@@ -72,6 +72,4 @@ java -cp "target/JavaFXLibrary-<version>.jar"  org.robotframework.RobotFramework
 
 ## Known issues
 
-* Tests can be executed with robot/pybot/jybot! Jython can be used locally without remote interface.
-* Running tests multiple times requires starting the server again, or applications start launching behind other windows, causing tests to fail when robot is trying to interact with them.
-* At the moment there are problems with Java Objects, they might be returned as Java Strings or their methods may be unavailable.
+* If the remote library server and tests are running on the same machine, the server must be restarted between test executions. If the server is not restarted, test applications will launch behind other windows, causing tests to fail when robot is trying to interact with them.
