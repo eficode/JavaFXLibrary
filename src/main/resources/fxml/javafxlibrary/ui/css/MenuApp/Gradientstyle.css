@@ -1,0 +1,128 @@
+/*
+ * Copyright 2017-2018   Eficode Oy
+ * Copyright 2018-       Robot Framework Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.textLabel .text {
+    -fx-fill: whitesmoke;
+    -fx-font-family: sans-serif;
+    -fx-font-style: oblique;
+    -fx-font-weight: 100;
+    -fx-font-size: 22px;
+}
+
+.context-menu {
+    -fx-background-color: linear-gradient(#3091ff 0%, #269bff 50%, #76dcf2 100%);
+    -fx-padding: 0;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+}
+
+.menu-bar .menu-item .label .text {
+    -fx-fill: whitesmoke;
+}
+
+.menu-item:hover {
+    -fx-background-color: whitesmoke;
+}
+
+.menu-bar .menu-item:hover .label .text {
+    -fx-fill: #3050ff;
+}
+
+/* MenuBar */
+.menu-bar {
+    -fx-background-color:
+        linear-gradient(#1e5799 0%,#2989d8 50%,#207cca 51%, #79a5e8 100%);
+}
+
+.menu-bar .text {
+    -fx-fill: whitesmoke;
+}
+
+/* Hovered MenuBar Menu */
+.menu-bar .menu:hover {
+    -fx-background-color: whitesmoke;
+}
+
+.menu-bar .menu:hover .text {
+    -fx-fill: #3050ff;
+}
+
+/* Active MenuBar Menu */
+.menu-bar .menu:showing {
+    -fx-background-color: whitesmoke;
+}
+
+.menu-bar .menu:showing .text {
+    -fx-fill: #3050ff;
+}
+
+/* Background for the text label */
+.textBg {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 150px;
+    -fx-background-color: linear-gradient(#3091ff 0%, #32a3ff 50%, #269bff 51%, #76e9ff 100%);
+    -fx-background-radius: 20px;
+    -fx-opacity: 0.25;
+}
+
+/* Bottom HBox */
+.comboBoxContainer {
+    -fx-alignment: center;
+    -fx-spacing: 45px;
+    -fx-pref-width: 800px;
+    -fx-pref-height: 32px;
+    -fx-background-color: linear-gradient(#3091ff 0%, #32a3ff 50%, #269bff 51%, #76e9ff 100%);
+    -fx-opacity: 0.85;
+}
+
+.comboBoxContainer .label {
+    -fx-pref-height: 32px;
+}
+
+.comboBoxContainer .text {
+    -fx-fill: whitesmoke;
+}
+
+/* ComboBox */
+ComboBox {
+    -fx-background-color: deepskyblue;
+    -fx-border-color: blue;
+    -fx-pref-height: 32px;
+}
+
+/* ComboBox items */
+.combo-box .combo-box-popup .list-view, .combo-box .combo-box-popup .list-cell {
+    -fx-background-color: deepskyblue ;
+}
+
+.combo-box .combo-box-popup .list-view, .combo-box .combo-box-popup .list-cell:hover {
+    -fx-background-color: whitesmoke;
+}
+
+.combo-box .combo-box-popup .list-view, .combo-box .combo-box-popup .list-cell .text {
+    -fx-fill: whitesmoke;
+}
+
+.combo-box .combo-box-popup .list-view, .combo-box .combo-box-popup .list-cell:hover .text {
+    -fx-fill: deepskyblue;
+}
+
+Rectangle {
+    -fx-fill: linear-gradient(lightskyblue, mediumblue)
+}

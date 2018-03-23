@@ -1,0 +1,151 @@
+*** Settings ***
+Documentation     Tests to test javafxlibrary.keywords.MoveRobot related keywords
+Library           JavaFXLibrary
+Suite Setup       Setup all tests
+Suite Teardown    Teardown all tests
+Test Setup        Move To Top Left Corner
+Force Tags        set-moverobot
+
+*** Variables ***
+${TEST_APPLICATION}         javafxlibrary.testapps.TestPointLocation
+${SCENE_MINX}               ${EMPTY}
+${SCENE_MINY}               ${EMPTY}
+${L_DECORATION_WIDTH}       ${EMPTY}
+${L_DECORATION_WIDTH}       ${EMPTY}
+${T_DECORATION_HEIGHT}      ${EMPTY}
+${B_DECORATION_HEIGHT}      ${EMPTY}
+
+*** Test Cases ***
+Move By
+    [Tags]                  smoke
+    Move By                 75    75
+    Verify String           \#locationLabel     75 | 75
+
+Move To Coordinates
+    [Tags]                  smoke
+    ${X}                    Evaluate    ${SCENE_MINX} + ${200}
+    ${Y}                    Evaluate    ${SCENE_MINY} + ${200}
+    Move To Coordinates     ${X}    ${Y}
+    Verify String           \#locationLabel    200 | 200
+
+    ${MSG}                  Run Keyword And Expect Error    *    Move To Coordinates     ${X}    ${Y}    NotValidMotion
+    Should Contain          ${MSG}    "NotValidMotion" is not a valid Motion. Accepted values are:
+
+Move To Query
+    [Tags]                  smoke
+    Move To                 \#rectangle
+    Verify String           \#locationLabel    25 | 475
+
+Move To Point Query
+    [Tags]                  smoke
+    ${POINTQUERY}           Point To            \#rectangle
+    Move To                 ${POINTQUERY}
+    Verify String           \#locationLabel     25 | 475
+
+Move To Point
+    [Tags]                  smoke
+    ${X}                    Evaluate    ${400} + ${SCENE_MINX}
+    ${Y}                    Evaluate    ${150} + ${SCENE_MINY}
+    ${POINT}                Create Point    ${X}    ${Y}
+    Move To                 ${POINT}
+    Verify String           \#locationLabel    400 | 150
+
+Move To Bounds
+    [Tags]                  smoke
+    ${NODE}                 Find                \#rectangle
+    ${BOUNDS}               Get Bounds          ${NODE}
+    Move To                 ${BOUNDS}
+    Verify String           \#locationLabel     25 | 475
+
+Move To Scene
+    [Tags]                  smoke
+    ${SCENE}                Get Nodes Scene    \#rectangle
+    Move To                 ${SCENE}
+    Verify String           \#locationLabel    250 | 250
+
+Move To Window
+    [Tags]                  smoke
+    ${WINDOW}               Get Window              PointLocation Test
+    Move To                 ${WINDOW}
+    ${WIDTH_OFFSET}         Evaluate                (${L_DECORATION_WIDTH} - ${R_DECORATION_WIDTH}) / 2
+    ${HEIGHT_OFFSET}        Evaluate                (${T_DECORATION_HEIGHT} - ${B_DECORATION_HEIGHT}) / 2
+    ${X}                    Evaluate                ${250} - ${WIDTH_OFFSET}
+    ${Y}                    Evaluate                ${250} - ${HEIGHT_OFFSET}
+    ${X}                    Convert To Integer      ${X}
+    ${Y}                    Convert To Integer      ${Y}
+    Verify String           \#locationLabel         ${X} | ${Y}
+
+*** Keywords ***
+Setup all tests
+    Launch Javafx Application       ${TEST_APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+    Set Scene Bounds Values
+    Set Decoration Values
+
+Teardown all tests
+    Close Javafx Application
+
+Move To Top Left Corner
+    Move To Coordinates     ${SCENE_MINX}    ${SCENE_MINY}
+
+Get Left Decoration Width
+    [Arguments]             ${WINDOW}
+    ${ROOT}                 Get Root Node Of    ${WINDOW}
+    ${SCENE}                Get Nodes Scene     ${ROOT}
+    ${WIDTH}                Call Object Method    ${SCENE}    getX
+    [Return]                ${WIDTH}
+
+Get Right Decoration Width
+    [Arguments]             ${WINDOW}
+    ${ROOT}                 Get Root Node Of    ${WINDOW}
+    ${SCENE}                Get Nodes Scene     ${ROOT}
+    ${WINDOWWIDTH}          Call Object Method    ${WINDOW}    getWidth
+    ${SCENEX}               Call Object Method    ${SCENE}    getX
+    ${SCENEWIDTH}           Call Object Method    ${SCENE}    getWidth
+    ${DECOWIDTH}            Evaluate    ${WINDOWWIDTH} - ${SCENEWIDTH} - ${SCENEX}
+    [Return]                ${DECOWIDTH}
+
+Get Top Decoration Height
+    [Arguments]             ${WINDOW}
+    ${ROOT}                 Get Root Node Of    ${WINDOW}
+    ${SCENE}                Get Nodes Scene     ${ROOT}
+    ${HEIGHT}               Call Object Method    ${SCENE}    getY
+    [Return]                ${HEIGHT}
+
+Get Bottom Decoration Height
+    [Arguments]             ${WINDOW}
+    ${ROOT}                 Get Root Node Of    ${WINDOW}
+    ${SCENE}                Get Nodes Scene     ${ROOT}
+    ${WINDOWHEIGHT}         Call Object Method    ${WINDOW}    getHeight
+    ${SCENEY}               Call Object Method    ${SCENE}    getY
+    ${SCENEHEIGHT}          Call Object Method    ${SCENE}    getHeight
+    ${DECOHEIGHT}           Evaluate    ${WINDOWHEIGHT} - ${SCENEHEIGHT} - ${SCENEY}
+    [Return]                ${DECOHEIGHT}
+
+Set Scene Bounds Values
+    ${SCENE}                Get Nodes Scene                 \#rectangle
+    ${BOUNDS}               Get Bounds                      ${SCENE}
+    ${MIN_X}                Call Object Method              ${BOUNDS}    getMinX
+    ${MIN_Y}                Call Object Method              ${BOUNDS}    getMinY
+    ${MIN_X}                Convert To Integer              ${MIN_X}
+    ${MIN_Y}                Convert To Integer              ${MIN_Y}
+    Set Suite Variable      ${SCENE_MINX}                   ${MIN_X}
+    Set Suite Variable      ${SCENE_MINY}                   ${MIN_Y}
+
+Set Decoration Values
+    ${WINDOW}               Get Window                      PointLocation Test
+    ${LEFT_WIDTH}           Get Left Decoration Width       ${WINDOW}
+    ${RIGHT_WIDTH}          Get Right Decoration Width      ${WINDOW}
+    ${TOP_HEIGHT}           Get Top Decoration Height       ${WINDOW}
+    ${BOTTOM_HEIGHT}        Get Bottom Decoration Height    ${WINDOW}
+    Set Suite Variable      ${L_DECORATION_WIDTH}           ${LEFT_WIDTH}
+    Set Suite Variable      ${R_DECORATION_WIDTH}           ${RIGHT_WIDTH}
+    Set Suite Variable      ${T_DECORATION_HEIGHT}          ${TOP_HEIGHT}
+    Set Suite Variable      ${B_DECORATION_HEIGHT}          ${BOTTOM_HEIGHT}
+    
+Verify String
+    [Documentation]    Verifies that string is equal in location
+    [Arguments]                   ${query}          ${string}
+    ${target_node}=               Find              ${query}
+    ${text_label}=                Get Node Text     ${target_node}
+    Should Be Equal As Strings    ${string}         ${text_label}

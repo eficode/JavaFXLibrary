@@ -1,0 +1,85 @@
+/*
+ * Copyright 2017-2018   Eficode Oy
+ * Copyright 2018-       Robot Framework Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.navButton {
+    -fx-alignment: center;
+    -fx-min-width: 150px;
+    -fx-min-height: 30px;
+    -fx-border-radius: 0 0 10 10;
+    -fx-background-radius: 0 0 10 10;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #07cc00;
+}
+
+.activeNavButton {
+    -fx-background-color: #07cc00;
+    -fx-border-color: #07cc00;
+    -fx-border-width: 0 2 2 2;
+    -fx-text-fill: #ffffff;
+}
+
+.navBar {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.heading {
+    -fx-alignment: center;
+    -fx-font-size: 22px;
+    -fx-pref-width: 500px;
+    -fx-font-weight: 900;
+    -fx-text-fill: forestgreen;
+}
+
+.activeView {
+    visibility: visible;
+    -fx-pref-height: 300px;
+}
+
+.hiddenView {
+    visibility: hidden;
+}
+
+.employeeDataCell {
+    -fx-padding: 5px;
+    -fx-border-color: black;
+    -fx-pref-width: 100px;
+    -fx-border-width: 0 1 1 1;
+}
+
+.employeeDataHeading {
+    -fx-border-width: 1;
+    -fx-font-family: sans-serif;
+    -fx-font-weight: 900;
+}
+
+.employeeDataRow {
+    -fx-alignment: center;
+    -fx-pref-width: 500px;
+}
+
+.bodyContainer {
+    -fx-padding: 50 0 0 0;
+}
+
+ScrollPane {
+    -fx-min-height: 200px;
+    -fx-fit-to-width: true;
+    -fx-vbar-policy: never;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}

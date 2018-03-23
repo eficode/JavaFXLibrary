@@ -1,0 +1,69 @@
+/*
+ * Copyright 2017-2018   Eficode Oy
+ * Copyright 2018-       Robot Framework Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+VBox, HBox {
+    -fx-alignment: center;
+}
+
+HBox {
+    -fx-padding: 5px;
+}
+
+Label {
+    -fx-border-width: 1px;
+}
+
+.greenRow {
+    -fx-border-color: green;
+    -fx-text-fill: green;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 100px;
+}
+
+.redRow {
+    -fx-border-color: red;
+    -fx-text-fill: red;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 100px;
+}
+
+.statsContainer {
+    -fx-padding: 4px;
+    -fx-start-margin: 10px;
+}
+
+.statsRow {
+    -fx-padding: 0px;
+}
+
+#greenLabel {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}
+
+#redLabel {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}
+
+#verticalStats {
+    -fx-padding: 40px 0px 0px 0px;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-border-color: black;
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import java.net.URL?>
+<!--
+  ~ Copyright 2017-2018   Eficode Oy
+  ~ Copyright 2018-       Robot Framework Foundation
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      prefHeight="400.0" prefWidth="500.0"
+      fx:id="root"
+      fx:controller="javafxlibrary.testapps.controllers.TestWindowManagementController">
+
+    <!-- NAVIGATION -->
+    <HBox fx:id="navBar" styleClass="navBar">
+        <Label fx:id="navigationAlert" styleClass="navButton, activeNavButton" onMouseClicked="#navListener">
+            Alert Example
+        </Label>
+        <Label fx:id="navigationDialog" styleClass="navButton" onMouseClicked="#navListener">
+            Dialog Example
+        </Label>
+    </HBox>
+
+    <VBox fx:id="bodyContainer" styleClass="bodyContainer">
+
+        <!-- ALERT EXAMPLE BODY -->
+        <VBox fx:id="informationAlertBody" styleClass="activeView" spacing="50">
+            <Label styleClass="heading">
+                Alert example
+            </Label>
+            <HBox prefWidth="400" alignment="CENTER">
+                <HBox prefWidth="400" alignment="BASELINE_LEFT">
+                    <Pane>
+                        <Rectangle width="404" height="40" fill="lightsteelblue" />
+                        <Rectangle fx:id="loadingBar" width="4" height="40" fill="lawngreen" />
+                    </Pane>
+                </HBox>
+            </HBox>
+            <HBox alignment="CENTER">
+                <Button fx:id="popupButton" onMouseClicked="#buttonListener">Download</Button>
+            </HBox>
+        </VBox>
+
+        <!-- DIALOG EXAMPLE BODY -->
+        <VBox fx:id="dialogBody" styleClass="hiddenView" spacing="20">
+            <Label styleClass="heading">
+                Dialog example
+            </Label>
+            <ScrollPane>
+                <VBox fx:id="employeeDataContainer">
+                    <HBox styleClass="employeeDataRow">
+                        <Label styleClass="employeeDataCell, employeeDataHeading">Name</Label>
+                        <Label styleClass="employeeDataCell, employeeDataHeading">Phone</Label>
+                    </HBox>
+                    <HBox id="secondRow" styleClass="employeeDataRow">
+                        <Label styleClass="employeeDataCell">John</Label>
+                        <Label styleClass="employeeDataCell">0401231234</Label>
+                    </HBox>
+                    <HBox styleClass="employeeDataRow">
+                        <Label styleClass="employeeDataCell">Mark</Label>
+                        <Label styleClass="employeeDataCell">1234567890</Label>
+                    </HBox>
+                    <HBox styleClass="employeeDataRow">
+                        <Label styleClass="employeeDataCell">Laura</Label>
+                        <Label styleClass="employeeDataCell">4419928810</Label>
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+            <HBox alignment="CENTER">
+                <Button fx:id="addEmployeeButton" onMouseClicked="#addEmployeeButtonListener">
+                    Add employee
+                </Button>
+            </HBox>
+        </VBox>
+
+    </VBox>
+
+    <stylesheets>
+        <URL value="@css/TestWindowManagementUI.css" />
+    </stylesheets>
+
+</VBox>

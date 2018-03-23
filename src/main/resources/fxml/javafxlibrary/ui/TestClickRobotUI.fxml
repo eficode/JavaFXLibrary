@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<!--
+  ~ Copyright 2017-2018   Eficode Oy
+  ~ Copyright 2018-       Robot Framework Foundation
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="javafxlibrary.testapps.controllers.TestClickRobotController"
+            styleClass="root"
+            onMouseClicked="#showCoordinates"
+>
+    <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <HBox>
+            <Button text="Click me" fx:id="button" styleClass="button"/>
+            <Label text="Button has been clicked 0 times." fx:id="buttonLabel" styleClass="clickLabel"/>
+        </HBox>
+        <HBox>
+            <Button text="Double-click me" fx:id="doubleClickButton" styleClass="button"/>
+            <Label text="Button has been double-clicked 0 times." fx:id="doubleClickButtonLabel" styleClass="clickLabel"/>
+        </HBox>
+        <HBox>
+            <Button text="Right-click me" fx:id="rightClickButton" styleClass="button"/>
+            <Label text="Button has been right-clicked 0 times." fx:id="rightClickButtonLabel" styleClass="clickLabel"/>
+        </HBox>
+        <HBox>
+            <Label fx:id="coordinateLabel"/>
+        </HBox>
+        <HBox>
+            <Button fx:id="resetButton" onMouseClicked="#resetCounters" text="Reset counters" />
+        </HBox>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@css/TestClickRobotUI.css" />
+    </stylesheets>
+</AnchorPane>

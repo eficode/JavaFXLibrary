@@ -1,0 +1,10 @@
+target
+*.html
+output.xml
+JavaFXLib-*.png
+.idea
+*.iml
+report-images
+
+# temporary pom file by shade plugin
+dependency-reduced-pom.xml
