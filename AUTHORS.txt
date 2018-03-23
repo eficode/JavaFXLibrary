@@ -1,0 +1,7 @@
+Core contributors:
+Jukka Haavisto                 2017 -
+Sami Pesonen                   2017 -
+Pasi Saikkonen                 2017 -
+
+Other contributors:
+Tatu Lahtela                   Find All With Pseudo Class and Find Class keywords

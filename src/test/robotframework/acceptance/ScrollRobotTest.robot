@@ -1,0 +1,101 @@
+*** Settings ***
+Documentation     Tests to test javafxlibrary.keywords.ScrollRobot related keywords
+Library           JavaFXLibrary
+Suite Setup       Setup all tests
+Suite Teardown    Teardown all tests
+Force Tags        set-scrollrobot
+
+*** Variables ***
+${TEST_APPLICATION}   javafxlibrary.testapps.TestScrollRobot
+${VERTICAL_TOTAL}     \#totalDistanceVertical
+${VERTICAL_ACTUAL}    \#actualDistanceVertical
+${VERTICAL_EVENTS}    \#eventsVertical
+${HORIZONTAL_TOTAL}   \#totalDistanceHorizontal
+${HORIZONTAL_ACTUAL}  \#actualDistanceHorizontal
+${HORIZONTAL_EVENTS}  \#eventsHorizontal
+${SCROLL_LENGTH}      ${EMPTY}
+
+*** Test Cases ***
+Scroll down
+    [Tags]    smoke
+    ${TARGET_DISTANCE}      Count Distance    25
+    Scroll Vertically       DOWN    25
+    Verify String           ${VERTICAL_TOTAL}    ${TARGET_DISTANCE}
+    Verify String           ${VERTICAL_ACTUAL}    -${TARGET_DISTANCE}
+    Verify String           ${VERTICAL_EVENTS}    25
+
+Scroll up
+    [Tags]    smoke
+    Reset counters
+    Move To Vertical Listener
+    ${TARGET_DISTANCE}      Count Distance    25
+    Scroll Vertically       UP    25
+    Verify String           ${VERTICAL_TOTAL}    ${TARGET_DISTANCE}
+    Verify String           ${VERTICAL_ACTUAL}    ${TARGET_DISTANCE}
+    Verify String           ${VERTICAL_EVENTS}    25
+
+Scroll Once Vertically
+    [Tags]    smoke
+    Reset counters
+    Move to vertical listener
+    :FOR    ${index}    IN RANGE    5
+    \    Scroll Vertically    DOWN    1
+    \    Sleep    50milliseconds
+    Verify String    ${VERTICAL_EVENTS}    5
+
+Scroll Left
+    [Tags]    smoke
+    Move to horizontal listener
+    ${TARGET_DISTANCE}      Count Distance    25
+    Scroll Horizontally     LEFT    25
+    Verify String           ${HORIZONTAL_TOTAL}    ${TARGET_DISTANCE}
+    Verify String           ${HORIZONTAL_ACTUAL}    ${TARGET_DISTANCE}
+    Verify String           ${HORIZONTAL_EVENTS}    25
+
+Scroll Right
+    [Tags]    smoke
+    Reset counters
+    Move to horizontal listener
+    ${TARGET_DISTANCE}      Count Distance    10
+    Scroll Horizontally     RIGHT    10
+    Verify String           ${HORIZONTAL_TOTAL}    ${TARGET_DISTANCE}
+    Verify String           ${HORIZONTAL_ACTUAL}    -${TARGET_DISTANCE}
+    Verify String           ${HORIZONTAL_EVENTS}    10
+
+*** Keywords ***
+Setup all tests
+    Launch Javafx Application    ${TEST_APPLICATION}
+    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    Set Variables
+    Move to vertical listener
+
+Move to vertical listener
+    Move To    \#greenLabel
+
+Move to horizontal listener
+    Move To    \#redLabel
+
+Reset counters
+    Click on    \#resetButton
+
+Teardown all tests
+    Close Javafx Application
+
+Set Variables
+    Move to vertical listener
+    Scroll Vertically       DOWN    1
+    ${DISTANCE}             Get Node Text    ${VERTICAL_TOTAL}
+    Set Suite Variable      ${SCROLL_LENGTH}    ${DISTANCE}
+    Reset counters
+
+Count Distance
+    [Arguments]    ${WHEEL_TICKS}
+    ${DISTANCE}    Evaluate    ${WHEEL_TICKS} * ${SCROLL_LENGTH}
+    [Return]       ${DISTANCE}
+    
+Verify String
+    [Documentation]    Verifies that string is equal in location
+    [Arguments]                   ${query}          ${string}
+    ${target_node}=               Find              ${query}
+    ${text_label}=                Get Node Text     ${target_node}
+    Should Be Equal As Strings    ${string}         ${text_label}
