@@ -1,4 +1,4 @@
-#JavaFXLibrary
+# JavaFXLibrary
 
 [Robot Framework](http://robotframework.org) library for testing and connecting to a JavaFX java process and using [TestFX](https://github.com/TestFX/TestFX).
 
@@ -9,7 +9,7 @@ JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
 You can connect to applications running on your local machine or even on a different machine.
 
 
-##Installation
+## Installation
 
 1. Download latest JavaFXLibrary and documentation from https://github.com/robotframework/JavaFXLibrary/releases/
 2. Copy(if needed) JAR to desired location and run from command line using
