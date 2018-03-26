@@ -27,7 +27,7 @@ recommend to create dedicated branches for pull requests instead of creating
 them based on the master branch. This is especially important if you plan to
 work on multiple pull requests at the same time.
 
-##Tests
+## Tests
 
 When submitting a pull request with a new feature or a fix, you should
 always include tests for your changes. These tests prove that your changes
