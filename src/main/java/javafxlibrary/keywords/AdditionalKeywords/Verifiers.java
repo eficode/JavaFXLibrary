@@ -266,8 +266,8 @@ public class Verifiers extends TestFxAdapter {
     }
 
     @RobotKeyword("Fails if images are not similar enough\n\n"
-            + "``image1`` ia an _Object:Image_ for the first comparable image.\n\n"
-            + "``image2`` ia an _Object:Image_ for the second comparable image.\n\n"
+            + "``image1`` is an _Object:Image_ for the first comparable image.\n\n"
+            + "``image2`` is an _Object:Image_ for the second comparable image.\n\n"
             + "``percentage`` the percentage of pixels that should match, defaults to 100.\n\n"
             + "This keyword can be coupled with e.g. `Capture Image` -keyword.")
     @ArgumentNames({ "image1", "image2", "percentage=100" })
@@ -294,8 +294,8 @@ public class Verifiers extends TestFxAdapter {
     }
 
     @RobotKeyword("Fails if images are too similar\n\n"
-            + "``image1`` ia an _Object:Image_ for the first comparable image.\n\n"
-            + "``image2`` ia an _Object:Image_ for the second comparable image.\n\n"
+            + "``image1`` is an _Object:Image_ for the first comparable image.\n\n"
+            + "``image2`` is an _Object:Image_ for the second comparable image.\n\n"
             + "``percentage`` the percentage of pixels that should not match, defaults to 100.\n\n"
             + "This keyword can be coupled with e.g. `Capture Image` -keyword.")
     @ArgumentNames({ "image1", "image2", "percentage=100" })
