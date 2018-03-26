@@ -52,6 +52,10 @@ Library    Remote    http://localhost:8272/    WITH NAME    client2
 
 Now the keywords can be used as `client1.List Windows` and `client2.List Windows`
 
+## JavaFX UI objects
+
+With [Scenic View](http://fxexperience.com/scenic-view/) you can see all your JavaFX applications UI objects.
+See [keyword documentation](#keyword-documentation) for additional info how to use them with keywords.
 
 ## JavaFXLibrary demo
 
