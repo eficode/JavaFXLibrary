@@ -9,6 +9,9 @@ JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
 You can connect to applications running on your local machine or even on a different machine.
 
 
+## Keyword documentation
+See keyword [documentation](https://eficode.github.io/JavaFXLibrary/JavaFXLibrary.html).
+
 ## Installation
 
 1. Download latest JavaFXLibrary and documentation from https://github.com/robotframework/JavaFXLibrary/releases/
