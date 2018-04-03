@@ -41,6 +41,8 @@ import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
+import org.testfx.robot.Motion;
+
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -1118,7 +1120,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         while (li.hasPrevious()){
             for(Node node : robot.rootNode((Window)li.previous()).lookupAll(".menu-item")) {
                 if (getMenuItemText(node).equals(item)) {
-                    robot.clickOn(node);
+                    robot.clickOn(node, Motion.HORIZONTAL_FIRST);
                     return;
                 }
             }
