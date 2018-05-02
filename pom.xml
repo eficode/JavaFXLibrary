@@ -236,12 +236,12 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.12-alpha</version>
+            <version>4.0.13-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.12-alpha</version>
+            <version>4.0.13-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.robotframework</groupId>
