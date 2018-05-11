@@ -92,7 +92,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
     }
 
     /*
-    *   Just an empy function to get rid of unnecessary errors, currently get_keyword_tags interface is not implemented.
+    *   Just an empty function to get rid of unnecessary errors, currently get_keyword_tags interface is not implemented.
     */
     public String getKeywordTags(String keywordName) {
         return null;
