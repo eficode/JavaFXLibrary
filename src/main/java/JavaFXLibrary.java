@@ -158,9 +158,9 @@ public class JavaFXLibrary extends AnnotationLibrary {
                     + "is describer separately for each keyword in their own documentation. For Example, `Set Target Window` can take either String, "
                     + "Integer, Node or Scene as parameter for selecting a window. "
                     + "\nExample:\n"
-                    + "| Set Traget Window | ${1} | # this selects window based on integer value | \n"
+                    + "| Set Target Window | ${1} | # this selects window based on integer value | \n"
                     + "| ${windows}= | List Windows | # this returns a list of window 'objects' | \n"
-                    + "| Set Traget Window | @{windows}[1] | # this selects window based on given Window object | \n"
+                    + "| Set Target Window | @{windows}[1] | # this selects window based on given Window object | \n"
                     + "Note! In this example the window object is actually a string in Robot Framework, but it gets converted into Window object in "
                     + "JavaFXLibrary side. Below section further clarifies this approach. "
 
