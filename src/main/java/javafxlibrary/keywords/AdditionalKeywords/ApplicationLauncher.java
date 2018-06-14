@@ -93,7 +93,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     }
 
     @RobotKeyword("Logs current classpath content")
-    public void logApplicationClassPath() {
+    public void logApplicationClasspath() {
         try {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             URL[] urls = ((URLClassLoader) cl).getURLs();
