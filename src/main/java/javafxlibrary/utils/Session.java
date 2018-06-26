@@ -70,10 +70,7 @@ public class Session extends ApplicationTest {
             FxToolkit.cleanupStages();
             sessionRobot.release(new KeyCode[] {});
             sessionRobot.release(new MouseButton[] {});
-
-            // If application processes are left running, use isMac() or other HelperFunctions to call cleanup.
-            if(!HelperFunctions.isMac())
-                FxToolkit.cleanupApplication(sessionApplication);
+            FxToolkit.cleanupApplication(sessionApplication);
         } catch (Exception e){
             throw new JavaFXLibraryNonFatalException("Problem shutting down the application: " + e.getMessage(), e);
         }
