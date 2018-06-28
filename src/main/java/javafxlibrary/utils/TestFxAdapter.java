@@ -19,16 +19,12 @@ package javafxlibrary.utils;
 
 import java.io.File;
 import java.util.HashMap;
+import javafx.application.Application;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.testfx.api.FxRobotContext;
 import org.testfx.api.FxRobotInterface;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+
+import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
 
 public class TestFxAdapter {
 
@@ -56,38 +52,8 @@ public class TestFxAdapter {
            FXMLLoader.setDefaultClassLoader(getClass().getClassLoader());
            in their start method for the controller class to load properly */
         if (appName.endsWith(".jar")) {
-
-            try {
-                JarFile jarFile = new JarFile(appName);
-                String mainClassName = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
-                Enumeration<JarEntry> e = jarFile.entries();
-                URL[] urls = {new URL("jar:file:" + appName + "!/")};
-                URLClassLoader cl = URLClassLoader.newInstance(urls);
-
-                while (e.hasMoreElements()) {
-                    JarEntry je = e.nextElement();
-
-                    if (je.isDirectory() || !je.getName().endsWith(".class"))
-                        continue;
-
-                    String className = je.getName().substring(0, je.getName().length() - 6);
-                    className = className.replace('/', '.');
-
-                    if (className.equals(mainClassName)) {
-                        Class c = cl.loadClass(className);
-                        activeSession = new Session(c, appArgs);
-                    }
-
-                }
-
-            } catch (FileNotFoundException e) {
-                throw new JavaFXLibraryNonFatalException("Couldn't find file: " + appName);
-            } catch (ClassNotFoundException e) {
-                throw new JavaFXLibraryNonFatalException("Couldn't find main application class in " + appName);
-            } catch (IOException e) {
-                throw new JavaFXLibraryNonFatalException(e);
-            }
-
+            Class mainClass = getMainClassFromJarFile(appName);
+            activeSession = new Session(mainClass, appArgs);
         } else {
             activeSession = new Session(appName, appArgs);
         }
@@ -97,10 +63,18 @@ public class TestFxAdapter {
 
     }
 
-    public void deleteSession() {
+    public void createNewSession(Application application) {
+        activeSession = new Session(application);
+        setRobot(activeSession.sessionRobot);
+        setRobotContext(activeSession.robotContext());
+    }
 
-        // application clean-up
+    public void deleteSession() {
         activeSession.closeApplication();
+    }
+
+    public void deleteSwingSession() {
+        activeSession.closeSwingApplication();
     }
 
     public String getCurrentSessionApplicationName() {

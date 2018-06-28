@@ -17,6 +17,7 @@
 
 package javafxlibrary.utils;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.geometry.*;
@@ -24,7 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.ProgressBarMatchers;
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +39,14 @@ import org.hamcrest.Matchers;
 import org.testfx.robot.Motion;
 import javafx.scene.input.MouseButton;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 import java.lang.*;
 import javafx.scene.input.KeyCode;
@@ -49,6 +56,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javafxlibrary.utils.TestFxAdapter.objectMap;
@@ -795,6 +804,58 @@ public class HelperFunctions {
     public static Node getTableRowCell(TableView table, int row, int cell){
          return robot.from(table).lookup(".table-row-cell").nth(row).lookup(".table-cell").nth(cell).query();
     }
+
+    public static Class getMainClassFromJarFile(String appName) {
+		try {
+			JarFile jarFile = new JarFile(appName);
+			String mainClassName = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
+			Enumeration<JarEntry> e = jarFile.entries();
+			URL[] urls = {new URL("jar:file:" + appName + "!/")};
+			URLClassLoader cl = URLClassLoader.newInstance(urls);
+
+			while (e.hasMoreElements()) {
+				JarEntry je = e.nextElement();
+
+				if (je.isDirectory() || !je.getName().endsWith(".class"))
+					continue;
+
+				String className = je.getName().substring(0, je.getName().length() - 6);
+				className = className.replace('/', '.');
+
+				if (className.equals(mainClassName)) {
+					return cl.loadClass(className);
+				}
+			}
+
+			throw new ClassNotFoundException();
+
+		} catch (FileNotFoundException e) {
+			throw new JavaFXLibraryNonFatalException("Couldn't find file: " + appName);
+		} catch (ClassNotFoundException e) {
+			throw new JavaFXLibraryNonFatalException("Couldn't find main application class in " + appName);
+		} catch (IOException e) {
+			throw new JavaFXLibraryNonFatalException(e);
+		}
+	}
+
+	public static Application createWrapperApplication(Class c, String... appArgs) {
+
+    	try {
+			Method main = c.getMethod("main", String[].class);
+			return new Application() {
+				@Override
+				public void start(Stage primaryStage) {
+					try {
+						main.invoke(null, (Object) appArgs);
+					} catch (IllegalAccessException | InvocationTargetException e) {
+						throw new JavaFXLibraryNonFatalException("Unable to launch application: " + c.getName(), e);
+					}
+				}
+			};
+		} catch (NoSuchMethodException e) {
+			throw new JavaFXLibraryNonFatalException("Couldn't create wrapper application for " + c.getName(), e);
+		}
+	}
 }
 
 

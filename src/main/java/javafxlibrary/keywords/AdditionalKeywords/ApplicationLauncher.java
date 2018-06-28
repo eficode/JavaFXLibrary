@@ -17,6 +17,7 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
+import javafx.application.Application;
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
@@ -30,6 +31,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
+import static javafxlibrary.utils.HelperFunctions.createWrapperApplication;
+import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
+
 @RobotKeywords
 public class ApplicationLauncher extends TestFxAdapter {
 
@@ -37,7 +41,8 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``appName`` is the name of the application to launch. \n\n"
             + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
             + "Example:\n"
-            + "| Launch JavaFX Application | _javafxlibrary.testapps.MenuApp_ |\n")
+            + "| Launch JavaFX Application | _javafxlibrary.testapps.MenuApp_ |\n"
+            + "| Launch JavaFX Application | _TestApplication.jar_ |\n")
     @ArgumentNames({"appName", "*args"})
     public void launchJavafxApplication(String appName, String... appArgs)  {
         try {
@@ -48,6 +53,35 @@ public class ApplicationLauncher extends TestFxAdapter {
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
         }
+    }
+
+    @RobotKeyword("Creates a JavaFX wrapper for the given Swing application and launches it. This allows testing "
+            + "Swing embedded JavaFX components. Custom wrappers can be used with Launch Javafx Application keyword, "
+            + "see [https://github.com/eficode/JavaFXLibrary/blob/master/src/main/java/javafxlibrary/testapps/"
+            + "SwingApplicationWrapper.java|SwingApplicationWrapper.java] for example.\n\n"
+            + "``appName`` is the name of the application to launch. \n\n"
+            + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
+            + "Example:\n"
+            + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application | _TestApplication.jar_ |\n")
+    @ArgumentNames({"appName", "*args"})
+    public void launchSwingApplication(String appName, String... appArgs) {
+        HelperFunctions.robotLog("INFO", "Starting application:" + appName);
+        Class c;
+
+        try {
+            if (appName.endsWith(".jar"))
+                c = getMainClassFromJarFile(appName);
+            else
+                c = Class.forName(appName);
+
+        } catch (ClassNotFoundException e) {
+            throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
+        }
+
+        Application app = createWrapperApplication(c, appArgs);
+        createNewSession(app);
+        HelperFunctions.robotLog("INFO", "Application: " + appName + " started.");
     }
 
     private void _addPathToClassPath(String path) {
@@ -149,7 +183,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     @RobotKeyword("Closes JavaFX application.\n\n"
             + "Example:\n"
             + "| Close JavaFX Application | \n")
-    public void closeJavafxApplication()  {
+    public void closeJavafxApplication() {
 
         try {
             HelperFunctions.robotLog("INFO", "Closing application...");
@@ -157,6 +191,19 @@ public class ApplicationLauncher extends TestFxAdapter {
             HelperFunctions.robotLog("INFO", "Application closed.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to close Java FX application.", e);
+        }
+    }
+
+    @RobotKeyword("Closes Wrapped Swing application.\n\n"
+            + "Example:\n"
+            + "| Close Swing Application | \n")
+    public void closeSwingApplication() {
+        try {
+            HelperFunctions.robotLog("INFO", "Closing application...");
+            deleteSwingSession();
+            HelperFunctions.robotLog("INFO", "Application closed.");
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Unable to close JavaFXLibrary Swing Wrapper application.", e);
         }
     }
 

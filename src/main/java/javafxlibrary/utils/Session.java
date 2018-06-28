@@ -25,6 +25,10 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.concurrent.TimeoutException;
 
 public class Session extends ApplicationTest {
@@ -38,12 +42,11 @@ public class Session extends ApplicationTest {
     public Session(String appName, String... appArgs) {
         try{
             // start the client
-            primaryStage = FxToolkit.registerPrimaryStage();
-            sessionApplication = FxToolkit.setupApplication((Class)Class.forName(appName), appArgs);
-            sessionRobot = new FxRobot();
-            applicationName = appName;
-            screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
-
+            this.primaryStage = FxToolkit.registerPrimaryStage();
+            this.sessionApplication = FxToolkit.setupApplication((Class)Class.forName(appName), appArgs);
+            this.sessionRobot = new FxRobot();
+            this.applicationName = appName;
+            this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
         } catch (ClassNotFoundException e) {
             throw new JavaFXLibraryNonFatalException("Couldn't find main application class from " + appName);
         } catch (Exception e) {
@@ -57,11 +60,25 @@ public class Session extends ApplicationTest {
             this.sessionApplication = FxToolkit.setupApplication(appClass, appArgs);
             this.sessionRobot = new FxRobot();
             this.applicationName = appClass.toString();
-
+            this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
         } catch (TimeoutException e) {
             throw new JavaFXLibraryNonFatalException("Problem launching the application: " + appClass.getSimpleName() + ", "
                     + e.getMessage(), e);
         }
+    }
+
+    public Session(Application application) {
+        try {
+            this.primaryStage = FxToolkit.registerPrimaryStage();
+            this.sessionApplication = FxToolkit.setupApplication(() -> application);
+            this.sessionRobot = new FxRobot();
+            this.applicationName = "JavaFXLibrary SwingWrapper";
+            this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
+
+        } catch (TimeoutException e) {
+            throw new JavaFXLibraryNonFatalException("Problem launching the application: " + e.getMessage(), e);
+        }
+
     }
 
     public void closeApplication() {
@@ -74,5 +91,20 @@ public class Session extends ApplicationTest {
         } catch (Exception e){
             throw new JavaFXLibraryNonFatalException("Problem shutting down the application: " + e.getMessage(), e);
         }
+    }
+
+    public void closeSwingApplication() {
+        Frame[] frames = Frame.getFrames();
+
+        for (Frame frame : frames) {
+            if (frame instanceof JFrame) {
+                JFrame jFrame = (JFrame) frame;
+                // EXIT_ON_CLOSE stops test execution on Jython (calls System.exit(0);)
+                jFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+                jFrame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+        }
+
+        closeApplication();
     }
 }
