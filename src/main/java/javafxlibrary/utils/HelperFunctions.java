@@ -73,26 +73,39 @@ public class HelperFunctions {
 		return waitUntilExists(target, waitUntilTimeout, "SECONDS");
 	}
 
-	public static Node waitUntilExists(String target, int timeout, String timeUnit){
-		robotLog("TRACE", "Waiting until target \"" + target.toString() + "\" becomes existent, timeout="
-				+ Integer.toString(timeout) + ", timeUnit=" + timeUnit);
+    // TODO: Needs additional testing e.g. propers unit tests
+    public static Node waitUntilExists(String target, int timeout, String timeUnit) {
+        robotLog("TRACE", "Waiting until target \"" + target.toString() + "\" becomes existent, timeout="
+                + Integer.toString(timeout) + ", timeUnit=" + timeUnit);
 
-		try {
-			Awaitility.setDefaultTimeout(timeout, getTimeUnit(timeUnit));
-			AtomicReference<Node> node = new AtomicReference<>();
-			Awaitility.await().until(() -> {
-				node.set(robot.lookup(target).query());
-				return node.get() != null;
-			} );
+        try {
+            robotLog("TRACE", "setDefaultTimeout");
+            Awaitility.setDefaultTimeout(timeout, getTimeUnit(timeUnit));
+            robotLog("TRACE", "AtomicReference");
+            AtomicReference<Node> node = new AtomicReference<>();
+            robotLog("TRACE", "Awaitility");
+            Awaitility.await().until(() -> {
+                try {
+                    robotLog("TRACE", "query");
+                    node.set(robot.lookup(target).query());
+                    robotLog("TRACE", "return");
+                    return node.get() != null;
+                } catch (Exception e) {
+                    robotLog("TRACE", "Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
+                    return Boolean.FALSE;
+                }
+            });
 
-			robotLog("TRACE", "Node located: \"" + node.get().toString() + "\"");
-			return node.get();
+            robotLog("TRACE", "Node located: \"" + node.get().toString() + "\"");
+            return node.get();
 
-		}catch (ConditionTimeoutException e) {
-			throw new JavaFXLibraryNonFatalException("Given element \"" + target.toString() + "\" was not found within given timeout of "
-					+ Integer.toString(timeout) + " " + timeUnit);
-		}
-	}
+        } catch (ConditionTimeoutException e) {
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target.toString() + "\" was not found within given timeout of "
+                    + Integer.toString(timeout) + " " + timeUnit);
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("waitUntilExist failed: " + e);
+        }
+    }
 
 	public static Node waitUntilVisible(Object target, int timeout){
 
@@ -497,8 +510,23 @@ public class HelperFunctions {
 		return contains;
 	}
 
+	// TODO: Needs additional testing e.g. propers unit tests
 	public static Point2D getCenterPoint(Bounds bounds) {
-		return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
+		int x = 0;
+		while(x <= 3) {
+			try {
+				robotLog("TRACE", "Getting center point, iteration: " + x );
+				Point2D centerPoint2D = new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
+				return centerPoint2D;
+			}
+			catch (Exception e) {
+				robotLog("TRACE", "Failed to get center point: " + e );
+				x++;
+				sleepFor(500);
+			}
+		}
+		throw new JavaFXLibraryNonFatalException("Unable to get center point of bounds.");
+		//return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
 	}
 
 	public static boolean isCompatible(Object o) {
