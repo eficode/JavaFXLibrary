@@ -54,11 +54,17 @@ public class RunOnFailure extends TestFxAdapter{
         }
 
         runningOnFailureRoutine = true;
-        robotLog("INFO", "JavaFxLibrary keyword has failed! Below a screenshot from erroneous situation:" );
-        if(robot.targetWindow() != null){
-            new ScreenCapturing().captureImage(robot.targetWindow());
-        } else
-            new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());
+
+        if (robot == null) {
+            robotLog("ERROR", "FxRobot not initialized, launch test application with the library");
+        } else {
+            robotLog("INFO", "JavaFxLibrary keyword has failed! Below a screenshot from erroneous situation:" );
+            if(robot.targetWindow() != null){
+                new ScreenCapturing().captureImage(robot.targetWindow());
+            } else
+                new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());
+        }
+
         runningOnFailureRoutine = false;
     }
 }
