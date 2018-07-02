@@ -760,7 +760,7 @@ public class HelperFunctions {
     public static String getMenuItemText(Node menuNode) {
         for (Node node : menuNode.lookupAll(".label")) {
             if (node instanceof Labeled) {
-                if (((Labeled) node).getText() != "")
+                if (!((Labeled) node).getText().equals(""))
                     return ((Labeled) node).getText();
             }
         }
@@ -804,7 +804,7 @@ public class HelperFunctions {
         for (Node label : node.lookupAll(".tab-label")) {
             if (label instanceof Labeled) {
                 String labelText = ((Labeled) label).getText();
-                if (labelText != null && labelText != "") {
+                if (labelText != null && !labelText.equals("")) {
                     return labelText;
                 }
             }
@@ -828,7 +828,7 @@ public class HelperFunctions {
         for (Node node : robot.from(table).lookup(".column-header-background .table-column").nth(index).lookup(".label").queryAll()) {
             if (node instanceof Labeled) {
                 String columnName = ((Labeled) node).getText();
-                if (columnName != "" && columnName != null)
+                if (columnName != null && !columnName.equals(""))
                     return columnName;
             }
         }
