@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -220,6 +221,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         RemoteServer server = new RemoteServer();
         server.putLibrary("/", new JavaFXLibrary());
         int port = 8270;
+        InetAddress ipAddr = InetAddress.getLocalHost();
 
         try {
             if(args.length > 0) {
@@ -227,7 +229,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
             } else
                 System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port + ". If you wish to use another port, restart the library and give port number as an argument. ");
 
-            InetAddress ipAddr = InetAddress.getLocalHost();
             server.setPort(port);
             server.start();
             System.out.println("\n        JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " + ipAddr.getHostAddress() + ":" + port + "\n ");
@@ -237,6 +238,10 @@ public class JavaFXLibrary extends AnnotationLibrary {
             System.exit(1);
         } catch (UnknownHostException uhe) {
             uhe.printStackTrace();
+            System.exit(1);
+        } catch (BindException be) {
+            // TODO: Configure RemoteServer logging, stackTrace gets logged here with default config
+            System.out.println("\n        Error! " + be.getMessage() + ": " + ipAddr.getHostAddress() +":" + port);
             System.exit(1);
         }
     }
