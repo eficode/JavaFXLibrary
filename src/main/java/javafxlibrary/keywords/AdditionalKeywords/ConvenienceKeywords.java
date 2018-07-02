@@ -17,7 +17,6 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;

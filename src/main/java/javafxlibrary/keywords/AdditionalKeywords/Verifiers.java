@@ -27,12 +27,9 @@ import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.Keywords.ScreenCapturing;
 import javafxlibrary.matchers.ExtendedNodeMatchers;
-import javafxlibrary.matchers.ProgressBarMatchers;
 import javafxlibrary.matchers.ToggleMatchers;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
-import org.hamcrest.Matchers;
-import org.omg.CORBA.TIMEOUT;
 import org.robotframework.javalib.annotation.*;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
@@ -43,11 +40,6 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.service.support.PixelMatcherResult;
 import org.testfx.service.support.impl.PixelMatcherRgb;
 import org.hamcrest.core.IsNot;
-import org.testfx.util.WaitForAsyncUtils;
-
-import java.sql.Time;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;

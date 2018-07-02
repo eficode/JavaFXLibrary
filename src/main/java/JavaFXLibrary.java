@@ -22,7 +22,6 @@ import java.util.*;
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
-import javafxlibrary.keywords.Keywords.WindowTargeting;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
 import org.robotframework.remoteserver.RemoteServer;

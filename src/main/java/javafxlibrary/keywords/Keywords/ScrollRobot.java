@@ -25,7 +25,6 @@ import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import org.testfx.api.FxRobotInterface;
 
 @RobotKeywords
 public class ScrollRobot extends TestFxAdapter {

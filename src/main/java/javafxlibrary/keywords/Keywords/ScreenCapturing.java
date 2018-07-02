@@ -19,7 +19,6 @@ package javafxlibrary.keywords.Keywords;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
-import javafx.stage.Screen;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
