@@ -109,6 +109,7 @@ public class HelperFunctions {
         }
     }
 
+    // TODO: Take same parameters as waitUntilExists in all waitUntil methods
     public static Node waitUntilVisible(Object target, int timeout) {
 
         // if target is a query string, let's try to find the relevant node
