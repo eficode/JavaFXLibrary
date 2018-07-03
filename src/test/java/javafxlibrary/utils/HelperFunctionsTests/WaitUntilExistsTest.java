@@ -71,23 +71,4 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
                     "of 500 MILLISECONDS");
         }
     }
-
-    @Test
-    public void waitUntilExists_Incorrect() {
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = null;
-            }
-        };
-
-        try {
-            Node node = HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals(e.getMessage(), "Given element \".button\" was not found within given timeout " +
-                    "of 500 MILLISECONDS");
-        }
-    }
-
 }
