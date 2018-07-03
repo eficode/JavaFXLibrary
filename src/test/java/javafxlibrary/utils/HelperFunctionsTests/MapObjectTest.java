@@ -7,10 +7,16 @@ import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
 import mockit.Mock;
 import mockit.MockUp;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class MapObjectTest extends TestFxAdapterTest {
+
+    @After
+    public void cleanup() {
+        TestFxAdapter.objectMap.clear();
+    }
 
     @Test
     public void mapObject_Node() {
