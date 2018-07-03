@@ -76,9 +76,8 @@ public class HelperFunctions {
         return waitUntilExists(target, waitUntilTimeout, "SECONDS");
     }
 
-    // TODO: Needs additional testing e.g. propers unit tests
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
-        robotLog("TRACE", "Waiting until target \"" + target.toString() + "\" becomes existent, timeout="
+        robotLog("TRACE", "Waiting until target \"" + target + "\" becomes existent, timeout="
                 + Integer.toString(timeout) + ", timeUnit=" + timeUnit);
 
         try {
@@ -103,7 +102,7 @@ public class HelperFunctions {
             return node.get();
 
         } catch (ConditionTimeoutException e) {
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target.toString() + "\" was not found within given timeout of "
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found within given timeout of "
                     + Integer.toString(timeout) + " " + timeUnit);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("waitUntilExist failed: " + e);
