@@ -36,16 +36,6 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
     public void waitUntilEnabled_IsEnabledWithDelay() {
         button.setDisable(true);
 
-        // Enable button after 200 milliseconds have passed
-        Thread t = new Thread(() -> {
-            try {
-                Thread.sleep(200);
-                button.setDisable(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
         new Expectations() {
             {
                 getRobot().lookup(".button").query();
@@ -53,6 +43,7 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
             }
         };
 
+        Thread t = enableButtonAfterTimeout();
         t.start();
         Node node = HelperFunctions.waitUntilEnabled(".button", 1);
         Assert.assertEquals(button, node);
@@ -75,5 +66,16 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
             String target = "Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.";
             Assert.assertEquals(e.getMessage(), target);
         }
+    }
+
+    private Thread enableButtonAfterTimeout() {
+        return new Thread(() -> {
+            try {
+                Thread.sleep(200);
+                button.setDisable(false);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

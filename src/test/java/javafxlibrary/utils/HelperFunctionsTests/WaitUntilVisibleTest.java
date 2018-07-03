@@ -37,16 +37,6 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
 
         button.setVisible(false);
 
-        // Set button visible after 200 milliseconds have passed
-        Thread t = new Thread(() -> {
-            try {
-                Thread.sleep(200);
-                button.setVisible(true);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
         new Expectations() {
             {
                 getRobot().lookup(".button").query();
@@ -54,6 +44,7 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
             }
         };
 
+        Thread t = setVisibleAfterTimeout();
         t.start();
         Node node = HelperFunctions.waitUntilVisible(".button", 1);
         Assert.assertEquals(button, node);
@@ -76,5 +67,16 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
             String target = "Given target \"" + button + "\" did not become visible within given timeout of 1 seconds.";
             Assert.assertEquals(e.getMessage(), target);
         }
+    }
+
+    private Thread setVisibleAfterTimeout() {
+        return new Thread(() -> {
+            try {
+                Thread.sleep(200);
+                button.setVisible(true);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
