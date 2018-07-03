@@ -5,6 +5,8 @@ import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import mockit.Mock;
+import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,5 +36,22 @@ public class MapObjectTest extends TestFxAdapterTest {
         String key = (String) HelperFunctions.mapObject(object);
         Object result = TestFxAdapter.objectMap.get(key);
         Assert.assertEquals(object, result);
+    }
+
+    @Test
+    public  void mapObject_CompatibleType() {
+        makeEverythingCompatible();
+        Button button = new Button("JavaFXLibrary");
+        Object result = HelperFunctions.mapObject(button);
+        Assert.assertEquals(button, result);
+    }
+
+    private void makeEverythingCompatible() {
+        new MockUp<HelperFunctions>() {
+            @Mock
+            boolean isCompatible(Object o) {
+                return true;
+            }
+        };
     }
 }
