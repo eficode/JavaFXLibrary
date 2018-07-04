@@ -203,15 +203,18 @@ public class HelperFunctions {
                         try {
                             m.invoke(o, null);
                         } catch (InvocationTargetException | IllegalAccessException e) {
-                            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
+                            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " +
+                                    e.getCause().getMessage());
                         }
                     });
                 }
             } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
+                throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
             }
         } catch (NoSuchMethodException e) {
             throw new JavaFXLibraryNonFatalException(c + " has no method \"" + method + "()\"");
+        } catch (JavaFXLibraryNonFatalException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
         }
