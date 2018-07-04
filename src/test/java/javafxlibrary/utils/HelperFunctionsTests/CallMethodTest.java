@@ -134,7 +134,6 @@ public class CallMethodTest extends TestFxAdapterTest {
             sleepFor(50);
             count++;
         }
-        System.out.println("STAGE IS SHOWING" + stage.isShowing());
     }
 
     private void sleepFor(int millis) {
