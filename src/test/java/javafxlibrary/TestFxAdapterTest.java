@@ -17,6 +17,7 @@
 
 package javafxlibrary;
 
+import javafx.application.Platform;
 import javafxlibrary.utils.TestFxAdapter;
 import mockit.Mocked;
 import org.junit.Before;
@@ -34,6 +35,7 @@ public abstract class TestFxAdapterTest {
     public void initJfxToolkit() {
         new javafx.embed.swing.JFXPanel();
         TestFxAdapter.setRobot(robot);
+        Platform.setImplicitExit(false);
     }
 
 }
