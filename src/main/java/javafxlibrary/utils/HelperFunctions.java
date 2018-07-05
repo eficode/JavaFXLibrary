@@ -285,9 +285,13 @@ public class HelperFunctions {
             sb.append(node.toString());
 
             if (node instanceof Parent) {
-                sb.append("<ul>");
-                printDescendents((Parent) node, sb);
-                sb.append("</ul>");
+                Parent subParent = (Parent) node;
+
+                if (!subParent.getChildrenUnmodifiable().isEmpty()) {
+                    sb.append("<ul>");
+                    printDescendents(subParent, sb);
+                    sb.append("</ul>");
+                }
             }
 
             sb.append("</details>");
