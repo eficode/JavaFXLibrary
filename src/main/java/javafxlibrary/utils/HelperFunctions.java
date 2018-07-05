@@ -299,7 +299,10 @@ public class HelperFunctions {
     }
 
     public static void robotLog(String level, String message) {
-        System.out.println("*" + level + "* " + message);
+        if (!level.toUpperCase().matches("INFO|DEBUG|TRACE|WARN|ERROR"))
+            throw new IllegalArgumentException("Unsupported log level \"" + level + "\": Accepted levels are INFO, " +
+                    "DEBUG, TRACE, WARN and ERROR.");
+        System.out.println("*" + level.toUpperCase() + "* " + message);
     }
 
 
