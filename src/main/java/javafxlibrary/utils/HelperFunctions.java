@@ -470,23 +470,6 @@ public class HelperFunctions {
         checkClickLocation(new Point2D(x, y));
     }
 
-    public static Object checkClickTarget(Object target) {
-        try {
-
-            if (target instanceof String || target instanceof Node)
-                target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
-
-            checkClickLocation(target);
-
-            return target;
-
-        } catch (Exception e) {
-            if (e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage());
-        }
-    }
-
     public static void checkClickLocation(Object object) {
 
         robotLog("TRACE", "Checking if target \"" + object.toString() + "\" is within active window");
@@ -502,6 +485,23 @@ public class HelperFunctions {
             }
         }
         robotLog("TRACE", "Target location checks out OK, it is within active window");
+    }
+
+    public static Object checkClickTarget(Object target) {
+        try {
+
+            if (target instanceof String || target instanceof Node)
+                target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
+
+            checkClickLocation(target);
+
+            return target;
+
+        } catch (Exception e) {
+            if (e instanceof JavaFXLibraryNonFatalException)
+                throw e;
+            throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage());
+        }
     }
 
     // Returns true if given point is located inside a visible window
