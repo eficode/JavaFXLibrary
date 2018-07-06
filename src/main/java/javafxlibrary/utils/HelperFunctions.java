@@ -494,7 +494,6 @@ public class HelperFunctions {
                 target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
 
             checkClickLocation(target);
-
             return target;
 
         } catch (Exception e) {
@@ -517,22 +516,9 @@ public class HelperFunctions {
         return contains;
     }
 
-    // TODO: Needs additional testing e.g. propers unit tests
     public static Point2D getCenterPoint(Bounds bounds) {
-        int x = 0;
-        while (x <= 3) {
-            try {
-                robotLog("TRACE", "Getting center point, iteration: " + x);
-                Point2D centerPoint2D = new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
-                return centerPoint2D;
-            } catch (Exception e) {
-                robotLog("TRACE", "Failed to get center point: " + e);
-                x++;
-                sleepFor(500);
-            }
-        }
-        throw new JavaFXLibraryNonFatalException("Unable to get center point of bounds.");
-        //return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
+        robotLog("TRACE", "Getting center point for " + bounds);
+        return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
     }
 
     public static boolean isCompatible(Object o) {
