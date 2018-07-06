@@ -12,6 +12,9 @@ import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
 
+import static testutils.TestFunctions.setupStageInJavaFXThread;
+import static testutils.TestFunctions.waitForEventsInJavaFXThread;
+
 public class CallMethodTest extends TestFxAdapterTest {
 
     @Test
@@ -50,34 +53,33 @@ public class CallMethodTest extends TestFxAdapterTest {
 
     @Test
     public void callMethod_InJavaFXThread_WithArgs() {
-        Stage stage = waitForStageSetup();
+        Stage stage = setupStageInJavaFXThread();
         stage.setTitle("Original title");
-
         Platform.runLater(() -> stage.show());
-        waitForStageToShow(stage);
+        waitForEventsInJavaFXThread();
 
         List<Object> arguments = Arrays.asList("Changed Title");
         List<Object> types = Arrays.asList("java.lang.String");
         HelperFunctions.callMethod(stage, "setTitle", arguments, types, true);
+        waitForEventsInJavaFXThread();
 
-        waitForTitleToChange(stage);
         Assert.assertEquals("Changed Title", stage.getTitle());
-        Platform.runLater(()->stage.close());
+        Platform.runLater(() -> stage.close());
     }
 
     @Test
     public void callMethod_InJavaFXThread_NoArgs() {
-        Stage stage = waitForStageSetup();
+        Stage stage = setupStageInJavaFXThread();
         Assert.assertFalse(stage.isShowing());
         HelperFunctions.callMethod(stage, "show", true);
-        waitForStageToShow(stage);
+        waitForEventsInJavaFXThread();
         Assert.assertTrue(stage.isShowing());
-        Platform.runLater(()->stage.close());
+        Platform.runLater(() -> stage.close());
     }
 
     @Test
     public void callMethod_InWrongThread() {
-        Stage stage = waitForStageSetup();
+        Stage stage = setupStageInJavaFXThread();
         try {
             HelperFunctions.callMethod(stage, "show", false);
             Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
@@ -98,49 +100,6 @@ public class CallMethodTest extends TestFxAdapterTest {
         } catch (JavaFXLibraryNonFatalException e) {
             String target = "class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]";
             Assert.assertEquals(target, e.getMessage());
-        }
-    }
-
-
-
-
-    private Stage waitForStageSetup() {
-        Stage[] stages = new Stage[1];
-        Platform.runLater(() -> stages[0] = new Stage());
-
-        while (stages[0] == null)
-            sleepFor(500);
-
-        return stages[0];
-    }
-
-    // Combine helper methods with generic method invocation?
-    private void waitForTitleToChange(Stage stage) {
-        int count = 0;
-        String originalTitle = stage.getTitle();
-
-        // Waits 2.5 seconds for the stage title to change
-        while (count < 50 && stage.getTitle().equals(originalTitle)) {
-            sleepFor(50);
-            count++;
-        }
-    }
-
-    private void waitForStageToShow(Stage stage) {
-        int count = 0;
-
-        // Waits 2.5 seconds for the stage to show
-        while (count < 50 && !stage.isShowing()) {
-            sleepFor(50);
-            count++;
-        }
-    }
-
-    private void sleepFor(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
