@@ -552,9 +552,8 @@ public class HelperFunctions {
                 try {
                     return Class.forName(className);
                 } catch (ClassNotFoundException e) {
-                    System.out.println(e.getMessage());
+                    throw new JavaFXLibraryNonFatalException("Could not parse class \"" + className + "\"");
                 }
-                return null;
         }
     }
 
@@ -573,11 +572,12 @@ public class HelperFunctions {
         if (target instanceof String)
             return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
         else if (target instanceof Node) {
-            if ((Node) target == null)
-                throw new JavaFXLibraryNonFatalException("Given target Node does not exist anymore!");
             return (Node) target;
+        } else if (target == null) {
+            throw new JavaFXLibraryNonFatalException("Target object was null");
         } else
-            throw new JavaFXLibraryNonFatalException("Given target is not an instance of Node or a query string for node!");
+            throw new JavaFXLibraryNonFatalException("Given target \"" + target.getClass().getName() +
+                    "\" is not an instance of Node or a query string for node!");
     }
 
     public static Bounds objectToBounds(Object object) {
