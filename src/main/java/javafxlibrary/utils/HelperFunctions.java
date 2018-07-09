@@ -582,10 +582,13 @@ public class HelperFunctions {
 
     public static Bounds objectToBounds(Object object) {
         if (object instanceof Window) {
-            return new BoundingBox(((Window) object).getX(), ((Window) object).getY(), ((Window) object).getWidth(), ((Window) object).getHeight());
+            Window window = (Window) object;
+            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
         } else if (object instanceof Scene) {
-            return new BoundingBox(((Scene) object).getX() + ((Scene) object).getWindow().getX(), ((Scene) object).getY() +
-                    ((Scene) object).getWindow().getY(), ((Scene) object).getWidth(), ((Scene) object).getHeight());
+            Scene scene = (Scene) object;
+            double x = scene.getX() + scene.getWindow().getX();
+            double y = scene.getY() + scene.getWindow().getY();
+            return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
         } else if (object instanceof Point2D) {
             return robot.bounds((Point2D) object).query();
         } else if (object instanceof Node) {
@@ -602,7 +605,7 @@ public class HelperFunctions {
             Rectangle2D r2 = (Rectangle2D) object;
             return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
         } else
-            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.toString());
+            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
     }
 
     private static String remainingQueries(String query) {
