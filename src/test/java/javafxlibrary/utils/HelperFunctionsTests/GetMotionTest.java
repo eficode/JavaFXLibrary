@@ -3,10 +3,15 @@ package javafxlibrary.utils.HelperFunctionsTests;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.testfx.robot.Motion;
 
 public class GetMotionTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getMotion_Default() {
@@ -34,11 +39,9 @@ public class GetMotionTest {
 
     @Test
     public void getMotion_InvalidValue() {
-        try {
-            HelperFunctions.getMotion("ZIGZAG");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "\"ZIGZAG\" is not a valid Motion. Accepted values are: [DEFAULT, DIRECT, HORIZONTAL_FIRST, VERTICAL_FIRST]";
-            Assert.assertEquals(target, e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("\"ZIGZAG\" is not a valid Motion. Accepted values are: [DEFAULT, DIRECT, " +
+                "HORIZONTAL_FIRST, VERTICAL_FIRST]");
+        HelperFunctions.getMotion("ZIGZAG");
     }
 }

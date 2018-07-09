@@ -9,9 +9,14 @@ import mockit.Mock;
 import mockit.MockUp;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class MapObjectTest extends TestFxAdapterTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @After
     public void cleanup() {
@@ -28,12 +33,9 @@ public class MapObjectTest extends TestFxAdapterTest {
 
     @Test
     public void mapObject_Null() {
-        try {
-            HelperFunctions.mapObject(null);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals("Object was null, unable to map object!", e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Object was null, unable to map object!");
+        HelperFunctions.mapObject(null);
     }
 
     @Test

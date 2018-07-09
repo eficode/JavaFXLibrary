@@ -5,16 +5,17 @@ import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 import java.util.*;
 
 public class MapObjectsTest extends TestFxAdapterTest {
 
     private Button button;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -67,23 +68,16 @@ public class MapObjectsTest extends TestFxAdapterTest {
         List<Object> list = new ArrayList<>();
         list.addAll(Arrays.asList(button, null));
 
-        try {
-            HelperFunctions.mapObjects(list);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals("Object was null, unable to map object!", e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Object was null, unable to map object!");
+        HelperFunctions.mapObjects(list);
     }
 
     @Test
     public void mapObjects_EmptyList() {
         List<Object> list = new ArrayList<>();
-
-        try {
-            HelperFunctions.mapObjects(list);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals("List was empty, unable to map anything!", e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("List was empty, unable to map anything!");
+        HelperFunctions.mapObjects(list);
     }
 }

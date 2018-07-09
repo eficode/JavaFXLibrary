@@ -8,26 +8,30 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class WaitUntilVisibleTest extends TestFxAdapterTest {
 
     private Button button;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setup() {
         button = new Button("JavaFXLibrary");
-    }
-
-    @Test
-    public void waitUntilVisible_IsVisible() {
         new Expectations() {
             {
                 getRobot().lookup(".button").query();
                 result = button;
             }
         };
+    }
 
+    @Test
+    public void waitUntilVisible_IsVisible() {
         Node node = HelperFunctions.waitUntilVisible(".button", 1);
         Assert.assertEquals(button, node);
     }
@@ -36,13 +40,6 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
     public void waitUntilVisible_IsVisibleWithDelay() {
 
         button.setVisible(false);
-
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
-            }
-        };
 
         Thread t = setVisibleAfterTimeout();
         t.start();
@@ -53,20 +50,9 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
     @Test
     public void waitUntilVisible_IsNotVisible() {
         button.setVisible(false);
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
-            }
-        };
-
-        try {
-            Node node = HelperFunctions.waitUntilVisible(".button", 1);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "Given target \"" + button + "\" did not become visible within given timeout of 1 seconds.";
-            Assert.assertEquals(e.getMessage(), target);
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 1 seconds.");
+        HelperFunctions.waitUntilVisible(".button", 1);
     }
 
     private Thread setVisibleAfterTimeout() {

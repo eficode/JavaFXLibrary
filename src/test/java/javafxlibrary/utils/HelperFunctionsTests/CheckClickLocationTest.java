@@ -10,6 +10,7 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.testfx.service.query.BoundsQuery;
 
 import java.io.ByteArrayOutputStream;
@@ -28,6 +29,9 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
 
     @Mocked
     Stage stage;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -53,35 +57,29 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
 
     @Test
     public void checkClickLocation_IsWithinVisibleWindow() {
-        new Expectations() {
-            {
-                getRobot().bounds((Point2D) any);
-                BoundsQuery bq = () -> new BoundingBox(30, 30, 0, 0);
-                result = bq;
-            }
-        };
-
+        setBoundsQueryExpectations(30, 30);
         HelperFunctions.checkClickLocation(30, 30);
         Assert.assertThat(outContent.toString(), endsWith("*TRACE* Target location checks out OK, it is within active window\n"));
     }
 
     @Test
-    public void checkClickLocation_IsOutsideVisibleWindow() {
+    public void checkClickLocation_IsOutsideVisibleWindow() throws Exception {
+        setBoundsQueryExpectations(30, 800);
+        String target = "Can't click Point2D at [30.0, 800.0]: out of window bounds. To enable clicking outside " +
+                "of visible window bounds use keyword SET SAFE CLICKING | OFF";
+
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage(target);
+        HelperFunctions.checkClickLocation(30, 800);
+    }
+
+    private void setBoundsQueryExpectations(double minX, double minY) {
         new Expectations() {
             {
                 getRobot().bounds((Point2D) any);
-                BoundsQuery bq = () -> new BoundingBox(30, 800, 0, 0);
+                BoundsQuery bq = () -> new BoundingBox(minX, minY, 0, 0);
                 result = bq;
             }
         };
-
-        try {
-            HelperFunctions.checkClickLocation(30, 800);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "Can't click Point2D at [30.0, 800.0]: out of window bounds. To enable clicking outside " +
-                    "of visible window bounds use keyword SET SAFE CLICKING | OFF";
-            Assert.assertEquals(target, e.getMessage());
-        }
     }
 }

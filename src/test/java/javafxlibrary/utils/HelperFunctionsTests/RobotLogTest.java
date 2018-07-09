@@ -1,10 +1,8 @@
 package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafxlibrary.utils.HelperFunctions;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,6 +11,9 @@ public class RobotLogTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUpStreams() {
@@ -62,12 +63,8 @@ public class RobotLogTest {
 
     @Test
     public void robotLog_UnsupportedLogLevel() {
-        try {
-            HelperFunctions.robotLog("SAUSAGE", "This should raise an exception!");
-            Assert.fail("Expected an IllegalArgumentException to be thrown");
-        } catch (IllegalArgumentException e) {
-            String target = "Unsupported log level \"SAUSAGE\": Accepted levels are INFO, DEBUG, TRACE, WARN and ERROR.";
-            Assert.assertEquals(target, e.getMessage());
-        }
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Unsupported log level \"SAUSAGE\": Accepted levels are INFO, DEBUG, TRACE, WARN and ERROR.");
+        HelperFunctions.robotLog("SAUSAGE", "This should raise an exception!");
     }
 }

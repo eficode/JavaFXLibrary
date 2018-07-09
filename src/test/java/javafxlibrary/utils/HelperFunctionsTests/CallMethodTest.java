@@ -6,7 +6,9 @@ import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.awt.Point;
 import java.util.Arrays;
@@ -16,6 +18,9 @@ import static testutils.TestFunctions.setupStageInJavaFXThread;
 import static testutils.TestFunctions.waitForEventsInJavaFXThread;
 
 public class CallMethodTest extends TestFxAdapterTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void callMethod_InSameThread_NoArgs_WithReturnValue() {
@@ -80,13 +85,9 @@ public class CallMethodTest extends TestFxAdapterTest {
     @Test
     public void callMethod_InWrongThread() {
         Stage stage = setupStageInJavaFXThread();
-        try {
-            HelperFunctions.callMethod(stage, "show", false);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "Couldn't execute Call Method: Not on FX application thread; currentThread = main";
-            Assert.assertEquals(target, e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Couldn't execute Call Method: Not on FX application thread; currentThread = main");
+        HelperFunctions.callMethod(stage, "show", false);
     }
 
     @Test
@@ -94,13 +95,11 @@ public class CallMethodTest extends TestFxAdapterTest {
         Point point = new Point(0, 0);
         List<Object> arguments = Arrays.asList("20", "17");
         List<Object> types = Arrays.asList("java.lang.String", "java.lang.String");
-        try {
-            HelperFunctions.callMethod(point, "setLocation", arguments, types, false);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]";
-            Assert.assertEquals(target, e.getMessage());
-        }
+
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]");
+
+        HelperFunctions.callMethod(point, "setLocation", arguments, types, false);
     }
 
     public class TestPoint extends Point {

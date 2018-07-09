@@ -4,12 +4,17 @@ import javafx.geometry.HorizontalDirection;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static testutils.TestFunctions.useMac;
 import static testutils.TestFunctions.useWindows;
 
 public class GetHorizontalDirectionTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getHorizontalDirection_WindowsAndLinux() {
@@ -27,12 +32,8 @@ public class GetHorizontalDirectionTest {
 
     @Test
     public void getHorizontalDirection_InvalidValue() {
-        try {
-            HelperFunctions.getHorizontalDirection("BACKWARD");
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "Direction: \"BACKWARD\" is not a valid direction. Accepted values are: [LEFT, RIGHT]";
-            Assert.assertEquals(target, e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Direction: \"BACKWARD\" is not a valid direction. Accepted values are: [LEFT, RIGHT]");
+        HelperFunctions.getHorizontalDirection("BACKWARD");
     }
 }

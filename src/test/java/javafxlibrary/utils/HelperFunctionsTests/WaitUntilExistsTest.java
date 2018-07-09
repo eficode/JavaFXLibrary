@@ -9,12 +9,17 @@ import mockit.Delegate;
 import mockit.Expectations;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import testutils.DelayedObject;
 
 public class WaitUntilExistsTest extends TestFxAdapterTest {
 
     private Button button;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -63,12 +68,8 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
             }
         };
 
-        try {
-            Node node = HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals(e.getMessage(), "Given element \".button\" was not found within given timeout " +
-                    "of 500 MILLISECONDS");
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Given element \".button\" was not found within given timeout of 500 MILLISECONDS");
+        HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
     }
 }

@@ -8,26 +8,30 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class WaitUntilEnabledTest extends TestFxAdapterTest {
 
     private Button button;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setup() {
         button = new Button("JavaFXLibrary");
-    }
-
-    @Test
-    public void waitUntilEnabled_IsEnabled() {
         new Expectations() {
             {
                 getRobot().lookup(".button").query();
                 result = button;
             }
         };
+    }
 
+    @Test
+    public void waitUntilEnabled_IsEnabled() {
         Node node = HelperFunctions.waitUntilEnabled(".button", 1);
         Assert.assertEquals(button, node);
     }
@@ -35,14 +39,6 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
     @Test
     public void waitUntilEnabled_IsEnabledWithDelay() {
         button.setDisable(true);
-
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
-            }
-        };
-
         Thread t = enableButtonAfterTimeout();
         t.start();
         Node node = HelperFunctions.waitUntilEnabled(".button", 1);
@@ -52,20 +48,9 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
     @Test
     public void waitUntilEnabled_IsNotEnabled() {
         button.setDisable(true);
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
-            }
-        };
-
-        try {
-            Node node = HelperFunctions.waitUntilEnabled(".button", 1);
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.";
-            Assert.assertEquals(e.getMessage(), target);
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.");
+        HelperFunctions.waitUntilEnabled(".button", 1);
     }
 
     private Thread enableButtonAfterTimeout() {

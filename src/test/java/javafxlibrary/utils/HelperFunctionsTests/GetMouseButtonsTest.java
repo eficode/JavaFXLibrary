@@ -4,9 +4,14 @@ import javafx.scene.input.MouseButton;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class GetMouseButtonsTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getMouseButtons_Middle() {
@@ -43,13 +48,9 @@ public class GetMouseButtonsTest {
 
     @Test
     public void getMouseButtons_InvalidValue() {
-        try {
-            HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
-            Assert.fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            String target = "\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: [NONE, PRIMARY, MIDDLE, SECONDARY]";
-            Assert.assertEquals(target, e.getMessage());
-        }
+        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: [NONE, PRIMARY, MIDDLE, SECONDARY]");
+        HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
     }
 
 }
