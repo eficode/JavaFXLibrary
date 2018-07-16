@@ -7,6 +7,7 @@ import javafxlibrary.matchers.InstanceOfMatcher;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import static javafxlibrary.utils.TestFxAdapter.robot;
 
@@ -15,6 +16,8 @@ public class Finder {
     public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH }
     private String[] prefixes;
     protected Parent currentRoot;
+    private Set<Parent> rootNodes;
+    private String originalQuery;
 
     public Finder() {
         this.prefixes = new String[]{"id=", "css=", "class=", "text=", "xpath="};
@@ -22,8 +25,11 @@ public class Finder {
     }
 
     public Node find(String query) {
-        if (containsPrefixes(query))
+        if (containsPrefixes(query)) {
+            originalQuery = query;
+            rootNodes = robot.fromAll().queryAll();
             return newFind(parseWholeQuery(query));
+        }
         return robot.lookup(query).query();
     }
 
@@ -35,10 +41,19 @@ public class Finder {
         return robot.from(root).lookup(query).query();
     }
 
-    // TODO: If nodes are not found start looking from other windows
     private Node newFind(String query) {
         FindPrefix prefix = getPrefix(query);
-        return transformQuery(query, prefix);
+        Node result = transformQuery(query, prefix);
+
+        if (result == null && rootNodes != null && rootNodes.size() > 1) {
+            HelperFunctions.robotLog("DEBUG", "Could not find anything from " + currentRoot + ", moving " +
+                    "to the next root node");
+            rootNodes.remove(currentRoot);
+            currentRoot = rootNodes.iterator().next();
+            result = newFind(parseWholeQuery(originalQuery));
+        }
+
+        return result;
     }
 
     private Node transformQuery(String query, FindPrefix prefix) {

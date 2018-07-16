@@ -10,11 +10,11 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestBoundsLocation
 
 *** Test Cases ***
 Find With TestFX Query
-   [Tags]           smoke
-   ${rectangle}     Find            \#green
-   ${text}          Find            .whiteText
-   Should Contain   ${rectangle}    Rectangle[id=green, x=300.0, y=0.0, width=150.0, height=150.0, fill=0x00a000ff]
-   Should Contain   ${text}         Text[text="75x75", x=0.0, y=0.0, alignment=CENTER, origin=BASELINE
+   [Tags]               smoke
+   ${rectangle}         Find            \#green
+   ${text}              Find            .whiteText
+   Should Contain       ${rectangle}    Rectangle[id=green, x=300.0, y=0.0, width=150.0, height=150.0, fill=0x00a000ff]
+   Should Contain       ${text}         Text[text="75x75", x=0.0, y=0.0, alignment=CENTER, origin=BASELINE
 
 Find With XPath
     [Tags]              smoke
@@ -52,9 +52,10 @@ New Types Chained
     Should Contain      ${blue}     Rectangle[id=blue, x=0.0, y=0.0, width=600.0, height=300.0, fill=0x00bfffff]
 
 Find With Root
-    [Tags]          smoke
-    ${root}    Find    css=Pane
-    ${rectangle}    Find    id=lime    true    ${root}
+    [Tags]              smoke
+    ${root}             Find            css=Pane
+    ${rectangle}        Find            id=lime    true    ${root}
+    Should Contain      ${rectangle}    Rectangle[id=lime, x=500.0, y=200.0, width=75.0, height=75.0, fill=0x00ff00ff]
 
 *** Keywords ***
 Setup all tests
