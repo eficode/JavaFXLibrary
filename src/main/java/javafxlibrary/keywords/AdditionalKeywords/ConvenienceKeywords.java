@@ -36,6 +36,7 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import javafxlibrary.utils.XPathFinder;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
@@ -128,44 +129,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
     public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments, List<Object> argumentTypes) {
         callMethod(object, method, arguments, argumentTypes, true);
-    }
-
-    @RobotKeyword("Returns the *first* node matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + "| ${my node}= | Find | some text | | # for finding something based on plain _text_ |\n"
-            + "| ${my node}= | Find | .css | | # for finding something based on _css_ class name |\n"
-            + "| ${my node}= | Find | \\#id | | # for finding something based on node _id_ |\n"
-            + "| ${my node}= | Find | \\#id | failIfNotFound=True | # this search fails if nothing is found |\n\n"
-            + "Or, chaining multiple queries together using _id_ and _css_:\n"
-            + "| ${my node}= | Find | \\#id .css-first .css-second | # using _id_ and _css_ class name | \n"
-            + "Above example would first try to find a node fulfilling a query using _id_, then continue search under previously found node using css class query \n"
-            + " _.css-first_, and then continue from there trying to locate css class _css-second_. \n\n"
-            + "Note, in case of ID, # prefix needs to be escaped with \\ sign!\n")
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public Object find(final String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find the first node matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
-        try {
-            Node node = robot.lookup(query).query();
-            return mapObject(node);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return "";
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public Object find(final String query) {
-        return find(query, false);
     }
 
     @RobotKeyword("Returns the *first* node matching the query. \n\n"
@@ -385,6 +348,27 @@ public class ConvenienceKeywords extends TestFxAdapter {
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to find current root node.", e);
         }
+    }
+
+    // TODO: Should printChildNodes be deprecated?
+    @RobotKeyword("Generates and prints FXML representation of the application starting from a given node.\n\n"
+            + "Optional argument ``root`` is the starting point from where to start listing child nodes. It can be either a _query_ or _Object_, "
+            + "see `3.1 Using queries` and `3.2 Using objects`. Defaults to root node of current window. \n\n"
+            + "\nExample:\n"
+            + "| ${my node}= | Find | \\#node-id | \n"
+            + "| Log FXML | ${my node} | \n")
+    @ArgumentNames({"root="})
+    public void logFXML(Object root) {
+        XPathFinder logger = new XPathFinder();
+        logger.setNodeLogging(false);
+        robotLog("INFO", logger.getFxml((Parent) objectToNode(root)));
+    }
+
+    @RobotKeywordOverload
+    public void logFXML() {
+        XPathFinder logger = new XPathFinder();
+        logger.setNodeLogging(false);
+        robotLog("INFO", logger.getFxml(robot.listTargetWindows().get(0).getScene().getRoot()));
     }
 
     @RobotKeyword("Enables/Disables clicking outside of visible JavaFX application windows. Safe clicking is on by" +
