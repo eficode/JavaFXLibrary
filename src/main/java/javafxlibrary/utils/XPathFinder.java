@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -14,7 +15,9 @@ import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class XPathFinder {
 
@@ -33,32 +36,43 @@ public class XPathFinder {
     }
 
     public Node find(String xpathQuery, Parent root) {
-
         HelperFunctions.robotLog("DEBUG", "Executing XPathFinder.find using query: " + xpathQuery + " and root: " + root);
         String fxmlString = this.getFxml(root);
+        Document xml = getXmlDocument(fxmlString);
+        XPathExpression expression = getXPathExpression(xpathQuery);
 
         try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document xml = documentBuilder.parse(new ByteArrayInputStream(fxmlString.getBytes()));
-
-            XPathFactory xpathFactory = XPathFactory.newInstance();
-            XPath xpath = xpathFactory.newXPath();
-            XPathExpression expression = xpath.compile(xpathQuery);
-
-            // TODO: Add support for returning multiple nodes
             // TODO: Fix getting nth element with XPath
-            // NodeList nodes = (NodeList) expression.evaluate(xml, XPathConstants.NODESET);
             org.w3c.dom.Node node = (org.w3c.dom.Node) expression.evaluate(xml, XPathConstants.NODE);
-
-            //NamedNodeMap attributes = nodes.item(0).getAttributes();
             NamedNodeMap attributes = node.getAttributes();
-
             int nodeIndex = Integer.parseInt(attributes.getNamedItem("jfxlibid").getNodeValue());
             return nodes.get(nodeIndex);
+        } catch (XPathExpressionException e) {
+            throw new JavaFXLibraryNonFatalException("Could not parse XPathExpression! " + e.getCause().getMessage());
+        } catch (NullPointerException e) {
+            return null;
         }
-        catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
+    }
+
+    public Set<Node> findAll(String xpathQuery, Parent root) {
+        HelperFunctions.robotLog("DEBUG", "Executing XPathFinder.findAll using query: " + xpathQuery + " and root: " + root);
+        String fxmlString = this.getFxml(root);
+        Document xml = getXmlDocument(fxmlString);
+        XPathExpression expression = getXPathExpression(xpathQuery);
+
+        try {
+            NodeList xmlNodes = (NodeList) expression.evaluate(xml, XPathConstants.NODESET);
+            Set<Node> foundNodes = new LinkedHashSet<>();
+
+            // NodeList items must be accessed using index
+            for (int i = 0; i < xmlNodes.getLength(); i++) {
+                NamedNodeMap attributes = xmlNodes.item(i).getAttributes();
+                int nodeIndex = Integer.parseInt(attributes.getNamedItem("jfxlibid").getNodeValue());
+                foundNodes.add(nodes.get(nodeIndex));
+            }
+
+            return foundNodes;
+        } catch (XPathExpressionException e) {
             throw new JavaFXLibraryNonFatalException("Could not parse XPathExpression! " + e.getCause().getMessage());
         } catch (NullPointerException e) {
             return null;
@@ -68,6 +82,27 @@ public class XPathFinder {
     public String getFxml(Parent root) {
         addTag(root, 0);
         return sb.toString();
+    }
+
+    private Document getXmlDocument(String fxmlString) {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            return documentBuilder.parse(new ByteArrayInputStream(fxmlString.getBytes()));
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new JavaFXLibraryNonFatalException("Unable to generate FXML for XPath lookup: " + e.getCause().getMessage());
+        }
+    }
+
+    private XPathExpression getXPathExpression(String xpathQuery) {
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+        try {
+            return xpath.compile(xpathQuery);
+        } catch (XPathExpressionException e) {
+            throw new JavaFXLibraryNonFatalException("Could not parse XPathExpression! " + e.getCause().getMessage());
+        }
     }
 
     private void parseChildren(Parent parent, int indentation) {

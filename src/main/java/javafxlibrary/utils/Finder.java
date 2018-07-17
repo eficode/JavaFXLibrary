@@ -21,7 +21,7 @@ public class Finder {
 
     public Finder() {
         this.prefixes = new String[]{"id=", "css=", "class=", "text=", "xpath="};
-        this.currentRoot = robot.listWindows().get(0).getScene().getRoot();
+        this.currentRoot = robot.listTargetWindows().get(0).getScene().getRoot();
     }
 
     public Node find(String query) {
@@ -41,9 +41,27 @@ public class Finder {
         return robot.from(root).lookup(query).query();
     }
 
+    public Set<Node> findAll(String query) {
+        if (containsPrefixes(query)) {
+            originalQuery = query;
+            rootNodes = robot.fromAll().queryAll();
+            return newFindAll(parseWholeQuery(query));
+        }
+        return robot.lookup(query).queryAll();
+    }
+
+    public Set<Node> findAll(String query, Parent root) {
+        HelperFunctions.robotLog("DEBUG", "Executing Finder.findAll using query: " + query + " and root: " + root);
+        if (containsPrefixes(query)) {
+            this.currentRoot = root;
+            return newFindAll(parseWholeQuery(query));
+        }
+        return robot.from(root).lookup(query).queryAll();
+    }
+
     private Node newFind(String query) {
         FindPrefix prefix = getPrefix(query);
-        Node result = transformQuery(query, prefix);
+        Node result = executeLookup(query, prefix);
 
         if (result == null && rootNodes != null && rootNodes.size() > 1) {
             HelperFunctions.robotLog("DEBUG", "Could not find anything from " + currentRoot + ", moving " +
@@ -56,7 +74,21 @@ public class Finder {
         return result;
     }
 
-    private Node transformQuery(String query, FindPrefix prefix) {
+    private Set<Node> newFindAll(String query) {
+        FindPrefix prefix = getPrefix(query);
+        Set<Node> nodes = executeLookupAll(query, prefix);
+
+        if (rootNodes != null && rootNodes.iterator().hasNext() && rootNodes.size() > 1) {
+            HelperFunctions.robotLog("DEBUG", "Finished lookup with root " + currentRoot + ", moving " +
+                    "to the next root node");
+            rootNodes.remove(currentRoot);
+            currentRoot = rootNodes.iterator().next();
+            nodes.addAll(newFindAll(parseWholeQuery(originalQuery)));
+        }
+        return nodes;
+    }
+
+    private Node executeLookup(String query, FindPrefix prefix) {
         switch (prefix) {
             case ID:
                 return this.currentRoot.lookup("#" + query.substring(3));
@@ -75,6 +107,29 @@ public class Finder {
                 return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).query();
             case XPATH:
                 return new XPathFinder().find(query.substring(6), currentRoot);
+        }
+        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
+    }
+
+    private Set<Node> executeLookupAll(String query, FindPrefix prefix) {
+        switch (prefix) {
+            case ID:
+                return this.currentRoot.lookupAll("#" + query.substring(3));
+            case CSS:
+                return this.currentRoot.lookupAll(query.substring(4));
+            case CLASS:
+                try {
+                    Class<?> clazz = Class.forName(query.substring(6));
+                    InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
+                    return robot.from(this.currentRoot).lookup(matcher).queryAll();
+                } catch (ClassNotFoundException e) {
+                    throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
+                            "Node lookup: class was not found");
+                }
+            case TEXT:
+                return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).queryAll();
+            case XPATH:
+                return new XPathFinder().findAll(query.substring(6), currentRoot);
         }
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }

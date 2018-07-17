@@ -147,35 +147,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Returns *all* nodes matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public List<Object> findAll(String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find all nodes matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
-        try {
-            Set<Node> nodes = robot.lookup(query).queryAll();
-            return mapObjects(nodes);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return Collections.emptyList();
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find All operation failed for query: " + query, e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public List<Object> findAll(String query) {
-        return findAll(query, false);
-    }
-
     @RobotKeyword("Returns *all* descendant nodes of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"

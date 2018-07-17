@@ -8,7 +8,11 @@ import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javafxlibrary.utils.HelperFunctions.mapObject;
+import static javafxlibrary.utils.HelperFunctions.mapObjects;
 import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
@@ -64,16 +68,47 @@ public class Find {
     }
 
     @RobotKeywordOverload
-    @ArgumentNames({ "query"})
+    @ArgumentNames({ "query" })
     public Object find(String query) {
-        robotLog("INFO", "Trying to find the first node matching the query: \"" + query
-                + "\"");
+        return find(query, false);
+    }
+
+    // TODO: Update Documentation (root parameter)
+    @RobotKeyword("Returns *all* nodes matching the query. \n\n"
+            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
+            + "keyword returns null in case lookup returns nothing.\n\n"
+            + "See keyword `Find` for further examples of query usage.\n")
+    @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
+    public List<Object> findAll(String query, boolean failIfNotFound, Parent root) {
         try {
-            return mapObject(new Finder().find(query));
-        } catch (JavaFXLibraryNonFatalException e){
-            return "";
+            return mapObjects(new Finder().findAll(query, root));
+        } catch (JavaFXLibraryNonFatalException e) {
+            if (failIfNotFound)
+                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
+            return new ArrayList<>();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
+    }
+
+    @RobotKeywordOverload
+    @ArgumentNames({ "query", "failIfNotFound=False" })
+    public List<Object> findAll(String query, boolean failIfNotFound) {
+        try {
+            return mapObjects(new Finder().findAll(query));
+        } catch (JavaFXLibraryNonFatalException e) {
+            if (failIfNotFound)
+                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
+            return new ArrayList<>();
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
+        }
+    }
+
+    @RobotKeywordOverload
+    @ArgumentNames({ "query" })
+    public List<Object> findAll(String query) {
+        return findAll(query, false);
     }
 }
