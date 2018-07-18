@@ -16,7 +16,6 @@ import org.testfx.api.FxRobot;
 
 import java.util.List;
 
-@Ignore
 public class FinderTest extends TestFxAdapterTest {
 
     private Finder finder;
@@ -31,7 +30,7 @@ public class FinderTest extends TestFxAdapterTest {
     public void setup() {
         new Expectations() {
             {
-                getRobot().listWindows(); result = windows;
+                getRobot().listTargetWindows(); result = windows;
                 windows.get(0); result = stage;
                 stage.getScene().getRoot(); result = root;
             }
