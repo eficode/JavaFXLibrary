@@ -1,10 +1,13 @@
 package javafxlibrary.utils;
 
+import javafx.collections.ObservableSet;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import org.testfx.matcher.control.LabeledMatchers;
+import org.testfx.service.query.NodeQuery;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -13,14 +16,14 @@ import static javafxlibrary.utils.TestFxAdapter.robot;
 
 public class Finder {
 
-    public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH }
+    public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH, PSEUDO }
     private String[] prefixes;
     protected Parent currentRoot;
     private Set<Parent> rootNodes;
     private String originalQuery;
 
     public Finder() {
-        this.prefixes = new String[]{"id=", "css=", "class=", "text=", "xpath="};
+        this.prefixes = new String[]{"id=", "css=", "class=", "text=", "xpath=", "pseudo="};
         this.currentRoot = robot.listTargetWindows().get(0).getScene().getRoot();
     }
 
@@ -95,18 +98,13 @@ public class Finder {
             case CSS:
                 return this.currentRoot.lookup(query.substring(4));
             case CLASS:
-                try {
-                    Class<?> clazz = Class.forName(query.substring(6));
-                    InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
-                    return robot.from(this.currentRoot).lookup(matcher).query();
-                } catch (ClassNotFoundException e) {
-                    throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
-                            "Node lookup: class was not found");
-                }
+                return classLookup(query).query();
             case TEXT:
                 return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).query();
             case XPATH:
                 return new XPathFinder().find(query.substring(6), currentRoot);
+            case PSEUDO:
+                return pseudoLookup(query).query();
         }
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
@@ -118,18 +116,13 @@ public class Finder {
             case CSS:
                 return this.currentRoot.lookupAll(query.substring(4));
             case CLASS:
-                try {
-                    Class<?> clazz = Class.forName(query.substring(6));
-                    InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
-                    return robot.from(this.currentRoot).lookup(matcher).queryAll();
-                } catch (ClassNotFoundException e) {
-                    throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
-                            "Node lookup: class was not found");
-                }
+                return classLookup(query).queryAll();
             case TEXT:
                 return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).queryAll();
             case XPATH:
                 return new XPathFinder().findAll(query.substring(6), currentRoot);
+            case PSEUDO:
+                return pseudoLookup(query).queryAll();
         }
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
@@ -173,6 +166,8 @@ public class Finder {
                     return FindPrefix.TEXT;
                 case "xpath":
                     return FindPrefix.XPATH;
+                case "pseudo":
+                    return FindPrefix.PSEUDO;
                 default:
                     throw new IllegalArgumentException("Query \"" + query + "\" does not contain any supported prefix");
             }
@@ -197,5 +192,31 @@ public class Finder {
                 return true;
         }
         return false;
+    }
+
+    private NodeQuery pseudoLookup(String query) {
+        String[] queries = query.substring(7).split(";");
+        return robot.from(this.currentRoot).lookup((Node n) -> {
+            int matching = 0;
+            ObservableSet<PseudoClass> pseudoStates = n.getPseudoClassStates();
+
+            for (PseudoClass c : pseudoStates)
+                for (String q : queries)
+                    if (c.getPseudoClassName().equals(q))
+                        matching++;
+
+            return n != this.currentRoot && (matching == queries.length);
+        });
+    }
+
+    private NodeQuery classLookup(String query) {
+        try {
+            Class<?> clazz = Class.forName(query.substring(6));
+            InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
+            return robot.from(this.currentRoot).lookup(matcher);
+        } catch (ClassNotFoundException e) {
+            throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
+                    "Node lookup: class was not found");
+        }
     }
 }

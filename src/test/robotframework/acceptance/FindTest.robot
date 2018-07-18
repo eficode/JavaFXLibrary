@@ -103,6 +103,23 @@ Find Nth Node With XPath
     Should Contain      ${child1}       Rectangle[id=yellow, x=450.0, y=0.0, width=75.0, height=75.0, fill=0xffff00ff]
     Should Contain      ${child2}       Rectangle[id=violet, x=525.0, y=0.0, width=75.0, height=75.0, fill=0x9400d3ff]
 
+Find With Pseudo Class
+    [Tags]              smoke
+    ${root}             Find            css=VBox HBox VBox HBox StackPane
+    ${target}           Find            xpath=//Text[@text="150x150"]
+    Move To             ${target}
+    ${result}           Find            pseudo=hover    false    ${root}
+    Should Be Equal     ${result}       ${target}
+
+Find All With Pseudo Class
+    [Tags]              smoke
+    ${node}             Find            xpath=//Text[@text="300x300"]
+    Move To             ${node}
+    @{hovered}          Find All        pseudo=hover
+    # Nodes behind have the hover pseudostate too, Find All returns all of these except the one used as a root in lookup
+    Length Should Be    ${hovered}      3
+    Should Contain      ${hovered}      ${node}
+
 *** Keywords ***
 Setup all tests
     Launch Javafx Application    ${TEST_APPLICATION}
