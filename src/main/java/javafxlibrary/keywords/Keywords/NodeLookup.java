@@ -17,31 +17,23 @@
 
 package javafxlibrary.keywords.Keywords;
 
+import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.scene.Node;
-import javafx.stage.Window;
-import javafx.scene.Scene;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class NodeLookup extends TestFxAdapter {
-
-
-    /* TODO: are these usabe in Robot Framework?
-    @RobotKeyword
-    public <T extends Node> NodeQuery lookup(Matcher<T> matcher) {
-        return robot.lookup(matcher);
-    }
-
-    @RobotKeyword
-    public <T extends Node> NodeQuery lookup(Predicate<T> predicate) {
-        return robot.lookup(predicate);
-    }
-*/
 
     @RobotKeyword("Returns the root node of given element.\n\n"
             + "``locator`` is either a _query_ or _Object:Node, Window, Scene_ for identifying the element, see "
@@ -60,30 +52,20 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${root} | Get Root Node Of | \\#some-node-id | \n" )
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
+        if (locator instanceof String) {
+            Node node = new Finder().find((String) locator);
+            if( node != null )
+                return getRootNodeOf(node);
+            throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");
+        }
+
+        robotLog("INFO", "Getting root node of target \"" + locator + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
         try {
-            if (locator instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Getting the root node for Window: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.rootNode((Window) locator));
-            } else if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Getting the root node for Scene: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.rootNode((Scene) locator));
-            } else if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Getting the root node for Node: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.rootNode((Node) locator));
-            } else if (locator instanceof String) {
-                HelperFunctions.robotLog("INFO", "Getting the node for query: \"" + locator.toString() + "\"");
-                Node node = robot.lookup((String) locator).query();
-                if( node != null )
-                    return getRootNodeOf(node);
-                throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");
-            }
-
-            throw new JavaFXLibraryNonFatalException("given object: \"" + locator.toString() + "\" was not a supported argument type!");
-
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get root node for locator: \"" + locator.toString() + "\"", e);
+            return HelperFunctions.mapObject(method.invoke(robot, locator));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute get root node of using locator \"" + locator
+                    + "\": " + e.getCause().getMessage());
         }
     }
 }

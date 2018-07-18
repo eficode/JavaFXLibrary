@@ -10,15 +10,13 @@ import javafx.stage.Window;
 import javafxlibrary.TestFxAdapterTest;
 import mockit.Expectations;
 import mockit.Mocked;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.testfx.api.FxRobot;
 
 import java.util.List;
 
+@Ignore
 public class FinderTest extends TestFxAdapterTest {
 
     private Finder finder;

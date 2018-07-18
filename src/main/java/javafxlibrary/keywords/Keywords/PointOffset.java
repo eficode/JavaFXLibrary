@@ -20,14 +20,15 @@ package javafxlibrary.keywords.Keywords;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.geometry.Point2D;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Window;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class PointOffset extends TestFxAdapter {
@@ -41,40 +42,15 @@ public class PointOffset extends TestFxAdapter {
             + "| ${point query offset}= | Call Method | ${point query} | getOffset | \n")
     @ArgumentNames({"locator", "offsetX", "offsetY"})
     public Object pointToWithOffset(Object locator, double offsetX, double offsetY) {
+        robotLog("INFO", "Creating a point query for target: \"" + locator
+                + "\" with offset: [" + offsetX + ", " + offsetY + "]");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "offset",
+                locator.getClass(), double.class, double.class);
         try {
-            if (locator instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Window: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((Window) locator, offsetX, offsetY));
-            } else if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Scene: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((Scene) locator, offsetX, offsetY));
-            } else if (locator instanceof Bounds) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Bounds: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((Bounds) locator, offsetX, offsetY));
-            } else if (locator instanceof Point2D) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Point2D: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((Point2D) locator, offsetX, offsetY));
-            } else if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Node: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((Node) locator, offsetX, offsetY));
-            } else if (locator instanceof String) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to query string: \"" + locator.toString()
-                        + "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]");
-                return HelperFunctions.mapObject(robot.offset((String) locator, offsetX, offsetY));
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: \"" + locator.toString() + "\"");
-
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to point to locator: \"" + locator.toString() +
-                    "\" with offset: [" + Double.toString(offsetX) + ", " + Double.toString(offsetY) + "]", e );
+            return HelperFunctions.mapObject(method.invoke(robot, locator, offsetX, offsetY));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute 'point to with offset' using locator \"" + locator
+                    + "\": " + e.getCause().getMessage());
         }
     }
 }
