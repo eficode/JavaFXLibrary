@@ -155,7 +155,8 @@ public class XPathFinder {
         if (!nodeString.contains("["))
             return;
 
-        String attributes = " " + nodeString.substring(nodeString.indexOf('[') + 1, nodeString.length() - 1);
+        // TODO: Nodes with LabeledText containing ']'-characters will have an effect on the last attribute, fix
+        String attributes = " " + nodeString.substring(nodeString.indexOf('[') + 1, nodeString.lastIndexOf(']'));
         String[] attributeArray = attributes.split(",");
         StringBuilder attributeBuilder = new StringBuilder();
         boolean unsupported = false;
