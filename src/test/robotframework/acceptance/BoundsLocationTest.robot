@@ -16,15 +16,15 @@ ${B_DECORATION_HEIGHT}      ${EMPTY}
 
 *** Test Cases ***
 Get Window Bounds
-    [Tags]                          smoke
-    ${SCREEN_BOUNDS}                Get Primary Screen Bounds
-    ${WINDOW}                       Get Window              BoundsLocation Test
-    Set Decoration Values           ${WINDOW}
-    ${WIDTH}                        Evaluate                ${L_DECORATION_WIDTH}+${R_DECORATION_WIDTH}+${600}
-    ${HEIGHT}                       Evaluate                ${T_DECORATION_HEIGHT}+${B_DECORATION_HEIGHT}+${600}
-    ${TARGET_BOUNDS}                Create Bounds           ${X_OFFSET}    ${Y_OFFSET}    ${WIDTH}    ${HEIGHT}
-    ${WINDOW_BOUNDS}                Get Bounds              ${WINDOW}
-    Bounds Should Be Equal          ${WINDOW_BOUNDS}        ${TARGET_BOUNDS}
+    [Tags]                      smoke
+    ${SCREEN_BOUNDS}            Get Primary Screen Bounds
+    ${WINDOW}                   Get Window              BoundsLocation Test
+    Set Decoration Values       ${WINDOW}
+    ${WIDTH}                    Evaluate                ${L_DECORATION_WIDTH}+${R_DECORATION_WIDTH}+${600}
+    ${HEIGHT}                   Evaluate                ${T_DECORATION_HEIGHT}+${B_DECORATION_HEIGHT}+${600}
+    ${TARGET_BOUNDS}            Create Bounds           ${X_OFFSET}    ${Y_OFFSET}    ${WIDTH}    ${HEIGHT}
+    ${WINDOW_BOUNDS}            Get Bounds              ${WINDOW}
+    Bounds Should Be Equal      ${WINDOW_BOUNDS}        ${TARGET_BOUNDS}
 
 Get Scene Bounds
     [Tags]                      smoke
@@ -41,7 +41,7 @@ Get Node Bounds (BLUE)
     ${NODE_BOUNDS}              Get Bounds          ${BLUE}
     ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
     ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
-    ${TARGET_BOUNDS}            Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
+    ${TARGET_BOUNDS}            Create Bounds       ${TARGET_X}   ${TARGET_Y}    600    300
     Bounds Should Be Equal      ${NODE_BOUNDS}      ${TARGET_BOUNDS}
 
 Get Node Bounds (PINK)
@@ -50,7 +50,7 @@ Get Node Bounds (PINK)
     ${NODE_BOUNDS}              Get Bounds          ${PINK}
     ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH} + ${450}
     ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${75}
-    ${TARGET_BOUNDS}            Create Bounds       ${TARGET_X}             ${TARGET_Y}    75    75
+    ${TARGET_BOUNDS}            Create Bounds       ${TARGET_X}   ${TARGET_Y}    75    75
     Bounds Should Be Equal      ${NODE_BOUNDS}      ${TARGET_BOUNDS}
 
 Get Point Bounds
@@ -65,7 +65,7 @@ Get Query Bounds
     ${BOUNDS}                   Get Bounds          \#blue
     ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
     ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
-    ${TARGET}                   Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
+    ${TARGET}                   Create Bounds       ${TARGET_X}   ${TARGET_Y}    600    300
     Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
 
 Get Bounds Using XPath Query
@@ -73,11 +73,12 @@ Get Bounds Using XPath Query
     ${BOUNDS}                   Get Bounds          xpath=//Rectangle[@id="blue"]
     ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
     ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
-    ${TARGET}                   Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
+    ${TARGET}                   Create Bounds       ${TARGET_X}   ${TARGET_Y}    600    300
     Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
 
+# TODO: Fix this test when Finder.find exception handling is ready
 Get Bounds Of Id That Does Not Exist
-    [Tags]              smoke    negative
+    [Tags]              not-ready    negative
     Set Timeout         ${1}
     ${MSG}              Run Keyword And Expect Error    *    Get Bounds    \#idThatDoesNotExist
     Should Be Equal     ${MSG}    Given element "\#idThatDoesNotExist" was not found within given timeout of 1 SECONDS
@@ -95,10 +96,10 @@ Teardown all tests
 
 Set Offsets
     ${SCREEN_BOUNDS}        Get Primary Screen Bounds
-    ${XOFF}                 Call Object Method             ${SCREEN_BOUNDS}    getMinX
-    ${YOFF}                 Call Object Method             ${SCREEN_BOUNDS}    getMinY
-    Set Suite Variable      ${X_OFFSET}                  ${XOFF}
-    Set Suite Variable      ${Y_OFFSET}                  ${YOFF}
+    ${XOFF}                 Call Object Method              ${SCREEN_BOUNDS}    getMinX
+    ${YOFF}                 Call Object Method              ${SCREEN_BOUNDS}    getMinY
+    Set Suite Variable      ${X_OFFSET}                     ${XOFF}
+    Set Suite Variable      ${Y_OFFSET}                     ${YOFF}
 
 Set Decoration Values
     [Arguments]             ${WINDOW}
@@ -113,34 +114,34 @@ Set Decoration Values
 
 Get Left Decoration Width
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WIDTH}                Call Object Method    ${SCENE}    getX
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Nodes Scene         ${ROOT}
+    ${WIDTH}                Call Object Method      ${SCENE}        getX
     [Return]                ${WIDTH}
 
 Get Right Decoration Width
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WINDOWWIDTH}          Call Object Method    ${WINDOW}    getWidth
-    ${SCENEX}               Call Object Method    ${SCENE}    getX
-    ${SCENEWIDTH}           Call Object Method    ${SCENE}    getWidth
-    ${DECOWIDTH}            Evaluate    ${WINDOWWIDTH} - ${SCENEWIDTH} - ${SCENEX}
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Nodes Scene         ${ROOT}
+    ${WINDOWWIDTH}          Call Object Method      ${WINDOW}       getWidth
+    ${SCENEX}               Call Object Method      ${SCENE}        getX
+    ${SCENEWIDTH}           Call Object Method      ${SCENE}        getWidth
+    ${DECOWIDTH}            Evaluate                ${WINDOWWIDTH} - ${SCENEWIDTH} - ${SCENEX}
     [Return]                ${DECOWIDTH}
 
 Get Top Decoration Height
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${HEIGHT}               Call Object Method    ${SCENE}    getY
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Nodes Scene         ${ROOT}
+    ${HEIGHT}               Call Object Method      ${SCENE}        getY
     [Return]                ${HEIGHT}
 
 Get Bottom Decoration Height
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WINDOWHEIGHT}         Call Object Method    ${WINDOW}    getHeight
-    ${SCENEY}               Call Object Method    ${SCENE}    getY
-    ${SCENEHEIGHT}          Call Object Method    ${SCENE}    getHeight
-    ${DECOHEIGHT}           Evaluate    ${WINDOWHEIGHT} - ${SCENEHEIGHT} - ${SCENEY}
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Nodes Scene         ${ROOT}
+    ${WINDOWHEIGHT}         Call Object Method      ${WINDOW}       getHeight
+    ${SCENEY}               Call Object Method      ${SCENE}        getY
+    ${SCENEHEIGHT}          Call Object Method      ${SCENE}        getHeight
+    ${DECOHEIGHT}           Evaluate                ${WINDOWHEIGHT} - ${SCENEHEIGHT} - ${SCENEY}
     [Return]                ${DECOHEIGHT}

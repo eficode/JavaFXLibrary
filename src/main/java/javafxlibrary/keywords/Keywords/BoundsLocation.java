@@ -20,17 +20,20 @@ package javafxlibrary.keywords.Keywords;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import javafx.geometry.Point2D;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Window;
-import org.testfx.service.query.PointQuery;
+import org.testfx.service.query.BoundsQuery;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
@@ -99,54 +102,34 @@ public class BoundsLocation extends TestFxAdapter {
             + "| ${bounds}= | Get Bounds | ${node} | \n"
             + "| ${target}= | Create Bounds | 150 | 150 | 200 | 200 | \n"
             + "| Should Be Equal | ${bounds} | ${target} | \n")
-    @ArgumentNames({ "locator", "logLevel=" })
-    public Object getBounds(Object locator, String logLevel) {
+    @ArgumentNames({ "locator" })
+    public Object getBounds(Object locator) {
+        robotLog("INFO", "Getting bounds using locator \"" + locator + "\"");
+        // TODO: Test if Window and Scene objects get correct Bound locations on scaled displays
         try {
             if (locator instanceof Window) {
                 Window window = (Window) locator;
-                robotLog(logLevel, "Getting bounds with window \"" + locator + "\"");
                 return mapObject(new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
-
             } else if (locator instanceof Scene) {
                 Scene scene = (Scene) locator;
-                robotLog(logLevel, "Getting bounds with scene \"" + locator + "\"");
                 return mapObject(new BoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
-
-            } else if (locator instanceof Point2D) {
-                robotLog(logLevel, "Getting bounds with point object \"" + locator + "\"");
-                return mapObject(robot.bounds((Point2D) locator).query());
-
-            } else if (locator instanceof Node) {
-                robotLog(logLevel, "Getting bounds with node \"" + locator + "\"");
-                return mapObject(robot.bounds((Node) locator).query());
-
-            } else if (locator instanceof String) {
-                robotLog(logLevel, "Getting bounds with query \"" + locator + "\"");
-                Node node = waitUntilExists((String) locator);
-                return mapObject(robot.bounds(node).query());
-
-            } else if (locator instanceof Bounds) {
-                robotLog(logLevel, "Getting bounds with bounds object \"" + locator + "\"");
-                return mapObject(locator);
-
-            } else if (locator instanceof PointQuery) {
-                robotLog(logLevel, "Getting bounds with point query \"" + locator + "\"");
-                return mapObject(robot.bounds(((PointQuery) locator).query()).query());
             }
 
-            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + locator);
+            if (locator instanceof String)
+                return getBounds(waitUntilExists((String) locator));
 
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "bounds", locator.getClass());
+            BoundsQuery bounds = (BoundsQuery) method.invoke(robot, locator);
+            return HelperFunctions.mapObject(bounds.query());
+
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\": "
+                    + e.getCause().getMessage());
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
             throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"");
         }
     }
-
-    @RobotKeywordOverload
-    public Object getBounds(Object locator) {
-        return getBounds(locator, "INFO");
-    }
-
 }
