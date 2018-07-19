@@ -451,37 +451,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
     public String getNodeText(Object locator) {
-        Object node = objectToNode(locator);
-
-//        if(object instanceof String)
-//            object = robot.lookup((String)object).query();
-
-        robotLog("INFO", "Getting text value for node: \"" + node.toString() + "\"");
-        Class c = node.getClass();
+        Node node = objectToNode(locator);
+        robotLog("INFO", "Getting text value for node: \"" + node + "\"");
+        Class<? extends Node> c = node.getClass();
         try {
-            Method[] methods = c.getMethods();
-
-            for (Method m : methods) {
-                // There are two versions of getText: getText() and getText(int, int)
-                if (m.getName().equals("getText") && m.getParameterCount() == 0) {
-                    robotLog("TRACE", "Calling method getText() for node: \"" + node.toString() + "\"");
-                    try {
-                        Object result = m.invoke(node);
-                        return result.toString();
-                    } catch (Exception e) {
-                        // Return empty string in case cannot get text from node
-                        return "";
-                        //throw new JavaFXLibraryNonFatalException("Problem calling method getText() ", e);
-                    }
-                }
-            }
-            throw new JavaFXLibraryNonFatalException(
-                    "Get node text failed for node: \"" + node.toString() + "\". Node has no method getText().");
-
+            return (String) c.getMethod("getText").invoke(node);
+        } catch (NoSuchMethodException e) {
+            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node + ": Node has no getText method");
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node.toString(), e);
+            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node, e);
         }
     }
 

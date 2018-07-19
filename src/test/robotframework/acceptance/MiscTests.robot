@@ -101,9 +101,9 @@ Get Node Children By Class Name
 Get Node Text Of Incompatible Node
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}                 Find    \#green
+    ${NODE}                 Find        \#green
     ${MSG}                  Run Keyword And Expect Error    *    Get Node Text    ${NODE}
-    Should End With         ${MSG}    Node has no method getText().
+    Should End With         ${MSG}      Node has no getText method
 
 Wait Until Node Is Enabled
     [Tags]                          smoke

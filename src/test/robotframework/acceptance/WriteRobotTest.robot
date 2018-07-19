@@ -42,8 +42,8 @@ Reset Textarea
     Click On    \#textArea
     
 Verify String
-    [Documentation]    Verifies that string is equal in location
-    [Arguments]                   ${query}          ${string}
-    ${target_node}=               Find              ${query}
-    ${text_label}=                Get Node Text     ${target_node}
-    Should Be Equal As Strings    ${string}         ${text_label}
+    [Documentation]                 Verifies that string is equal in location
+    [Arguments]                     ${query}          ${string}
+    ${target_node}                  Find              ${query}
+    ${text_label}                   Get Node Text     ${target_node}
+    Should Be Equal As Strings      ${string}         ${text_label}
