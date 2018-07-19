@@ -6,12 +6,10 @@ import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
+@Ignore
 public class WaitUntilEnabledTest extends TestFxAdapterTest {
 
     private Button button;

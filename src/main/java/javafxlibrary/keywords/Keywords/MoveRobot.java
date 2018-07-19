@@ -18,6 +18,7 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -49,7 +50,12 @@ public class MoveRobot extends TestFxAdapter {
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
         robotLog("INFO", "Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
+
+        if (locator instanceof String)
+            locator = new Finder().find((String) locator);
+
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
+
         try {
             return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));
         } catch (IllegalAccessException | InvocationTargetException e) {

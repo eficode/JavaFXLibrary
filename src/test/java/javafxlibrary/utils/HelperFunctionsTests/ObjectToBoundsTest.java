@@ -16,12 +16,14 @@ import mockit.Injectable;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.testfx.service.query.PointQuery;
 import org.testfx.service.query.impl.BoundsPointQuery;
 
+@Ignore
 public class ObjectToBoundsTest extends TestFxAdapterTest {
 
     @Rule

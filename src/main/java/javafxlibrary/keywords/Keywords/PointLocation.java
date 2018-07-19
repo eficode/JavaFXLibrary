@@ -18,6 +18,7 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -46,7 +47,12 @@ public class PointLocation extends TestFxAdapter {
     @ArgumentNames({"locator"})
     public Object pointTo(Object locator) {
         robotLog("INFO", "Creating a point query for target \"" + locator + "\"");
+
+        if (locator instanceof String)
+            locator = new Finder().find((String) locator);
+
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
+
         try {
             return HelperFunctions.mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {

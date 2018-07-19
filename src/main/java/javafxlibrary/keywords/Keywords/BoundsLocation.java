@@ -43,20 +43,14 @@ public class BoundsLocation extends TestFxAdapter {
         + "| ${capture}= | Capture Bounds | ${target bounds} |\n"
         + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Bounds.html")
     @ArgumentNames({"minX", "minY", "width", "height"})
-    public Object createBounds(double minX,
-                               double minY,
-                               double width,
-                               double height) {
+    public Object createBounds(double minX, double minY, double width, double height) {
         try {
-            robotLog("INFO", "Creating bounds object with minX=\"" + minX + "\""
-                                                                                     + ", minY=\"" + minY + "\""
-                                                                                     + ", width=\"" + width + "\""
-                                                                                     + " and height=\"" + height + "\"");
+            robotLog("INFO", "Creating bounds object with minX=\"" + minX + "\", minY=\"" + minY
+                    + "\", width=\"" + width + "\" and height=\"" + height + "\"");
             return mapObject(robot.bounds(minX, minY, width, height).query());
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
-            }
             throw new JavaFXLibraryNonFatalException("Unable to create Bounds object: " + e);
         }
     }
@@ -70,13 +64,11 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"x", "y"})
     public Object createPoint(double x, double y) {
         try {
-            robotLog("INFO", "Creating point object with x=\"" + x + "\""
-                                                                                    + " and y=\"" + y + "\"");
+            robotLog("INFO", "Creating point object with x=\"" + x + "\"" + " and y=\"" + y + "\"");
             return mapObject(new Point2D(x, y));
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            }
             throw new JavaFXLibraryNonFatalException("Unable to create Point object: " + e);
         }
     }
@@ -90,33 +82,16 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createRectangle(double minX, double minY, double width, double height) {
         try {
-            robotLog("INFO", "Creating retangle object with minX=\"" + minX + "\""
-                                                                                    + ", minY=\"" + minY + "\""
-                                                                                    + ", width=\"" + width + "\""
-                                                                                    + "and height=\"" + height + "\"");
+            robotLog("INFO", "Creating retangle object with minX=\"" + minX + "\", minY=\"" + minY
+                    + "\", width=\"" + width + "\" and height=\"" + height + "\"");
             return mapObject(new Rectangle2D(minX, minY, width, height));
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            }
             throw new JavaFXLibraryNonFatalException("Unable to create Rectangle object: " + e);
         }
     }
 
-    /*
-        TestFX has a bug in BoundQueryUtils boundsOnScreen(Bounds b, Window w) method which causes window location data
-        to be incorrect. Problem is that the method first takes windows location with getMinX() and getMinY() (that
-        already return the location on the screen) and then add an extra offset (getMinX() and getMinY() again) to them.
-        This results the coordinates to be always twice as large than they should be.
-
-        This bug also affects bounds(Scene s) method, as it uses the buggy boundsOnScreen to count the offset for the
-        scene. Both of these method calls have been replaced with pure JavaFX, and shouldn't be affected in any way in
-        case TestFX gets changed.
-
-        Details:
-        - version: testfx-core 4.0.6-alpha
-        - location: main/java/org/testfx/api/util/BoundsQueryUtils.java: rows 153-160
-     */
     @RobotKeyword("Returns a Bounds object for a region located using given locator. \n\n"
             + "``locator`` is either a _query_ or _Object:Node, Point2D, Scene, or Window_ for identifying the region"
             + ", see `3. Locating or specifying UI elements`. \n\n"
@@ -129,44 +104,42 @@ public class BoundsLocation extends TestFxAdapter {
         try {
             if (locator instanceof Window) {
                 Window window = (Window) locator;
-                robotLog(logLevel, "Getting bounds with window \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with window \"" + locator + "\"");
                 return mapObject(new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
 
             } else if (locator instanceof Scene) {
                 Scene scene = (Scene) locator;
-                robotLog(logLevel, "Getting bounds with scene \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with scene \"" + locator + "\"");
                 return mapObject(new BoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
 
             } else if (locator instanceof Point2D) {
-                robotLog(logLevel, "Getting bounds with point object \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with point object \"" + locator + "\"");
                 return mapObject(robot.bounds((Point2D) locator).query());
 
             } else if (locator instanceof Node) {
-                robotLog(logLevel, "Getting bounds with node \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with node \"" + locator + "\"");
                 return mapObject(robot.bounds((Node) locator).query());
 
             } else if (locator instanceof String) {
-                waitUntilExists((String) locator);
-                Node node = robot.lookup((String) locator).query();
-                robotLog(logLevel, "Getting bounds with query \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with query \"" + locator + "\"");
+                Node node = waitUntilExists((String) locator);
                 return mapObject(robot.bounds(node).query());
 
             } else if (locator instanceof Bounds) {
-                robotLog(logLevel, "Getting bounds with bounds object \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with bounds object \"" + locator + "\"");
                 return mapObject(locator);
 
             } else if (locator instanceof PointQuery) {
-                robotLog(logLevel, "Getting bounds with point query \"" + locator.toString() + "\"");
+                robotLog(logLevel, "Getting bounds with point query \"" + locator + "\"");
                 return mapObject(robot.bounds(((PointQuery) locator).query()).query());
             }
 
-            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + locator.toString());
+            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + locator);
 
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
-            }
             throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"");
         }
     }

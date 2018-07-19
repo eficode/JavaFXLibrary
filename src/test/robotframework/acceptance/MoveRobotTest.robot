@@ -36,6 +36,16 @@ Move To Query
     Move To                 \#rectangle
     Verify String           \#locationLabel    25 | 475
 
+Move To XPath Query
+    [Tags]                  smoke
+    Move To                 xpath=//Rectangle[@id="rectangle"]
+    Verify String           \#locationLabel    25 | 475
+
+Move To ID Query
+    [Tags]                  smoke
+    Move To                 id=rectangle
+    Verify String           \#locationLabel    25 | 475
+
 Move To Point Query
     [Tags]                  smoke
     ${POINTQUERY}           Point To            \#rectangle

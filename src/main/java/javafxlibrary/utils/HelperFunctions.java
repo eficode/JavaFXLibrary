@@ -89,7 +89,7 @@ public class HelperFunctions {
             Awaitility.await().until(() -> {
                 try {
                     robotLog("TRACE", "query");
-                    node.set(robot.lookup(target).query());
+                    node.set(new Finder().find(target));
                     robotLog("TRACE", "return");
                     return node.get() != null;
                 } catch (Exception e) {
@@ -594,8 +594,7 @@ public class HelperFunctions {
         } else if (object instanceof Node) {
             return robot.bounds((Node) object).query();
         } else if (object instanceof String) {
-            waitUntilExists((String) object, waitUntilTimeout, "SECONDS");
-            Node node = robot.lookup((String) object).query();
+            Node node = waitUntilExists((String) object, waitUntilTimeout, "SECONDS");
             return robot.bounds(node).query();
         } else if (object instanceof Bounds) {
             return (Bounds) object;

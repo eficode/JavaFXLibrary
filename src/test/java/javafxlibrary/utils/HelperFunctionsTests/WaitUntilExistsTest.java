@@ -7,13 +7,10 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Delegate;
 import mockit.Expectations;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import testutils.DelayedObject;
-
+@Ignore
 public class WaitUntilExistsTest extends TestFxAdapterTest {
 
     private Button button;

@@ -128,9 +128,15 @@ public class Finder {
     }
 
     private String parseWholeQuery(String query) {
+
+        int limiter = 0;
         while (containsMultiplePrefixes(query)) {
 
-            String[] queryArray = query.split(" ");
+            limiter++;
+            if (limiter > 15)
+                throw new JavaFXLibraryNonFatalException("LIMITER!");
+
+            String[] queryArray = splitQuery(query);
 
             for (int i = 1; i < queryArray.length; i++) {
                 if (containsPrefixes(queryArray[i])) {
@@ -148,6 +154,28 @@ public class Finder {
                 break;
         }
         return query;
+    }
+
+    // TODO: This solution will not work when node text contains '"'-characters, could regexp be used for this?
+    private String[] splitQuery(String query) {
+        // Replace spaces of text values with temporary tag to prevent them interfering with parsing of the query
+        boolean replaceSpaces = false;
+
+        for (int i = 0; i < query.length(); i++) {
+            char current = query.charAt(i);
+
+            if (current == '"')
+                replaceSpaces = !replaceSpaces;
+
+            if (replaceSpaces && current == ' ')
+                query = query.substring(0, i) + ";javafxlibraryfinderspace;" + query.substring(i + 1);
+        }
+        String [] splittedQuery = query.split(" ");
+
+        for (int i = 0; i < splittedQuery.length; i++)
+            splittedQuery[i] = splittedQuery[i].replace(";javafxlibraryfinderspace;", " ");
+
+        return splittedQuery;
     }
 
     protected FindPrefix getPrefix(String query) {

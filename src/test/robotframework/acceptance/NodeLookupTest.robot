@@ -36,15 +36,16 @@ Root Node Of Query
     ${ROOT_NODE}        Get Root Node Of    \#button
     Should Be Equal     ${ROOT_NODE}    ${TARGET}
 
-    ${MSG}              Run Keyword And Expect Error    *    Get Root Node Of    \#non-existent-node-id
-    Should Contain      ${MSG}    Unable to find any node with query: "#non-existent-node-id"
+Root Node Of XPath Query
+    [Tags]              smoke
+    ${TARGET}           Find    \.root
+    ${ROOT_NODE}        Get Root Node Of    xpath=//Button
+    Should Be Equal     ${ROOT_NODE}    ${TARGET}
 
-#Lookup
-#    [Tags]              smoke
-#    ${NODEQUERY}        Lookup    \#resetButton
-#    ${NODE}             Query Node    ${NODEQUERY}
-#    ${TARGET}           Find    \#resetButton
-#    Should Be Equal     ${NODE}    ${TARGET}
+Root Node Of Node That Does Not Exist
+    [Tags]              smoke
+    ${MSG}              Run Keyword And Expect Error    *    Get Root Node Of    \#non-existent-node-id
+    Should Contain      ${MSG}    Unable to find any node with query: "\#non-existent-node-id"
 
 *** Keywords ***
 Setup all tests

@@ -120,6 +120,8 @@ Find All With Pseudo Class
     Length Should Be    ${hovered}      3
     Should Contain      ${hovered}      ${node}
 
+# TODO: Add negative tests
+
 *** Keywords ***
 Setup all tests
     Launch Javafx Application    ${TEST_APPLICATION}

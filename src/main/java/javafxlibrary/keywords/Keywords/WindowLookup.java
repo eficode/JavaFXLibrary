@@ -20,12 +20,14 @@ package javafxlibrary.keywords.Keywords;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 
 @RobotKeywords
 public class WindowLookup extends TestFxAdapter {
@@ -75,36 +77,26 @@ public class WindowLookup extends TestFxAdapter {
     )
     @ArgumentNames({"locator"})
     public Object getWindow(Object locator) {
+        HelperFunctions.robotLog("INFO", "Getting window using locator \"" + locator.toString() + "\"");
         try {
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")) {
                     locator = ((String) locator).replace("pattern=","");
-                    HelperFunctions.robotLog("INFO", "Getting window with pattern \"" + locator + "\"");
                     return HelperFunctions.mapObject(robot.window((String) locator));
                 } else if ( ((String) locator).matches("[0-9]+")) {
                     return getWindow(Integer.parseInt(locator.toString()));
                 }
                 else {
-                    if (((String) locator).startsWith("title=")) { locator = ((String) locator).replace("title=", "");}
-                    HelperFunctions.robotLog("INFO", "Getting window with title \"" + locator + "\"");
+                    if (((String) locator).startsWith("title="))
+                        locator = ((String) locator).replace("title=", "");
                     return HelperFunctions.mapObject(robot.window((String) locator));
                 }
             }
-            if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Getting window with node \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.window((Node) locator));
-            }
-            if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Getting window with scene \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.window((Scene) locator));
-            }
-            if (locator instanceof Integer) {
-                HelperFunctions.robotLog("INFO", "Getting window with index \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.window((Integer) locator));
-            }
 
-            throw new JavaFXLibraryNonFatalException("Unable to handle argument \"" + locator.toString() + "\"");
-
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "window", locator.getClass());
+            return HelperFunctions.mapObject(method.invoke(robot, locator));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute get window using locator \"" + locator + "\"");
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;

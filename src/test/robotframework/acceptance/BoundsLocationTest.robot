@@ -61,12 +61,20 @@ Get Point Bounds
     Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
 
 Get Query Bounds
-    [Tags]              smoke
-    ${BOUNDS}           Get Bounds          \#blue
-    ${TARGET_Y}         Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
-    ${TARGET_X}         Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
-    ${TARGET}           Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
-    Bounds Should Be Equal     ${BOUNDS}           ${TARGET}
+    [Tags]                      smoke
+    ${BOUNDS}                   Get Bounds          \#blue
+    ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
+    ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
+    ${TARGET}                   Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
+    Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
+
+Get Bounds Using XPath Query
+    [Tags]                      smoke
+    ${BOUNDS}                   Get Bounds          xpath=//Rectangle[@id="blue"]
+    ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
+    ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
+    ${TARGET}                   Create Bounds       ${TARGET_X}             ${TARGET_Y}    600    300
+    Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
 
 Get Bounds Of Id That Does Not Exist
     [Tags]              smoke    negative

@@ -18,6 +18,7 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -44,6 +45,10 @@ public class PointOffset extends TestFxAdapter {
     public Object pointToWithOffset(Object locator, double offsetX, double offsetY) {
         robotLog("INFO", "Creating a point query for target: \"" + locator
                 + "\" with offset: [" + offsetX + ", " + offsetY + "]");
+
+        if (locator instanceof String)
+            locator = new Finder().find((String) locator);
+
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "offset",
                 locator.getClass(), double.class, double.class);
         try {
