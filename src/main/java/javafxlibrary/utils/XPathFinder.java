@@ -42,7 +42,6 @@ public class XPathFinder {
         XPathExpression expression = getXPathExpression(xpathQuery);
 
         try {
-            // TODO: Fix getting nth element with XPath
             org.w3c.dom.Node node = (org.w3c.dom.Node) expression.evaluate(xml, XPathConstants.NODE);
             NamedNodeMap attributes = node.getAttributes();
             int nodeIndex = Integer.parseInt(attributes.getNamedItem("jfxlibid").getNodeValue());
@@ -117,7 +116,7 @@ public class XPathFinder {
     private void addTag(Node node, int indentation) {
         indentRow(indentation);
         sb.append("<");
-        sb.append(node.getTypeSelector());
+        sb.append(getSelector(node));
 
         // Should this feature just have its own method?
         // getFXML can be used for printing the UI structure to test logs also. If so, there is no need to track the nodes.
@@ -138,7 +137,7 @@ public class XPathFinder {
                 parseChildren(subParent, indentation + 1);
                 indentRow(indentation);
                 sb.append("</");
-                sb.append(node.getTypeSelector());
+                sb.append(getSelector(node));
                 sb.append(">\n");
             } else {
                 // If subParent has no children: use self-closing tag
@@ -185,5 +184,11 @@ public class XPathFinder {
         }
 
         sb.append(attributeBuilder.toString());
+    }
+
+    // Inner classes have a dollar sign in their selector, which is not allowed in XML and has to be replaced
+    private String getSelector(Node node) {
+        // TODO: Are there more possible characters for type selectors that require replacing?
+        return node.getTypeSelector().replaceAll("\\$", "");
     }
 }
