@@ -617,6 +617,8 @@ public class HelperFunctions {
     }
 
 
+    // Deprecated: Use javafxlibrary.utils.Finder instead
+    @Deprecated
     public static Node findNode(Node node, String query) {
 
         robotLog("INFO", "finding from node: " + node.toString() + " with query: " + query);
@@ -657,15 +659,20 @@ public class HelperFunctions {
         }
     }
 
+    // Deprecated: Use javafxlibrary.utils.Finder instead
+    @Deprecated
     public static Node findNode(String query) {
-//		return findNode(robot.lookup(getQueryString(query.split(" ", 2)[0])).query(), query.split(" ", 2)[1]);
         return findNode(robot.listTargetWindows().get(0).getScene().getRoot(), query);
     }
 
+    // Deprecated: Used only in deprecated method findNode
+    @Deprecated
     public static String getQueryString(String query) {
         return query.replaceAll("\\[\\d]$", "");
     }
 
+    // Deprecated: Used only in deprecated method findNode
+    @Deprecated
     public static int getQueryIndex(String query) {
         Pattern pattern = Pattern.compile(".*\\[\\d]$");
         Matcher matcher = pattern.matcher(query);

@@ -51,7 +51,9 @@ import static javafxlibrary.utils.HelperFunctions.*;
 @RobotKeywords
 public class ConvenienceKeywords extends TestFxAdapter {
 
-    @RobotKeyword("Finder that mimics _xpath_ style search.\n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n" +
+            "Finder that mimics _xpath_ style search.\n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
@@ -73,6 +75,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "query" })
     public Object findWithPath(String query) {
@@ -131,7 +134,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         callMethod(object, method, arguments, argumentTypes, true);
     }
 
-    @RobotKeyword("Returns the *first* node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns the *first* node matching the query. \n\n"
             + "``query`` is the Class name String to use in lookup.\n"
             + "\nExample:\n"
             + "| ${my node}= | Find | javafx.scene.control.Button | # button class |")
@@ -147,7 +152,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Returns *all* descendant nodes of given node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* descendant nodes of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -178,13 +185,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "node", "query" })
     public List<Object> findAllFromNode(Object node, String query) {
             return findAllFromNode(node, query, false);
     }
 
-    @RobotKeyword("Returns *all* nodes matching query AND given pseudo-class state. \r\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``pseudo`` is a String value specifying pseudo class value.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -214,13 +224,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "query", "pseudo" })
     public List<Object> findAllWithPseudoClass(String query, String pseudo) {
         return findAllWithPseudoClass(query, pseudo, false);
     }
 
-    @RobotKeyword("Returns the *first* descendant node of given node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns the *first* descendant node of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -247,6 +260,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "node", "query" })
     public Object findFromNode(Node node, String query) {
@@ -413,7 +427,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     // TODO: Should this be deleted? Find All From Node has the same functionality
-    @RobotKeyword("Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
             + "``locator`` is either a _query_ or _Object_ for node whose children will be queried, see "
             + "`3. Locating or specifying UI elements`. \n\n"
             + "``className`` is the Java class name to look for.\n"
