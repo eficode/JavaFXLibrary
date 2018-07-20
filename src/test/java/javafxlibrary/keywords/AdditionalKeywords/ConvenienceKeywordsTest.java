@@ -28,10 +28,8 @@ import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.service.query.NodeQuery;
-import static org.junit.Assert.fail;
 
 public class ConvenienceKeywordsTest extends TestFxAdapterTest {
 
@@ -41,7 +39,6 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
     private Button button;
     private Button button2;
     private ConvenienceKeywords keywords = new ConvenienceKeywords();
-    private Find find = new Find();
 
     @Before
     public void setup() {
@@ -99,35 +96,5 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
                 result = ImmutableSet.of(button, button2);
             }
         };
-    }
-
-    @Ignore
-    @Test
-    public void findGivesMeTheNode() {
-        new Expectations() {
-            {
-                rootQuery.query();
-                result = button;
-            }
-        };
-        Object value = find.find("rootId");
-        Assert.assertEquals(HelperFunctions.mapObject(button), value);
-    }
-
-    @Ignore
-    @Test
-    public void findNoMatching() {
-        new Expectations() {
-            {
-                rootQuery.query();
-                result = null;
-            }
-        };
-        try {
-            find.find("invalid", true);
-            fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals("Unable to find anything with query: \"invalid\"", e.getMessage());
-        }
     }
 }

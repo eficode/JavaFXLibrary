@@ -4,15 +4,16 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
-import mockit.Delegate;
-import mockit.Expectations;
+import mockit.*;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import testutils.DelayedObject;
-@Ignore
+
 public class WaitUntilExistsTest extends TestFxAdapterTest {
 
+    @Mocked private Finder finder;
     private Button button;
 
     @Rule
@@ -21,14 +22,19 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
     @Before
     public void setup() {
         button = new Button("JavaFXLibrary");
+        new MockUp<HelperFunctions>() {
+            @Mock
+            Finder createFinder() {
+                return finder;
+            }
+        };
     }
 
     @Test
     public void waitUntilExists_Exist() {
         new Expectations() {
             {
-                getRobot().lookup(".button").query();
-                result = button;
+                finder.find(".button"); result = button;
             }
         };
 
@@ -42,7 +48,7 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
 
         new Expectations() {
             {
-                getRobot().lookup(".button").query();
+                finder.find(".button");
                 result = new Delegate() {
                     public Node delegate() throws Exception {
                         return (Node) delayedObject.getValue();
@@ -60,8 +66,7 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
     public void waitUntilExists_DoesNotExist() {
         new Expectations() {
             {
-                getRobot().lookup(".button").query();
-                result = null;
+                finder.find(".button"); result = null;
             }
         };
 

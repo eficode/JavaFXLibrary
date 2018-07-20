@@ -89,7 +89,7 @@ public class HelperFunctions {
             Awaitility.await().until(() -> {
                 try {
                     robotLog("TRACE", "query");
-                    node.set(new Finder().find(target));
+                    node.set(createFinder().find(target));
                     robotLog("TRACE", "return");
                     return node.get() != null;
                 } catch (Exception e) {
@@ -879,6 +879,10 @@ public class HelperFunctions {
         } catch (NoSuchMethodException e) {
             throw new JavaFXLibraryNonFatalException("Couldn't create wrapper application for " + c.getName(), e);
         }
+    }
+
+    public static Finder createFinder() {
+        return new Finder();
     }
 }
 

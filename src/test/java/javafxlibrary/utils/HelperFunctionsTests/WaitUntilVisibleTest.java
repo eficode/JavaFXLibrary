@@ -9,7 +9,6 @@ import mockit.*;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
-@Ignore
 public class WaitUntilVisibleTest extends TestFxAdapterTest {
 
     private Button button;
@@ -20,10 +19,10 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
     @Before
     public void setup() {
         button = new Button("JavaFXLibrary");
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
+        new MockUp<HelperFunctions>() {
+            @Mock
+            Node waitUntilExists(String target, int timeout, String timeUnit) {
+                return button;
             }
         };
     }

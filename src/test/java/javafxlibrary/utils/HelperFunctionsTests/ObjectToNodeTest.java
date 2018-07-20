@@ -4,17 +4,21 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-@Ignore
 public class ObjectToNodeTest extends TestFxAdapterTest {
 
+    @Mocked
+    private Finder finder;
     Button button;
 
     @Rule
@@ -23,9 +27,16 @@ public class ObjectToNodeTest extends TestFxAdapterTest {
     @Test
     public void objectToNode_StringQuery() {
         button = new Button();
+        new MockUp<HelperFunctions>() {
+            @Mock
+            Finder createFinder() {
+                return finder;
+            }
+        };
+
         new Expectations() {
             {
-                getRobot().lookup("#testNode").query(); result = button;
+                finder.find("#testNode"); result = button;
             }
         };
 
