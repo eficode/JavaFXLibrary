@@ -1,0 +1,115 @@
+JavaFXLibrary is a test library for Robot Framework targeted for UI acceptance testing of JavaFX applications.
+JavaFXLibrary can be run with both Jython and Python version of Robot Framework and both in Local and Remote mode.
+
+In short, this library is a wrapper for [https://github.com/TestFX/TestFX|TestFX], which is a Java library for testing JavaFX UI applications.
+
+
+
+== 1. Preparations before running the tests ==
+- JavaFXLibrary needs to be compiled and packaged. [https://github.com/eficode/JavaFXLibrary/releases/latest|Download JAR release] or clone the [https://github.com/eficode/JavaFXLibrary.git|repository] and run _mvn package_ from the root folder.
+- The tested application and the JavaFXLibrary jars need to be added to CLASSPATH.
+
+
+
+== 2. Using the library ==
+Once the library jar -file is available, the library can be taken into use in two ways: *Local mode* with _Jython_ and
+*Remote mode* with both _Jython_ and _Python_ version of Robot Framework.
+
+
+=== 2.1 Usage in local mode(Jython only) ===
+First, the JavaFXLibrary needs to be taken into use in the settings table.
+| *Settings * | *Value* |
+| Library | JavaFXLibrary |
+
+
+=== 2.2 Usage in remote mode(Jython & Python) ===
+When using the test library in remote mode, the library needs to be started at the remote end first. This can be done as follows:
+- _java -jar JavaFXLibrary-<version>.jar_
+This will start the remote server listening at default port number 8270.
+
+If there is a need to use a different port the library can be started with optional parameter:
+- _java -jar JavaFXLibrary-<version>.jar 1234_
+This will start the remote server listening on port 1234.
+
+JavaFXLibrary can be taken into use as remote library in settings table as follows:
+| *Settings * | *Value* |
+| Library | Remote | http://localhost:8270/ | WITH NAME | JavaFXLibrary |
+
+Multiple JavaFXLibraries in remote mode:
+| *Settings * | *Value* |
+| Library | Remote | ip_address:8270/ | WITH NAME | my_application |
+| Library | Remote | ip_address:8271/ | WITH NAME | my_other_application |
+
+
+
+== 3. Locating or specifying UI elements ==
+There are several ways of locating elements in UI. The most common way is using CSS queries, but UI elements can also be referenced using actual Java Objects.
+
+
+=== 3.1 Using queries ===
+Below a few examples of clicking a button using CSS queries:
+| Click On | some text | # using plain _text_ as locator |
+| Click On | .css | # using _css_ class name as locator |
+| Click On | \#id | # using node _id_ as locator |
+
+Note, in case of id, '#'-prefix needs to be escaped with a back slash.
+
+CSS queries can also be chained together using _id_ and _css_ selectors:
+| Click On | \#id .css-first .css-second | # using _id_ and _css_ class name |
+Above example would first try to find a node fulfilling a query using _id_, then continue search under previously found
+node using css class query _.css-first_, and then continue from there trying to locate css class _css-second_.
+Sometimes locating elements can be difficult in case there is a very limited amount of id's or css selector provided.
+In these cases, a special `Find With Path` -keyword might provide some extra locating power trying to mimic _xpath_ style searches:
+| ${my node}= | Find With Path | .main-view[0] .split-pane[0] \#node-i d class=GridPane .toggle-button[3] sometext |
+With this approach, user is able to give indexes([x]) to select a specific node in case there are multiple matches found.
+Also, this keyword provides a possibility to use class name based locators (class=) e.g. StackPane, GridPane etc...
+
+
+=== 3.2 Using objects ===
+Elements on UI can also be referenced using actual Java Objects. Most of the keywords accepts a Node, Window, Scene, Bounds,
+Point2D, Rectangle2D or Image object as parameter for specifying which element to act on. Which object(s) is accepted
+as an argument is describer separately for each keyword in their own documentation. For Example, `Set Target Window`
+can take either String, Integer, Node or Scene as parameter for selecting a window.
+Example:
+| Set Target Window | ${1} | # this selects window based on integer value |
+| ${windows}= | List Windows | # this returns a list of window 'objects' |
+| Set Target Window | @{windows}[1] | # this selects window based on given Window object |
+Note! In this example the window object is actually a string in Robot Framework, but it gets converted into Window object
+in JavaFXLibrary side. Below section further clarifies this approach.
+
+
+
+== 4. Argument types and return value types ==
+This library has a built in support for [https://github.com/ombre42/jrobotremoteserver|jrobotremoteserver], which provides
+a remote server interface for Robot Framework test libraries. This approach, however, has some limitations what comes to
+passing different [https://github.com/ombre42/jrobotremoteserver/wiki/User-Guide#Return_Types|return- and parameter types]
+between Robot Framework and Java libraries. All simple object types like Strings, Integers, Booleans etc.. remains as they
+are when passing them between Robot Framework and test libraries but in case of more complex ones, argument types are being
+converted into Strings. For this situation, JavaFXLibrary keeps internal book keeping for mapping complex objects as
+key:value pairs. This means that when e.g. JavaFX Node object is returned from library to Robot Framework as a return
+value, this object is mapped into internal book keeping and only the key (String) representation of JavaFX Node is
+returned. When this same key (String value) is passed back to JavaFXLibrary, it is converted back to actual JavaFX Node.
+So, even though the return values are Strings, tester is able to use them 'as if' they were actual Nodes and e.g. call
+object methods available for Nodes.
+
+Let's take an example of a table that can contain complex objects, not just simple string values:
+| ${table cells}= | Get Table Row Cells | \#table-id | 2 | # table cell Nodes are stored in map and string representations are returned |
+| Node Should Be Enabled | @{table cells}[column 0] | | | # Library takes the string value as an argument and converts it back to Node |
+| Node Should Have Text | @{table cells}[column 1] | some text | | |
+| Click On | @{table cells}[column 2] | | | # in case this cell is clickable |
+| ${cell buttons}= | Find All From Node | @{table cells}[column 3] | .button  | # Finds all buttons from table cell Node |
+| Click On | @{cell buttons}[0] |  |  | |
+Most of the JavaFXLibrary keywords can use locators directly e.g. `Click On` keyword can take just css selector as an
+argument, but in some cases it can be convenient to be able to pass in a 'Node' as an argument, especially when dealing
+with complex data structures.
+
+
+
+== 5. Used ENUMs ==
+| [https://github.com/TestFX/TestFX/blob/master/subprojects/testfx-core/src/main/java/org/testfx/robot/Motion.java|Motion] | DEFAULT, DIRECT, HORIZONTAL_FIRST, VERTICAL_FIRST |
+| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/MouseButton.html|MouseButton] | MIDDLE, NONE, PRIMARY, SECONDARY |
+| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html|KeyCode] | Check the link |
+| [https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/TimeUnit.html|TimeUnit] | DAYS, HOURS, MICROSECONDS, MILLISECONDS, MINUTES, NANOSECONDS, SECONDS |
+| [https://docs.oracle.com/javafx/2/api/javafx/geometry/VerticalDirection.html|VerticalDirection] | UP, DOWN |
+| [https://docs.oracle.com/javafx/2/api/javafx/geometry/HorizontalDirection.html|HorizontalDirection] | LEFT, RIGHT |
+| [https://docs.oracle.com/javafx/2/api/javafx/geometry/Pos.html|Pos] | BASELINE_CENTER, BASELINE_LEFT, BASELINE_RIGHT, BOTTOM_CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER, CENTER_LEFT, CENTER_RIGHT, TOP_CENTER, TOP_LEFT, TOP_RIGHT |
