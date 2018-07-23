@@ -18,20 +18,27 @@ import static javafxlibrary.utils.HelperFunctions.robotLog;
 @RobotKeywords
 public class Find {
 
-    // TODO: Fix documentation
     @RobotKeyword("Returns the *first* node matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``query`` is a query locator, see `3. Locating JavaFX Nodes`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
+            + "``root`` is an optional argument pointing to the element which is used as the origin of the lookup. If "
+            + "root is defined only its children can be found. By default nodes are being looked from everywhere.\n\n"
             + "\nExample:\n"
-            + "| ${my node}= | Find | some text | | # for finding something based on plain _text_ |\n"
-            + "| ${my node}= | Find | .css | | # for finding something based on _css_ class name |\n"
-            + "| ${my node}= | Find | \\#id | | # for finding something based on node _id_ |\n"
-            + "| ${my node}= | Find | \\#id | failIfNotFound=True | # this search fails if nothing is found |\n\n"
-            + "Or, chaining multiple queries together using _id_ and _css_:\n"
-            + "| ${my node}= | Find | \\#id .css-first .css-second | # using _id_ and _css_ class name | \n"
-            + "Above example would first try to find a node fulfilling a query using _id_, then continue search under previously found node using css class query \n"
-            + " _.css-first_, and then continue from there trying to locate css class _css-second_. \n\n")
+            + "| ${my node}= | Find | some text | | | # finds node containing text _some text_ |\n"
+            + "| ${my node}= | Find | .css | | | # finds node with matching style class |\n"
+            + "| ${my node}= | Find | \\#id | | | # finds node with matching _id_ |\n"
+            + "| ${my node}= | Find | css=VBox | | | # finds node matching the CSS selector |\n"
+            + "| ${my node}= | Find | id=id | | | # finds node with matching _id_ |\n"
+            + "| ${my node}= | Find | xpath=//Rectangle | | | # finds node matching the XPath |\n"
+            + "| ${my node}= | Find | class=javafx.scene.shape.Rectangle | | | # finds node that is instance of the class |\n"
+            + "| ${my node}= | Find | pseudo=hover | | | # finds node containing the given pseudo class state |\n"
+            + "| ${my node}= | Find | \\#id | True | | # this search fails if nothing is found |\n"
+            + "| ${my node}= | Find | css=VBox | False | ${root} | # finds node matching the CSS selector from the children of given root |\n\n"
+            + "Or chaining multiple queries together:\n"
+            + "| ${my node}= | Find | css=VBox HBox xpath=//Rectangle[@width=\"600.0\"] | \n"
+            + "The example above would first look for a node matching the css selector _VBox HBox_, then continue the search "
+            + "using the found HBox as a root node, while looking for a node matching the XPath.\n\n")
     @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
     public Object find(String query, boolean failIfNotFound, Parent root) {
         robotLog("INFO", "Trying to find the first node matching the query: \"" + query
@@ -73,11 +80,12 @@ public class Find {
         return find(query, false);
     }
 
-    // TODO: Update Documentation (root parameter)
     @RobotKeyword("Returns *all* nodes matching the query. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
+            + "``root`` is an optional argument pointing to the element which is used as the origin of the lookup. If "
+            + "root is defined only its children can be found. By default nodes are being looked from everywhere.\n\n"
             + "See keyword `Find` for further examples of query usage.\n")
     @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
     public List<Object> findAll(String query, boolean failIfNotFound, Parent root) {
