@@ -355,8 +355,7 @@ public class HelperFunctions {
     }
 
     // https://docs.oracle.com/javafx/2/api/javafx/geometry/VerticalDirection.html
-    // Returns opposite direction for Mac since natural scrolling is the default setting.
-    // TODO: Add support for different scroll setting on Macs
+    // Macs require inverted value regardless of the natural scroll setting, so the opposite direction is returned for them
     public static VerticalDirection getVerticalDirection(String direction) {
         if (isMac()) {
             switch (direction) {
@@ -378,7 +377,7 @@ public class HelperFunctions {
 
 
     // https://docs.oracle.com/javafx/2/api/javafx/geometry/HorizontalDirection.html
-    // Returns opposite direction for Mac since natural scrolling is the default setting.
+    // Macs require inverted value regardless of the natural scroll setting, so the opposite direction is returned for them
     public static HorizontalDirection getHorizontalDirection(String direction) {
         if (isMac()) {
             switch (direction) {
