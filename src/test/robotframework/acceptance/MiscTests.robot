@@ -212,17 +212,25 @@ Print Object Properties
     ${node}                     Find    \#button
     Print Object Properties     ${node}
 
+Get Node Image Url With Get Object Property
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${node}                 Find    \#imageView
+    ${image}                Get Object Property     ${node}     oldImage
+    ${url}                  Get Object Property     ${image}    url
+    Should End With         ${url}    /fxml/javafxlibrary/ui/uiresources/ejlogo.png
+
 *** Keywords ***
 Set Test Application
-    [Arguments]    ${APPLICATION}
-    Run Keyword Unless    '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
+    [Arguments]             ${APPLICATION}
+    Run Keyword Unless      '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
 
 Change Current Application
-    [Arguments]    ${APPLICATION}
-    Run Keyword Unless    '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
-    Set Suite Variable    ${CURRENT_APPLICATION}    ${APPLICATION}
-    Launch Javafx Application    ${APPLICATION}
-    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    [Arguments]                     ${APPLICATION}
+    Run Keyword Unless              '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
+    Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
+    Launch Javafx Application       ${APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
 
 Get First Player
     ${TABLE}        Find    \#table
