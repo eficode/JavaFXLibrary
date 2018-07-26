@@ -393,14 +393,20 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "Parameter _value_ specifies whether safety should be toggled on or off")
     @ArgumentNames({ "value" })
     public void setSafeClicking(String value) {
-        if (value.equals("OFF") || value.equals("off")) {
-            robotLog("INFO", "Setting safe clicking mode to OFF");
-            HelperFunctions.setSafeClicking(false);
-        } else if (value.equals("ON") || value.equals("on")) {
-            robotLog("INFO", "Setting safe clicking mode to ON");
-            HelperFunctions.setSafeClicking(true);
-        } else
-            throw new JavaFXLibraryNonFatalException("Unkown value: \"" + value + "\". Expected values are: on, ON, off and OFF.");
+        switch (value) {
+            case "OFF":
+            case "off":
+                robotLog("INFO", "Setting safe clicking mode to OFF");
+                HelperFunctions.setSafeClicking(false);
+                break;
+            case "ON":
+            case "on":
+                robotLog("INFO", "Setting safe clicking mode to ON");
+                HelperFunctions.setSafeClicking(true);
+                break;
+            default:
+                throw new JavaFXLibraryNonFatalException("Unknown value: \"" + value + "\". Expected values are: on, ON, off and OFF.");
+        }
     }
 
     @RobotKeyword("Sets the time waited for nodes to become available. Default value is 5 seconds."
