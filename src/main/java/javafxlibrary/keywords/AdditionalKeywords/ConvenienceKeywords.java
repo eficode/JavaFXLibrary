@@ -1087,23 +1087,22 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Click On | &{menu items}[menu item name] | \n\n")
     @ArgumentNames({"locator="})
     public Map<String, Object> getContextMenuItems(Window window){
-        try {
-            ContextMenu cm = (ContextMenu) window;
-            Map<String, Object> menuItems = new HashMap<>();
-
-            for (Node node : robot.rootNode(window).lookupAll(".menu-item") ) {
-                menuItems.put(getMenuItemText(node), mapObject(node));
-            }
-
-            return menuItems;
-
-        } catch (ClassCastException cce) {
+        if (!(window instanceof ContextMenu))
             throw new JavaFXLibraryNonFatalException("Unable to handle target as ContextMenu!");
-        }
+
+        Map<String, Object> menuItems = new HashMap<>();
+        Set<Node> nodes = robot.rootNode(window).lookupAll(".menu-item");
+
+        for (Node node : nodes)
+            menuItems.put(getMenuItemText(node), mapObject(node));
+
+        return menuItems;
     }
+
+    @RobotKeywordOverload
     public Map<String, Object> getContextMenuItems(){
         List<Window> windows = robot.listTargetWindows();
-        return getContextMenuItems(windows.get(windows.size()));
+        return getContextMenuItems(windows.get(windows.size() - 1));
     }
 
     @RobotKeyword("Clicks the given item from menu\n\n"
@@ -1116,8 +1115,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public void selectContextMenuItem(String item){
         List<Window> windows = robot.listTargetWindows();
         ListIterator li = windows.listIterator(windows.size());
-        while (li.hasPrevious()){
-            for(Node node : robot.rootNode((Window)li.previous()).lookupAll(".menu-item")) {
+        while (li.hasPrevious()) {
+            Set<Node> nodes = robot.rootNode((Window)li.previous()).lookupAll(".menu-item");
+            for (Node node : nodes) {
                 if (getMenuItemText(node).equals(item)) {
                     robot.clickOn(node, Motion.HORIZONTAL_FIRST);
                     return;
