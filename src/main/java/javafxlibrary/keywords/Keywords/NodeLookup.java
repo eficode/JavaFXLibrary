@@ -48,7 +48,7 @@ public class NodeLookup extends TestFxAdapter {
             + "`3. Locating or specifying UI elements`. \n\n"
             + "\nExamples for different kind of locators: \n\n"
             + "Window:\n"
-            + "| ${window}= | Window By Title | ClickRobot Test | \n"
+            + "| ${window}= | Get Window | title=ClickRobot Test | \n"
             + "| ${node}= | Get Root Node Of | ${window} | \n"
             + "Scene:\n"
             + "| ${some scene}= | Get Nodes Scene | ${some node} | \n"
