@@ -199,12 +199,12 @@ Get Object Property
 Get Pseudostates With Get Object Property
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestClickRobot
-    ${node}    Find         \#button
-    ${pseudostates}         Get Object Property    ${node}    pseudoClassStates
-    Should Contain          ${pseudostates}    focused
+    ${node}                 Find                    \#button
+    ${pseudostates}         Get Object Property     ${node}    pseudoClassStates
+    Should Contain          ${pseudostates}         focused
     Move To                 ${node}
-    ${pseudostates}         Get Object Property    ${node}    pseudoClassStates
-    Should Contain          ${pseudostates}    hover
+    ${pseudostates}         Get Object Property     ${node}    pseudoClassStates
+    Should Contain          ${pseudostates}         hover
 
 Print Object Properties
     [Tags]                      smoke
@@ -219,6 +219,32 @@ Get Node Image Url With Get Object Property
     ${image}                Get Object Property     ${node}     oldImage
     ${url}                  Get Object Property     ${image}    url
     Should End With         ${url}    /fxml/javafxlibrary/ui/uiresources/ejlogo.png
+
+Get Scene (Node)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${node}                 Find                \#imageView
+    ${scene}                Get Scene           ${node}
+    ${target}               Get Root Node Of    ${node}
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
+
+Get Scene (String)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${scene}                Get Scene           \#imageView
+    ${target}               Get Root Node Of    \#imageView
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
+
+Get Scene (Window)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${window}               Get Window          title=ScrollRobot Test 2
+    ${scene}                Get Scene           ${window}
+    ${target}               Get Root Node Of    ${window}
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
 
 *** Keywords ***
 Set Test Application

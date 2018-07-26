@@ -628,28 +628,52 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    // TODO: Add support for getting Scene using Window object
-    @RobotKeyword("Returns given locators Scene object. \n\n"
-            + "``locator`` is either a _query_ or _Object:Node_ for a node whose getSimpleName method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
-    @ArgumentNames({ "query" })
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Get Scene` instead.\n\n"
+            +"Returns given locators Scene object. \n\n"
+            + "``locator`` is either a _query_ or a _Node_, see `3.2 Using locators as keyword arguments`\n\n")
+    @ArgumentNames({ "locator" })
     public Object getNodesScene(Object locator) {
         try {
-            if(locator instanceof Node){
-                robotLog("INFO", "Getting a Scene object for a Node: \"" + locator.toString() + "\"");
+            if (locator instanceof Node){
+                robotLog("INFO", "Getting a Scene object for a Node: \"" + locator + "\"");
                 return mapObject(((Node) locator).getScene());
-            } else if ( locator instanceof String) {
-                robotLog("INFO", "Getting a Scene object for a query: \"" + locator.toString() + "\"");
-                Node node = robot.lookup((String)locator).query();
+            } else if (locator instanceof String) {
+                robotLog("INFO", "Getting a Scene object for a query: \"" + locator + "\"");
+                Node node = objectToNode(locator);
                 return mapObject(node.getScene());
             }
 
             throw new JavaFXLibraryNonFatalException("locator type is not a Node or a query string!");
 
         } catch (Exception e) {
-            if( e instanceof JavaFXLibraryNonFatalException )
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator.toString() + "\"", e);
+            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator + "\"", e);
+        }
+    }
+
+    @RobotKeyword("Returns Scene of the given object. \n\n"
+            + "``locator`` is either a _query_, a _Node_ or a _Window_, see `3.2 Using locators as keyword arguments`\n\n")
+    @ArgumentNames({ "locator" })
+    public Object getScene(Object locator) {
+        try {
+            robotLog("INFO", "Getting a Scene object for: \"" + locator + "\"");
+            if (locator instanceof Node){
+                return mapObject(((Node) locator).getScene());
+            } else if (locator instanceof String) {
+                Node node = objectToNode(locator);
+                return mapObject(node.getScene());
+            } else if (locator instanceof Window) {
+                return mapObject(((Window) locator).getScene());
+            }
+
+            throw new JavaFXLibraryNonFatalException("Unsupported locator type. Locator must be an instance of Node, String or Window!");
+
+        } catch (Exception e) {
+            if (e instanceof JavaFXLibraryNonFatalException)
+                throw e;
+            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator + "\"", e);
         }
     }
 
