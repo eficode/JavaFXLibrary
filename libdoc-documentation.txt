@@ -92,20 +92,20 @@ If we wanted to click every Button of the application, we could use Find All and
  The FXML used in XPath lookups is generated on the fly and might differ from the actual FXML file the application uses. For
 example a Button that contains a text value is split into a Parent node Button and a child node LabeledText. Numeric
 values of attributes such as width and height are represented in their actual type format, which is usually double for
-JavaFX nodes, so e.g. height="600" becomes height="600.0". This is important to note when using attribute values in the
-XPath query, as Node[@height="600"] will not be able to find anything.
+JavaFX nodes, so e.g. _height="600"_ becomes _height="600.0"_. This is important to note when using attribute values in the
+XPath query, as _Node[@height="600"]_ will not be able to find anything.
 | *Original FXML* | *Generated FXML* |
 | <Button text="Click me" /> | <Button> <LabeledText text="Click me" ... /> </Button> |
 | <Rectangle width="150" height="150" x="300" /> | <Rectangle width="150.0" height="150.0" x="300.0" /> |
 
 Generated FXML usually contains also some values that are not specifically defined in the actual code, but can still be
-used to differentiate nodes. To see the generated FXML used for the lookup, use Log FXML keyword. If the tested application
+used to differentiate nodes. To see the generated FXML used for the lookup, use `Log FXML` keyword. If the tested application
 is large, it might be easier to first get a parent node closer to the actual point of interest and use it as a root for
 the Log FXML keyword. This way the output will be easier to read and the log.html wont be millions of lines long.
 
 
 === 3.4 About Pseudo queries ===
-All lookup queries return the first matching node, unless used with `Find All keyword in which case all of the matches
+All lookup queries return the first matching node, unless used with `Find All` keyword in which case all of the matches
 will be returned. Usually this is not a problem, but pseudo classes require a some additional thought and care. For example
 when the cursor is hovered on top of a JavaFX Button and the lookup is executed with a query  _pseudo=hover_, the top level
 parent node of the button is returned instead of it. This happens because every parent of the button also contains the

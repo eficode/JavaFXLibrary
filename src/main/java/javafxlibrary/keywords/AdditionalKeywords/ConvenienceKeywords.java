@@ -311,8 +311,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Prints all child nodes starting from a given node.\n\n"
-            + "Optional argument ``root`` is the starting point from where to start listing child nodes. It can be either a _query_ or _Object_, "
-            + "see `3.1 Using queries` and `3.2 Using objects`. Defaults to root node of current window. \n\n"
+            + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
+            + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
             + "\nExample:\n"
             + "| ${my node}= | Find | \\#node-id | \n"
             + "| Print Child Nodes | ${my node} | \n")
@@ -337,8 +337,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     // TODO: Should printChildNodes be deprecated?
     @RobotKeyword("Generates and prints FXML representation of the application starting from a given node.\n\n"
-            + "Optional argument ``root`` is the starting point from where to start listing child nodes. It can be either a _query_ or _Object_, "
-            + "see `3.1 Using queries` and `3.2 Using objects`. Defaults to root node of current window. \n\n"
+            + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
+            + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
             + "\nExample:\n"
             + "| ${my node}= | Find | \\#node-id | \n"
             + "| Log FXML | ${my node} | \n")
@@ -431,7 +431,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
             + "Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
             + "``locator`` is either a _query_ or _Object_ for node whose children will be queried, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3.2 Using locators as keyword arguments`. \n\n"
             + "``className`` is the Java class name to look for.\n"
             + "\nExample:\n"
             + "| ${panes}= | Get Node Children By Class Name | ${some node} | BorderPane | \n"
