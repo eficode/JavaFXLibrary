@@ -65,7 +65,7 @@
 
     <AnchorPane>
         <StackPane>
-            <Rectangle width="800" height="350" />
+            <Rectangle fx:id="bgRectangle" width="800" height="350" />
             <Label fx:id="textLabel" styleClass="textLabel" text="Menu App" />
         </StackPane>
         <HBox styleClass="comboBoxContainer" AnchorPane.bottomAnchor="0">

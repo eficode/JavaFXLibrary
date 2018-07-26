@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-.textLabel .text {
+#textLabel > .text {
     -fx-fill: white;
     -fx-stroke: #323232;
     -fx-stroke-type: outside;

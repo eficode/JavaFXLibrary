@@ -22,6 +22,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,6 +38,7 @@ public class MenuAppController implements Initializable {
     private @FXML RadioMenuItem javaStyle;
     private @FXML RadioMenuItem gradientStyle;
     private @FXML Menu fontMenu;
+    private @FXML Rectangle bgRectangle;
     private String bnyCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Bny.css").toExternalForm();
     private String javaCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Javastyle.css").toExternalForm();
     private String gradientCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Gradientstyle.css").toExternalForm();
@@ -58,11 +61,23 @@ public class MenuAppController implements Initializable {
         for (MenuItem menuItem : fontMenu.getItems()) {
             RadioMenuItem r = (RadioMenuItem) menuItem;
             r.setToggleGroup(fontSizeGroup);
-            menuItem.setOnAction((ActionEvent event) -> {RadioMenuItem radioMenuItem = (RadioMenuItem) event.getSource();
-            int size = Integer.parseInt(radioMenuItem.getText().substring(0,2));
-            textLabel.setStyle("-fx-font-size: " + size + "px");
+            menuItem.setOnAction((ActionEvent event) -> {
+                RadioMenuItem radioMenuItem = (RadioMenuItem) event.getSource();
+                int size = Integer.parseInt(radioMenuItem.getText().substring(0,2));
+                textLabel.setStyle("-fx-font-size: " + size + "px");
             });
         }
+
+        final ContextMenu cm = new ContextMenu();
+        cm.getItems().addAll(new MenuItem("JavaFXLibrary"), new MenuItem("Is easy"), new MenuItem("And fun to use"));
+
+        for (MenuItem item : cm.getItems())
+            item.setOnAction(e -> textLabel.setText(item.getText()));
+
+        bgRectangle.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY)
+                cm.show(textLabel, e.getScreenX(), e.getScreenY());
+        });
     }
 
     public void navigate(ActionEvent event) {
