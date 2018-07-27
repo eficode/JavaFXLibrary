@@ -829,7 +829,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-
     @RobotKeyword("Returns the given table row cells in a dictionary in form of name:node pairs. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating or specifying UI elements`. \n\n"
@@ -1103,6 +1102,21 @@ public class ConvenienceKeywords extends TestFxAdapter {
             return mapObject(dp.getValue());
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle target as DatePicker!");
+        }
+    }
+
+    @RobotKeyword("Clears the text value of given TextInputControl\n\n"
+            + "``locator`` is either a _query_ or _TextInputControl_ object. For identifying the element, see "
+            + "`3. Locating or specifying UI elements`. \n\n"
+            + "\nExample:\n"
+            + "| Clear Text Input | .text-field | \n")
+    @ArgumentNames({ "locator" })
+    public void clearTextInput(Object locator) {
+        try {
+            TextInputControl input = (TextInputControl) objectToNode(locator);
+            input.clear();
+        } catch (ClassCastException cce) {
+            throw new JavaFXLibraryNonFatalException("Unable to handle target as TextInputControl!");
         }
     }
 
