@@ -1095,13 +1095,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the DatePicker element, see "
             + "`3. Locating or specifying UI elements`. \n\n"
             + "\nExample:\n"
-            + "| ${date}= | Get Selected Date Picker Date | \\#.datepicker-id | \n")
+            + "| ${date}= | Get Selected Date Picker Date | \\#datepicker-id | \n")
     @ArgumentNames({"locator"})
-    public Object getSelectedDatePickerDate(Object locator){
+    public Object getSelectedDatePickerDate(Object locator) {
         try {
             DatePicker dp = (DatePicker) objectToNode(locator);
-            return dp.getValue();
-
+            return mapObject(dp.getValue());
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle target as DatePicker!");
         }
