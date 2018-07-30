@@ -61,7 +61,7 @@ for locating objects: *id*, *css*, *class*, *text*, *xpath* and *pseudo*. Query 
 | class=javafx.scene.shape.Rectangle | Returns a node that is an instance of the given class. |
 | text=Submit | Returns a node with text value _Submit_. Works only with Labeled nodes, and is basically the same as the default locator with plain text. |
 | xpath=//Rectangle[@fill="0xff1493ff"] | Returns a Rectangle that has fill value _0xff1493ff_. See `3.3 About XPath queries` for more details about using xpath queries. |
-| pseudo=hover focused | Returns a node that contains pseudo class states _hover_ and _focused_. See `3.4 About Pseudo queries` for more details about using pseudo queries. |
+| pseudo=hover;focused | Returns a node that contains pseudo class states _hover_ and _focused_. See `3.4 About Pseudo queries` for more details about using pseudo queries. |
 
 These queries can be chained to move in application UI tree more precisely. The result of the previous query
 is used as the root of the next query. Only queries with prefixes can be chained.
@@ -114,7 +114,7 @@ hover pseudo state.
 To avoid accidentally targeting parents of the expected node it is advisable to use the closest parent possible as a
 root for the lookup. Root can be given as an argument for both Find keywords, or it can be defined by adding other queries
 before using pseudo-query. Multiple pseudo-classes can be given in a single query to further narrow the amount of matching
-nodes, e.g. _pseudo=hover focused_.
+nodes by using ';' separator, e.g. _pseudo=hover;focused_.
 
 
 
