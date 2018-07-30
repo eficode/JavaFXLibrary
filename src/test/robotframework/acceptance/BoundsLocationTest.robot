@@ -76,9 +76,8 @@ Get Bounds Using XPath Query
     ${TARGET}                   Create Bounds       ${TARGET_X}   ${TARGET_Y}    600    300
     Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
 
-# TODO: Fix this test when Finder.find exception handling is ready
 Get Bounds Of Id That Does Not Exist
-    [Tags]              not-ready    negative
+    [Tags]              smoke    negative
     Set Timeout         ${1}
     ${MSG}              Run Keyword And Expect Error    *    Get Bounds    \#idThatDoesNotExist
     Should Be Equal     ${MSG}    Given element "\#idThatDoesNotExist" was not found within given timeout of 1 SECONDS
