@@ -102,17 +102,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Calls a given method for a given java object.\n\n"
             + "``object`` can be an instance of any Java Class retrieved using JavaFXLibrary keywords, see `3.2 Using objects`.\n\n"
             + "``methodName`` is a String type argument describing the method name to call.\n\n"
-            + "Optional ``arguments`` is a list of Java objects to be passed to method call as mehod arguments.\n\n"
-            + "Optional ``argumentTypes`` is a list of Java objects describing the mehod argument types.\n\n"
+            + "Optional ``arguments`` is a list of Java objects to be passed to method call as method arguments.\n\n"
             + "\nExample:\n"
             + "| ${args}= | Create List | 10 | \n"
-            + "| ${argtypes}= | Create List | double | \n"
             + "| ${node}= | Find | \\#node-id | \n"
-            + "| ${max height}= | Call Object Method | ${node} | maxHeight | ${args} | ${argTypes} | \n"
+            + "| ${max height}= | Call Object Method | ${node} | maxHeight | ${args} | \n"
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
-    @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
-    public Object callObjectMethod(Object object, String method, List<Object> arguments, List<Object> argumentTypes) {
-        Object value = callMethod(object, method, arguments, argumentTypes, false);
+    @ArgumentNames({ "object", "methodName", "arguments=" })
+    public Object callObjectMethod(Object object, String method, List<Object> arguments) {
+        Object value = callMethod(object, method, arguments, false);
         if (value != null)
             return mapObject(value);
         return null;
@@ -126,8 +124,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Uses Platform.runLater() for a method call. See `Call Object Method` for further documentation.\n\n")
     @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
-    public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments, List<Object> argumentTypes) {
-        callMethod(object, method, arguments, argumentTypes, true);
+    public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments) {
+        callMethod(object, method, arguments, true);
     }
 
     @RobotKeyword("Returns the *first* node matching the query. \n\n"

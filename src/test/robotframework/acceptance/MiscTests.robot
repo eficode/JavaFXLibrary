@@ -2,6 +2,7 @@
 Documentation       Tests for AdditionalKeywords
 Library             JavaFXLibrary
 Library             Collections
+Library             String
 Suite Teardown      Close Javafx Application
 
 *** Variables ***
@@ -37,13 +38,12 @@ Call Method That Does Not Exist
     Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
 
 Call Method With Wrong Types
-    [Tags]    negative    smoke
+    [Tags]                  negative        smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}    Find    \#green
-    @{ARGS}    Create List    ${20}
-    @{ARG_TYPES}    Create List    int
-    ${MSG}    Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    ${ARGS}    ${ARG_TYPES}
-    Should Be Equal    ${MSG}    class javafx.scene.shape.Rectangle has no method "setWidth" with arguments [int]
+    ${NODE}                 Find            \#green
+    @{ARGS}                 Create List     20
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    ${ARGS}
+    Should End With         ${MSG}          has no method "setWidth" with arguments [class java.lang.String]
 
 Call Method That Does Not Exist In Fx Application Thread
     [Tags]                  negative    smoke
@@ -53,50 +53,82 @@ Call Method That Does Not Exist In Fx Application Thread
     Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
 
 Call Method With Wrong Types In Fx Application Thread
-    [Tags]    negative    smoke
+    [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}    Find    \#green
-    @{ARGS}    Create List    ${20}
-    @{ARG_TYPES}    Create List    int
-    ${MSG}    Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    ${ARGS}    ${ARG_TYPES}
-    Should Be Equal    ${MSG}    class javafx.scene.shape.Rectangle has no method "setWidth" with arguments [int]
+    ${NODE}                 Find    \#green
+    @{ARGS}                 Create List    20
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    ${ARGS}
+    Should End With         ${MSG}    has no method "setWidth" with arguments [class java.lang.String]
+
+Change Node ID Using Call Method
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestBoundsLocation
+    ${args}                 Create List         importantNode
+    ${original}             Find                \#yellow
+    Call Object Method      ${original}         setId    ${args}
+    ${modified}             Find                \#importantNode
+    ${original_hash}        Fetch From Left     ${original}    [
+    ${modified_hash}        Fetch From Left     ${modified}    [
+    Should Be Equal         ${original_hash}    ${modified_hash}
+    # Set id back to yellow in case it is needed in some other test
+    ${reset}                Create List         yellow
+    Call Object Method      ${modified}         setId    ${reset}
+    Sleep                   1                   SECONDS
+    ${after_reset}          Find                \#yellow
+    Should Be Equal         ${after_reset}      ${original}
+
+Change Node Fill Using Call Method In JavaFX Application Thread
+    [Tags]                                          smoke
+    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    ${node}                                         Find                    \#turquoise
+    ${fill}                                         Call Object Method      ${node}         getFill
+    ${target}                                       Find                    \#yellow
+    ${original}                                     Call Object Method      ${target}       getFill
+    ${args}                                         Create List             ${fill}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    # TODO: Add Wait For Events in Fx Thread kw / Wait automatically in Call Method kw
+    Sleep                                           1                       SECONDS
+    ${result}                                       Call Object Method      ${target}       getFill
+    Should End With                                 ${result}               00ffe9ff
+    # Reset original fill value
+    ${args}                                         Create List             ${original}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    Sleep                                           1                       SECONDS
+    ${result}                                       Call Object Method      ${target}       getFill
 
 Find From Node
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}                 Find    \#yellow
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox StackPane
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${NODE}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    ${RECT}                 Find From Node    ${RESULT}    Rectangle
-    Should Be Equal         ${NODE}    ${RECT}
+    ${NODE}                 Find                    \#yellow
+    @{ARGS}                 Create List             HBox VBox HBox VBox HBox StackPane
+    ${ROOT}                 Get Root Node Of        ${NODE}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup    ${ARGS}
+    ${RECT}                 Find From Node          ${RESULT}       Rectangle
+    Should Be Equal         ${NODE}                 ${RECT}
 
 Find All From Node
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${YELLOW}               Find    \#yellow
-    ${VIOLET}               Find    \#violet
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${YELLOW}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    @{RECT}                 Find All From Node    ${RESULT}    Rectangle
-    Should Be Equal         ${YELLOW}    @{RECT}[0]
-    Should Be Equal         ${VIOLET}    @{RECT}[1]
+    ${YELLOW}               Find                    \#yellow
+    ${VIOLET}               Find                    \#violet
+    @{ARGS}                 Create List             HBox VBox HBox VBox HBox
+    ${ROOT}                 Get Root Node Of        ${YELLOW}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup      ${ARGS}
+    @{RECT}                 Find All From Node      ${RESULT}       Rectangle
+    Should Be Equal         ${YELLOW}               @{RECT}[0]
+    Should Be Equal         ${VIOLET}               @{RECT}[1]
 
 Get Node Children By Class Name
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${YELLOW}               Find    \#yellow
-    ${VIOLET}               Find    \#violet
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${YELLOW}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    @{RECT}                 Get Node Children By Class Name    ${RESULT}    Rectangle
-    Should Contain          ${RECT}    ${YELLOW}
-    Should Contain          ${RECT}    ${VIOLET}
+    ${YELLOW}               Find                                \#yellow
+    ${VIOLET}               Find                                \#violet
+    @{ARGS}                 Create List                         HBox VBox HBox VBox HBox
+    ${ROOT}                 Get Root Node Of                    ${YELLOW}
+    ${RESULT}               Call Object Method                  ${ROOT}         lookup    ${ARGS}
+    @{RECT}                 Get Node Children By Class Name     ${RESULT}       Rectangle
+    Should Contain          ${RECT}                             ${YELLOW}
+    Should Contain          ${RECT}                             ${VIOLET}
 
 Get Node Text Of Incompatible Node
     [Tags]                  negative    smoke
