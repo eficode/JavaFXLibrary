@@ -41,8 +41,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     public void callMethod_InSameThread_WithArgs_WithReturnValue() {
         String name = "JavaFXLibrary";
         List<Object> arguments = Arrays.asList(4, 9);
-        List<Object> types = Arrays.asList("int", "int");
-        String result = (String) HelperFunctions.callMethod(name, "substring", arguments, types, false);
+        String result = (String) HelperFunctions.callMethod(name, "substring", arguments, false);
         Assert.assertEquals("FXLib", result);
     }
 
@@ -50,8 +49,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     public void callMethod_InSameThread_WithArgs_NoReturnValue() {
         Point point = new Point(0, 0);
         List<Object> arguments = Arrays.asList(20, 17);
-        List<Object> types = Arrays.asList("int", "int");
-        HelperFunctions.callMethod(point, "setLocation", arguments, types, false);
+        HelperFunctions.callMethod(point, "setLocation", arguments, false);
         Assert.assertEquals(20, point.getX(), 0);
         Assert.assertEquals(17, point.getY(), 0);
     }
@@ -64,8 +62,7 @@ public class CallMethodTest extends TestFxAdapterTest {
         waitForEventsInJavaFXThread();
 
         List<Object> arguments = Arrays.asList("Changed Title");
-        List<Object> types = Arrays.asList("java.lang.String");
-        HelperFunctions.callMethod(stage, "setTitle", arguments, types, true);
+        HelperFunctions.callMethod(stage, "setTitle", arguments, true);
         waitForEventsInJavaFXThread();
 
         Assert.assertEquals("Changed Title", stage.getTitle());
@@ -94,12 +91,11 @@ public class CallMethodTest extends TestFxAdapterTest {
     public void callMethod_WithWrongTypes() {
         Point point = new Point(0, 0);
         List<Object> arguments = Arrays.asList("20", "17");
-        List<Object> types = Arrays.asList("java.lang.String", "java.lang.String");
 
         thrown.expect(JavaFXLibraryNonFatalException.class);
         thrown.expectMessage("class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]");
 
-        HelperFunctions.callMethod(point, "setLocation", arguments, types, false);
+        HelperFunctions.callMethod(point, "setLocation", arguments, false);
     }
 
     public class TestPoint extends Point {

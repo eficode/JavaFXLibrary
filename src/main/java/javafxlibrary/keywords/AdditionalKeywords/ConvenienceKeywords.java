@@ -45,6 +45,7 @@ import org.testfx.robot.Motion;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import static javafxlibrary.utils.HelperFunctions.*;
 
@@ -106,17 +107,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Calls a given method for a given java object.\n\n"
             + "``object`` can be an instance of any Java Class retrieved using JavaFXLibrary keywords, see `3.2 Using objects`.\n\n"
             + "``methodName`` is a String type argument describing the method name to call.\n\n"
-            + "Optional ``arguments`` is a list of Java objects to be passed to method call as mehod arguments.\n\n"
-            + "Optional ``argumentTypes`` is a list of Java objects describing the mehod argument types.\n\n"
+            + "Optional ``arguments`` is a list of Java objects to be passed to method call as method arguments.\n\n"
             + "\nExample:\n"
             + "| ${args}= | Create List | 10 | \n"
-            + "| ${argtypes}= | Create List | double | \n"
             + "| ${node}= | Find | \\#node-id | \n"
-            + "| ${max height}= | Call Object Method | ${node} | maxHeight | ${args} | ${argTypes} | \n"
+            + "| ${max height}= | Call Object Method | ${node} | maxHeight | ${args} | \n"
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
-    @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
-    public Object callObjectMethod(Object object, String method, List<Object> arguments, List<Object> argumentTypes) {
-        Object value = callMethod(object, method, arguments, argumentTypes, false);
+    @ArgumentNames({ "object", "methodName", "arguments=" })
+    public Object callObjectMethod(Object object, String method, List<Object> arguments) {
+        Object value = callMethod(object, method, arguments, false);
         if (value != null)
             return mapObject(value);
         return null;
@@ -130,8 +129,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Uses Platform.runLater() for a method call. See `Call Object Method` for further documentation.\n\n")
     @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
-    public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments, List<Object> argumentTypes) {
-        callMethod(object, method, arguments, argumentTypes, true);
+    public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments) {
+        callMethod(object, method, arguments, true);
     }
 
     @Deprecated
@@ -362,14 +361,20 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "Parameter _value_ specifies whether safety should be toggled on or off")
     @ArgumentNames({ "value" })
     public void setSafeClicking(String value) {
-        if (value.equals("OFF") || value.equals("off")) {
-            robotLog("INFO", "Setting safe clicking mode to OFF");
-            HelperFunctions.setSafeClicking(false);
-        } else if (value.equals("ON") || value.equals("on")) {
-            robotLog("INFO", "Setting safe clicking mode to ON");
-            HelperFunctions.setSafeClicking(true);
-        } else
-            throw new JavaFXLibraryNonFatalException("Unkown value: \"" + value + "\". Expected values are: on, ON, off and OFF.");
+        switch (value) {
+            case "OFF":
+            case "off":
+                robotLog("INFO", "Setting safe clicking mode to OFF");
+                HelperFunctions.setSafeClicking(false);
+                break;
+            case "ON":
+            case "on":
+                robotLog("INFO", "Setting safe clicking mode to ON");
+                HelperFunctions.setSafeClicking(true);
+                break;
+            default:
+                throw new JavaFXLibraryNonFatalException("Unknown value: \"" + value + "\". Expected values are: on, ON, off and OFF.");
+        }
     }
 
     @RobotKeyword("Sets the time waited for nodes to become available. Default value is 5 seconds."
@@ -571,28 +576,52 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    // TODO: Add support for getting Scene using Window object
-    @RobotKeyword("Returns given locators Scene object. \n\n"
-            + "``locator`` is either a _query_ or _Object:Node_ for a node whose getSimpleName method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
-    @ArgumentNames({ "query" })
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Get Scene` instead.\n\n"
+            +"Returns given locators Scene object. \n\n"
+            + "``locator`` is either a _query_ or a _Node_, see `3.2 Using locators as keyword arguments`\n\n")
+    @ArgumentNames({ "locator" })
     public Object getNodesScene(Object locator) {
         try {
-            if(locator instanceof Node){
-                robotLog("INFO", "Getting a Scene object for a Node: \"" + locator.toString() + "\"");
+            if (locator instanceof Node){
+                robotLog("INFO", "Getting a Scene object for a Node: \"" + locator + "\"");
                 return mapObject(((Node) locator).getScene());
-            } else if ( locator instanceof String) {
-                robotLog("INFO", "Getting a Scene object for a query: \"" + locator.toString() + "\"");
-                Node node = robot.lookup((String)locator).query();
+            } else if (locator instanceof String) {
+                robotLog("INFO", "Getting a Scene object for a query: \"" + locator + "\"");
+                Node node = objectToNode(locator);
                 return mapObject(node.getScene());
             }
 
             throw new JavaFXLibraryNonFatalException("locator type is not a Node or a query string!");
 
         } catch (Exception e) {
-            if( e instanceof JavaFXLibraryNonFatalException )
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator.toString() + "\"", e);
+            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator + "\"", e);
+        }
+    }
+
+    @RobotKeyword("Returns Scene of the given object. \n\n"
+            + "``locator`` is either a _query_, a _Node_ or a _Window_, see `3.2 Using locators as keyword arguments`\n\n")
+    @ArgumentNames({ "locator" })
+    public Object getScene(Object locator) {
+        try {
+            robotLog("INFO", "Getting a Scene object for: \"" + locator + "\"");
+            if (locator instanceof Node){
+                return mapObject(((Node) locator).getScene());
+            } else if (locator instanceof String) {
+                Node node = objectToNode(locator);
+                return mapObject(node.getScene());
+            } else if (locator instanceof Window) {
+                return mapObject(((Window) locator).getScene());
+            }
+
+            throw new JavaFXLibraryNonFatalException("Unsupported locator type. Locator must be an instance of Node, String or Window!");
+
+        } catch (Exception e) {
+            if (e instanceof JavaFXLibraryNonFatalException)
+                throw e;
+            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator + "\"", e);
         }
     }
 
@@ -747,7 +776,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
         }
     }
-
 
     @RobotKeyword("Returns the given table row cells in a dictionary in form of name:node pairs. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
@@ -1014,15 +1042,29 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the DatePicker element, see "
             + "`3. Locating or specifying UI elements`. \n\n"
             + "\nExample:\n"
-            + "| ${date}= | Get Selected Date Picker Date | \\#.datepicker-id | \n")
+            + "| ${date}= | Get Selected Date Picker Date | \\#datepicker-id | \n")
     @ArgumentNames({"locator"})
-    public Object getSelectedDatePickerDate(Object locator){
+    public Object getSelectedDatePickerDate(Object locator) {
         try {
             DatePicker dp = (DatePicker) objectToNode(locator);
-            return dp.getValue();
-
+            return mapObject(dp.getValue());
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle target as DatePicker!");
+        }
+    }
+
+    @RobotKeyword("Clears the text value of given TextInputControl\n\n"
+            + "``locator`` is either a _query_ or _TextInputControl_ object. For identifying the element, see "
+            + "`3. Locating or specifying UI elements`. \n\n"
+            + "\nExample:\n"
+            + "| Clear Text Input | .text-field | \n")
+    @ArgumentNames({ "locator" })
+    public void clearTextInput(Object locator) {
+        try {
+            TextInputControl input = (TextInputControl) objectToNode(locator);
+            input.clear();
+        } catch (ClassCastException cce) {
+            throw new JavaFXLibraryNonFatalException("Unable to handle target as TextInputControl!");
         }
     }
 
@@ -1036,23 +1078,22 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Click On | &{menu items}[menu item name] | \n\n")
     @ArgumentNames({"locator="})
     public Map<String, Object> getContextMenuItems(Window window){
-        try {
-            ContextMenu cm = (ContextMenu) window;
-            Map<String, Object> menuItems = new HashMap<>();
-
-            for (Node node : robot.rootNode(window).lookupAll(".menu-item") ) {
-                menuItems.put(getMenuItemText(node), mapObject(node));
-            }
-
-            return menuItems;
-
-        } catch (ClassCastException cce) {
+        if (!(window instanceof ContextMenu))
             throw new JavaFXLibraryNonFatalException("Unable to handle target as ContextMenu!");
-        }
+
+        Map<String, Object> menuItems = new HashMap<>();
+        Set<Node> nodes = robot.rootNode(window).lookupAll(".menu-item");
+
+        for (Node node : nodes)
+            menuItems.put(getMenuItemText(node), mapObject(node));
+
+        return menuItems;
     }
+
+    @RobotKeywordOverload
     public Map<String, Object> getContextMenuItems(){
         List<Window> windows = robot.listTargetWindows();
-        return getContextMenuItems(windows.get(windows.size()));
+        return getContextMenuItems(windows.get(windows.size() - 1));
     }
 
     @RobotKeyword("Clicks the given item from menu\n\n"
@@ -1065,8 +1106,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public void selectContextMenuItem(String item){
         List<Window> windows = robot.listTargetWindows();
         ListIterator li = windows.listIterator(windows.size());
-        while (li.hasPrevious()){
-            for(Node node : robot.rootNode((Window)li.previous()).lookupAll(".menu-item")) {
+        while (li.hasPrevious()) {
+            Set<Node> nodes = robot.rootNode((Window)li.previous()).lookupAll(".menu-item");
+            for (Node node : nodes) {
                 if (getMenuItemText(node).equals(item)) {
                     robot.clickOn(node, Motion.HORIZONTAL_FIRST);
                     return;
@@ -1089,5 +1131,43 @@ public class ConvenienceKeywords extends TestFxAdapter {
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as ProgressBar!");
         }
+    }
+
+    @RobotKeyword("Waits for current events in Fx Application Thread event queue to finish before continuing.\n\n"
+            + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
+            + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
+    @ArgumentNames({ "timeout=" })
+    public static void waitForEventsInFxApplicationThread(int timeout) {
+
+        try {
+            Semaphore semaphore = new Semaphore(0);
+            Platform.runLater(() -> semaphore.release());
+            Thread t = new Thread(() -> {
+                int passed = 0;
+                try {
+                    while (passed <= timeout) {
+                        Thread.sleep(1000);
+                        passed++;
+                    }
+
+                    if (semaphore.hasQueuedThreads())
+                        throw new JavaFXLibraryNonFatalException("Events did not finish within the given timeout of "
+                                + timeout + " seconds.");
+                } catch (InterruptedException e) {
+                    throw new JavaFXLibraryNonFatalException("Timeout was interrupted in Wait For Wait For Events in " +
+                            "Fx Application Thread: " + e.getMessage());
+                }
+            });
+            t.start();
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
+                    + e.getMessage());
+        }
+    }
+
+    @RobotKeywordOverload
+    public static void waitForEventsInFxApplicationThread() {
+        waitForEventsInFxApplicationThread(HelperFunctions.getWaitUntilTimeout());
     }
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-.textLabel .text {
+#textLabel > .text {
     -fx-fill: whitesmoke;
     -fx-font-family: sans-serif;
     -fx-font-style: oblique;
@@ -32,7 +32,7 @@
     -fx-background-color: transparent;
 }
 
-.menu-bar .menu-item .label .text {
+.context-menu .menu-item .label .text {
     -fx-fill: whitesmoke;
 }
 
@@ -40,7 +40,7 @@
     -fx-background-color: whitesmoke;
 }
 
-.menu-bar .menu-item:hover .label .text {
+.context-menu .menu-item:hover .label .text {
     -fx-fill: #3050ff;
 }
 

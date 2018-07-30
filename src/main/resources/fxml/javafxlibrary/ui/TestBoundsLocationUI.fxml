@@ -20,12 +20,13 @@
   ~ limitations under the License.
   -->
 
+<?import javafxlibrary.testapps.customcomponents.ColorChangingRectangle?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="javafxlibrary.testapps.controllers.TestBoundsLocationController">
     <HBox>
         <StackPane>
-            <Rectangle fx:id="red" width="300" height="300" />
+            <ColorChangingRectangle fx:id="red" width="300" height="300" />
             <Text text="300x300"/>
         </StackPane>
         <VBox>

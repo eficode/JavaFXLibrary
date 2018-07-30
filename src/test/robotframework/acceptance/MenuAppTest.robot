@@ -9,8 +9,26 @@ Force Tags        set-menuapp
 ${TEST_APPLICATION}   javafxlibrary.testapps.MenuApp
 
 *** Test Cases ***
+Select Context Menu Item
+    [Tags]          smoke
+    ${menuitems}    Create List                 JavaFXLibrary    Is easy    And fun to use
+    ${location}     Point To With Offset        \#bgRectangle    -300       0
+    :FOR            ${menuitem}    IN           @{menuitems}
+    \               Right Click On              ${location}
+    \               Select Context Menu Item    ${menuitem}
+    \               Verify String               .textLabel       ${menuitem}
+
+Select Context Menu Item Using Click On Keyword
+    [Tags]          smoke
+    ${menuitems}    Create List                 JavaFXLibrary    Is easy    And fun to use
+    ${location}     Point To With Offset        \#bgRectangle    -300       0
+    :FOR            ${menuitem}    IN           @{menuitems}
+    \               Right Click On              ${location}
+    \               Click On                    ${menuitem}
+    \               Verify String               .textLabel       ${menuitem}
+
 Menus - Navigate
-    [Tags]                  menu
+    [Tags]                  smoke
     Click On                Learn
     Click On                Test Automation & Robot Framework
     Verify String           .textLabel    Test Automation & Robot Framework
@@ -30,7 +48,7 @@ Menus - Change Theme
     Click On                JavaFX               HORIZONTAL_FIRST
     ${SCENE}                Get Nodes Scene      .textLabel
     @{STYLESHEET}           Call Object Method   ${SCENE}        getStylesheets
-    Should Contain          @{STYLESHEET}[0]   Javastyle.css
+    Should Contain          @{STYLESHEET}[0]     Javastyle.css
 
 Menus - Change Font Size
     [Tags]                  smoke
@@ -46,7 +64,7 @@ Combined
     Click On                Settings
     Move To                 Theme
     # Horizontal first is required because submenu closes if the cursor moves outside of menu bounds
-    Click On                Gradient             HORIZONTAL_FIRST
+    Click On                Gradient              HORIZONTAL_FIRST
     ${SCENE}                Get Nodes Scene       .textLabel
     @{STYLESHEET}           Call Object Method    ${SCENE}    getStylesheets
     Should Contain          @{STYLESHEET}[0]      Gradientstyle.css
@@ -72,8 +90,8 @@ Teardown all tests
     Close Javafx Application
 
 Verify String
-    [Documentation]    Verifies that string is equal in location
-    [Arguments]                   ${query}          ${string}
-    ${target_node}=               Find              ${query}
-    ${text_label}=                Get Node Text     ${target_node}
-    Should Be Equal As Strings    ${string}         ${text_label}
+    [Documentation]                 Verifies that string is equal in location
+    [Arguments]                     ${query}          ${string}
+    ${target_node}                  Find              ${query}
+    ${text_label}                   Get Node Text     ${target_node}
+    Should Be Equal As Strings      ${string}         ${text_label}

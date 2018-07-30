@@ -2,6 +2,7 @@
 Documentation       Tests for AdditionalKeywords
 Library             JavaFXLibrary
 Library             Collections
+Library             String
 Suite Teardown      Close Javafx Application
 
 *** Variables ***
@@ -37,13 +38,12 @@ Call Method That Does Not Exist
     Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
 
 Call Method With Wrong Types
-    [Tags]    negative    smoke
+    [Tags]                  negative        smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}    Find    \#green
-    @{ARGS}    Create List    ${20}
-    @{ARG_TYPES}    Create List    int
-    ${MSG}    Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    ${ARGS}    ${ARG_TYPES}
-    Should Be Equal    ${MSG}    class javafx.scene.shape.Rectangle has no method "setWidth" with arguments [int]
+    ${NODE}                 Find            \#green
+    @{ARGS}                 Create List     20
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    ${ARGS}
+    Should End With         ${MSG}          has no method "setWidth" with arguments [class java.lang.String]
 
 Call Method That Does Not Exist In Fx Application Thread
     [Tags]                  negative    smoke
@@ -53,50 +53,96 @@ Call Method That Does Not Exist In Fx Application Thread
     Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
 
 Call Method With Wrong Types In Fx Application Thread
-    [Tags]    negative    smoke
+    [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}    Find    \#green
-    @{ARGS}    Create List    ${20}
-    @{ARG_TYPES}    Create List    int
-    ${MSG}    Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    ${ARGS}    ${ARG_TYPES}
-    Should Be Equal    ${MSG}    class javafx.scene.shape.Rectangle has no method "setWidth" with arguments [int]
+    ${NODE}                 Find    \#green
+    @{ARGS}                 Create List    20
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    ${ARGS}
+    Should End With         ${MSG}    has no method "setWidth" with arguments [class java.lang.String]
+
+Change Node ID Using Call Method
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestBoundsLocation
+    ${args}                 Create List         importantNode
+    ${original}             Find                \#yellow
+    Call Object Method      ${original}         setId    ${args}
+    ${modified}             Find                \#importantNode
+    ${original_hash}        Fetch From Left     ${original}    [
+    ${modified_hash}        Fetch From Left     ${modified}    [
+    Should Be Equal         ${original_hash}    ${modified_hash}
+    # Set id back to yellow in case it is needed in some other test
+    ${reset}                Create List         yellow
+    Call Object Method      ${modified}         setId    ${reset}
+    Wait For Events In Fx Application Thread
+    ${after_reset}          Find                \#yellow
+    Should Be Equal         ${after_reset}      ${original}
+
+Change Node Fill Using Call Method In JavaFX Application Thread
+    [Tags]                                          smoke
+    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    ${node}                                         Find                    \#turquoise
+    ${fill}                                         Call Object Method      ${node}         getFill
+    ${target}                                       Find                    \#yellow
+    ${original}                                     Call Object Method      ${target}       getFill
+    ${args}                                         Create List             ${fill}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    Wait For Events In Fx Application Thread
+    ${result}                                       Call Object Method      ${target}       getFill
+    Should End With                                 ${result}               00ffe9ff
+    # Reset original fill value
+    ${args}                                         Create List             ${original}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    Wait For Events In Fx Application Thread
+    ${after_reset}                                  Call Object Method      ${target}       getFill
+    Should End With                                 ${after_reset}          ffff00ff
+
+Wait For Events In Fx Application Thread
+    [Tags]                                          smoke
+    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    ${node}                                         Find        \#red
+    Call Object Method In Fx Application Thread     ${node}     changeFillAfterTwoSeconds
+    Wait For Events In Fx Application Thread
+    ${result}                                       Find        \#red
+    Should End With                                 ${result}   fill=0x7fffd4ff]
+    # Reset color
+    Call Object Method In Fx Application Thread     ${node}     resetFillToRed
+    Wait For Events In Fx Application Thread
+    ${result}                                       Find        \#red
+    Should End With                                 ${result}   fill=0xff0000ff]
 
 Find From Node
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}                 Find    \#yellow
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox StackPane
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${NODE}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    ${RECT}                 Find From Node    ${RESULT}    Rectangle
-    Should Be Equal         ${NODE}    ${RECT}
+    ${NODE}                 Find                    \#yellow
+    @{ARGS}                 Create List             HBox VBox HBox VBox HBox StackPane
+    ${ROOT}                 Get Root Node Of        ${NODE}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup    ${ARGS}
+    ${RECT}                 Find From Node          ${RESULT}       Rectangle
+    Should Be Equal         ${NODE}                 ${RECT}
 
 Find All From Node
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${YELLOW}               Find    \#yellow
-    ${VIOLET}               Find    \#violet
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${YELLOW}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    @{RECT}                 Find All From Node    ${RESULT}    Rectangle
-    Should Be Equal         ${YELLOW}    @{RECT}[0]
-    Should Be Equal         ${VIOLET}    @{RECT}[1]
+    ${YELLOW}               Find                    \#yellow
+    ${VIOLET}               Find                    \#violet
+    @{ARGS}                 Create List             HBox VBox HBox VBox HBox
+    ${ROOT}                 Get Root Node Of        ${YELLOW}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup      ${ARGS}
+    @{RECT}                 Find All From Node      ${RESULT}       Rectangle
+    Should Be Equal         ${YELLOW}               @{RECT}[0]
+    Should Be Equal         ${VIOLET}               @{RECT}[1]
 
 Get Node Children By Class Name
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${YELLOW}               Find    \#yellow
-    ${VIOLET}               Find    \#violet
-    @{ARGS}                 Create List    HBox VBox HBox VBox HBox
-    @{TYPES}                Create List    java.lang.String
-    ${ROOT}                 Get Root Node Of    ${YELLOW}
-    ${RESULT}               Call Object Method    ${ROOT}    lookup    ${ARGS}    ${TYPES}
-    @{RECT}                 Get Node Children By Class Name    ${RESULT}    Rectangle
-    Should Contain          ${RECT}    ${YELLOW}
-    Should Contain          ${RECT}    ${VIOLET}
+    ${YELLOW}               Find                                \#yellow
+    ${VIOLET}               Find                                \#violet
+    @{ARGS}                 Create List                         HBox VBox HBox VBox HBox
+    ${ROOT}                 Get Root Node Of                    ${YELLOW}
+    ${RESULT}               Call Object Method                  ${ROOT}         lookup    ${ARGS}
+    @{RECT}                 Get Node Children By Class Name     ${RESULT}       Rectangle
+    Should Contain          ${RECT}                             ${YELLOW}
+    Should Contain          ${RECT}                             ${VIOLET}
 
 Get Node Text Of Incompatible Node
     [Tags]                  negative    smoke
@@ -199,12 +245,12 @@ Get Object Property
 Get Pseudostates With Get Object Property
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestClickRobot
-    ${node}    Find         \#button
-    ${pseudostates}         Get Object Property    ${node}    pseudoClassStates
-    Should Contain          ${pseudostates}    focused
+    ${node}                 Find                    \#button
+    ${pseudostates}         Get Object Property     ${node}    pseudoClassStates
+    Should Contain          ${pseudostates}         focused
     Move To                 ${node}
-    ${pseudostates}         Get Object Property    ${node}    pseudoClassStates
-    Should Contain          ${pseudostates}    hover
+    ${pseudostates}         Get Object Property     ${node}    pseudoClassStates
+    Should Contain          ${pseudostates}         hover
 
 Print Object Properties
     [Tags]                      smoke
@@ -212,17 +258,51 @@ Print Object Properties
     ${node}                     Find    \#button
     Print Object Properties     ${node}
 
+Get Node Image Url With Get Object Property
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${node}                 Find    \#imageView
+    ${image}                Get Object Property     ${node}     oldImage
+    ${url}                  Get Object Property     ${image}    url
+    Should End With         ${url}    /fxml/javafxlibrary/ui/uiresources/ejlogo.png
+
+Get Scene (Node)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${node}                 Find                \#imageView
+    ${scene}                Get Scene           ${node}
+    ${target}               Get Root Node Of    ${node}
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
+
+Get Scene (String)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${scene}                Get Scene           \#imageView
+    ${target}               Get Root Node Of    \#imageView
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
+
+Get Scene (Window)
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestScrollRobot2
+    ${window}               Get Window          title=ScrollRobot Test 2
+    ${scene}                Get Scene           ${window}
+    ${target}               Get Root Node Of    ${window}
+    ${result}               Get Root Node Of    ${scene}
+    Should Be Equal         ${target}           ${result}
+
 *** Keywords ***
 Set Test Application
-    [Arguments]    ${APPLICATION}
-    Run Keyword Unless    '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
+    [Arguments]             ${APPLICATION}
+    Run Keyword Unless      '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
 
 Change Current Application
-    [Arguments]    ${APPLICATION}
-    Run Keyword Unless    '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
-    Set Suite Variable    ${CURRENT_APPLICATION}    ${APPLICATION}
-    Launch Javafx Application    ${APPLICATION}
-    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    [Arguments]                     ${APPLICATION}
+    Run Keyword Unless              '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
+    Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
+    Launch Javafx Application       ${APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
 
 Get First Player
     ${TABLE}        Find    \#table

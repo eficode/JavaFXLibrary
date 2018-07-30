@@ -134,7 +134,7 @@ public class DragRobot extends TestFxAdapter {
             + "Integer argument ``y`` sets the source point for y -coordinate\n\n"
             + "Optional parameter ``buttons`` is a list of mouse buttons to be used, defaults to PRIMARY. See `5. Used ENUMs` for different MouseButtons\n\n"
             + "\nExample:\n"
-            + "| ${window}= | Window By Title | Window Title | \n"
+            + "| ${window}= | Get Window | title=Window Title | \n"
             + "| Drag From Coordinates | ${x} | ${y} | \n"
             + "| Drop To | ${window} | \n")
     @ArgumentNames({ "x", "y", "*buttons" })

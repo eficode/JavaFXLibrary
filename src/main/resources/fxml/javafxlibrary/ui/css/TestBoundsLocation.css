@@ -68,3 +68,7 @@ Text {
     -fx-fill: lime;
     -fx-opacity: 0.6;
 }
+
+#importantNode {
+    -fx-fill: linear-gradient(deeppink, orangered);
+}

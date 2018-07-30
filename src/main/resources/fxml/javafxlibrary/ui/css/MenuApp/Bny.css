@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-.textLabel .text {
+#textLabel > .text {
     -fx-fill: yellow;
     -fx-stroke: #323232;
     -fx-stroke-type: outside;
@@ -31,7 +31,7 @@
     -fx-background-color: black;
 }
 
-.menu-bar .menu-item .label .text {
+.context-menu .menu-item .label .text {
     -fx-fill: yellow;
 }
 
@@ -39,7 +39,7 @@
     -fx-background-color: yellow;
 }
 
-.menu-bar .menu-item:hover .label .text {
+.context-menu .menu-item:hover .label .text {
     -fx-fill: black;
 }
 

@@ -56,17 +56,33 @@ public class JavaFXLibrary extends AnnotationLibrary {
     protected RunOnFailure runOnFailure;
 
     private void useMappedObjects(Object[] arr) {
-        for(Object o : arr) {
-            if(o.getClass().isArray()) {
-                useMappedObjects((Object[]) o);
-            } else {
-                if (o instanceof String) {
-                    if (objectMap.containsKey(o)) {
+        for (Object o : arr) {
+            if (o.getClass().isArray() || o instanceof List)
+                containsMultipleObjects(o);
+            else
+                if (o instanceof String)
+                    if (objectMap.containsKey(o))
                         arr[Arrays.asList(arr).indexOf(o)] = objectMap.get(o);
-                    }
-                }
-            }
         }
+    }
+
+    private void useMappedObjects(List<Object> list) {
+        for (Object o : list) {
+            if (o.getClass().isArray() || o instanceof List)
+                containsMultipleObjects(o);
+            else
+                if (o instanceof String)
+                    if (objectMap.containsKey(o))
+                        list.set(list.indexOf(o), objectMap.get(o));
+        }
+    }
+
+    private void containsMultipleObjects(Object o) {
+        if (o.getClass().isArray())
+            useMappedObjects((Object[]) o);
+        else if (o instanceof List)
+            useMappedObjects(((List) o));
+
     }
 
     // overriding the run method to catch the control in case of failure, so that desired runOnFailureKeyword
