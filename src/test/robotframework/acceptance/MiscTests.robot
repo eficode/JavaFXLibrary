@@ -73,7 +73,7 @@ Change Node ID Using Call Method
     # Set id back to yellow in case it is needed in some other test
     ${reset}                Create List         yellow
     Call Object Method      ${modified}         setId    ${reset}
-    Sleep                   1                   SECONDS
+    Wait For Events In Fx Application Thread
     ${after_reset}          Find                \#yellow
     Should Be Equal         ${after_reset}      ${original}
 
@@ -86,15 +86,29 @@ Change Node Fill Using Call Method In JavaFX Application Thread
     ${original}                                     Call Object Method      ${target}       getFill
     ${args}                                         Create List             ${fill}
     Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
-    # TODO: Add Wait For Events in Fx Thread kw / Wait automatically in Call Method kw
-    Sleep                                           1                       SECONDS
+    Wait For Events In Fx Application Thread
     ${result}                                       Call Object Method      ${target}       getFill
     Should End With                                 ${result}               00ffe9ff
     # Reset original fill value
     ${args}                                         Create List             ${original}
     Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
-    Sleep                                           1                       SECONDS
-    ${result}                                       Call Object Method      ${target}       getFill
+    Wait For Events In Fx Application Thread
+    ${after_reset}                                  Call Object Method      ${target}       getFill
+    Should End With                                 ${after_reset}          ffff00ff
+
+Wait For Events In Fx Application Thread
+    [Tags]                                          smoke
+    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    ${node}                                         Find        \#red
+    Call Object Method In Fx Application Thread     ${node}     changeFillAfterTwoSeconds
+    Wait For Events In Fx Application Thread
+    ${result}                                       Find        \#red
+    Should End With                                 ${result}   fill=0x7fffd4ff]
+    # Reset color
+    Call Object Method In Fx Application Thread     ${node}     resetFillToRed
+    Wait For Events In Fx Application Thread
+    ${result}                                       Find        \#red
+    Should End With                                 ${result}   fill=0xff0000ff]
 
 Find From Node
     [Tags]                  smoke

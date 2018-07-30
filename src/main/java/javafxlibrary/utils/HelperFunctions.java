@@ -467,6 +467,10 @@ public class HelperFunctions {
         waitUntilTimeout = value;
     }
 
+    public static int getWaitUntilTimeout() {
+        return waitUntilTimeout;
+    }
+
     public static void checkClickLocation(int x, int y) {
         checkClickLocation(new Point2D(x, y));
     }

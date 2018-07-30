@@ -44,6 +44,7 @@ import org.testfx.robot.Motion;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import static javafxlibrary.utils.HelperFunctions.*;
 
@@ -1181,5 +1182,43 @@ public class ConvenienceKeywords extends TestFxAdapter {
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as ProgressBar!");
         }
+    }
+
+    @RobotKeyword("Waits for current events in Fx Application Thread event queue to finish before continuing.\n\n"
+            + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
+            + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
+    @ArgumentNames({ "timeout=" })
+    public static void waitForEventsInFxApplicationThread(int timeout) {
+
+        try {
+            Semaphore semaphore = new Semaphore(0);
+            Platform.runLater(() -> semaphore.release());
+            Thread t = new Thread(() -> {
+                int passed = 0;
+                try {
+                    while (passed <= timeout) {
+                        Thread.sleep(1000);
+                        passed++;
+                    }
+
+                    if (semaphore.hasQueuedThreads())
+                        throw new JavaFXLibraryNonFatalException("Events did not finish within the given timeout of "
+                                + timeout + " seconds.");
+                } catch (InterruptedException e) {
+                    throw new JavaFXLibraryNonFatalException("Timeout was interrupted in Wait For Wait For Events in " +
+                            "Fx Application Thread: " + e.getMessage());
+                }
+            });
+            t.start();
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
+                    + e.getMessage());
+        }
+    }
+
+    @RobotKeywordOverload
+    public static void waitForEventsInFxApplicationThread() {
+        waitForEventsInFxApplicationThread(HelperFunctions.getWaitUntilTimeout());
     }
 }
