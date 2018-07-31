@@ -97,10 +97,10 @@ public class JavaFXLibrary extends AnnotationLibrary {
             return super.runKeyword(keywordName, args);
         } catch (RuntimeException e) {
             runOnFailure.runOnFailure();
-            if ( e.getCause() instanceof JavaFXLibraryFatalException ) {
+            if (e.getCause() instanceof JavaFXLibraryFatalException) {
                 robotLog("DEBUG", "JavaFXLibrary: Caught JavaFXLibrary FATAL exception");
                 throw e;
-            } else if ( e.getCause() instanceof JavaFXLibraryNonFatalException ) {
+            } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
                 robotLog("DEBUG", "JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception");
                 throw e;
             } else {
@@ -109,14 +109,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
             }
         }
     }
-
-    /*
-    *   Just an empty function to get rid of unnecessary errors, currently get_keyword_tags interface is not implemented.
-    */
-    public String getKeywordTags(String keywordName) {
-        return null;
-    }
-
 
     @Override
     public String getKeywordDocumentation(String keywordName) {
@@ -146,32 +138,33 @@ public class JavaFXLibrary extends AnnotationLibrary {
     }
 
     public static void main(String[] args) throws Exception {
-        RemoteServer.configureLogging();
+        JavaFXLibraryRemoteServer.configureLogging();
         System.out.println("-------------------- JavaFXLibrary --------------------- ");
-        RemoteServer server = new RemoteServer();
+        RemoteServer server = new JavaFXLibraryRemoteServer();
         server.putLibrary("/", new JavaFXLibrary());
         int port = 8270;
         InetAddress ipAddr = InetAddress.getLocalHost();
 
         try {
-            if(args.length > 0) {
+            if (args.length > 0)
                 port = Integer.parseInt(args[0]);
-            } else
-                System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port + ". If you wish to use another port, restart the library and give port number as an argument. ");
+            else
+                System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port +
+                        ". If you wish to use another port, restart the library and give port number as an argument.");
 
             server.setPort(port);
             server.start();
-            System.out.println("\n        JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " + ipAddr.getHostAddress() + ":" + port + "\n ");
+            System.out.println("\n        JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " +
+                    ipAddr.getHostAddress() + ":" + port + "\n");
 
         } catch (NumberFormatException nfe) {
-            System.out.println("\n        Error! Not a valid port number: " + args[0]);
+            System.out.println("\n        Error! Not a valid port number: " + args[0] + "\n");
             System.exit(1);
         } catch (UnknownHostException uhe) {
             uhe.printStackTrace();
             System.exit(1);
         } catch (BindException be) {
-            // TODO: Configure RemoteServer logging, stackTrace gets logged here with default config
-            System.out.println("\n        Error! " + be.getMessage() + ": " + ipAddr.getHostAddress() +":" + port);
+            System.out.println("\n        Error! " + be.getMessage() + ": " + ipAddr.getHostAddress() + ":" + port + "\n");
             System.exit(1);
         }
     }
