@@ -66,7 +66,7 @@ Find All With XPath
     [Tags]              smoke
     @{all_rectangles}   Find All            xpath=//Rectangle
     @{text_nodes}       Find All            xpath=//Text[@text="75x75"]
-    Length Should Be    ${all_rectangles}   10
+    Length Should Be    ${all_rectangles}   9
     Length Should Be    ${text_nodes}       6
 
 Find All With CSS query
@@ -74,7 +74,7 @@ Find All With CSS query
     @{nodes1}           Find All        css=VBox HBox > StackPane Rectangle
     @{nodes2}           Find All        css=Pane Rectangle
     @{nodes3}           Find All        css=Pane > Rectangle
-    Length Should Be    ${nodes1}       6
+    Length Should Be    ${nodes1}       5
     Length Should Be    ${nodes2}       3
     Length Should Be    ${nodes3}       2
 
@@ -82,7 +82,7 @@ Find All With Chained Selectors
     [Tags]              smoke
     @{nodes1}           Find All        css=VBox HBox xpath=//Rectangle
     @{nodes2}           Find All        css=VBox HBox xpath=//Rectangle[@width="75.0"]
-    Length Should Be    ${nodes1}       7
+    Length Should Be    ${nodes1}       6
     Length Should Be    ${nodes2}       4
 
 Find All With Root
