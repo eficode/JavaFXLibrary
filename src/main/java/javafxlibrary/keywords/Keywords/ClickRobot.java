@@ -17,20 +17,19 @@
 
 package javafxlibrary.keywords.Keywords;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.service.query.PointQuery;
+import org.testfx.robot.Motion;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static javafxlibrary.utils.HelperFunctions.*;
@@ -50,43 +49,16 @@ public class ClickRobot extends TestFxAdapter {
             + "| Click On | .css-name | Motion=VERTICAL_FIRST | \n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface clickOn(Object locator, String motion) {
-
         Object target = checkClickTarget(locator);
+        robotLog("INFO", "Clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "clickOn",
+                target.getClass(), Motion.class, MouseButton.class);
 
         try {
-
-            if (target instanceof Window) {
-                robotLog("INFO", "Clicking on window \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((Window) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Scene) {
-                robotLog("INFO", "Clicking on scene \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((Scene) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Bounds) {
-                robotLog("INFO", "Clicking on bounds \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((Bounds) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Point2D) {
-                robotLog("INFO", "Clicking on point \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((Point2D) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Node) {
-                robotLog("INFO", "Clicking on node \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((Node) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof PointQuery) {
-                robotLog("INFO", "Clicking on point query \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.clickOn((PointQuery) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: " + target.toString());
-
-        } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
-                throw e;
-            }
-            throw new JavaFXLibraryNonFatalException("Unable to click locator: " + target.toString(), e);
+            return (FxRobotInterface) method.invoke(robot, target, getMotion(motion), new MouseButton[]{MouseButton.PRIMARY});
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute click on using locator \"" + locator + "\" " +
+                    "and motion " + motion + ": " + e.getCause().getMessage());
         }
     }
 
@@ -101,43 +73,15 @@ public class ClickRobot extends TestFxAdapter {
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_. Especially with submenus, desired motion "
             + "is usually HORIZONTAL_FIRST.\n\n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
-    public FxRobotInterface rightClickOn(Object locator,String motion) {
-
+    public FxRobotInterface rightClickOn(Object locator, String motion) {
         Object target = checkClickTarget(locator);
-
+        robotLog("INFO", "Right clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rightClickOn", target.getClass(), Motion.class);
         try {
-            if (target instanceof Window) {
-                robotLog("INFO", "Right clicking on window \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((Window) target, getMotion(motion));
-            }
-            else if (target instanceof Scene) {
-                robotLog("INFO", "Right clicking on scene \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((Scene) target, getMotion(motion));
-            }
-            else if (target instanceof Bounds) {
-                robotLog("INFO", "Right clicking on bounds \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((Bounds) target, getMotion(motion));
-            }
-            else if (target instanceof Point2D) {
-                robotLog("INFO", "Right clicking on point \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((Point2D) target, getMotion(motion));
-            }
-            else if (target instanceof Node) {
-                robotLog("INFO", "Right clicking on node \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((Node) target, getMotion(motion));
-            }
-            else if (target instanceof PointQuery) {
-                robotLog("INFO", "Right clicking on point query \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.rightClickOn((PointQuery) target, getMotion(motion));
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: " + target.toString());
-
-        } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
-                throw e;
-            }
-            throw new JavaFXLibraryNonFatalException("Unable to right click locator: " + target.toString(), e);
+            return (FxRobotInterface) method.invoke(robot, target, getMotion(motion));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute right click on using locator \"" + locator + "\" " +
+                    "and motion " + motion + ": " + e.getCause().getMessage());
         }
     }
 
@@ -152,42 +96,16 @@ public class ClickRobot extends TestFxAdapter {
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_.")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface doubleClickOn(Object locator, String motion) {
-
         Object target = checkClickTarget(locator);
+        robotLog("INFO", "Double clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "doubleClickOn",
+                target.getClass(), Motion.class, MouseButton.class);
 
         try {
-            if (target instanceof Window) {
-                robotLog("INFO", "Double clicking on window \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((Window) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Scene) {
-                robotLog("INFO", "Double clicking on scene \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((Scene) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Bounds){
-                robotLog("INFO", "Double clicking on bounds \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((Bounds) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Point2D) {
-                robotLog("INFO", "Double clicking on point \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((Point2D) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof Node) {
-                robotLog("INFO", "Double clicking on node \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((Node) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-            else if (target instanceof PointQuery){
-                robotLog("INFO", "Double clicking on point query \"" + target.toString() + "\", motion=\"" + getMotion(motion) + "\"");
-                return robot.doubleClickOn((PointQuery) target, getMotion(motion), MouseButton.PRIMARY);
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: " + target.toString());
-
-        } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
-                throw e;
-            }
-            throw new JavaFXLibraryNonFatalException("Unable to double click locator: " + target.toString(), e);
+            return (FxRobotInterface) method.invoke(robot, target, getMotion(motion), new MouseButton[]{MouseButton.PRIMARY});
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute double click on using locator \"" + locator + "\" " +
+                    "and motion " + motion + ": " + e.getCause().getMessage());
         }
     }
 

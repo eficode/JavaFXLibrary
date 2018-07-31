@@ -18,16 +18,18 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.geometry.Point2D;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Window;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class PointLocation extends TestFxAdapter {
@@ -44,33 +46,18 @@ public class PointLocation extends TestFxAdapter {
             + "| Move To | ${point query} | | | # moves to bottom right corner of a node that was stored in PointQuery object. |\n")
     @ArgumentNames({"locator"})
     public Object pointTo(Object locator) {
+        robotLog("INFO", "Creating a point query for target \"" + locator + "\"");
+
+        if (locator instanceof String)
+            locator = new Finder().find((String) locator);
+
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
+
         try {
-            if (locator instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Window: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((Window) locator));
-            } else if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Scene: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((Scene) locator));
-            } else if (locator instanceof Bounds) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Bounds: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((Bounds) locator));
-            } else if (locator instanceof Point2D) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Point2D: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((Point2D) locator));
-            } else if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to Node: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((Node) locator));
-            } else if (locator instanceof String) {
-                HelperFunctions.robotLog("INFO", "Returning a pointquery to query: \"" + locator.toString() + "\"");
-                return HelperFunctions.mapObject(robot.point((String) locator));
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: \"" + locator.toString() + "\"");
-
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to point to locator: \"" + locator.toString() + "\"", e);
+            return HelperFunctions.mapObject(method.invoke(robot, locator));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute point to using locator \"" + locator
+                    + "\": " + e.getCause().getMessage());
         }
     }
 

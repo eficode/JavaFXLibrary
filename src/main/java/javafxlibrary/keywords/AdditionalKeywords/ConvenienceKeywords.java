@@ -36,6 +36,7 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import javafxlibrary.utils.XPathFinder;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
@@ -51,7 +52,9 @@ import static javafxlibrary.utils.HelperFunctions.*;
 @RobotKeywords
 public class ConvenienceKeywords extends TestFxAdapter {
 
-    @RobotKeyword("Finder that mimics _xpath_ style search.\n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n" +
+            "Finder that mimics _xpath_ style search.\n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
@@ -73,6 +76,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "query" })
     public Object findWithPath(String query) {
@@ -129,45 +133,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         callMethod(object, method, arguments, true);
     }
 
-    @RobotKeyword("Returns the *first* node matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + "| ${my node}= | Find | some text | | # for finding something based on plain _text_ |\n"
-            + "| ${my node}= | Find | .css | | # for finding something based on _css_ class name |\n"
-            + "| ${my node}= | Find | \\#id | | # for finding something based on node _id_ |\n"
-            + "| ${my node}= | Find | \\#id | failIfNotFound=True | # this search fails if nothing is found |\n\n"
-            + "Or, chaining multiple queries together using _id_ and _css_:\n"
-            + "| ${my node}= | Find | \\#id .css-first .css-second | # using _id_ and _css_ class name | \n"
-            + "Above example would first try to find a node fulfilling a query using _id_, then continue search under previously found node using css class query \n"
-            + " _.css-first_, and then continue from there trying to locate css class _css-second_. \n\n"
-            + "Note, in case of ID, # prefix needs to be escaped with \\ sign!\n")
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public Object find(final String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find the first node matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
-        try {
-            Node node = robot.lookup(query).query();
-            return mapObject(node);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return "";
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public Object find(final String query) {
-        return find(query, false);
-    }
-
-    @RobotKeyword("Returns the *first* node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns the *first* node matching the query. \n\n"
             + "``query`` is the Class name String to use in lookup.\n"
             + "\nExample:\n"
             + "| ${my node}= | Find | javafx.scene.control.Button | # button class |")
@@ -183,36 +151,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Returns *all* nodes matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public List<Object> findAll(String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find all nodes matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
-        try {
-            Set<Node> nodes = robot.lookup(query).queryAll();
-            return mapObjects(nodes);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return Collections.emptyList();
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find All operation failed for query: " + query, e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public List<Object> findAll(String query) {
-        return findAll(query, false);
-    }
-
-    @RobotKeyword("Returns *all* descendant nodes of given node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* descendant nodes of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -243,13 +184,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "node", "query" })
     public List<Object> findAllFromNode(Object node, String query) {
             return findAllFromNode(node, query, false);
     }
 
-    @RobotKeyword("Returns *all* nodes matching query AND given pseudo-class state. \r\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``pseudo`` is a String value specifying pseudo class value.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -279,13 +223,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "query", "pseudo" })
     public List<Object> findAllWithPseudoClass(String query, String pseudo) {
         return findAllWithPseudoClass(query, pseudo, false);
     }
 
-    @RobotKeyword("Returns the *first* descendant node of given node matching the query. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns the *first* descendant node of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -312,6 +259,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    @Deprecated
     @RobotKeywordOverload
     @ArgumentNames({ "node", "query" })
     public Object findFromNode(Node node, String query) {
@@ -362,8 +310,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Prints all child nodes starting from a given node.\n\n"
-            + "Optional argument ``root`` is the starting point from where to start listing child nodes. It can be either a _query_ or _Object_, "
-            + "see `3.1 Using queries` and `3.2 Using objects`. Defaults to root node of current window. \n\n"
+            + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
+            + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
             + "\nExample:\n"
             + "| ${my node}= | Find | \\#node-id | \n"
             + "| Print Child Nodes | ${my node} | \n")
@@ -384,6 +332,27 @@ public class ConvenienceKeywords extends TestFxAdapter {
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to find current root node.", e);
         }
+    }
+
+    // TODO: Should printChildNodes be deprecated?
+    @RobotKeyword("Generates and prints FXML representation of the application starting from a given node.\n\n"
+            + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
+            + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
+            + "\nExample:\n"
+            + "| ${my node}= | Find | \\#node-id | \n"
+            + "| Log FXML | ${my node} | \n")
+    @ArgumentNames({"root="})
+    public void logFXML(Object root) {
+        XPathFinder logger = new XPathFinder();
+        logger.setNodeLogging(false);
+        robotLog("INFO", logger.getFxml((Parent) objectToNode(root)));
+    }
+
+    @RobotKeywordOverload
+    public void logFXML() {
+        XPathFinder logger = new XPathFinder();
+        logger.setNodeLogging(false);
+        robotLog("INFO", logger.getFxml(robot.listTargetWindows().get(0).getScene().getRoot()));
     }
 
     @RobotKeyword("Enables/Disables clicking outside of visible JavaFX application windows. Safe clicking is on by" +
@@ -463,9 +432,11 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     // TODO: Should this be deleted? Find All From Node has the same functionality
-    @RobotKeyword("Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
             + "``locator`` is either a _query_ or _Object_ for node whose children will be queried, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3.2 Using locators as keyword arguments`. \n\n"
             + "``className`` is the Java class name to look for.\n"
             + "\nExample:\n"
             + "| ${panes}= | Get Node Children By Class Name | ${some node} | BorderPane | \n"
@@ -501,37 +472,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
     public String getNodeText(Object locator) {
-        Object node = objectToNode(locator);
-
-//        if(object instanceof String)
-//            object = robot.lookup((String)object).query();
-
-        robotLog("INFO", "Getting text value for node: \"" + node.toString() + "\"");
-        Class c = node.getClass();
+        Node node = objectToNode(locator);
+        robotLog("INFO", "Getting text value for node: \"" + node + "\"");
+        Class<? extends Node> c = node.getClass();
         try {
-            Method[] methods = c.getMethods();
-
-            for (Method m : methods) {
-                // There are two versions of getText: getText() and getText(int, int)
-                if (m.getName().equals("getText") && m.getParameterCount() == 0) {
-                    robotLog("TRACE", "Calling method getText() for node: \"" + node.toString() + "\"");
-                    try {
-                        Object result = m.invoke(node);
-                        return result.toString();
-                    } catch (Exception e) {
-                        // Return empty string in case cannot get text from node
-                        return "";
-                        //throw new JavaFXLibraryNonFatalException("Problem calling method getText() ", e);
-                    }
-                }
-            }
-            throw new JavaFXLibraryNonFatalException(
-                    "Get node text failed for node: \"" + node.toString() + "\". Node has no method getText().");
-
+            return (String) c.getMethod("getText").invoke(node);
+        } catch (NoSuchMethodException e) {
+            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node + ": Node has no getText method");
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node.toString(), e);
+            throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node, e);
         }
     }
 

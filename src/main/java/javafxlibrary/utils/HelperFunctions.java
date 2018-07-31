@@ -90,7 +90,7 @@ public class HelperFunctions {
             Awaitility.await().until(() -> {
                 try {
                     robotLog("TRACE", "query");
-                    node.set(robot.lookup(target).query());
+                    node.set(createFinder().find(target));
                     robotLog("TRACE", "return");
                     return node.get() != null;
                 } catch (Exception e) {
@@ -259,15 +259,15 @@ public class HelperFunctions {
 
     public static ArrayList<Node> getAllNodes(Parent root) {
         ArrayList<Node> nodes = new ArrayList<>();
-        addAllDescendents(root, nodes);
+        addAllDescendants(root, nodes);
         return nodes;
     }
 
-    private static void addAllDescendents(Parent parent, ArrayList<Node> nodes) {
+    private static void addAllDescendants(Parent parent, ArrayList<Node> nodes) {
         for (Node node : parent.getChildrenUnmodifiable()) {
             nodes.add(node);
             if (node instanceof Parent)
-                addAllDescendents((Parent) node, nodes);
+                addAllDescendants((Parent) node, nodes);
         }
     }
 
@@ -599,8 +599,7 @@ public class HelperFunctions {
         } else if (object instanceof Node) {
             return robot.bounds((Node) object).query();
         } else if (object instanceof String) {
-            waitUntilExists((String) object, waitUntilTimeout, "SECONDS");
-            Node node = robot.lookup((String) object).query();
+            Node node = waitUntilExists((String) object, waitUntilTimeout, "SECONDS");
             return robot.bounds(node).query();
         } else if (object instanceof Bounds) {
             return (Bounds) object;
@@ -623,6 +622,8 @@ public class HelperFunctions {
     }
 
 
+    // Deprecated: Use javafxlibrary.utils.Finder instead
+    @Deprecated
     public static Node findNode(Node node, String query) {
 
         robotLog("INFO", "finding from node: " + node.toString() + " with query: " + query);
@@ -663,15 +664,20 @@ public class HelperFunctions {
         }
     }
 
+    // Deprecated: Use javafxlibrary.utils.Finder instead
+    @Deprecated
     public static Node findNode(String query) {
-//		return findNode(robot.lookup(getQueryString(query.split(" ", 2)[0])).query(), query.split(" ", 2)[1]);
         return findNode(robot.listTargetWindows().get(0).getScene().getRoot(), query);
     }
 
+    // Deprecated: Used only in deprecated method findNode
+    @Deprecated
     public static String getQueryString(String query) {
         return query.replaceAll("\\[\\d]$", "");
     }
 
+    // Deprecated: Used only in deprecated method findNode
+    @Deprecated
     public static int getQueryIndex(String query) {
         Pattern pattern = Pattern.compile(".*\\[\\d]$");
         Matcher matcher = pattern.matcher(query);
@@ -885,6 +891,10 @@ public class HelperFunctions {
         } catch (NoSuchMethodException e) {
             throw new JavaFXLibraryNonFatalException("Couldn't create wrapper application for " + c.getName(), e);
         }
+    }
+
+    public static Finder createFinder() {
+        return new Finder();
     }
 }
 

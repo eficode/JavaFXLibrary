@@ -17,21 +17,23 @@
 
 package javafxlibrary.keywords.Keywords;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
 import org.testfx.robot.Motion;
-import org.testfx.service.query.PointQuery;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.getMotion;
+import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class MoveRobot extends TestFxAdapter {
@@ -47,45 +49,18 @@ public class MoveRobot extends TestFxAdapter {
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
+        robotLog("INFO", "Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
+
+        if (locator instanceof String)
+            locator = new Finder().find((String) locator);
+
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
 
         try {
-            if (locator instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Moving to Window: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((Window) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Moving to Scene: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((Scene) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof Bounds) {
-                HelperFunctions.robotLog("INFO", "Moving to Bounds: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((Bounds) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof Point2D) {
-                HelperFunctions.robotLog("INFO", "Moving to Point2D: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((Point2D) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof PointQuery) {
-                HelperFunctions.robotLog("INFO", "Moving to Pointquery: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((PointQuery) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Moving to Node: \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((Node) locator, HelperFunctions.getMotion(motion));
-            } else if (locator instanceof String) {
-                HelperFunctions.robotLog("INFO", "Moving to string query \""
-                        + locator.toString() + "\" using motion: \"" + motion  + "\"");
-                return robot.moveTo((String) locator, HelperFunctions.getMotion(motion));
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: \"" + locator.toString() + "\"");
-
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to move to locator: \"" + locator.toString()
-                    + "\" using motion: \"" + motion  + "\"", e);
+            return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\" " +
+                    "and motion " + motion + ": " + e.getCause().getMessage());
         }
     }
 

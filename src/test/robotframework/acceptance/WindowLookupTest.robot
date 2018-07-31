@@ -9,6 +9,18 @@ Force Tags        set-windowlookup
 ${TEST_APPLICATION}   javafxlibrary.testapps.TestMultipleWindows
 
 *** Test Cases ***
+Find From Different Window
+    [Tags]              smoke
+    ${first}            Find            id=firstWindowLabel
+    ${second}           Find            id=secondWindowLabel
+    ${third}            Find            id=thirdWindowLabel
+    ${root}             Find            id=secondWindowAnchorPane
+    ${node4}            Find            id=thirdWindowLabel    false    ${root}
+    Should Contain      ${first}        Label[id=firstWindowLabel, styleClass=label]'First window'
+    Should Contain      ${second}       Label[id=secondWindowLabel, styleClass=label]'Second window'
+    Should Contain      ${third}        Label[id=thirdWindowLabel, styleClass=label]'Third window'
+    Should Not Contain  ${node4}        Label[id=thirdWindowLabel, styleClass=label]'Third window'
+
 Window By Node
     [Tags]    smoke
     ${TARGET}         Get Window   Second window
@@ -43,18 +55,18 @@ Window By Index
     Should Be Equal    ${TARGET}          ${WINDOW}   msg=Window searched with title and index (integer) does not match!
 
 List Windows
-    [Tags]    smoke
-    ${INDEX}           Set Variable    ${0}
-    ${LIST_WINDOWS}    List Windows
+    [Tags]              smoke
+    ${INDEX}            Set Variable    ${0}
+    ${LIST_WINDOWS}     List Windows
     :FOR    ${WINDOW}    IN    @{LIST_WINDOWS}
         \    ${TARGET}         Get Window         ${INDEX}
         \    Should Be Equal   ${WINDOW}          ${TARGET}    msg=Window lists does not match (index ${INDEX})!
         \    ${INDEX}          Set Variable       ${INDEX+1}
 
 List Target Windows
-    [Tags]    smoke
-    ${INDEX}    Set Variable    ${0}
-    ${LIST_WINDOWS}    List Target Windows
+    [Tags]              smoke
+    ${INDEX}            Set Variable    ${0}
+    ${LIST_WINDOWS}     List Target Windows
     :FOR    ${WINDOW}    IN    @{LIST_WINDOWS}
         \    ${TARGET}         Get Window      ${INDEX}
         \    Should Be Equal   ${WINDOW}       ${TARGET}       msg=Window lists does not match (index ${INDEX})!
@@ -62,9 +74,9 @@ List Target Windows
 
 # Keyword is located in ConvenienceKeywords
 Bring Stage To Front
-    [Tags]    smoke
-    ${SECOND_WINDOW}=       Get Window    Second window
-    ${THIRD_WINDOW}=        Get Window    Third window
+    [Tags]                  smoke
+    ${SECOND_WINDOW}        Get Window    Second window
+    ${THIRD_WINDOW}         Get Window    Third window
 
     Bring Stage To Front    ${SECOND_WINDOW}
     Sleep                   1    SECONDS
@@ -81,18 +93,18 @@ Bring Stage To Front
 #
 # Keyword is located in TypeRobot
 Close Current Window
-    [Tags]    smoke    set-todo
-    ${START}=              List Windows
-    Activate window        @{START}[0]
+    [Tags]                  smoke    set-todo
+    ${START}                List Windows
+    Activate window         @{START}[0]
     Close Current Window
-    ${END}=                List Windows
-    Should Not Be Equal    ${START}    ${END}     msg=Unable to close window!   values=False
+    ${END}                  List Windows
+    Should Not Be Equal     ${START}    ${END}     msg=Unable to close window!   values=False
 
 *** Keywords ***
 Activate window
-    [Arguments]    ${window_node}
-    Bring Stage To Front   ${window_node}
-    Click On               ${window_node}
+    [Arguments]             ${window_node}
+    Bring Stage To Front    ${window_node}
+    Click On                ${window_node}
 
 Setup all tests
     Launch Javafx Application    ${TEST_APPLICATION}

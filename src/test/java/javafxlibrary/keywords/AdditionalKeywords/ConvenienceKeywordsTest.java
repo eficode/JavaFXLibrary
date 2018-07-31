@@ -30,7 +30,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.service.query.NodeQuery;
-import static org.junit.Assert.fail;
 
 public class ConvenienceKeywordsTest extends TestFxAdapterTest {
 
@@ -97,33 +96,5 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
                 result = ImmutableSet.of(button, button2);
             }
         };
-    }
-
-    @Test
-    public void findGivesMeTheNode() {
-        new Expectations() {
-            {
-                rootQuery.query();
-                result = button;
-            }
-        };
-        Object value = keywords.find("rootId");
-        Assert.assertEquals(HelperFunctions.mapObject(button), value);
-    }
-
-    @Test
-    public void findNoMatching() {
-        new Expectations() {
-            {
-                rootQuery.query();
-                result = null;
-            }
-        };
-        try {
-            keywords.find("invalid", true);
-            fail("Expected a JavaFXLibraryNonFatalException to be thrown");
-        } catch (JavaFXLibraryNonFatalException e) {
-            Assert.assertEquals("Unable to find anything with query: \"invalid\"", e.getMessage());
-        }
     }
 }

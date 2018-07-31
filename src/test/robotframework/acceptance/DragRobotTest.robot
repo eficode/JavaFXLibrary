@@ -106,15 +106,15 @@ Drag From Point Query (PointQuery + MouseButton)
     Verify String               \#circleLabel       Second window
 
 Drag From Window (Window Only)
-    [Tags]    smoke
+    [Tags]                      smoke
     Reset Circle
-    Set Coordinates To Use    150    150
-    Drag From                 \#circle
-    ${WINDOW}                 Get Window    DragRobot Test
-    Drop To                   ${WINDOW}
-    Drag From                 ${WINDOW}
-    Drop To Coordinates       ${COORD_X}    ${COORD_Y}
-    Verify String             \#circleScreenLocationLabel    X${COORD_X} Y${COORD_Y}
+    Set Coordinates To Use      150    150
+    Drag From                   \#circle
+    ${WINDOW}                   Get Window    DragRobot Test
+    Drop To                     ${WINDOW}
+    Drag From                   ${WINDOW}
+    Drop To Coordinates         ${COORD_X}    ${COORD_Y}
+    Verify String               \#circleScreenLocationLabel    X${COORD_X} Y${COORD_Y}
 
 Drag From Window (Window + MouseButton)
     [Tags]                          smoke
@@ -232,6 +232,13 @@ Drag from bounds, Drop to bounds
     Drag From                   ${CIRCLE_BOUNDS}
     Drop To                     ${DROP_BOUNDS}
     Verify String               \#circleScreenLocationLabel    X${TARGET_X} Y${TARGET_Y}
+
+Drag From + Drop To Using XPath Query
+    [Tags]                      smoke
+    Reset Circle
+    Drag From                   xpath=//Circle[@id="circle"]
+    Drop To                     xpath=//LabeledText[@text="Second Window"]
+    Verify String               \#circleLabel    Second window
 
 *** Keywords ***
 Setup all tests

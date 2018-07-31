@@ -5,11 +5,9 @@ import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
-import mockit.Expectations;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import mockit.Mock;
+import mockit.MockUp;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 public class WaitUntilEnabledTest extends TestFxAdapterTest {
@@ -22,10 +20,10 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
     @Before
     public void setup() {
         button = new Button("JavaFXLibrary");
-        new Expectations() {
-            {
-                getRobot().lookup(".button").query();
-                result = button;
+        new MockUp<HelperFunctions>() {
+            @Mock
+            Node waitUntilExists(String target, int timeout, String timeUnit) {
+                return button;
             }
         };
     }

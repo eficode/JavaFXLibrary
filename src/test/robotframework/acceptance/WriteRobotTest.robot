@@ -10,24 +10,24 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestKeyboardRobot
 
 *** Test Cases ***
 Write text
-    [Tags]    smoke
-    Write    2.6.5 Embedding arguments
-    Verify String           \#textAreaLabel    2.6.5 Embedding arguments
+    [Tags]          smoke
+    Write           2.6.5 Embedding arguments
+    Verify String   \#textAreaLabel    2.6.5 Embedding arguments
 
 Write single characters
-    [Tags]    smoke
+    [Tags]          smoke
     Reset Textarea
-    Write    t
-    Write    e
-    Write    s
-    Write    t
-    Verify String           \#textAreaLabel    test
+    Write           t
+    Write           e
+    Write           s
+    Write           t
+    Verify String   \#textAreaLabel    test
 
 Write special characters
-    [Tags]    smoke
+    [Tags]          smoke
     Reset Textarea
-    Write    /@[*])(=?^_:;
-    Verify String           \#textAreaLabel    /@[*])(=?^_:;
+    Write           /@[*])(=?^_:;
+    Verify String   \#textAreaLabel    /@[*])(=?^_:;
 
 *** Keywords ***
 Setup all tests
@@ -42,8 +42,8 @@ Reset Textarea
     Click On    \#textArea
     
 Verify String
-    [Documentation]    Verifies that string is equal in location
-    [Arguments]                   ${query}          ${string}
-    ${target_node}=               Find              ${query}
-    ${text_label}=                Get Node Text     ${target_node}
-    Should Be Equal As Strings    ${string}         ${text_label}
+    [Documentation]                 Verifies that string is equal in location
+    [Arguments]                     ${query}          ${string}
+    ${target_node}                  Find              ${query}
+    ${text_label}                   Get Node Text     ${target_node}
+    Should Be Equal As Strings      ${string}         ${text_label}

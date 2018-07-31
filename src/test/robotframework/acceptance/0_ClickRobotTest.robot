@@ -18,10 +18,22 @@ ${WINDOW_CENTERX}           ${EMPTY}
 ${WINDOW_CENTERY}           ${EMPTY}
 
 *** Test Cases ***
-Click On Query
-    [Tags]                    smoke
-    Click On                  \#button
-    Verify String             \#buttonLabel    Button has been clicked 1 times.
+Click On TextFX Query
+    [Tags]                  smoke
+    Click On                \#button
+    Verify String           \#buttonLabel    Button has been clicked 1 times.
+
+Click On ID
+    [Tags]                  smoke
+    Click On                id=button
+    Verify String           \#buttonLabel    Button has been clicked 1 times.
+
+Click On XPath Query
+    [Tags]                  smoke
+    Click On                xpath=//Button[@id="button"]
+    Double Click On         xpath=//LabeledText[@text="Double-click me"]
+    Verify String           \#buttonLabel    Button has been clicked 1 times.
+    Verify String           \#doubleClickButtonLabel    Button has been double-clicked 1 times.
 
 Click On Bounds
     [Tags]                  smoke
@@ -63,9 +75,9 @@ Click On Point Query
     Verify String           \#buttonLabel    Button has been clicked 1 times.
 
 Double Click On Query
-    [Tags]                    smoke
-    Double Click On           \#doubleClickButton
-    Verify String             \#doubleClickButtonLabel    Button has been double-clicked 1 times.
+    [Tags]                  smoke
+    Double Click On         \#doubleClickButton
+    Verify String           \#doubleClickButtonLabel    Button has been double-clicked 1 times.
 
 Double Click On Bounds
     [Tags]                  smoke
@@ -107,9 +119,9 @@ Double Click On Point Query
     Verify String           \#doubleClickButtonLabel    Button has been double-clicked 1 times.
 
 Right Click On Query
-    [Tags]                    smoke
-    Right Click On            \#rightClickButton
-    Verify String             \#rightClickButtonLabel    Button has been right-clicked 1 times.
+    [Tags]                  smoke
+    Right Click On          \#rightClickButton
+    Verify String           \#rightClickButtonLabel    Button has been right-clicked 1 times.
 
 Right Click On Bounds
     [Tags]                  smoke
@@ -249,19 +261,19 @@ Setup all tests
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Values
     Set Window Values
-    Set Timeout             ${1}
+    Set Timeout                     ${1}
 
 Teardown all tests
     Close Javafx Application
-    Set Timeout             ${5}
+    Set Timeout                     ${5}
 
 Set Scene Values
     ${SCENE}                        Get Nodes Scene         \#button
     ${BOUNDS}                       Get Bounds              ${SCENE}
-    ${MIN_X}                        Call Object Method        ${BOUNDS}    getMinX
-    ${MIN_Y}                        Call Object Method        ${BOUNDS}    getMinY
-    ${WIDTH}                        Call Object Method        ${BOUNDS}    getWidth
-    ${HEIGHT}                       Call Object Method        ${BOUNDS}    getHeight
+    ${MIN_X}                        Call Object Method      ${BOUNDS}    getMinX
+    ${MIN_Y}                        Call Object Method      ${BOUNDS}    getMinY
+    ${WIDTH}                        Call Object Method      ${BOUNDS}    getWidth
+    ${HEIGHT}                       Call Object Method      ${BOUNDS}    getHeight
     ${MIN_X}                        Convert To Integer      ${MIN_X}
     ${MIN_Y}                        Convert To Integer      ${MIN_Y}
     ${WIDTH}                        Convert To Integer      ${WIDTH}
@@ -292,14 +304,14 @@ Set Window Values
     Set Suite Variable              ${WINDOW_CENTERY}       ${CENTERY}
 
 Reset Counters
-    Click On                \#resetButton
+    Click On         \#resetButton
     Verify String    \#buttonLabel               Button has been clicked 0 times.
     Verify String    \#rightClickButtonLabel     Button has been right-clicked 0 times.
     Verify String    \#doubleClickButtonLabel    Button has been double-clicked 0 times.
     
 Verify String
-    [Documentation]    Verifies that string is equal in location
-    [Arguments]                   ${query}          ${string}
-    ${target_node}=               Find              ${query}
-    ${text_label}=                Get Node Text     ${target_node}
-    Should Be Equal As Strings    ${string}         ${text_label}
+    [Documentation]                 Verifies that string is equal in location
+    [Arguments]                     ${query}          ${string}
+    ${target_node}                  Find              ${query}
+    ${text_label}                   Get Node Text     ${target_node}
+    Should Be Equal As Strings      ${string}         ${text_label}

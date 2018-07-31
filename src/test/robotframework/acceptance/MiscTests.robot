@@ -70,12 +70,7 @@ Change Node ID Using Call Method
     ${original_hash}        Fetch From Left     ${original}    [
     ${modified_hash}        Fetch From Left     ${modified}    [
     Should Be Equal         ${original_hash}    ${modified_hash}
-    # Set id back to yellow in case it is needed in some other test
-    ${reset}                Create List         yellow
-    Call Object Method      ${modified}         setId    ${reset}
-    Wait For Events In Fx Application Thread
-    ${after_reset}          Find                \#yellow
-    Should Be Equal         ${after_reset}      ${original}
+    Wait Until Keyword Succeeds    10 s    1 s    Reset Node Id To Yellow    ${modified}    ${original}
 
 Change Node Fill Using Call Method In JavaFX Application Thread
     [Tags]                                          smoke
@@ -147,9 +142,9 @@ Get Node Children By Class Name
 Get Node Text Of Incompatible Node
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${NODE}                 Find    \#green
+    ${NODE}                 Find        \#green
     ${MSG}                  Run Keyword And Expect Error    *    Get Node Text    ${NODE}
-    Should End With         ${MSG}    Node has no method getText().
+    Should End With         ${MSG}      Node has no getText method
 
 Wait Until Node Is Enabled
     [Tags]                          smoke
@@ -314,3 +309,10 @@ Get List Of All Players
     Append To List    ${list}    Rosa    Preston    Garrett    Mike    John    Donald    Michael    Kelly    Robin
     Append To List    ${list}    Alice    Johannes    Juhani    Tuukka    Mika    Petteri    Marko
     [return]    @{list}
+
+Reset Node Id To Yellow
+    [Arguments]             ${node}             ${original}
+    ${reset}                Create List         yellow
+    Call Object Method      ${node}             setId       ${reset}
+    ${after_reset}          Find                \#yellow
+    Should Be Equal         ${after_reset}      ${original}

@@ -17,21 +17,19 @@
 
 package javafxlibrary.keywords.Keywords;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.service.query.PointQuery;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import static javafxlibrary.utils.HelperFunctions.*;
 
@@ -47,53 +45,14 @@ public class DragRobot extends TestFxAdapter {
             + "| Drag From | ${node} | SECONDARY | \n")
     @ArgumentNames({ "locator", "button=PRIMARY" })
     public FxRobotInterface dragFrom(Object locator, String button) {
-
         Object target = checkClickTarget(locator);
-
+        robotLog("INFO", "Dragging from \"" + target + "\"" + " with button=\"" + button + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "drag", target.getClass(), MouseButton.class);
         try {
-            if (target instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Drags from window \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-                return robot.drag((Window) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Drags from scene \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-                return robot.drag((Scene) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof Bounds){
-                HelperFunctions.robotLog("INFO", "Drags from bounds \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-            return robot.drag((Bounds) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof Point2D){
-                HelperFunctions.robotLog("INFO", "Drags from point \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-            return robot.drag((Point2D) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof Node){
-                HelperFunctions.robotLog("INFO", "Drags from node \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-            return robot.drag((Node) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof String){
-                HelperFunctions.robotLog("INFO", "Drags from query \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-            return robot.drag((String) target, MouseButton.valueOf(button));
-            }
-            else if (target instanceof PointQuery) {
-                HelperFunctions.robotLog("INFO", "Drags from point query \"" + target.toString() + "\""
-                        + " with  button=\"" + button + "\"");
-                return robot.drag((PointQuery) target, MouseButton.valueOf(button));
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: " + target.toString());
-
-        } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
-                throw e;
-            }
-            throw new JavaFXLibraryNonFatalException("Unable to drag from: " + target.toString(), e);
+            return (FxRobotInterface) method.invoke(robot, target, new MouseButton[]{MouseButton.valueOf(button)});
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute drag from using locator \"" + locator + "\" " +
+                    "and button " + button + ": " + e.getCause().getMessage());
         }
     }
 
@@ -109,46 +68,15 @@ public class DragRobot extends TestFxAdapter {
             + "| Drop To | \\#some-node-id | \n")
     @ArgumentNames({ "locator" })
     public FxRobotInterface dropTo(Object locator) {
-
         Object target = checkClickTarget(locator);
+        robotLog("INFO", "Dropping to \"" + target + "\"");
+        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "dropTo", target.getClass());
 
         try {
-            if (target instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Drops to window \"" + target.toString() + "\"");
-                return robot.dropTo((Window) target);
-            }
-            else if (target instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Drops to scene \"" + target.toString() + "\"");
-                return robot.dropTo((Scene) target);
-            }
-            else if (target instanceof Bounds) {
-                HelperFunctions.robotLog("INFO", "Drops to bounds \"" + target.toString() + "\"");
-                return robot.dropTo((Bounds) target);
-            }
-            else if (target instanceof Point2D) {
-                HelperFunctions.robotLog("INFO", "Drops to point \"" + target.toString() + "\"");
-                return robot.dropTo((Point2D) target);
-            }
-            else if (target instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Drops to node \"" + target.toString() + "\"");
-                return robot.dropTo((Node) target);
-            }
-            else if (target instanceof String){
-                HelperFunctions.robotLog("INFO", "Drops to query \"" + target.toString() + "\"");
-                return robot.dropTo((String) target);
-            }
-            else if (target instanceof PointQuery) {
-                HelperFunctions.robotLog("INFO", "Drops to point query \"" + target.toString() + "\"");
-                return robot.dropTo((PointQuery) target);
-            }
-
-            throw new JavaFXLibraryNonFatalException("Unsupported locator type: " + target.toString());
-
-        } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
-                throw e;
-            }
-            throw new JavaFXLibraryNonFatalException("Unable to drop to locator: " + target.toString(), e);
+            return (FxRobotInterface) method.invoke(robot, target);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute drop to using locator \"" + locator + "\" " +
+                    ": " + e.getCause().getMessage());
         }
     }
 

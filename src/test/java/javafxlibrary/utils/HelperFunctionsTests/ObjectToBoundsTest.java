@@ -80,17 +80,15 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
 
     @Test
     public void objectToBounds_String() {
-        new Expectations() {
-            {
-                getRobot().lookup("#testNode").query(); result = new Button();
-                getRobot().bounds((Node) any).query(); result = new BoundingBox(906, 609, 250, 50);
-            }
-        };
-
         new MockUp<HelperFunctions>() {
             @Mock
-            boolean waitUntilExists(String any, int timeout, String timeunit) {
-                return true;
+            Node waitUntilExists(String target, int timeout, String timeUnit) {
+                return new Button();
+            }
+        };
+        new Expectations() {
+            {
+                getRobot().bounds((Node) any).query(); result = new BoundingBox(906, 609, 250, 50);
             }
         };
 

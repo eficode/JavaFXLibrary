@@ -17,14 +17,14 @@
 
 package javafxlibrary.keywords.Keywords;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
@@ -65,44 +65,31 @@ public class WindowTargeting extends TestFxAdapter {
             )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
+        HelperFunctions.robotLog("INFO", "Setting target window according to locator \"" + locator + "\"");
+
         try {
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")){
                     locator = ((String) locator).replace("pattern=","");
                     HelperFunctions.robotLog("DEBUG", "String which is pattern, converting...");
-                    setTargetWindow((Pattern) Pattern.compile((String)locator));
+                    setTargetWindow(Pattern.compile((String)locator));
                 } else if (((String) locator).matches("[0-9]+")) {
                     HelperFunctions.robotLog("DEBUG", "String which is integer, converting...");
-                    setTargetWindow(Integer.parseInt(locator.toString()));
+                    setTargetWindow(Integer.parseInt((String)locator));
                 } else {
-                    if (((String) locator).startsWith("title=")) { locator = ((String) locator).replace("title=", "");}
-                    HelperFunctions.robotLog("INFO", "Setting target window with title \"" + locator + "\"");
+                    if (((String) locator).startsWith("title="))
+                        locator = ((String) locator).replace("title=", "");
                     robot.targetWindow((String) locator);
                 }
-            }
-            if (locator instanceof Window) {
-                HelperFunctions.robotLog("INFO", "Setting target window according to window \"" + locator.toString() + "\"");
-                robot.targetWindow((Window) locator);
-            }
-            if (locator instanceof Integer) {
-                HelperFunctions.robotLog("INFO", "Setting target window according to window index \"" + locator.toString() + "\"");
-                robot.targetWindow((Integer) locator);
-            }
-            if (locator instanceof Scene) {
-                HelperFunctions.robotLog("INFO", "Setting target window according to window scene \"" + locator.toString() + "\"");
-                robot.targetWindow((Scene) locator);
-            }
-            if (locator instanceof Node) {
-                HelperFunctions.robotLog("INFO", "Setting target window according to window node \"" + locator.toString() + "\"");
-                robot.targetWindow((Node) locator);
-            }
-            if (locator instanceof Pattern) {
-                HelperFunctions.robotLog("INFO", "Setting target window according to window title pattern \"" + locator.toString() + "\"");
-                robot.targetWindow((Pattern) locator);
+            } else {
+                Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "targetWindow", locator.getClass());
+                method.invoke(robot, locator);
             }
 
-            Platform.runLater( (robot.targetWindow())::requestFocus );
+            Platform.runLater((robot.targetWindow())::requestFocus);
 
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new JavaFXLibraryNonFatalException("Could not execute set target window using locator \"" + locator + "\"");
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
