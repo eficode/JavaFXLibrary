@@ -120,6 +120,7 @@ Find All With Pseudo Class
     Length Should Be    ${hovered}      3
     Should Contain      ${hovered}      ${node}
 
+# TODO: Add test for text= prefix when next TestFX version comes out (4.0.14-alpha)
 # TODO: Add negative tests
 
 *** Keywords ***

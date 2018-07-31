@@ -100,6 +100,7 @@ public class Finder {
             case CLASS:
                 return classLookup(query).query();
             case TEXT:
+                query = query.substring(6, query.length() - 1);
                 return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).query();
             case XPATH:
                 return new XPathFinder().find(query.substring(6), currentRoot);
@@ -118,6 +119,7 @@ public class Finder {
             case CLASS:
                 return classLookup(query).queryAll();
             case TEXT:
+                query = query.substring(6, query.length() - 1);
                 return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).queryAll();
             case XPATH:
                 return new XPathFinder().findAll(query.substring(6), currentRoot);
@@ -156,8 +158,7 @@ public class Finder {
         return query;
     }
 
-    // TODO: This solution will not work when node text contains '"'-characters, could regexp be used for this?
-    private String[] splitQuery(String query) {
+    protected String[] splitQuery(String query) {
         // Replace spaces of text values with temporary tag to prevent them interfering with parsing of the query
         boolean replaceSpaces = false;
 
@@ -166,6 +167,10 @@ public class Finder {
 
             if (current == '"')
                 replaceSpaces = !replaceSpaces;
+
+            // Query can have escaped quotation marks in it, skip these
+            if (current == '\\' && query.charAt(i + 1) == '"')
+                query = query.substring(0, i) + "" + query.substring(i + 1);
 
             if (replaceSpaces && current == ' ')
                 query = query.substring(0, i) + ";javafxlibraryfinderspace;" + query.substring(i + 1);
@@ -206,19 +211,20 @@ public class Finder {
 
     // True if starts with known prefix
     protected boolean containsPrefixes(String query) {
-        for (String prefix : prefixes) {
+        for (String prefix : prefixes)
             if (query.startsWith(prefix))
                 return true;
-        }
+
         return false;
     }
 
+    // NOTE: Returns true when a single query contains known prefixes, e.g. in xpath=[@id="something"] !
     protected boolean containsMultiplePrefixes(String query) {
         String subQuery = query.substring(query.indexOf('='));
-        for (String prefix : prefixes) {
+        for (String prefix : prefixes)
             if (subQuery.contains(prefix))
                 return true;
-        }
+
         return false;
     }
 
