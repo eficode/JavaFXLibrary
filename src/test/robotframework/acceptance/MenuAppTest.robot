@@ -19,7 +19,7 @@ Select Context Menu Item
     \               Verify String               .textLabel       ${menuitem}
 
 Select Context Menu Item Using Click On Keyword
-    [Tags]          smoke
+    [Tags]          smoke    demo-set
     ${menuitems}    Create List                 JavaFXLibrary    Is easy    And fun to use
     ${location}     Point To With Offset        \#bgRectangle    -300       0
     :FOR            ${menuitem}    IN           @{menuitems}
@@ -28,13 +28,13 @@ Select Context Menu Item Using Click On Keyword
     \               Verify String               .textLabel       ${menuitem}
 
 Menus - Navigate
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Click On                Learn
     Click On                Test Automation & Robot Framework
     Verify String           .textLabel    Test Automation & Robot Framework
 
 Use ComboBoxes With Text Values
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Click On                Select amount
     Click On                50 pc
     Click On                Select price
@@ -42,7 +42,7 @@ Use ComboBoxes With Text Values
     Verify String           \#total     3750 €
 
 Menus - Change Theme
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Click On                Settings
     Click On                Theme
     Click On                JavaFX               HORIZONTAL_FIRST
@@ -51,7 +51,7 @@ Menus - Change Theme
     Should Contain          @{STYLESHEET}[0]     Javastyle.css
 
 Menus - Change Font Size
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Click On                Settings
     Move To                 Font size
     Click On                26px                 HORIZONTAL_FIRST
@@ -60,7 +60,7 @@ Menus - Change Font Size
     Should Contain          ${STYLE}             -fx-font-size: 26px
 
 Combined
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Click On                Settings
     Move To                 Theme
     # Horizontal first is required because submenu closes if the cursor moves outside of menu bounds

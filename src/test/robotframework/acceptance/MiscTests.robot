@@ -59,7 +59,7 @@ Call Method With Wrong Types In Fx Application Thread
     Should End With         ${MSG}    has no method "setWidth" with arguments [class java.lang.String]
 
 Change Node ID Using Call Method
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${original}             Find                \#yellow
     Call Object Method      ${original}         setId          importantNode
@@ -70,7 +70,7 @@ Change Node ID Using Call Method
     Wait Until Keyword Succeeds    10 s    1 s    Reset Node Id To Yellow    ${modified}    ${original}
 
 Change Node Fill Using Call Method In JavaFX Application Thread
-    [Tags]                                          smoke
+    [Tags]                                          smoke    demo-set
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
     ${node}                                         Find                    \#turquoise
     ${fill}                                         Call Object Method      ${node}         getFill
@@ -87,7 +87,7 @@ Change Node Fill Using Call Method In JavaFX Application Thread
     Should End With                                 ${after_reset}          ffff00ff
 
 Set Node Visibility (Call Method With Argument Types That Require Casting)
-    [Tags]                                          smoke
+    [Tags]                                          smoke    demo-set
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
     ${node}    Find                                 \#yellow
     Node Should Be Visible                          ${node}
@@ -100,7 +100,7 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
     Node Should Be Visible                          ${node}
 
 Wait For Events In Fx Application Thread
-    [Tags]                                          smoke
+    [Tags]                                          smoke    demo-set
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
     ${node}                                         Find        \#red
     Call Object Method In Fx Application Thread     ${node}     changeFillAfterTwoSeconds
@@ -204,7 +204,7 @@ Get Table Row Values
     Lists Should Be Equal   ${target}    ${values}
 
 Order Table Values By Different Columns
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Set Test Application    javafxlibrary.testapps.TestTableManagement
     Click On                Player
     ${FIRST_NICK}           Get First Player

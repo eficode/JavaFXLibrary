@@ -17,12 +17,12 @@ ${B_DECORATION_HEIGHT}      ${EMPTY}
 
 *** Test Cases ***
 Move By
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Move By                 75    75
     Verify String           \#locationLabel     75 | 75
 
 Move To Coordinates
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     ${X}                    Evaluate    ${SCENE_MINX} + ${200}
     ${Y}                    Evaluate    ${SCENE_MINY} + ${200}
     Move To Coordinates     ${X}    ${Y}
@@ -32,7 +32,7 @@ Move To Coordinates
     Should Contain          ${MSG}    "NotValidMotion" is not a valid Motion. Accepted values are:
 
 Move To Query
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Move To                 \#rectangle
     Verify String           \#locationLabel    25 | 475
 

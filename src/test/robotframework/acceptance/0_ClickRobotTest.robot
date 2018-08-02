@@ -19,7 +19,7 @@ ${WINDOW_CENTERY}           ${EMPTY}
 
 *** Test Cases ***
 Click On TextFX Query
-    [Tags]                  smoke
+    [Tags]                  smoke            demo-set
     Click On                \#button
     Verify String           \#buttonLabel    Button has been clicked 1 times.
 
@@ -75,7 +75,7 @@ Click On Point Query
     Verify String           \#buttonLabel    Button has been clicked 1 times.
 
 Double Click On Query
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Double Click On         \#doubleClickButton
     Verify String           \#doubleClickButtonLabel    Button has been double-clicked 1 times.
 
@@ -119,7 +119,7 @@ Double Click On Point Query
     Verify String           \#doubleClickButtonLabel    Button has been double-clicked 1 times.
 
 Right Click On Query
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Right Click On          \#rightClickButton
     Verify String           \#rightClickButtonLabel    Button has been right-clicked 1 times.
 
@@ -188,7 +188,7 @@ Right Click On Mouse Button
     Verify String                   \#rightClickButtonLabel    Button has been right-clicked 1 times.
 
 Click On Coordinates
-    [Tags]                          smoke
+    [Tags]                          smoke       demo-set
     ${COORD_X}                      Evaluate    ${SCENE_MINX} + ${150}
     ${COORD_Y}                      Evaluate    ${SCENE_MINY} + ${150}
     ${COORD_X}                      Convert To Integer    ${COORD_X}

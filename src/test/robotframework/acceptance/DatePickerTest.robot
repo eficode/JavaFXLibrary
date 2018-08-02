@@ -11,7 +11,7 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.DatePickerApp
 
 *** Test Cases ***
 Select JavaFXLibrary Release Date
-    [Tags]              smoke
+    [Tags]              smoke    demo-set
     Write To            .text-field     JavaFXLibrary Open Source Release
     Click On            .arrow-button
     Set Month           March
@@ -21,7 +21,7 @@ Select JavaFXLibrary Release Date
     Should End With     ${date}         2018-03-23
 
 Select JavaFX Release Date
-    [Tags]              smoke
+    [Tags]              smoke    demo-set
     Write To            .text-field     JavaFX Release
     Click On            .arrow-button
     Set Month           December

@@ -5,7 +5,7 @@ Force Tags          set-embedded
 
 *** Testcases ***
 Swing Embedded JavaFX Click Test
-    [Tags]                          smoke
+    [Tags]                          smoke    demo-set
     Launch Swing Application        javafxlibrary.testapps.SwingApplication
     Wait Until Keyword Succeeds     15 sec    250ms    Find    .button     	failIfNotFound=True
     ${colors}    Create List        0xdc143cff    0x00fa9aff    0xee82eeff    0xffff00ff    0x00ffffff

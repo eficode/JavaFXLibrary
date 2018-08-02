@@ -10,7 +10,7 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestWindowManagement
 
 *** Test Cases ***
 Close Alert
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Click On                    \#navigationAlert
     Click On                    .button
     Sleep                       3s
@@ -21,7 +21,7 @@ Close Alert
     List Length Should Be       ${WINDOWS}      ${1}
 
 Add an employee
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Click On                    \#navigationDialog
     Click On                    \#addEmployeeButton
     ${TEXTFIELDS}               Find All                .dialog-pane .text-field

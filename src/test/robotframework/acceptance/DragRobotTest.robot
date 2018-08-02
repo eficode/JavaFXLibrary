@@ -13,31 +13,31 @@ ${COORD_Y}              ${EMPTY}
 
 *** Test Cases ***
 Drop by left
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Drag From                   \#horizontalSlider .thumb
     Drop By                     -300    0
     Verify String               \#sliderLabel    0
 
 Drop by up
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Drag From                   \#verticalSlider .thumb
     Drop By                     0    -200
     Verify String               \#verticalSliderLabel    100
 
 Drop by right
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Drag From                   \#horizontalSlider .thumb
     Drop By                     500    0
     Verify String               \#sliderLabel    100
 
 Drop by down
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Drag From                   \#verticalSlider .thumb
     Drop By                     0    150
     Verify String               \#verticalSliderLabel    0
 
 Drag
-    [Tags]                      smoke
+    [Tags]                      smoke    demo-set
     Set Coordinates To Use      240    210
     Move To                     \#circle
     Drag
@@ -150,7 +150,7 @@ Drag From Scene (Scene + MouseButton)
     Verify String                   \#circleScreenLocationLabel    X${COORD_X} Y${COORD_Y}
 
 Drop To Node
-    [Tags]                  smoke
+    [Tags]                  smoke    demo-set
     Reset Circle
     ${TARGET}               find    \#secondWindowLabel
     Drag From               \#circle

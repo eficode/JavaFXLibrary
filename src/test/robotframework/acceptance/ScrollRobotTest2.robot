@@ -10,22 +10,22 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestScrollRobot2
 
 *** Test Cases ***
 Scroll down
-    [Tags]    smoke
+    [Tags]    smoke    demo-set
     Scroll Vertically    DOWN    50
     Verify String        \#verticalScrollLocation    max
 
 Scroll up
-    [Tags]    smoke
+    [Tags]    smoke    demo-set
     Scroll Vertically    UP    50
     Verify String        \#verticalScrollLocation    min
 
 Scroll right
-    [Tags]    smoke
+    [Tags]    smoke    demo-set
     Scroll Horizontally    RIGHT    50
     Verify String          \#horizontalScrollLocation    max
 
 Scroll left
-    [Tags]    smoke
+    [Tags]    smoke    demo-set
     Scroll Horizontally    LEFT    50
     Verify String          \#horizontalScrollLocation    min
 
