@@ -65,6 +65,19 @@ Write Fast Test
     Write Fast          Robot Framework via Write Fast -keyword using clipboard
     Verify String       \#textAreaLabel    Robot Framework via Write Fast -keyword using clipboard
 
+Write text
+    [Tags]          smoke
+    Clear Textarea
+    Write           2.6.5 Embedding arguments
+    Verify String   \#textAreaLabel    2.6.5 Embedding arguments
+
+Write special characters
+    [Tags]          smoke    demo-set
+    Clear Textarea
+    Write           /@[*])(=?^_:;
+    Verify String   \#textAreaLabel    /@[*])(=?^_:;
+
+
 *** Keywords ***
 Setup all tests
     Launch Javafx Application    ${TEST_APPLICATION}
