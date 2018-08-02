@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.awt.Point;
-import java.util.Arrays;
-import java.util.List;
 
 import static testutils.TestFunctions.setupStageInJavaFXThread;
 import static testutils.TestFunctions.waitForEventsInJavaFXThread;
@@ -40,7 +38,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     @Test
     public void callMethod_InSameThread_WithArgs_WithReturnValue() {
         String name = "JavaFXLibrary";
-        List<Object> arguments = Arrays.asList(4, 9);
+        Object[] arguments = {4, 9};
         String result = (String) HelperFunctions.callMethod(name, "substring", arguments, false);
         Assert.assertEquals("FXLib", result);
     }
@@ -48,7 +46,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     @Test
     public void callMethod_InSameThread_WithArgs_NoReturnValue() {
         Point point = new Point(0, 0);
-        List<Object> arguments = Arrays.asList(20, 17);
+        Object[] arguments = {20, 17};
         HelperFunctions.callMethod(point, "setLocation", arguments, false);
         Assert.assertEquals(20, point.getX(), 0);
         Assert.assertEquals(17, point.getY(), 0);
@@ -61,7 +59,7 @@ public class CallMethodTest extends TestFxAdapterTest {
         Platform.runLater(() -> stage.show());
         waitForEventsInJavaFXThread();
 
-        List<Object> arguments = Arrays.asList("Changed Title");
+        Object[] arguments = {"Changed Title"};
         HelperFunctions.callMethod(stage, "setTitle", arguments, true);
         waitForEventsInJavaFXThread();
 
@@ -90,7 +88,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     @Test
     public void callMethod_WithWrongTypes() {
         Point point = new Point(0, 0);
-        List<Object> arguments = Arrays.asList("20", "17");
+        Object[] arguments = {"20", "17"};
 
         thrown.expect(JavaFXLibraryNonFatalException.class);
         thrown.expectMessage("class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]");

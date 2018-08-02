@@ -41,8 +41,7 @@ Call Method With Wrong Types
     [Tags]                  negative        smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find            \#green
-    @{ARGS}                 Create List     20
-    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    ${ARGS}
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    20
     Should End With         ${MSG}          has no method "setWidth" with arguments [class java.lang.String]
 
 Call Method That Does Not Exist In Fx Application Thread
@@ -56,16 +55,14 @@ Call Method With Wrong Types In Fx Application Thread
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find    \#green
-    @{ARGS}                 Create List    20
-    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    ${ARGS}
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    setWidth    20
     Should End With         ${MSG}    has no method "setWidth" with arguments [class java.lang.String]
 
 Change Node ID Using Call Method
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${args}                 Create List         importantNode
     ${original}             Find                \#yellow
-    Call Object Method      ${original}         setId    ${args}
+    Call Object Method      ${original}         setId          importantNode
     ${modified}             Find                \#importantNode
     ${original_hash}        Fetch From Left     ${original}    [
     ${modified_hash}        Fetch From Left     ${modified}    [
@@ -79,17 +76,28 @@ Change Node Fill Using Call Method In JavaFX Application Thread
     ${fill}                                         Call Object Method      ${node}         getFill
     ${target}                                       Find                    \#yellow
     ${original}                                     Call Object Method      ${target}       getFill
-    ${args}                                         Create List             ${fill}
-    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${fill}
     Wait For Events In Fx Application Thread
     ${result}                                       Call Object Method      ${target}       getFill
     Should End With                                 ${result}               00ffe9ff
     # Reset original fill value
-    ${args}                                         Create List             ${original}
-    Call Object Method In Fx Application Thread     ${target}               setFill         ${args}
+    Call Object Method In Fx Application Thread     ${target}               setFill         ${original}
     Wait For Events In Fx Application Thread
     ${after_reset}                                  Call Object Method      ${target}       getFill
     Should End With                                 ${after_reset}          ffff00ff
+
+Set Node Visibility (Call Method With Argument Types That Require Casting)
+    [Tags]                                          smoke
+    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    ${node}    Find                                 \#yellow
+    Node Should Be Visible                          ${node}
+    Call Object Method In Fx Application Thread     ${node}     setVisible                  (boolean)false
+    Wait For Events In Fx Application Thread
+    Run Keyword And Expect Error                    *           Node Should Be Visible      ${node}
+    #Reset visibility to true
+    Call Object Method In Fx Application Thread     ${node}     setVisible                  (boolean)true
+    Wait For Events In Fx Application Thread
+    Node Should Be Visible                          ${node}
 
 Wait For Events In Fx Application Thread
     [Tags]                                          smoke
@@ -109,9 +117,8 @@ Find From Node
     [Tags]                  smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find                    \#yellow
-    @{ARGS}                 Create List             HBox VBox HBox VBox HBox StackPane
     ${ROOT}                 Get Root Node Of        ${NODE}
-    ${RESULT}               Call Object Method      ${ROOT}         lookup    ${ARGS}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup    HBox VBox HBox VBox HBox StackPane
     ${RECT}                 Find From Node          ${RESULT}       Rectangle
     Should Be Equal         ${NODE}                 ${RECT}
 
@@ -120,9 +127,8 @@ Find All From Node
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${YELLOW}               Find                    \#yellow
     ${VIOLET}               Find                    \#violet
-    @{ARGS}                 Create List             HBox VBox HBox VBox HBox
     ${ROOT}                 Get Root Node Of        ${YELLOW}
-    ${RESULT}               Call Object Method      ${ROOT}         lookup      ${ARGS}
+    ${RESULT}               Call Object Method      ${ROOT}         lookup      HBox VBox HBox VBox HBox
     @{RECT}                 Find All From Node      ${RESULT}       Rectangle
     Should Be Equal         ${YELLOW}               @{RECT}[0]
     Should Be Equal         ${VIOLET}               @{RECT}[1]
@@ -132,9 +138,8 @@ Get Node Children By Class Name
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${YELLOW}               Find                                \#yellow
     ${VIOLET}               Find                                \#violet
-    @{ARGS}                 Create List                         HBox VBox HBox VBox HBox
     ${ROOT}                 Get Root Node Of                    ${YELLOW}
-    ${RESULT}               Call Object Method                  ${ROOT}         lookup    ${ARGS}
+    ${RESULT}               Call Object Method                  ${ROOT}         lookup    HBox VBox HBox VBox HBox
     @{RECT}                 Get Node Children By Class Name     ${RESULT}       Rectangle
     Should Contain          ${RECT}                             ${YELLOW}
     Should Contain          ${RECT}                             ${VIOLET}
@@ -312,7 +317,6 @@ Get List Of All Players
 
 Reset Node Id To Yellow
     [Arguments]             ${node}             ${original}
-    ${reset}                Create List         yellow
-    Call Object Method      ${node}             setId       ${reset}
+    Call Object Method      ${node}             setId       yellow
     ${after_reset}          Find                \#yellow
     Should Be Equal         ${after_reset}      ${original}

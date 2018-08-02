@@ -24,6 +24,7 @@ import java.util.*;
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
+import javafxlibrary.utils.HelperFunctions;
 import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
@@ -32,7 +33,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static javafxlibrary.utils.HelperFunctions.*;
-import static javafxlibrary.utils.TestFxAdapter.objectMap;
 
 public class JavaFXLibrary extends AnnotationLibrary {
 
@@ -55,46 +55,20 @@ public class JavaFXLibrary extends AnnotationLibrary {
     @Autowired
     protected RunOnFailure runOnFailure;
 
-    private void useMappedObjects(Object[] arr) {
-        for (Object o : arr) {
-            if (o.getClass().isArray() || o instanceof List)
-                containsMultipleObjects(o);
-            else
-                if (o instanceof String)
-                    if (objectMap.containsKey(o))
-                        arr[Arrays.asList(arr).indexOf(o)] = objectMap.get(o);
-        }
-    }
-
-    private void useMappedObjects(List<Object> list) {
-        for (Object o : list) {
-            if (o.getClass().isArray() || o instanceof List)
-                containsMultipleObjects(o);
-            else
-                if (o instanceof String)
-                    if (objectMap.containsKey(o))
-                        list.set(list.indexOf(o), objectMap.get(o));
-        }
-    }
-
-    private void containsMultipleObjects(Object o) {
-        if (o.getClass().isArray())
-            useMappedObjects((Object[]) o);
-        else if (o instanceof List)
-            useMappedObjects(((List) o));
-
-    }
-
     // overriding the run method to catch the control in case of failure, so that desired runOnFailureKeyword
     // can be executed in controlled manner.
-
     @Override
     public Object runKeyword(String keywordName, Object[] args) {
 
-        useMappedObjects(args);
+        Object[] finalArgs;
+        // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
+        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread")))
+            finalArgs = HelperFunctions.useMappedObjects(args);
+        else
+            finalArgs = args;
 
         try {
-            return super.runKeyword(keywordName, args);
+            return super.runKeyword(keywordName, finalArgs);
         } catch (RuntimeException e) {
             runOnFailure.runOnFailure();
             if (e.getCause() instanceof JavaFXLibraryFatalException) {

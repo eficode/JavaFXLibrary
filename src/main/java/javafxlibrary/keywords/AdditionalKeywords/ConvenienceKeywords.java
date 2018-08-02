@@ -95,42 +95,57 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    @ArgumentNames({ "object", "methodName" })
-    public Object callObjectMethod(Object object, String methodName) {
-        Object value = callMethod(object, methodName, false);
-        if (value != null)
-            return mapObject(value);
-        return null;
-    }
-
     @RobotKeyword("Calls a given method for a given java object.\n\n"
-            + "``object`` can be an instance of any Java Class retrieved using JavaFXLibrary keywords, see `3.2 Using objects`.\n\n"
-            + "``methodName`` is a String type argument describing the method name to call.\n\n"
-            + "Optional ``arguments`` is a list of Java objects to be passed to method call as method arguments.\n\n"
+            + "``object`` is a Java object retrieved using JavaFXLibrary keywords, see `3.2 Using objects`.\n\n"
+            + "``method`` is the name of the method that will be called.\n\n"
+            + "Optional ``arguments`` are variable-length arguments that will be provided for the method.\n "
+            + "If argument type is boolean, byte, char, double, float, int, long or short, it must have \"casting instructions\" "
+            + "in front of it, e.g. _\"(boolean)false\"_.\n\n"
             + "\nExample:\n"
-            + "| ${args}= | Create List | 10 | \n"
             + "| ${node}= | Find | \\#node-id | \n"
-            + "| ${max height}= | Call Object Method | ${node} | maxHeight | ${args} | \n"
+            + "| ${max height}= | Call Object Method | ${node} | maxHeight | (double)10 | \n"
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
-    @ArgumentNames({ "object", "methodName", "arguments=" })
-    public Object callObjectMethod(Object object, String method, List<Object> arguments) {
-        Object value = callMethod(object, method, arguments, false);
-        if (value != null)
-            return mapObject(value);
+    @ArgumentNames({ "object", "method", "*arguments=" })
+    public Object callObjectMethod(Object object, String method, Object... arguments) {
+        /* Workaround for overloading the keyword, Javalib Core seems to have a bug which causes overloaded keywords that
+           take varargs throw IllegalArgumentException occasionally. Some of the calls for the base keyword get directed
+           to the overloaded keyword, so the method invocation fails because of incorrect arguments. */
+
+        /* Javalib Core changes all parameters to Strings after runKeywords automatic argument replacement, so arguments
+           are replaced with objects from objectMap here instead. */
+        object = HelperFunctions.useMappedObject(object);
+        Object[] tempArgs = HelperFunctions.checkMethodArguments(arguments);
+        Object[] finalArgs = HelperFunctions.useMappedObjects(tempArgs);
+
+        Object result;
+
+        if (finalArgs.length == 0)
+            result = callMethod(object, method, false);
+        else
+            result = callMethod(object, method, finalArgs, false);
+
+        if (result != null)
+            return mapObject(result);
+
         return null;
     }
 
-    @RobotKeywordOverload
-    @ArgumentNames({ "object", "methodName" })
-    public void callObjectMethodInFxApplicationThread(Object object, String methodName) {
-        callMethod(object, methodName, true);
-    }
+    @RobotKeyword("Calls given method in FX Application Thread using Platform.runLater(). See `Call Object Method` "
+            + "for further documentation.\n\n"
+            + "\nExample:\n"
+            + "| ${node}= | Find | \\#node-id | \n"
+            + "| Call Object Method In Fx Application Thread | ${node} | maxHeight | (boolean)false | \n")
+    @ArgumentNames({ "object", "method", "*arguments=" })
+    public void callObjectMethodInFxApplicationThread(Object object, String method, Object... arguments) {
+        // Check callObjectMethod for info about argument replacing and overloading in these keywords.
+        object = HelperFunctions.useMappedObject(object);
+        Object[] tempArgs = HelperFunctions.checkMethodArguments(arguments);
+        Object[] finalArgs = HelperFunctions.useMappedObjects(tempArgs);
 
-    @RobotKeyword("Uses Platform.runLater() for a method call. See `Call Object Method` for further documentation.\n\n")
-    @ArgumentNames({ "object", "methodName", "arguments=", "argumentTypes=" })
-    public void callObjectMethodInFxApplicationThread(Object object, String method, List<Object> arguments) {
-        callMethod(object, method, arguments, true);
+        if (finalArgs.length == 0)
+            callMethod(object, method, true);
+        else
+            callMethod(object, method, finalArgs, true);
     }
 
     @Deprecated

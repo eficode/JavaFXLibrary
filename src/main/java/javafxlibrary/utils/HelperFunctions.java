@@ -221,14 +221,14 @@ public class HelperFunctions {
         return null;
     }
 
-    public static Object callMethod(Object o, String method, List<Object> arguments, boolean runLater) {
+    public static Object callMethod(Object o, String method, Object[] arguments, boolean runLater) {
         robotLog("INFO", "Calling method \"" + method + "\" of object \"" + o + "\" with arguments \""
-                + Arrays.toString(arguments.toArray()) + "\"");
+                + Arrays.toString(arguments) + "\"");
 
-        Class[] argumentTypes = new Class[arguments.size()];
+        Class[] argumentTypes = new Class[arguments.length];
 
-        for (int i = 0; i < arguments.size(); i++)
-            argumentTypes[i] = arguments.get(i).getClass();
+        for (int i = 0; i < arguments.length; i++)
+            argumentTypes[i] = arguments[i].getClass();
 
         try {
             Method m = MethodUtils.getMatchingAccessibleMethod(o.getClass(), method, argumentTypes);
@@ -237,11 +237,11 @@ public class HelperFunctions {
                 throw new JavaFXLibraryNonFatalException(o.getClass() + " has no method \"" + method + "\" with arguments " + Arrays.toString(argumentTypes));
 
             if (!runLater) {
-                return m.invoke(o, arguments.toArray());
+                return m.invoke(o, arguments);
             } else {
                 Platform.runLater(() -> {
                     try {
-                        m.invoke(o, arguments.toArray());
+                        m.invoke(o, arguments);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
                     }
@@ -895,6 +895,107 @@ public class HelperFunctions {
 
     public static Finder createFinder() {
         return new Finder();
+    }
+
+    public static Object useMappedObject(Object object) {
+        if (object instanceof String)
+            if (objectMap.containsKey(object))
+                return objectMap.get(object);
+        return object;
+    }
+
+    public static Object[] useMappedObjects(Object[] arr) {
+
+        Object[] replaced = new Object[arr.length];
+
+        for (int i = 0; i < arr.length; i++) {
+            Object o = arr[i];
+
+            if (o.getClass().isArray()) {
+                replaced[i] = useMappedObjects((Object[]) o);
+            } else if (o instanceof List) {
+                replaced[i] = useMappedObjects((List<Object>) o);
+            } else {
+                if (objectMap.containsKey(o)) {
+                    replaced[i] = objectMap.get(o);
+                } else {
+                    replaced[i] = arr[i];
+                }
+            }
+        }
+
+        return replaced;
+    }
+
+    public static List<Object> useMappedObjects(List<Object> list) {
+        List<Object> replaced = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            Object o = list.get(i);
+
+            if (o.getClass().isArray()) {
+                replaced.set(i, useMappedObjects((Object[]) o));
+            } else if (o instanceof List) {
+                replaced.set(i, useMappedObjects((List<Object>) o));
+            } else {
+                if (objectMap.containsKey(o)) {
+                    replaced.set(i, objectMap.get(o));
+                } else {
+                    replaced.set(i, list.get(i));
+                }
+
+            }
+        }
+        return replaced;
+    }
+
+    public static Object[] checkMethodArguments(Object[] arguments) {
+        Object[] replaced = new Object[arguments.length];
+        for (int i = 0; i < arguments.length; i++) {
+            Object argument = arguments[i];
+
+            if (argument instanceof String)
+                replaced[i] = checkMethodArgument((String) argument);
+            else
+                replaced[i] = argument;
+        }
+
+        return replaced;
+    }
+
+    public static Object checkMethodArgument(String argument) {
+        String[] types = {"boolean", "byte", "char", "double", "float", "int", "long", "short"};
+        String argumentType = "String";
+
+        for (String type : types) {
+            if (argument.startsWith("(" + type + ")")) {
+                argumentType = type;
+                break;
+            }
+        }
+
+        argument = argument.substring(argument.indexOf(')') + 1);
+
+        switch(argumentType) {
+            case "boolean":
+                return Boolean.parseBoolean(argument);
+            case "byte":
+                return Byte.parseByte(argument);
+            case "char":
+                return argument.charAt(0);
+            case "double":
+                return Double.parseDouble(argument);
+            case "float":
+                return Float.parseFloat(argument);
+            case "int":
+                return Integer.parseInt(argument);
+            case "long":
+                return Long.parseLong(argument);
+            case "short":
+                return Short.parseShort(argument);
+            default:
+                return argument;
+        }
     }
 }
 
