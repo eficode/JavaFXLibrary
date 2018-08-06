@@ -3,6 +3,7 @@ package javafxlibrary.keywords.AdditionalKeywords;
 import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.Finder;
+import javafxlibrary.utils.RobotLog;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
@@ -13,7 +14,6 @@ import java.util.List;
 
 import static javafxlibrary.utils.HelperFunctions.mapObject;
 import static javafxlibrary.utils.HelperFunctions.mapObjects;
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class Find {
@@ -41,8 +41,8 @@ public class Find {
             + "using the found HBox as a root node, while looking for a node matching the XPath.\n\n")
     @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
     public Object find(String query, boolean failIfNotFound, Parent root) {
-        robotLog("INFO", "Trying to find the first node matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\", root= \"" + root + "\"");
+        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound= \"" +
+                failIfNotFound + "\", root= \"" + root + "\"");
         try {
             return mapObject(new Finder().find(query, root));
 
@@ -59,8 +59,8 @@ public class Find {
     @RobotKeywordOverload
     @ArgumentNames({ "query", "failIfNotFound=False" })
     public Object find(String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find the first node matching the query: \"" + query
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
+        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound= \"" +
+                failIfNotFound + "\"");
         try {
             return mapObject(new Finder().find(query));
 

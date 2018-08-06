@@ -20,7 +20,7 @@ package javafxlibrary.keywords.AdditionalKeywords;
 import javafx.application.Application;
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -33,7 +33,6 @@ import java.util.*;
 
 import static javafxlibrary.utils.HelperFunctions.createWrapperApplication;
 import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class ApplicationLauncher extends TestFxAdapter {
@@ -47,10 +46,9 @@ public class ApplicationLauncher extends TestFxAdapter {
     @ArgumentNames({"appName", "*args"})
     public void launchJavafxApplication(String appName, String... appArgs)  {
         try {
-            HelperFunctions.robotLog("INFO", "Starting application:" + appName);
+            RobotLog.info("Starting application:" + appName);
             createNewSession(appName, appArgs);
-            HelperFunctions.robotLog("INFO", "Application: " + appName + " started.");
-
+            RobotLog.info("Application: " + appName + " started.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
         }
@@ -67,7 +65,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "| Launch Swing Application | _TestApplication.jar_ |\n")
     @ArgumentNames({"appName", "*args"})
     public void launchSwingApplication(String appName, String... appArgs) {
-        HelperFunctions.robotLog("INFO", "Starting application:" + appName);
+        RobotLog.info("Starting application:" + appName);
         Class c;
 
         try {
@@ -82,15 +80,15 @@ public class ApplicationLauncher extends TestFxAdapter {
 
         Application app = createWrapperApplication(c, appArgs);
         createNewSession(app);
-        HelperFunctions.robotLog("INFO", "Application: " + appName + " started.");
+        RobotLog.info("Application: " + appName + " started.");
     }
 
     private void _addPathToClassPath(String path) {
         URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
-        HelperFunctions.robotLog("INFO", "Setting following path to Classpath: " + path );
+        RobotLog.info("Setting following path to Classpath: " + path);
 
-        try{
+        try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
             method.invoke(classLoader, (new File(path)).toURI().toURL() );
@@ -110,10 +108,12 @@ public class ApplicationLauncher extends TestFxAdapter {
     public void setToClasspath(String path)  {
         if (path.endsWith("*")) {
           path = path.substring(0, path.length() - 1);
-          HelperFunctions.robotLog("INFO", "Adding all jars from directory: " + path );
+          RobotLog.info("Adding all jars from directory: " + path);
+
           try {
               File directory = new File(path);
               File[] fileList = directory.listFiles();
+
               for (File file : fileList) {
                   if (file.getName().endsWith(".jar"))
                       _addPathToClassPath(file.getAbsolutePath());
@@ -132,10 +132,9 @@ public class ApplicationLauncher extends TestFxAdapter {
         try {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             URL[] urls = ((URLClassLoader) cl).getURLs();
-            HelperFunctions.robotLog("INFO", "Printing out classpaths: \n");
-            for (URL url : urls) {
-                HelperFunctions.robotLog("INFO", url.getFile());
-            }
+            RobotLog.info("Printing out classpaths: \n");
+            for (URL url : urls)
+                RobotLog.info(url.getFile());
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to log application classpaths", e);
         }
@@ -174,7 +173,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             while (keys.hasMoreElements()) {
                 String key = (String) keys.nextElement();
                 String value = (String) p.get(key);
-                HelperFunctions.robotLog("INFO", key + "=" + value);
+                RobotLog.info(key + "=" + value);
             }
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to log system properties", e);
@@ -187,9 +186,9 @@ public class ApplicationLauncher extends TestFxAdapter {
     public void closeJavafxApplication() {
 
         try {
-            HelperFunctions.robotLog("INFO", "Closing application...");
+            RobotLog.info("Closing application...");
             deleteSession();
-            HelperFunctions.robotLog("INFO", "Application closed.");
+            RobotLog.info("Application closed.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to close Java FX application.", e);
         }
@@ -200,9 +199,9 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "| Close Swing Application | \n")
     public void closeSwingApplication() {
         try {
-            HelperFunctions.robotLog("INFO", "Closing application...");
+            RobotLog.info("Closing application...");
             deleteSwingSession();
-            HelperFunctions.robotLog("INFO", "Application closed.");
+            RobotLog.info("Application closed.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to close JavaFXLibrary Swing Wrapper application.", e);
         }
@@ -210,7 +209,7 @@ public class ApplicationLauncher extends TestFxAdapter {
 
     @RobotKeyword("Clears internal book keeping of all java objects.")
     public void clearObjectMap() {
-        robotLog("INFO", "Clearing " + objectMap.size() + " objects from objectMap.");
+        RobotLog.info("Clearing " + objectMap.size() + " objects from objectMap.");
         objectMap.clear();
     }
 

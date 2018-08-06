@@ -19,6 +19,7 @@ package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -77,7 +78,8 @@ public class WindowLookup extends TestFxAdapter {
     )
     @ArgumentNames({"locator"})
     public Object getWindow(Object locator) {
-        HelperFunctions.robotLog("INFO", "Getting window using locator \"" + locator.toString() + "\"");
+        RobotLog.info("Getting window using locator \"" + locator + "\"");
+
         try {
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")) {
@@ -85,8 +87,7 @@ public class WindowLookup extends TestFxAdapter {
                     return HelperFunctions.mapObject(robot.window((String) locator));
                 } else if ( ((String) locator).matches("[0-9]+")) {
                     return getWindow(Integer.parseInt(locator.toString()));
-                }
-                else {
+                } else {
                     if (((String) locator).startsWith("title="))
                         locator = ((String) locator).replace("title=", "");
                     return HelperFunctions.mapObject(robot.window((String) locator));

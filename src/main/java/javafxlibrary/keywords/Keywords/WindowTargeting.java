@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -65,16 +66,16 @@ public class WindowTargeting extends TestFxAdapter {
             )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
-        HelperFunctions.robotLog("INFO", "Setting target window according to locator \"" + locator + "\"");
+        RobotLog.info("Setting target window according to locator \"" + locator + "\"");
 
         try {
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")){
                     locator = ((String) locator).replace("pattern=","");
-                    HelperFunctions.robotLog("DEBUG", "String which is pattern, converting...");
+                    RobotLog.debug("String which is pattern, converting...");
                     setTargetWindow(Pattern.compile((String)locator));
                 } else if (((String) locator).matches("[0-9]+")) {
-                    HelperFunctions.robotLog("DEBUG", "String which is integer, converting...");
+                    RobotLog.debug("String which is integer, converting...");
                     setTargetWindow(Integer.parseInt((String)locator));
                 } else {
                     if (((String) locator).startsWith("title="))

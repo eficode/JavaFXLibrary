@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -28,8 +29,6 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class PointOffset extends TestFxAdapter {
@@ -43,8 +42,7 @@ public class PointOffset extends TestFxAdapter {
             + "| ${point query offset}= | Call Method | ${point query} | getOffset | \n")
     @ArgumentNames({"locator", "offsetX", "offsetY"})
     public Object pointToWithOffset(Object locator, double offsetX, double offsetY) {
-        robotLog("INFO", "Creating a point query for target: \"" + locator
-                + "\" with offset: [" + offsetX + ", " + offsetY + "]");
+        RobotLog.info("Creating a point query for target: \"" + locator + "\" with offset: [" + offsetX + ", " + offsetY + "]");
 
         if (locator instanceof String)
             locator = new Finder().find((String) locator);

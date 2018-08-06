@@ -19,9 +19,9 @@ package javafxlibrary.keywords.AdditionalKeywords;
 
 import javafx.stage.Screen;
 import javafxlibrary.keywords.Keywords.ScreenCapturing;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class RunOnFailure extends TestFxAdapter{
@@ -45,21 +45,21 @@ public class RunOnFailure extends TestFxAdapter{
 
     public void runOnFailure() {
 
-        robotLog("DEBUG", "Executing cleanup functions by running: " + runOnFailureKeyword);
-        robotLog("DEBUG", "runningOnFailureRoutine: " + runningOnFailureRoutine);
+        RobotLog.debug("Executing cleanup functions by running: " + runOnFailureKeyword);
+        RobotLog.debug("runningOnFailureRoutine: " + runningOnFailureRoutine);
 
         if (runningOnFailureRoutine) {
-            robotLog("DEBUG", "WARNING, runOnFailureKeyword is currently being executed!");
+            RobotLog.debug("WARNING, runOnFailureKeyword is currently being executed!");
             return;
         }
 
         runningOnFailureRoutine = true;
 
         if (robot == null) {
-            robotLog("ERROR", "FxRobot not initialized, launch test application with the library");
+            RobotLog.error("FxRobot not initialized, launch test application with the library");
         } else {
-            robotLog("INFO", "JavaFxLibrary keyword has failed! Below a screenshot from erroneous situation:" );
-            if(robot.targetWindow() != null){
+            RobotLog.info("JavaFxLibrary keyword has failed! Below a screenshot from erroneous situation:");
+            if (robot.targetWindow() != null) {
                 new ScreenCapturing().captureImage(robot.targetWindow());
             } else
                 new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());

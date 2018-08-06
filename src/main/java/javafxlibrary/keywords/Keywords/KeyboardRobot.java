@@ -19,6 +19,7 @@ package javafxlibrary.keywords.Keywords;
 
 import javafx.scene.input.KeyCode;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.Autowired;
@@ -49,10 +50,10 @@ public class KeyboardRobot extends TestFxAdapter {
     @ArgumentNames({ "*keys" })
     public FxRobotInterface press(String... keys) {
         try {
-            robotLog("INFO", "Pressing keys: " + Arrays.asList(keys));
+            RobotLog.info("Pressing keys: " + Arrays.asList(keys));
             return robot.press(getKeyCode(keys));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to press keys: " + Arrays.asList(keys), e);
         }
@@ -67,10 +68,10 @@ public class KeyboardRobot extends TestFxAdapter {
     @Unstable(reason = "could be renamed to accept empty arrays")
     public FxRobotInterface release(String... keys) {
         try {
-            robotLog("INFO", "Releasing keys: " + Arrays.asList(keys) );
+            RobotLog.info("Releasing keys: " + Arrays.asList(keys));
             return robot.release(getKeyCode(keys));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to release keys: " + Arrays.asList(keys), e);
         }
@@ -84,10 +85,10 @@ public class KeyboardRobot extends TestFxAdapter {
     @ArgumentNames({ "*keys" })
     public FxRobotInterface push(String... keys) {
         try {
-            robotLog("INFO", "Pushing combination: " + Arrays.asList(keys) );
+            RobotLog.info("Pushing combination: " + Arrays.asList(keys));
             return robot.push(getKeyCode(keys));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to push combination: " + Arrays.asList(keys), e);
         }
@@ -101,15 +102,14 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Push Many Times | 5 | SHIFT | X |\n")
     @ArgumentNames({ "times", "*keys" })
     public void pushManyTimes(int times, String... keys) {
-        robotLog("INFO", "Pushing combination: \"" + Arrays.asList(keys)
-                + "\" for \"" + Integer.toString(times) + "\" times." );
+        RobotLog.info("Pushing combination: \"" + Arrays.asList(keys) + "\" for \"" + times + "\" times.");
         try {
             for (int i = 0; i < times; i++) {
                 robot.push(getKeyCode(keys));
                 sleepFor(50);
             }
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to push: " + Arrays.asList(keys), e);
         }
@@ -122,13 +122,13 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Push In Order | BACK_SPACE | LEFT | BACK_SPACE | \n")
     @ArgumentNames({ "*keys" })
     public void pushInOrder(String... keys) {
-        robotLog("INFO", "Pushing following keys: " + Arrays.asList(keys) );
+        RobotLog.info("Pushing following keys: " + Arrays.asList(keys));
         try {
             for (String key : keys) {
                 robot.push(KeyCode.valueOf(key));
             }
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to push keys: " + Arrays.toString(keys), e);
         }
@@ -140,7 +140,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Erase Text | 5 | \n")
     @ArgumentNames({ "amount" })
     public FxRobotInterface eraseText(int amount) {
-        robotLog("INFO", "Erasing \"" + Integer.toString(amount) + "\" characters." );
+        RobotLog.info("Erasing \"" + amount + "\" characters.");
         return robot.eraseText(amount);
     }
 
@@ -149,10 +149,10 @@ public class KeyboardRobot extends TestFxAdapter {
     public FxRobotInterface closeCurrentWindow() {
         try {
             if (isMac()) {
-                robotLog("INFO", "Closing window via: META + W ");
+                RobotLog.info("Closing window via: META + W");
                 return robot.push(KeyCode.META, KeyCode.W).sleep(100);
             } else if (robot instanceof FxRobot) {
-                robotLog("INFO", "Closing window via: ALT + F4 ");
+                RobotLog.info("Closing window via: ALT + F4");
                 return ((FxRobot) robot).closeCurrentWindow();
             }
 
@@ -210,8 +210,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Write | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
     public FxRobotInterface writeTo(Object locator, String text) {
-
-        robotLog("INFO", "Writing to " + locator.toString());
+        RobotLog.info("Writing to " + locator);
 
         try {
             clickRobot.clickOn(locator);
@@ -219,7 +218,7 @@ public class KeyboardRobot extends TestFxAdapter {
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator.toString(), e);
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator, e);
         }
     }
 

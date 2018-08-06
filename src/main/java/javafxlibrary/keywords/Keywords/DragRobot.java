@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafx.scene.input.MouseButton;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -46,7 +47,7 @@ public class DragRobot extends TestFxAdapter {
     @ArgumentNames({ "locator", "button=PRIMARY" })
     public FxRobotInterface dragFrom(Object locator, String button) {
         Object target = checkClickTarget(locator);
-        robotLog("INFO", "Dragging from \"" + target + "\"" + " with button=\"" + button + "\"");
+        RobotLog.info("Dragging from \"" + target + "\"" + " with button=\"" + button + "\"");
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "drag", target.getClass(), MouseButton.class);
         try {
             return (FxRobotInterface) method.invoke(robot, target, new MouseButton[]{MouseButton.valueOf(button)});
@@ -69,7 +70,7 @@ public class DragRobot extends TestFxAdapter {
     @ArgumentNames({ "locator" })
     public FxRobotInterface dropTo(Object locator) {
         Object target = checkClickTarget(locator);
-        robotLog("INFO", "Dropping to \"" + target + "\"");
+        RobotLog.info("Dropping to \"" + target + "\"");
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "dropTo", target.getClass());
 
         try {
@@ -85,10 +86,10 @@ public class DragRobot extends TestFxAdapter {
     @ArgumentNames({ "*buttons" })
     public FxRobotInterface drag(String... buttons) {
         try {
-            HelperFunctions.robotLog("INFO", "Dragging mouse buttons \"" + Arrays.toString(buttons) + "\"");
+            RobotLog.info("Dragging mouse buttons \"" + Arrays.toString(buttons) + "\"");
             return robot.drag(HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
             }
             throw new JavaFXLibraryNonFatalException("Unable to drag using " + Arrays.toString(buttons), e);
@@ -117,15 +118,13 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dropBy(int x, int y) {
 
         try {
-            HelperFunctions.robotLog("INFO", "Dropping by x=\"" + Integer.toString(x) + "\" and y=\""
-            + Integer.toString(y) + "\"" );
+            RobotLog.info("Dropping by x=\"" + x + "\" and y=\"" + y + "\"");
             return robot.dropBy((double) x, (double) y);
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
             }
-            throw new JavaFXLibraryNonFatalException("Unable to drop by: " +
-                Integer.toString(x) + ", " + Integer.toString(y), e);
+            throw new JavaFXLibraryNonFatalException("Unable to drop by: " + x + ", " + y, e);
         }
     }
 
@@ -140,15 +139,13 @@ public class DragRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y", "*buttons" })
     public FxRobotInterface dragFromCoordinates(int x, int y, String... buttons) {
         try {
-            HelperFunctions.robotLog("INFO", "Dragging from x=\"" + Integer.toString(x) + "\" and y=\""
-                    + Integer.toString(y) + "\" with buttons \"" + Arrays.toString(buttons) + "\"" );
+            RobotLog.info("Dragging from x=\"" + x + "\" and y=\"" + y + "\" with buttons \"" + Arrays.toString(buttons) + "\"");
             return robot.drag((double) x, (double) y, HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException ) {
+            if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
             }
-            throw new JavaFXLibraryNonFatalException("Unable to drag from coordinates: " +
-                    Integer.toString(x) + ", " + Integer.toString(y), e);
+            throw new JavaFXLibraryNonFatalException("Unable to drag from coordinates: " + x + ", " + y, e);
         }
     }
 
@@ -161,15 +158,13 @@ public class DragRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y" })
     public FxRobotInterface dropToCoordinates(int x, int y) {
         try {
-            HelperFunctions.robotLog("INFO", "Dropping to x=\"" + Integer.toString(x) + "\" and y=\""
-                    + Integer.toString(y) + "\"");
+            RobotLog.info("Dropping to x=\"" + x + "\" and y=\"" + y + "\"");
             return robot.dropTo((double) x, (double) y);
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException ) {
                 throw e;
             }
-            throw new JavaFXLibraryNonFatalException("Unable to drop to coordinates: " +
-                    Integer.toString(x) + ", " + Integer.toString(y), e);
+            throw new JavaFXLibraryNonFatalException("Unable to drop to coordinates: " + x + ", " + y, e);
         }
     }
 }

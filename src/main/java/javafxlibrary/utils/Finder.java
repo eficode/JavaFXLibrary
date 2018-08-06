@@ -54,7 +54,7 @@ public class Finder {
     }
 
     public Set<Node> findAll(String query, Parent root) {
-        HelperFunctions.robotLog("DEBUG", "Executing Finder.findAll using query: " + query + " and root: " + root);
+        RobotLog.debug("Executing Finder.findAll using query: " + query + " and root: " + root);
         if (containsPrefixes(query)) {
             this.currentRoot = root;
             return newFindAll(parseWholeQuery(query));
@@ -67,8 +67,7 @@ public class Finder {
         Node result = executeLookup(query, prefix);
 
         if (result == null && rootNodes != null && rootNodes.size() > 1) {
-            HelperFunctions.robotLog("DEBUG", "Could not find anything from " + currentRoot + ", moving " +
-                    "to the next root node");
+            RobotLog.debug("Could not find anything from " + currentRoot + ", moving to the next root node");
             rootNodes.remove(currentRoot);
             currentRoot = rootNodes.iterator().next();
             result = newFind(parseWholeQuery(originalQuery));
@@ -82,8 +81,7 @@ public class Finder {
         Set<Node> nodes = executeLookupAll(query, prefix);
 
         if (rootNodes != null && rootNodes.iterator().hasNext() && rootNodes.size() > 1) {
-            HelperFunctions.robotLog("DEBUG", "Finished lookup with root " + currentRoot + ", moving " +
-                    "to the next root node");
+            RobotLog.debug("Finished lookup with root " + currentRoot + ", moving to the next root node");
             rootNodes.remove(currentRoot);
             currentRoot = rootNodes.iterator().next();
             nodes.addAll(newFindAll(parseWholeQuery(originalQuery)));
@@ -131,12 +129,7 @@ public class Finder {
 
     private String parseWholeQuery(String query) {
 
-        int limiter = 0;
         while (containsMultiplePrefixes(query)) {
-
-            limiter++;
-            if (limiter > 15)
-                throw new JavaFXLibraryNonFatalException("LIMITER!");
 
             String[] queryArray = splitQuery(query);
 

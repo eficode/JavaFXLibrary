@@ -25,6 +25,7 @@ import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestListener;
 import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.Autowired;
@@ -73,13 +74,13 @@ public class JavaFXLibrary extends AnnotationLibrary {
         } catch (RuntimeException e) {
             runOnFailure.runOnFailure();
             if (e.getCause() instanceof JavaFXLibraryFatalException) {
-                robotLog("DEBUG", "JavaFXLibrary: Caught JavaFXLibrary FATAL exception");
+                RobotLog.debug("JavaFXLibrary: Caught JavaFXLibrary FATAL exception");
                 throw e;
             } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
-                robotLog("DEBUG", "JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception");
+                RobotLog.debug("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception");
                 throw e;
             } else {
-                robotLog("DEBUG", "JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception");
+                RobotLog.debug("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception");
                 throw e;
             }
         }

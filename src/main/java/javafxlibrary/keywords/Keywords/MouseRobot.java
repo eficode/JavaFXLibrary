@@ -19,6 +19,7 @@ package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -40,7 +41,7 @@ public class MouseRobot extends TestFxAdapter {
     public FxRobotInterface pressMouseButton(String... buttons) {
 
         try {
-            HelperFunctions.robotLog("INFO", "Pressing mouse buttons: \"" + Arrays.asList(buttons) + "\"" );
+            RobotLog.info("Pressing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
             return robot.press(HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
@@ -57,7 +58,7 @@ public class MouseRobot extends TestFxAdapter {
     @Unstable(reason = "could be renamed to accept empty arrays")
     public FxRobotInterface releaseMouseButton(String... buttons) {
         try {
-            HelperFunctions.robotLog("INFO", "Releasing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
+            RobotLog.info("Releasing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
             return robot.release(HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)

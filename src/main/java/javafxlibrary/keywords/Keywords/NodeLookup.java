@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -29,8 +30,6 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class NodeLookup extends TestFxAdapter {
@@ -59,7 +58,7 @@ public class NodeLookup extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");
         }
 
-        robotLog("INFO", "Getting root node of target \"" + locator + "\"");
+        RobotLog.info("Getting root node of target \"" + locator + "\"");
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
         try {
             return HelperFunctions.mapObject(method.invoke(robot, locator));

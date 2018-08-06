@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.Finder;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -33,7 +34,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static javafxlibrary.utils.HelperFunctions.getMotion;
-import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class MoveRobot extends TestFxAdapter {
@@ -49,7 +49,7 @@ public class MoveRobot extends TestFxAdapter {
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
-        robotLog("INFO", "Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
+        RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
 
         if (locator instanceof String)
             locator = new Finder().find((String) locator);
@@ -78,14 +78,12 @@ public class MoveRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y", "motion=DIRECT" })
     public FxRobotInterface moveBy(int x, int y, String motion) {
         try {
-            HelperFunctions.robotLog("INFO", "Moving by [" + Integer.toString(x) + ", "
-                    + Integer.toString(y) + "] using motion: \"" + motion  + "\"" );
+            RobotLog.info("Moving by [" + x + ", " + y + "] using motion: \"" + motion  + "\"");
             return robot.moveBy((double) x, (double) y, HelperFunctions.getMotion(motion));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to move by using coordinates: " +
-                    Integer.toString(x) + ", " + Integer.toString(y), e);
+            throw new JavaFXLibraryNonFatalException("Unable to move by using coordinates: " + x + ", " + y, e);
         }
     }
 
@@ -106,14 +104,13 @@ public class MoveRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y", "motion=DIRECT" })
     public FxRobotInterface moveToCoordinates(int x, int y, String motion) {
         try {
-            HelperFunctions.robotLog("INFO", "Moving to coordinates: [" +
-                    Integer.toString(x) + ", " + Integer.toString(y) + "] using motion: \"" + motion + "\"");
+            RobotLog.info("Moving to coordinates: [" + x + ", " + y + "] using motion: \"" + motion + "\"");
             return robot.moveTo((double) x, (double) y, HelperFunctions.getMotion(motion));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to move to coordinates: [" +
-                    Integer.toString(x) + ", " + Integer.toString(y) + "] using motion: \"" + motion + "\"", e);
+            throw new JavaFXLibraryNonFatalException("Unable to move to coordinates: [" + x + ", " + y +
+                    "] using motion: \"" + motion + "\"", e);
         }
     }
 

@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafx.scene.input.KeyCode;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -38,7 +39,7 @@ public class ScrollRobot extends TestFxAdapter {
     @ArgumentNames({ "direction", "amount=1" })
     public void scrollVertically(String direction, int amount) {
         try {
-            HelperFunctions.robotLog("INFO", "Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
+            RobotLog.info("Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
             robot.scroll(amount, HelperFunctions.getVerticalDirection(direction));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
@@ -51,6 +52,7 @@ public class ScrollRobot extends TestFxAdapter {
     public void scrollVertically(String direction) {
         scrollVertically(direction, 1);
     }
+
     /*
      *    Current version of TestFX uses java.awt.Robots mouseWheel-method for scrolling, which only supports
      *    vertical scrolling. This solution uses SHIFT + MWHEEL combination for horizontal scrolling. Note that this
@@ -66,7 +68,7 @@ public class ScrollRobot extends TestFxAdapter {
     public void scrollHorizontally(String direction, int amount) {
 
         try {
-            HelperFunctions.robotLog("INFO", "Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
+            RobotLog.info("Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
             robot.press(KeyCode.SHIFT);
             robot.scroll(amount, HelperFunctions.getHorizontalDirection(direction));
             robot.release(KeyCode.SHIFT);
@@ -76,6 +78,7 @@ public class ScrollRobot extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to scroll horizontally to direction: \"" + direction + "\"", e);
         }
     }
+
     @RobotKeywordOverload
     public void scrollHorizontally(String direction) {
         scrollHorizontally(direction, 1);

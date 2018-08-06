@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -58,8 +59,8 @@ public class ScreenCapturing extends TestFxAdapter {
         if(locator == null)
             throw new JavaFXLibraryNonFatalException("Unable to capture image, given locator was null!");
 
-        robotLog("INFO", "Capturing screenshot from locator: \"" + locator.toString() +  "\"");
-        Image image = null;
+        RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
+        Image image;
         Bounds targetBounds = objectToBounds(locator);
 
         try {
@@ -88,7 +89,7 @@ public class ScreenCapturing extends TestFxAdapter {
     @ArgumentNames({"path"})
     public Object loadImage(String path) {
         try {
-            robotLog("INFO", "Loading image from: \"" + path + "\"");
+            RobotLog.info("Loading image from: \"" + path + "\"");
             return mapObject(robot.capture(Paths.get(path)).getImage());
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
@@ -105,7 +106,7 @@ public class ScreenCapturing extends TestFxAdapter {
     @ArgumentNames({"url"})
     public Object loadImageFromUrl(String url) {
         try {
-            robotLog("INFO", "Loading image from URL: \"" + url + "\"");
+            RobotLog.info("Loading image from URL: \"" + url + "\"");
             return mapObject(SwingFXUtils.toFXImage(ImageIO.read(new URL(url)), null));
         } catch(Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to load image from URL: \"" + url + "\"", e);
@@ -118,7 +119,7 @@ public class ScreenCapturing extends TestFxAdapter {
     @ArgumentNames({ "image", "path" })
     public void saveImageAs(Image image, String path) {
         try {
-            robotLog("INFO", "Saving image \"" + image.toString() + "\" to path \"" + path + "\"");
+            RobotLog.info("Saving image \"" + image + "\" to path \"" + path + "\"");
             robotContext.getCaptureSupport().saveImage(image, Paths.get(path));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)

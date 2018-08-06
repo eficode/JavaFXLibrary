@@ -19,6 +19,7 @@ package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -37,10 +38,10 @@ public class PointPosition extends TestFxAdapter {
     public FxRobotInterface setTargetPosition(String pointPosition) {
 
         try {
-            HelperFunctions.robotLog("INFO", "Setting new target position as: \"" + pointPosition + "\"" );
+            RobotLog.info("Setting new target position as: \"" + pointPosition + "\"");
             return robot.targetPos(HelperFunctions.getPosition(pointPosition));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to set target position: \"" + pointPosition + "\"", e);
         }

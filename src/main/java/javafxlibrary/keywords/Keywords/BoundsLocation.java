@@ -21,6 +21,7 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -48,8 +49,8 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createBounds(double minX, double minY, double width, double height) {
         try {
-            robotLog("INFO", "Creating bounds object with minX=\"" + minX + "\", minY=\"" + minY
-                    + "\", width=\"" + width + "\" and height=\"" + height + "\"");
+            RobotLog.info("Creating bounds object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" + width +
+                    "\" and height=\"" + height + "\"");
             return mapObject(robot.bounds(minX, minY, width, height).query());
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException )
@@ -67,7 +68,7 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"x", "y"})
     public Object createPoint(double x, double y) {
         try {
-            robotLog("INFO", "Creating point object with x=\"" + x + "\"" + " and y=\"" + y + "\"");
+            RobotLog.info("Creating point object with x=\"" + x + "\"" + " and y=\"" + y + "\"");
             return mapObject(new Point2D(x, y));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
@@ -85,8 +86,8 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createRectangle(double minX, double minY, double width, double height) {
         try {
-            robotLog("INFO", "Creating retangle object with minX=\"" + minX + "\", minY=\"" + minY
-                    + "\", width=\"" + width + "\" and height=\"" + height + "\"");
+            RobotLog.info("Creating retangle object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" +
+                    width + "\" and height=\"" + height + "\"");
             return mapObject(new Rectangle2D(minX, minY, width, height));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
@@ -104,7 +105,7 @@ public class BoundsLocation extends TestFxAdapter {
             + "| Should Be Equal | ${bounds} | ${target} | \n")
     @ArgumentNames({ "locator" })
     public Object getBounds(Object locator) {
-        robotLog("INFO", "Getting bounds using locator \"" + locator + "\"");
+        RobotLog.info("Getting bounds using locator \"" + locator + "\"");
         // TODO: Test if Window and Scene objects get correct Bound locations on scaled displays
         try {
             if (locator instanceof Window) {

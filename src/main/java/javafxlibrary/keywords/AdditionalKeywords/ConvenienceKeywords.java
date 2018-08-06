@@ -35,6 +35,7 @@ import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import javafxlibrary.utils.XPathFinder;
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -87,7 +88,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``stage`` is an Object:Stage to be set in front of others`, see `3.2 Using objects`. \n\n")
     @ArgumentNames({ "stage" })
     public void bringStageToFront(Stage stage) {
-        robotLog("INFO", "Bringing following Stage to front: \"" + stage + "\"");
+        RobotLog.info("Bringing following Stage to front: \"" + stage + "\"");
         try {
             Platform.runLater(() -> stage.toFront());
         } catch (Exception e) {
@@ -161,7 +162,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
             return mapObject(robot.lookup(matcher).query());
         } catch (Exception e) {
-            robotLog("TRACE", "Problem has occurred during node lookup: " + e);
+            RobotLog.trace("Problem has occurred during node lookup: " + e);
             return "";
         }
     }
@@ -180,9 +181,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public List<Object> findAllFromNode(Object node, String query, boolean failIfNotFound) {
         try {
             if ( node instanceof Node ) {
-                robotLog("INFO", "Trying to find all nodes with query: \"" + query
-                        + "\" that are under starting point node: \"" + node.toString() + "\", failIfNotFound= \""
-                        + Boolean.toString(failIfNotFound) + "\"");
+                RobotLog.info("Trying to find all nodes with query: \"" + query + "\" that are under starting " +
+                        "point node: \"" + node + "\", failIfNotFound= \"" + failIfNotFound + "\"");
                 return mapObjects(((Node) node).lookupAll(query));
             }
             // fail in case no valid node argument.
@@ -217,8 +217,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${my node}= | Find All With Pseudo Class | .check-box-tree-cell .check-box | selected | \n")
     @ArgumentNames({ "query", "pseudo", "failIfNotFound=" })
     public List<Object> findAllWithPseudoClass(String query, String pseudo, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find all nodes with query: \"" + query
-                + "\" that has pseudoclass state as: \"" + pseudo + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
+        RobotLog.info("Trying to find all nodes with query: \"" + query + "\" that has pseudoclass state as: \"" +
+                pseudo + "\", failIfNotFound= \"" + failIfNotFound + "\"");
         try {
             Set<Node> nodes = robot.lookup(query).queryAll();
             Set<Node> matches = nodes.stream()
@@ -257,8 +257,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "See keyword `Find` for further examples of query usage.\n")
     @ArgumentNames({ "node", "query", "failIfNotFound=" })
     public Object findFromNode(Node node, String query, boolean failIfNotFound) {
-        robotLog("INFO", "Trying to find: \"" + query + "\" from node: \"" + node.toString()
-                + "\", failIfNotFound= \"" + Boolean.toString(failIfNotFound) + "\"");
+        RobotLog.info("Trying to find: \"" + query + "\" from node: \"" + node + "\", failIfNotFound= \"" + failIfNotFound + "\"");
         try {
             Node childNode = node.lookup(query);
             return mapObject(childNode);
@@ -269,7 +268,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             return "";
 
         } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find from node operation failed for node: \"" + node.toString() +
+            throw new JavaFXLibraryNonFatalException("Find from node operation failed for node: \"" + node +
                     "\" and query: " + query, e);
         }
     }
@@ -289,7 +288,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| List Component Methods | ${my node} |\n")
     @ArgumentNames({ "node" })
     public String[] listNodeMethods(Node node) {
-        robotLog("INFO", "Listing all available methods for node: \"" + node.toString() + "\"" );
+        RobotLog.info("Listing all available methods for node: \"" + node + "\"");
         try {
             Class klass = node.getClass();
             ArrayList<String> list = new ArrayList<String>();
@@ -333,7 +332,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "root=" })
     public void printChildNodes(Object root) {
         try {
-            robotLog("INFO", "Printing tree structure for node: \"" + root.toString() + "\"");
+            RobotLog.info("Printing tree structure for node: \"" + root + "\"");
             printTreeStructure((Parent) objectToNode(root));
         } catch (ClassCastException e) {
             throw new JavaFXLibraryNonFatalException(root.getClass() + " is not a subclass of javafx.scene.Parent");
@@ -360,14 +359,14 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public void logFXML(Object root) {
         XPathFinder logger = new XPathFinder();
         logger.setNodeLogging(false);
-        robotLog("INFO", logger.getFxml((Parent) objectToNode(root)));
+        RobotLog.info(logger.getFxml((Parent) objectToNode(root)));
     }
 
     @RobotKeywordOverload
     public void logFXML() {
         XPathFinder logger = new XPathFinder();
         logger.setNodeLogging(false);
-        robotLog("INFO", logger.getFxml(robot.listTargetWindows().get(0).getScene().getRoot()));
+        RobotLog.info(logger.getFxml(robot.listTargetWindows().get(0).getScene().getRoot()));
     }
 
     @RobotKeyword("Enables/Disables clicking outside of visible JavaFX application windows. Safe clicking is on by" +
@@ -379,12 +378,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
         switch (value) {
             case "OFF":
             case "off":
-                robotLog("INFO", "Setting safe clicking mode to OFF");
+                RobotLog.info("Setting safe clicking mode to OFF");
                 HelperFunctions.setSafeClicking(false);
                 break;
             case "ON":
             case "on":
-                robotLog("INFO", "Setting safe clicking mode to ON");
+                RobotLog.info("Setting safe clicking mode to ON");
                 HelperFunctions.setSafeClicking(true);
                 break;
             default:
@@ -396,7 +395,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``timeout`` is an Integer value for timeout.")
     @ArgumentNames({ "timeout" })
     public void setTimeout(int timeout) {
-        robotLog("INFO", "Setting timeout to " + timeout + "s");
+        RobotLog.info("Setting timeout to " + timeout + "s");
         setWaitUntilTimeout(timeout);
     }
 
@@ -409,7 +408,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``switchAmount`` is an Integer value and specifies how many switches will be made in total")
     @ArgumentNames({ "switchAmount" })
     public void switchWindow(int switchAmount) {
-        robotLog("INFO", "Switching window for: \"" + Integer.toString(switchAmount) + "\" times.");
+        RobotLog.info("Switching window for: \"" + switchAmount + "\" times.");
+
         try {
             if (isMac()) {
                 robot.press(KeyCode.META);
@@ -439,7 +439,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         Node node = objectToNode(locator);
 
         try {
-            robotLog("INFO", "Getting pseudoclass states for node: \"" + node.toString() + "\"");
+            RobotLog.info("Getting pseudoclass states for node: \"" + node + "\"");
             return node.getPseudoClassStates();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get pseudoClassStates for node: " + node.toString());
@@ -459,8 +459,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "node", "className" })
     public Set<Object> getNodeChildrenByClassName(Object locator, String className) {
         Node node = objectToNode(locator);
-        robotLog("INFO", "Getting node: \"" + node.toString() + "\" children by class name: \""
-                + className + "\"");
+        RobotLog.info("Getting node: \"" + node + "\" children by class name: \"" + className + "\"");
         try {
             Set<Object> keys = new HashSet<Object>();
             Set childNodes = node.lookupAll("*");
@@ -469,7 +468,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             while (iter.hasNext()) {
                 Node childNode = (Node) iter.next();
                 if (childNode.getClass().getSimpleName().equals(className)) {
-                    robotLog("TRACE", "Classname: \"" + className + "\" found: \"" + childNode.toString() + "\"");
+                    RobotLog.trace("Classname: \"" + className + "\" found: \"" + childNode + "\"");
                     keys.add(mapObject(childNode));
                 }
             }
@@ -488,7 +487,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "locator" })
     public String getNodeText(Object locator) {
         Node node = objectToNode(locator);
-        robotLog("INFO", "Getting text value for node: \"" + node + "\"");
+        RobotLog.info("Getting text value for node: \"" + node + "\"");
         Class<? extends Node> c = node.getClass();
         try {
             return (String) c.getMethod("getText").invoke(node);
@@ -499,6 +498,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    // TODO: Deprecate
     @RobotKeyword("Returns height value of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
             + "`3. Locating or specifying UI elements`. \n\n")
@@ -534,16 +534,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "node" })
     public String getNodeImageUrl(Object locator) {
         Node node = objectToNode(locator);
-        robotLog("INFO", "Getting image url from node: \"" + node.toString() + "\"");
+        RobotLog.info("Getting image url from node: \"" + node + "\"");
         try {
             Method[] methods = node.getClass().getMethods();
             for (Method m : methods) {
                 if (m.getName().equals("getImage") && m.getParameterCount() == 0) {
-                    robotLog("TRACE", "Method getImage() found. Invoking it on node: \"" + node.toString() + "\"");
+                    RobotLog.trace("Method getImage() found. Invoking it on node: \"" + node + "\"");
                     try {
                         Object result = m.invoke(node, null);
                         Image image = (Image) result;
-                        robotLog("TRACE", "Calling deprecated method impl_getUrl() for image: \"" + image.toString() + "\"");
+                        RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
                         return image.impl_getUrl();
                     } catch (Exception e) {
                         throw new JavaFXLibraryNonFatalException("Problem calling method: .getImage(): " + e.getMessage(), e);
@@ -567,7 +567,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         Node node = objectToNode(locator);
 
         try {
-            robotLog("INFO", "Getting node parent object for: \"" + node.toString() + "\"");
+            RobotLog.info("Getting node parent object for: \"" + node + "\"");
             return mapObject(node.getParent());
         } catch (Exception e) {
             if( e instanceof JavaFXLibraryNonFatalException )
@@ -584,7 +584,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         Node node = objectToNode(locator);
 
         try {
-            robotLog("INFO", "Getting class name for object: \"" + node.toString() + "\"");
+            RobotLog.info("Getting class name for object: \"" + node + "\"");
             return node.getClass().getSimpleName();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get class name for object: " + node.toString(), e);
@@ -599,15 +599,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public Object getNodesScene(Object locator) {
         try {
             if (locator instanceof Node){
-                robotLog("INFO", "Getting a Scene object for a Node: \"" + locator + "\"");
+                RobotLog.info("Getting a Scene object for a Node: \"" + locator + "\"");
                 return mapObject(((Node) locator).getScene());
             } else if (locator instanceof String) {
-                robotLog("INFO", "Getting a Scene object for a query: \"" + locator + "\"");
+                RobotLog.info("Getting a Scene object for a query: \"" + locator + "\"");
                 Node node = objectToNode(locator);
                 return mapObject(node.getScene());
             }
 
-            throw new JavaFXLibraryNonFatalException("locator type is not a Node or a query string!");
+            throw new JavaFXLibraryNonFatalException("Locator type is not a Node or a query string!");
 
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
@@ -621,7 +621,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "locator" })
     public Object getScene(Object locator) {
         try {
-            robotLog("INFO", "Getting a Scene object for: \"" + locator + "\"");
+            RobotLog.info("Getting a Scene object for: \"" + locator + "\"");
             if (locator instanceof Node){
                 return mapObject(((Node) locator).getScene());
             } else if (locator instanceof String) {
@@ -645,13 +645,13 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3.2 Using objects`. This keyword can be coupled with e.g. `List Windows` -keyword.\n\n")
     @ArgumentNames({ "window" })
     public String getWindowTitle(Object object) {
-        robotLog("INFO", "Getting the window title for: \"" + object.toString() + "\"");
+        RobotLog.info("Getting the window title for: \"" + object + "\"");
 
         try {
             Method m = object.getClass().getMethod("getTitle");
             return (String) m.invoke(object, null);
         } catch (NoSuchMethodException e) {
-            robotLog("INFO", "This window type has no getTitle() -method. Returning null");
+            RobotLog.info("This window type has no getTitle() -method. Returning null");
             return "";
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get title for window: " + object.toString(), e);
@@ -661,7 +661,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the bounds of primary screen. \n")
     public Object getPrimaryScreenBounds() {
         try {
-            robotLog("INFO", "Getting the primary screen bounds");
+            RobotLog.info("Getting the primary screen bounds");
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
             return mapObject(new BoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
         } catch (Exception e) {
@@ -725,9 +725,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
             TableColumn tableColumn = (TableColumn) table.getColumns().get(column);
 
             if (tableColumn.getText() != null)
-                robotLog("INFO", "Getting values from column " + tableColumn.getText());
+                RobotLog.info("Getting values from column " + tableColumn.getText());
             else
-                robotLog("INFO", "Getting values from column using index " + column);
+                RobotLog.info("Getting values from column using index " + column);
 
             for(Object item : items) {
                 Object value = tableColumn.getCellObservableValue(item).getValue();
@@ -755,7 +755,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             VirtualFlow<?> vf = (VirtualFlow<?>) ( (TableViewSkin<?>) table.getSkin() ).getChildren().get( 1 );
 
             for(int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
-                robotLog("INFO", "index number: " + Integer.toString(i));
+                RobotLog.info("Index number: " + Integer.toString(i));
                 columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
             }
 
@@ -776,7 +776,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
     @ArgumentNames({ "table", "row" })
     public List<Object> getTableRowValues(Object locator, int rowNumber) {
-        robotLog("INFO", "Getting values from table row: " + rowNumber);
+        RobotLog.info("Getting values from table row: " + rowNumber);
         try {
             TableView table = (TableView) objectToNode(locator);
             Object row = table.getItems().get(rowNumber);
@@ -802,7 +802,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
     @ArgumentNames({ "table", "row" })
     public Map<String, Object> getTableRowCells(Object locator, int row) {
-        robotLog("INFO", "Getting cell nodes from table row: " + row);
+        RobotLog.info("Getting cell nodes from table row: " + row);
 
         try {
             TableView table = (TableView) objectToNode(locator);
@@ -835,7 +835,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``directory`` is a path to a folder which is to be set as current screenshot directory")
     @ArgumentNames({ "directory" })
     public void setScreenshotDirectory(String dir){
-        robotLog("INFO", "Setting new screenshot directory: " + dir);
+        RobotLog.info("Setting new screenshot directory: " + dir);
         setCurrentSessionScreenshotDirectory(dir);
     }
 
@@ -953,7 +953,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Dictionary Should Contain Key | ${tabs} | tab name | \n")
     @ArgumentNames({ "locator" })
     public Map<String, Object> getTabPaneTabs(Object locator) {
-        robotLog("INFO", "Getting a dictionary for all tabs in TabPane: " + locator);
+        RobotLog.info("Getting a dictionary for all tabs in TabPane: " + locator);
         try {
             TabPane tabPane = (TabPane) objectToNode(locator);
             Map<String, Object> tabs = new HashMap<>();
@@ -981,8 +981,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${tab}= | Get Tab Pane Selected Tab | \\#pane-id | \n"
             + "| Dictionary Should contain Key | ${tab} | tab name | \n")
     @ArgumentNames({ "locator" })
-    public Map<String, Object> getSelectedTabPaneTab(Object locator){
-        robotLog("INFO", "Getting the selected tab from TabPane: " + locator);
+    public Map<String, Object> getSelectedTabPaneTab(Object locator) {
+        RobotLog.info("Getting the selected tab from TabPane: " + locator);
         Map<String, Object> tab = new HashMap<>();
 
         try {
@@ -1003,8 +1003,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Select Tab Pane Tab | ${Tab Pane} | tab name | \n"
             + "| Select Tab Pane Tab | \\#tab-id | tab name | \n")
     @ArgumentNames({"locator", "tabName"})
-    public void selectTabPaneTab (Object locator, String tabName){
-        robotLog("INFO", "Selecting tab: \"" + tabName + "\" from TabPane: \"" + locator + "\"");
+    public void selectTabPaneTab (Object locator, String tabName) {
+        RobotLog.info("Selecting tab: \"" + tabName + "\" from TabPane: \"" + locator + "\"");
         try {
             Node headerArea = getTabPaneHeaderArea((TabPane) objectToNode(locator));
 
@@ -1013,7 +1013,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                     String tabLabel = ((Labeled)node).getText();
                     if ( tabLabel != null ) {
                         if (tabLabel.equals(tabName)) {
-                            robotLog("TRACE", "Clicking on node: " + node);
+                            RobotLog.trace("Clicking on node: " + node);
                             robot.clickOn(node);
                             return;
                         }
@@ -1068,6 +1068,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    // TODO: Remove
     @RobotKeyword("Clears the text value of given TextInputControl\n\n"
             + "``locator`` is either a _query_ or _TextInputControl_ object. For identifying the element, see "
             + "`3. Locating or specifying UI elements`. \n\n"

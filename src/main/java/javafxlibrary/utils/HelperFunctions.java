@@ -78,28 +78,22 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
-        robotLog("TRACE", "Waiting until target \"" + target + "\" becomes existent, timeout="
-                + Integer.toString(timeout) + ", timeUnit=" + timeUnit);
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout=" + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            robotLog("TRACE", "setDefaultTimeout");
             Awaitility.setDefaultTimeout(timeout, getTimeUnit(timeUnit));
-            robotLog("TRACE", "AtomicReference");
             AtomicReference<Node> node = new AtomicReference<>();
-            robotLog("TRACE", "Awaitility");
             Awaitility.await().until(() -> {
                 try {
-                    robotLog("TRACE", "query");
                     node.set(createFinder().find(target));
-                    robotLog("TRACE", "return");
                     return node.get() != null;
                 } catch (Exception e) {
-                    robotLog("TRACE", "Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
+                    RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause());
                     return Boolean.FALSE;
                 }
             });
 
-            robotLog("TRACE", "Node located: \"" + node.get().toString() + "\"");
+            RobotLog.trace("Node located: \"" + node.get() + "\"");
             return node.get();
 
         } catch (ConditionTimeoutException e) {
@@ -118,19 +112,16 @@ public class HelperFunctions {
             target = waitUntilExists((String) target, timeout, "SECONDS");
 
         final Object finalTarget = target;
-        robotLog("TRACE", "Waiting until target \"" + target.toString() + "\" becomes visible, timeout=" + Integer.toString(timeout));
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            WaitForAsyncUtils.waitFor((long) timeout,
-                    TimeUnit.SECONDS,
-                    () -> Matchers.is(isVisible()).matches(finalTarget));
+            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
             return (Node) target;
-
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given target \"" + target.toString() + "\" did not become visible within given timeout of "
-                    + Integer.toString(timeout) + " seconds.");
+            throw new JavaFXLibraryNonFatalException("Given target \"" + target + "\" did not become visible within given timeout of "
+                    + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be visible: " + e.getMessage());
         }
@@ -142,19 +133,16 @@ public class HelperFunctions {
             target = waitUntilExists((String) target, timeout, "SECONDS");
 
         final Object finalTarget = target;
-        robotLog("TRACE", "Waiting until target \"" + target.toString() + "\" becomes enabled, timeout=" + Integer.toString(timeout));
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            WaitForAsyncUtils.waitFor((long) timeout,
-                    TimeUnit.SECONDS,
-                    () -> Matchers.is(isEnabled()).matches(finalTarget));
+            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
             return (Node) target;
-
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given target \"" + target.toString() + "\" did not become enabled within given timeout of "
-                    + Integer.toString(timeout) + " seconds.");
+            throw new JavaFXLibraryNonFatalException("Given target \"" + target + "\" did not become enabled within given timeout of "
+                    + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be enabled: " + e.getMessage());
         }
@@ -162,11 +150,9 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            WaitForAsyncUtils.waitFor((long) timeout,
-                    TimeUnit.SECONDS,
-                    () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
+            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + Integer.toString(timeout) + " seconds!");
+            throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
     }
 
@@ -183,17 +169,20 @@ public class HelperFunctions {
 
     public static List<Object> mapObjects(Iterable objects) {
         List<Object> keys = new ArrayList<>();
-        for (Object o : objects) {
+
+        for (Object o : objects)
             keys.add(mapObject(o));
-        }
+
         if (keys.isEmpty())
             throw new JavaFXLibraryNonFatalException("List was empty, unable to map anything!");
+
         return keys;
     }
 
     public static Object callMethod(Object o, String method, boolean runLater) {
-        robotLog("INFO", "Calling method " + method + " of object " + o);
+        RobotLog.info("Calling method " + method + " of object " + o);
         Class<?> c = o.getClass();
+
         try {
             Method m = c.getMethod(method, null);
 
@@ -204,8 +193,7 @@ public class HelperFunctions {
                     try {
                         m.invoke(o, null);
                     } catch (InvocationTargetException | IllegalAccessException e) {
-                        throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " +
-                                e.getCause().getMessage());
+                        throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
                     }
                 });
             }
@@ -222,7 +210,7 @@ public class HelperFunctions {
     }
 
     public static Object callMethod(Object o, String method, Object[] arguments, boolean runLater) {
-        robotLog("INFO", "Calling method \"" + method + "\" of object \"" + o + "\" with arguments \""
+        RobotLog.info("Calling method \"" + method + "\" of object \"" + o + "\" with arguments \""
                 + Arrays.toString(arguments) + "\"");
 
         Class[] argumentTypes = new Class[arguments.length];
@@ -234,7 +222,8 @@ public class HelperFunctions {
             Method m = MethodUtils.getMatchingAccessibleMethod(o.getClass(), method, argumentTypes);
 
             if (m == null)
-                throw new JavaFXLibraryNonFatalException(o.getClass() + " has no method \"" + method + "\" with arguments " + Arrays.toString(argumentTypes));
+                throw new JavaFXLibraryNonFatalException(o.getClass() + " has no method \"" + method + "\" with arguments "
+                        + Arrays.toString(argumentTypes));
 
             if (!runLater) {
                 return m.invoke(o, arguments);
@@ -299,14 +288,6 @@ public class HelperFunctions {
             sb.append("</details>");
         }
     }
-
-    public static void robotLog(String level, String message) {
-        if (!level.toUpperCase().matches("INFO|DEBUG|TRACE|WARN|ERROR"))
-            throw new IllegalArgumentException("Unsupported log level \"" + level + "\": Accepted levels are INFO, " +
-                    "DEBUG, TRACE, WARN and ERROR.");
-        System.out.println("*" + level.toUpperCase() + "* " + message);
-    }
-
 
     // https://github.com/TestFX/TestFX/blob/master/subprojects/testfx-core/src/main/java/org/testfx/robot/Motion.java
     public static Motion getMotion(String motion) {
@@ -477,7 +458,7 @@ public class HelperFunctions {
 
     public static void checkClickLocation(Object object) {
 
-        robotLog("TRACE", "Checking if target \"" + object.toString() + "\" is within active window");
+        RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
 
         if (safeClicking) {
 
@@ -489,7 +470,7 @@ public class HelperFunctions {
                         "To enable clicking outside of visible window bounds use keyword SET SAFE CLICKING | OFF");
             }
         }
-        robotLog("TRACE", "Target location checks out OK, it is within active window");
+        RobotLog.trace("Target location checks out OK, it is within active window");
     }
 
     public static Object checkClickTarget(Object target) {
@@ -522,7 +503,7 @@ public class HelperFunctions {
     }
 
     public static Point2D getCenterPoint(Bounds bounds) {
-        robotLog("TRACE", "Getting center point for " + bounds);
+        RobotLog.trace("Getting center point for " + bounds);
         return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
     }
 
@@ -626,14 +607,14 @@ public class HelperFunctions {
     @Deprecated
     public static Node findNode(Node node, String query) {
 
-        robotLog("INFO", "finding from node: " + node.toString() + " with query: " + query);
+        RobotLog.info("Finding from node: " + node.toString() + " with query: " + query);
 
         if (query != null) {
             List<Node> nodelist = new ArrayList<>();
 
             String currentQuery = query.split(" ", 2)[0];
             String nextQuery = remainingQueries(query);
-            robotLog("INFO", "currentQuery: " + currentQuery + ", nextQuery: " + nextQuery);
+            RobotLog.info("CurrentQuery: " + currentQuery + ", nextQuery: " + nextQuery);
 
             if (currentQuery.startsWith("class=")) {
                 nodelist.addAll(node.lookupAll((getQueryString(currentQuery)).replaceFirst("^class=", "")));
@@ -693,20 +674,20 @@ public class HelperFunctions {
     }
 
     public static Node getHoveredNode(Parent root) {
-        robotLog("DEBUG", "Checking parent: " + root);
+        RobotLog.debug("Checking parent: " + root);
         for (Node node : root.getChildrenUnmodifiable()) {
-            robotLog("DEBUG", "Checking parent child: " + node);
+            RobotLog.debug("Checking parent child: " + node);
             if (node.isHover()) {
-                robotLog("DEBUG", "Parent child is hovered: " + node);
+                RobotLog.debug("Parent child is hovered: " + node);
                 if (node instanceof Parent)
                     return getHoveredNode((Parent) node);
                 else {
-                    robotLog("DEBUG", "Last hovered node in the chain has been found: " + node);
+                    RobotLog.debug("Last hovered node in the chain has been found: " + node);
                     return node;
                 }
             }
         }
-        robotLog("DEBUG", "Last hovered node in the chain has been found: " + root);
+        RobotLog.debug("Last hovered node in the chain has been found: " + root);
         return root;
     }
 
@@ -789,10 +770,10 @@ public class HelperFunctions {
     }
 
     public static String getSelectedTabName(TabPane tabPane) {
-        robotLog("INFO", "Getting selected tab name");
+        RobotLog.info("Getting selected tab name");
         for (Node node : getTabPaneHeaderArea(tabPane).lookupAll(".tab")) {
-            robotLog("INFO", "checking the name for: " + node);
-            robotLog("INFO", "Styles: " + Arrays.asList(node.getPseudoClassStates()));
+            RobotLog.info("Checking the name for: " + node);
+            RobotLog.info("Styles: " + Arrays.asList(node.getPseudoClassStates()));
 
             if (node.getPseudoClassStates().stream().map(PseudoClass::getPseudoClassName).anyMatch("selected"::contains))
                 return getTabName(node);
@@ -801,7 +782,8 @@ public class HelperFunctions {
     }
 
     public static String getTabName(Node node) {
-        robotLog("INFO", "Getting tab name for: " + node);
+        RobotLog.info("Getting tab name for: " + node);
+
         for (Node label : node.lookupAll(".tab-label")) {
             if (label instanceof Labeled) {
                 String labelText = ((Labeled) label).getText();
@@ -814,7 +796,8 @@ public class HelperFunctions {
     }
 
     public static Node getSelectedTab(TabPane tabPane) {
-        robotLog("INFO", "Getting selected tab");
+        RobotLog.info("Getting selected tab");
+
         for (Node node : tabPane.getChildrenUnmodifiable()) {
             if (node.getStyleClass().contains("tab-content-area")) {
                 if (node.isVisible())

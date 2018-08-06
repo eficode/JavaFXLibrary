@@ -36,7 +36,7 @@ public class XPathFinder {
     }
 
     public Node find(String xpathQuery, Parent root) {
-        HelperFunctions.robotLog("DEBUG", "Executing XPathFinder.find using query: " + xpathQuery + " and root: " + root);
+        RobotLog.debug("Executing XPathFinder.find using query: " + xpathQuery + " and root: " + root);
         String fxmlString = this.getFxml(root);
         Document xml = getXmlDocument(fxmlString);
         XPathExpression expression = getXPathExpression(xpathQuery);
@@ -54,7 +54,7 @@ public class XPathFinder {
     }
 
     public Set<Node> findAll(String xpathQuery, Parent root) {
-        HelperFunctions.robotLog("DEBUG", "Executing XPathFinder.findAll using query: " + xpathQuery + " and root: " + root);
+        RobotLog.debug("Executing XPathFinder.findAll using query: " + xpathQuery + " and root: " + root);
         String fxmlString = this.getFxml(root);
         Document xml = getXmlDocument(fxmlString);
         XPathExpression expression = getXPathExpression(xpathQuery);
