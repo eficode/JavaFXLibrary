@@ -33,6 +33,7 @@ import java.util.*;
 
 import static javafxlibrary.utils.HelperFunctions.createWrapperApplication;
 import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
+import static javafxlibrary.utils.HelperFunctions.robotLog;
 
 @RobotKeywords
 public class ApplicationLauncher extends TestFxAdapter {
@@ -209,6 +210,7 @@ public class ApplicationLauncher extends TestFxAdapter {
 
     @RobotKeyword("Clears internal book keeping of all java objects.")
     public void clearObjectMap() {
+        robotLog("INFO", "Clearing " + objectMap.size() + " objects from objectMap.");
         objectMap.clear();
     }
 

@@ -25,6 +25,7 @@ import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.TestListener;
 import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
@@ -37,8 +38,8 @@ import static javafxlibrary.utils.HelperFunctions.*;
 public class JavaFXLibrary extends AnnotationLibrary {
 
     public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL";
-
     public static final String ROBOT_LIBRARY_VERSION = loadRobotLibraryVersion();
+    public static final TestListener ROBOT_LIBRARY_LISTENER = new TestListener();
 
     static List<String> includePatterns = new ArrayList<String>() {{
         add("javafxlibrary/keywords/AdditionalKeywords/*.class");
