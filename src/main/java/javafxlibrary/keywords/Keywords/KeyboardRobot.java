@@ -222,6 +222,14 @@ public class KeyboardRobot extends TestFxAdapter {
         }
     }
 
+    @RobotKeyword("Pushes CTRL/CMD + A key combination to select all.")
+    public void selectAll() {
+        if (isMac())
+            robot.push(KeyCode.META, KeyCode.A);
+        else
+            robot.push(KeyCode.CONTROL, KeyCode.A);
+    }
+
     @RobotKeyword("Sets the time waited between every character when typing\n\n" +
             "``milliseconds`` is the time waited between each character in milliseconds.")
     @ArgumentNames({ "milliseconds" })
