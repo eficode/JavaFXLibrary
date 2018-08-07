@@ -33,6 +33,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.keywords.Keywords.ClickRobot;
+import javafxlibrary.keywords.Keywords.KeyboardRobot;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
@@ -498,8 +500,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    // TODO: Deprecate
-    @RobotKeyword("Returns height value of the node. \n\n"
+    @Deprecated
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+            + "Returns height value of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
             + "`3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
@@ -1068,7 +1071,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    // TODO: Remove
     @RobotKeyword("Clears the text value of given TextInputControl\n\n"
             + "``locator`` is either a _query_ or _TextInputControl_ object. For identifying the element, see "
             + "`3. Locating or specifying UI elements`. \n\n"
@@ -1077,10 +1079,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @ArgumentNames({ "locator" })
     public void clearTextInput(Object locator) {
         try {
-            TextInputControl input = (TextInputControl) objectToNode(locator);
-            input.clear();
-        } catch (ClassCastException cce) {
-            throw new JavaFXLibraryNonFatalException("Unable to handle target as TextInputControl!");
+            TextInputControl textInputControl = (TextInputControl) objectToNode(locator);
+            new ClickRobot().clickOn(textInputControl);
+            new KeyboardRobot().selectAll();
+            robot.push(KeyCode.BACK_SPACE);
+        } catch (ClassCastException e) {
+            throw new JavaFXLibraryNonFatalException("Target is not an instance of TextInputControl!");
         }
     }
 
