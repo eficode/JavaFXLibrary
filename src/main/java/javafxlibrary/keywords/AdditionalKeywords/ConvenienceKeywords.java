@@ -110,22 +110,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
     @ArgumentNames({ "object", "method", "*arguments=" })
     public Object callObjectMethod(Object object, String method, Object... arguments) {
-        /* Workaround for overloading the keyword, Javalib Core seems to have a bug which causes overloaded keywords that
-           take varargs throw IllegalArgumentException occasionally. Some of the calls for the base keyword get directed
-           to the overloaded keyword, so the method invocation fails because of incorrect arguments. */
-
         /* Javalib Core changes all parameters to Strings after runKeywords automatic argument replacement, so arguments
            are replaced with objects from objectMap here instead. */
         object = HelperFunctions.useMappedObject(object);
         Object[] tempArgs = HelperFunctions.checkMethodArguments(arguments);
         Object[] finalArgs = HelperFunctions.useMappedObjects(tempArgs);
-
-        Object result;
-
-        if (finalArgs.length == 0)
-            result = callMethod(object, method, false);
-        else
-            result = callMethod(object, method, finalArgs, false);
+        Object result = callMethod(object, method, finalArgs, false);
 
         if (result != null)
             return mapObject(result);
@@ -140,15 +130,11 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Call Object Method In Fx Application Thread | ${node} | maxHeight | (boolean)false | \n")
     @ArgumentNames({ "object", "method", "*arguments=" })
     public void callObjectMethodInFxApplicationThread(Object object, String method, Object... arguments) {
-        // Check callObjectMethod for info about argument replacing and overloading in these keywords.
+        // Check callObjectMethod for info about argument replacing.
         object = HelperFunctions.useMappedObject(object);
         Object[] tempArgs = HelperFunctions.checkMethodArguments(arguments);
         Object[] finalArgs = HelperFunctions.useMappedObjects(tempArgs);
-
-        if (finalArgs.length == 0)
-            callMethod(object, method, true);
-        else
-            callMethod(object, method, finalArgs, true);
+        callMethod(object, method, finalArgs, true);
     }
 
     @Deprecated

@@ -23,14 +23,14 @@ public class CallMethodTest extends TestFxAdapterTest {
     @Test
     public void callMethod_InSameThread_NoArgs_WithReturnValue() {
         String name = "JavaFXLibrary";
-        String result = (String) HelperFunctions.callMethod(name, "toUpperCase", false);
+        String result = (String) HelperFunctions.callMethod(name, "toUpperCase", new Object[]{}, false);
         Assert.assertEquals("JAVAFXLIBRARY", result);
     }
 
     @Test
     public void callMethod_InSameThread_NoArgs_NoReturnValue() {
         TestPoint testPoint = new TestPoint(0, 0);
-        HelperFunctions.callMethod(testPoint, "setLocationTo2017", false);
+        HelperFunctions.callMethod(testPoint, "setLocationTo2017", new Object[]{}, false);
         Assert.assertEquals(20, testPoint.getX(), 0);
         Assert.assertEquals(17, testPoint.getY(), 0);
     }
@@ -71,7 +71,7 @@ public class CallMethodTest extends TestFxAdapterTest {
     public void callMethod_InJavaFXThread_NoArgs() {
         Stage stage = setupStageInJavaFXThread();
         Assert.assertFalse(stage.isShowing());
-        HelperFunctions.callMethod(stage, "show", true);
+        HelperFunctions.callMethod(stage, "show", new Object[]{}, true);
         waitForEventsInJavaFXThread();
         Assert.assertTrue(stage.isShowing());
         Platform.runLater(() -> stage.close());
@@ -82,7 +82,7 @@ public class CallMethodTest extends TestFxAdapterTest {
         Stage stage = setupStageInJavaFXThread();
         thrown.expect(JavaFXLibraryNonFatalException.class);
         thrown.expectMessage("Couldn't execute Call Method: Not on FX application thread; currentThread = main");
-        HelperFunctions.callMethod(stage, "show", false);
+        HelperFunctions.callMethod(stage, "show", new Object[]{}, false);
     }
 
     @Test

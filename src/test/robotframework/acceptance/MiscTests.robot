@@ -35,7 +35,7 @@ Call Method That Does Not Exist
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find    \#green
     ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    fakeMethod
-    Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
+    Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod" with arguments []
 
 Call Method With Wrong Types
     [Tags]                  negative        smoke
@@ -49,7 +49,7 @@ Call Method That Does Not Exist In Fx Application Thread
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find    \#green
     ${MSG}                  Run Keyword And Expect Error    *    Call Object Method In Fx Application Thread    ${NODE}    fakeMethod
-    Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod()"
+    Should Be Equal         ${MSG}    class javafx.scene.shape.Rectangle has no method "fakeMethod" with arguments []
 
 Call Method With Wrong Types In Fx Application Thread
     [Tags]                  negative    smoke

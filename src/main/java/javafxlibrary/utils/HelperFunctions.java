@@ -179,36 +179,6 @@ public class HelperFunctions {
         return keys;
     }
 
-    public static Object callMethod(Object o, String method, boolean runLater) {
-        RobotLog.info("Calling method " + method + " of object " + o);
-        Class<?> c = o.getClass();
-
-        try {
-            Method m = c.getMethod(method, null);
-
-            if (!runLater) {
-                return m.invoke(o, null);
-            } else {
-                Platform.runLater(() -> {
-                    try {
-                        m.invoke(o, null);
-                    } catch (InvocationTargetException | IllegalAccessException e) {
-                        throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
-                    }
-                });
-            }
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
-        } catch (NoSuchMethodException e) {
-            throw new JavaFXLibraryNonFatalException(c + " has no method \"" + method + "()\"");
-        } catch (JavaFXLibraryNonFatalException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
-        }
-        return null;
-    }
-
     public static Object callMethod(Object o, String method, Object[] arguments, boolean runLater) {
         RobotLog.info("Calling method \"" + method + "\" of object \"" + o + "\" with arguments \""
                 + Arrays.toString(arguments) + "\"");
@@ -232,16 +202,16 @@ public class HelperFunctions {
                     try {
                         m.invoke(o, arguments);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
+                        throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
                     }
                 });
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage());
+            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage());
         } catch (JavaFXLibraryNonFatalException e) {
             throw e;
         } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getMessage(), e);
+            throw new JavaFXLibraryNonFatalException("Couldn't execute Call Method: " + e.getCause().getMessage(), e);
         }
         return null;
     }
