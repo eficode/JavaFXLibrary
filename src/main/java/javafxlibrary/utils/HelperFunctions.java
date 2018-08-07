@@ -33,8 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.awaitility.Awaitility;
-import org.awaitility.core.ConditionTimeoutException;
 import org.hamcrest.Matchers;
 import org.testfx.robot.Motion;
 import javafx.scene.input.MouseButton;
@@ -58,7 +56,6 @@ import org.testfx.util.WaitForAsyncUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -78,28 +75,21 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout=" + timeout + ", timeUnit=" + timeUnit);
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
+                + Integer.toString(timeout) + ", timeUnit=" + timeUnit);
 
         try {
-            Awaitility.setDefaultTimeout(timeout, getTimeUnit(timeUnit));
-            AtomicReference<Node> node = new AtomicReference<>();
-            Awaitility.await().until(() -> {
-                try {
-                    node.set(createFinder().find(target));
-                    return node.get() != null;
-                } catch (Exception e) {
-                    RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause());
-                    return Boolean.FALSE;
-                }
-            });
 
-            RobotLog.trace("Node located: \"" + node.get() + "\"");
-            return node.get();
+            WaitForAsyncUtils.waitFor((long) timeout,
+                    getTimeUnit(timeUnit),
+                    () -> Matchers.is(isNotNull()).matches(createFinder().find(target)));
+            return createFinder().find(target);
 
-        } catch (ConditionTimeoutException e) {
+        } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found within given timeout of "
                     + Integer.toString(timeout) + " " + timeUnit);
         } catch (Exception e) {
+            RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
             throw new JavaFXLibraryNonFatalException("waitUntilExist failed: " + e);
         }
     }
