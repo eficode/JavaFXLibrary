@@ -276,10 +276,10 @@ Set Scene Values
     ${HEIGHT}                       Call Object Method      ${BOUNDS}    getHeight
     ${MIN_X}                        Convert To Integer      ${MIN_X}
     ${MIN_Y}                        Convert To Integer      ${MIN_Y}
-    ${WIDTH}                        Convert To Integer      ${WIDTH}
-    ${HEIGHT}                       Convert To Integer      ${HEIGHT}
     ${CENTERX}                      Evaluate                ${MIN_X} + (${WIDTH} / 2)
     ${CENTERY}                      Evaluate                ${MIN_Y} + (${HEIGHT} / 2)
+    ${CENTERX}                      Convert To Integer      ${CENTERX}
+    ${CENTERY}                      Convert To Integer      ${CENTERY}
     Set Suite Variable              ${SCENE_MINY}           ${MIN_Y}
     Set Suite Variable              ${SCENE_MINX}           ${MIN_X}
     Set Suite Variable              ${SCENE_CENTERX}        ${CENTERX}
@@ -294,10 +294,10 @@ Set Window Values
     ${HEIGHT}                       Call Object Method      ${BOUNDS}    getHeight
     ${MIN_X}                        Convert To Integer      ${MIN_X}
     ${MIN_Y}                        Convert To Integer      ${MIN_Y}
-    ${WIDTH}                        Convert To Integer      ${WIDTH}
-    ${HEIGHT}                       Convert To Integer      ${HEIGHT}
     ${CENTERX}                      Evaluate                ${MIN_X} + (${WIDTH} / 2)
     ${CENTERY}                      Evaluate                ${MIN_Y} + (${HEIGHT} / 2)
+    ${CENTERX}                      Convert To Integer      ${CENTERX}
+    ${CENTERY}                      Convert To Integer      ${CENTERY}
     Set Suite Variable              ${WINDOW_MINY}          ${MIN_Y}
     Set Suite Variable              ${WINDOW_MINX}          ${MIN_X}
     Set Suite Variable              ${WINDOW_CENTERX}       ${CENTERX}
