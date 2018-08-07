@@ -135,8 +135,15 @@ public class Finder {
 
             for (int i = 1; i < queryArray.length; i++) {
                 if (containsPrefixes(queryArray[i])) {
-                    String[] rootQuery = Arrays.copyOfRange(queryArray, 0, i );
-                    this.currentRoot = (Parent) newFind(String.join(" ", rootQuery));
+                    String rootQuery = String.join(" ", Arrays.copyOfRange(queryArray, 0, i ));
+                    RobotLog.debug("Finding next root using query: " + rootQuery);
+                    this.currentRoot = (Parent) newFind(rootQuery);
+                    RobotLog.debug("New root set for find: " + this.currentRoot);
+
+                    if (this.currentRoot == null)
+                        throw new JavaFXLibraryNonFatalException("Could not find a Parent node with query: \"" +
+                                rootQuery + "\" to be used as the next root node, quitting find!");
+
                     String[] remainingQuery = Arrays.copyOfRange(queryArray, i, queryArray.length);
                     query = String.join(" ", remainingQuery);
                     break;
