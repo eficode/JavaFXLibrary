@@ -28,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -48,6 +49,11 @@ public class DatePickerApp extends Application  {
 
         Label label = new Label("");
         label.setTranslateY(15);
+
+        final Locale defaultLocale = Locale.getDefault(Locale.Category.FORMAT);
+        datePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH));
+        datePicker.setOnHiding(e -> Locale.setDefault(Locale.Category.FORMAT, defaultLocale));
+        datePicker.setOnAction(e -> Locale.setDefault(Locale.Category.FORMAT, defaultLocale));
 
         datePicker.valueProperty().addListener(((observable, oldValue, newValue) -> {
             long daysBetween = DAYS.between(LocalDate.now(), newValue);
