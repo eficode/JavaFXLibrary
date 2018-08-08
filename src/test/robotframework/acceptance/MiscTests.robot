@@ -151,12 +151,12 @@ Get Node Text Of Incompatible Node
     ${MSG}                  Run Keyword And Expect Error    *    Get Node Text    ${NODE}
     Should End With         ${MSG}      Node has no getText method
 
-Wait Until Node Is Enabled
+Wait Until Node Is Visible
     [Tags]                          smoke
     Set Test Application            javafxlibrary.testapps.TestWindowManagement
     Click On                        \#navigationAlert
     Click On                        .button
-    Wait Until Node Is Enabled      .dialog-pane .button    ${5}
+    Wait Until Node Is Visible      .dialog-pane .button    ${5}
     Click On                        .dialog-pane .button
 
 Find All With Pseudo Class
