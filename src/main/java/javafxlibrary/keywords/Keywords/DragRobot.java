@@ -53,7 +53,7 @@ public class DragRobot extends TestFxAdapter {
             return (FxRobotInterface) method.invoke(robot, target, new MouseButton[]{MouseButton.valueOf(button)});
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute drag from using locator \"" + locator + "\" " +
-                    "and button " + button + ": " + e.getCause().getMessage());
+                    "and button " + button + ": " + e.getCause().getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class DragRobot extends TestFxAdapter {
             return (FxRobotInterface) method.invoke(robot, target);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute drop to using locator \"" + locator + "\" " +
-                    ": " + e.getCause().getMessage());
+                    ": " + e.getCause().getMessage(), e);
         }
     }
 
