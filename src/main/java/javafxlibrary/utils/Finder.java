@@ -10,6 +10,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.service.query.NodeQuery;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javafxlibrary.utils.TestFxAdapter.robot;
@@ -19,6 +20,7 @@ public class Finder {
     public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH, PSEUDO }
     private String[] prefixes;
     protected Parent currentRoot;
+    private  Parent originalRoot;
     private Set<Parent> rootNodes;
     private String originalQuery;
 
@@ -47,8 +49,10 @@ public class Finder {
     public Set<Node> findAll(String query) {
         if (containsPrefixes(query)) {
             originalQuery = query;
+            originalRoot = this.currentRoot;
             rootNodes = robot.fromAll().queryAll();
-            return newFindAll(parseWholeQuery(query));
+            Set<Node> allNodes = new HashSet<>();
+            return newFindAll(parseWholeQuery(query), allNodes);
         }
         return robot.lookup(query).queryAll();
     }
@@ -57,7 +61,8 @@ public class Finder {
         RobotLog.debug("Executing Finder.findAll using query: " + query + " and root: " + root);
         if (containsPrefixes(query)) {
             this.currentRoot = root;
-            return newFindAll(parseWholeQuery(query));
+            Set<Node> allNodes = new HashSet<>();
+            return newFindAll(parseWholeQuery(query), allNodes);
         }
         return robot.from(root).lookup(query).queryAll();
     }
@@ -67,26 +72,30 @@ public class Finder {
         Node result = executeLookup(query, prefix);
 
         if (result == null && rootNodes != null && rootNodes.size() > 1) {
-            RobotLog.debug("Could not find anything from " + currentRoot + ", moving to the next root node");
-            rootNodes.remove(currentRoot);
-            currentRoot = rootNodes.iterator().next();
+            RobotLog.debug("Could not find anything from " + originalRoot + ", moving to the next root node");
+            rootNodes.remove(originalRoot);
+            originalRoot = rootNodes.iterator().next();
+            currentRoot = originalRoot;
             result = newFind(parseWholeQuery(originalQuery));
         }
 
         return result;
     }
 
-    private Set<Node> newFindAll(String query) {
+    private Set<Node> newFindAll(String query, Set<Node> allNodes) {
         FindPrefix prefix = getPrefix(query);
         Set<Node> nodes = executeLookupAll(query, prefix);
+        allNodes.addAll(nodes);
 
         if (rootNodes != null && rootNodes.iterator().hasNext() && rootNodes.size() > 1) {
-            RobotLog.debug("Finished lookup with root " + currentRoot + ", moving to the next root node");
-            rootNodes.remove(currentRoot);
-            currentRoot = rootNodes.iterator().next();
-            nodes.addAll(newFindAll(parseWholeQuery(originalQuery)));
+            RobotLog.debug("Finished lookup with root " + originalRoot + ", moving to the next root node");
+            rootNodes.remove(originalRoot);
+            originalRoot = rootNodes.iterator().next();
+            currentRoot = originalRoot;
+            RobotLog.debug("Starting another lookup using new root: " + currentRoot);
+            newFindAll(parseWholeQuery(originalQuery), allNodes);
         }
-        return nodes;
+        return allNodes;
     }
 
     private Node executeLookup(String query, FindPrefix prefix) {

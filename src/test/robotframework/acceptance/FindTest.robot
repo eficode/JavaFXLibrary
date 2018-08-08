@@ -1,16 +1,18 @@
 *** Settings ***
 Documentation       Tests to test javafxlibrary.keywords.AdditionalKeywords.Find related keywords
 Library             JavaFXLibrary
-Suite Setup         Setup all tests
 Suite Teardown      Teardown all tests
 Force Tags          set-find
 
 *** Variables ***
-${TEST_APPLICATION}   javafxlibrary.testapps.TestBoundsLocation
+${CURRENT_APPLICATION}    NOT SET
+${BOUNDS_APP}             javafxlibrary.testapps.TestBoundsLocation
+${WINDOW_APP}             javafxlibrary.testapps.TestMultipleWindows
 
 *** Test Cases ***
 Find With TestFX Query
    [Tags]               smoke
+   Set Test App         ${BOUNDS_APP}
    ${rectangle}         Find            \#green
    ${text}              Find            .whiteText
    Should Contain       ${rectangle}    Rectangle[id=green, x=300.0, y=0.0, width=150.0, height=150.0, fill=0x00a000ff]
@@ -18,6 +20,7 @@ Find With TestFX Query
 
 Find With XPath
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${rect_by_id}       Find                xpath=//Rectangle[@id="lime"]
     ${rect_by_fill}     Find                xpath=//Rectangle[@fill="0xff1493ff"]
     ${text}             Find                xpath=//Text[@text="75x75"]
@@ -27,6 +30,7 @@ Find With XPath
 
 Find With Class
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${rectangle}        Find            class=javafx.scene.shape.Rectangle
     ${text}             Find            class=javafx.scene.text.Text
     Should Contain      ${rectangle}    Rectangle[id=red, x=0.0, y=0.0, width=300.0, height=300.0, fill=0xff0000ff]
@@ -34,6 +38,7 @@ Find With Class
 
 Find With CSS Query
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${rectangle}        Find            css=\#violet
     ${text}             Find            css=VBox HBox StackPane Text.whiteText
     Should Contain      ${rectangle}    Rectangle[id=violet, x=525.0, y=0.0, width=75.0, height=75.0, fill=0x9400d3ff]
@@ -41,11 +46,13 @@ Find With CSS Query
 
 Find With ID
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${rectangle}        Find            id=darkblue
     Should Contain      ${rectangle}    Rectangle[id=darkblue, x=300.0, y=150.0, width=300.0, height=150.0, fill=0x00008bff]
 
 Find With Chained Selectors
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${lime}             Find        css=VBox HBox Pane id=lime
     ${blue}             Find        css=VBox HBox Pane xpath=//Rectangle[@width="600.0"]
     Should Contain      ${lime}     Rectangle[id=lime, x=500.0, y=200.0, width=75.0, height=75.0, fill=0x00ff00ff]
@@ -53,17 +60,20 @@ Find With Chained Selectors
 
 Find With Root
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${root}             Find            css=Pane
     ${rectangle}        Find            id=lime    true    ${root}
     Should Contain      ${rectangle}    Rectangle[id=lime, x=500.0, y=200.0, width=75.0, height=75.0, fill=0x00ff00ff]
 
 Find All With TestFX Query
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     @{nodes}            Find All    .whiteText
     Length Should Be    ${nodes}    3
 
 Find All With XPath
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     @{all_rectangles}   Find All            xpath=//Rectangle
     @{text_nodes}       Find All            xpath=//Text[@text="75x75"]
     Length Should Be    ${all_rectangles}   9
@@ -71,6 +81,7 @@ Find All With XPath
 
 Find All With CSS query
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     @{nodes1}           Find All        css=VBox HBox > StackPane Rectangle
     @{nodes2}           Find All        css=Pane Rectangle
     @{nodes3}           Find All        css=Pane > Rectangle
@@ -80,6 +91,7 @@ Find All With CSS query
 
 Find All With Chained Selectors
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     @{nodes1}           Find All        css=VBox HBox xpath=//Rectangle
     @{nodes2}           Find All        css=VBox HBox xpath=//Rectangle[@width="75.0"]
     Length Should Be    ${nodes1}       6
@@ -87,6 +99,7 @@ Find All With Chained Selectors
 
 Find All With Root
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${xroot}            Find            css=VBox HBox VBox HBox
     ${croot}            Find            css=Pane
     @{xpath}            Find All        xpath=//Rectangle[@width="75.0"]    false    ${xroot}
@@ -96,6 +109,7 @@ Find All With Root
 
 Find Nth Node With XPath
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${node1}            Find            xpath=/VBox/HBox/VBox/HBox/VBox/HBox/StackPane
     ${node2}            Find            xpath=/VBox/HBox/VBox/HBox/VBox/HBox/StackPane[2]
     ${child1}           Find            css=Rectangle    true    ${node1}
@@ -105,6 +119,7 @@ Find Nth Node With XPath
 
 Find With Pseudo Class
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${root}             Find            css=VBox HBox VBox HBox StackPane
     ${target}           Find            xpath=//Text[@text="150x150"]
     Move To             ${target}
@@ -113,6 +128,7 @@ Find With Pseudo Class
 
 Find All With Pseudo Class
     [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
     ${node}             Find            xpath=//Text[@text="300x300"]
     Move To             ${node}
     @{hovered}          Find All        pseudo=hover
@@ -124,48 +140,87 @@ Find All With Pseudo Class
 
 Nothing Is Found
     [Tags]              smoke       negative
+    Set Test App        ${BOUNDS_APP}
     ${node}             Find        css=NoSuchSelector
     Should Be Empty     ${node}
 
 Nothing Is Found When failIfNotFound Is True
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${msg}              Run Keyword And Expect Error    *    Find    css=NoSuchSelector    true
     Should Be Equal     ${msg}    Unable to find anything with query: "css=NoSuchSelector"
 
 Nothing Is Found With Find All
     [Tags]              smoke       negative
+    Set Test App        ${BOUNDS_APP}
     ${nodes}            Find All    css=NoSuchSelector
     Should Be Empty     ${nodes}
 
 Nothing Is Found With Find All When failIfNotFound Is True
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${msg}              Run Keyword And Expect Error    *    Find All    css=NoSuchSelector    true
     Should Be Equal     ${msg}    Unable to find anything with query: "css=NoSuchSelector"
 
 Previous Query Returns Nothing In Chained Selector
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${node}             Find    css=VBox css=ZBox Pane id=lime
     Should Be Empty     ${node}
 
 Previous Query Returns Nothing In Chained Selector With Find All
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${nodes}            Find All    css=VBox css=ZBox Pane id=lime
     Should Be Empty     ${nodes}
 
 Previous Query Returns Nothing In Chained Selector When failIfNotFound Is True
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${msg}              Run Keyword And Expect Error    *    Find    css=VBox css=ZBox Pane id=lime    true
     Should Be Equal     ${msg}    Unable to find anything with query: "css=VBox css=ZBox Pane id=lime"
 
 Previous Query Returns Nothing In Chained Selector With Find All When failIfNotFound Is True
     [Tags]              smoke    negative
+    Set Test App        ${BOUNDS_APP}
     ${msg}              Run Keyword And Expect Error    *    Find All    css=VBox css=ZBox Pane id=lime    true
     Should Be Equal     ${msg}    Unable to find anything with query: "css=VBox css=ZBox Pane id=lime"
 
+Find From Another Window
+    [Tags]              smoke
+    Set Test App        ${WINDOW_APP}
+    ${node}             Find            id=thirdWindowLabel
+    Should End With     ${node}         Label[id=thirdWindowLabel, styleClass=label]'Third window'
+
+Find From Another Window Using Chained Selector
+    [Tags]              smoke
+    Set Test App        ${WINDOW_APP}
+    ${node}             Find            css=HBox id=thirdWindowLabel
+    Should End With     ${node}         Label[id=thirdWindowLabel, styleClass=label]'Third window'
+
+Find All From Multiple Windows
+    [Tags]              smoke
+    Set Test App        ${WINDOW_APP}
+    ${nodes}            Find All        css=.label
+    Length Should Be    ${nodes}        3
+
+Find All From Multiple Windows Using Chained Selector
+    [Tags]              smoke
+    Set Test App        ${WINDOW_APP}
+    ${nodes}            Find All    css=HBox css=.label
+    Length Should Be    ${nodes}        3
+
 *** Keywords ***
-Setup all tests
-    Launch Javafx Application    ${TEST_APPLICATION}
-    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+Set Test App
+    [Arguments]             ${APPLICATION}
+    Run Keyword Unless      '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
+
+Change Current Application
+    [Arguments]                     ${APPLICATION}
+    Run Keyword Unless              '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
+    Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
+    Launch Javafx Application       ${APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
 
 Teardown all tests
     Close Javafx Application
