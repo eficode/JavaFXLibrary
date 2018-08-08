@@ -55,7 +55,7 @@ public class BoundsLocation extends TestFxAdapter {
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to create Bounds object: " + e);
+            throw new JavaFXLibraryNonFatalException("Unable to create Bounds object: ", e);
         }
     }
 

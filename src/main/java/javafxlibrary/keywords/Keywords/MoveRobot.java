@@ -60,7 +60,7 @@ public class MoveRobot extends TestFxAdapter {
             return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\" " +
-                    "and motion " + motion + ": " + e.getCause().getMessage());
+                    "and motion " + motion + ": " + e.getCause().getMessage(), e);
         }
     }
 
