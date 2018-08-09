@@ -61,6 +61,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javafxlibrary.matchers.ExtendedNodeMatchers.hasValidCoordinates;
 import static javafxlibrary.utils.TestFxAdapter.objectMap;
 import static javafxlibrary.utils.TestFxAdapter.robot;
 import static org.testfx.matcher.base.NodeMatchers.*;
@@ -76,18 +77,16 @@ public class HelperFunctions {
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
-                + Integer.toString(timeout) + ", timeUnit=" + timeUnit);
+                + timeout + ", timeUnit=" + timeUnit);
 
         try {
-
-            WaitForAsyncUtils.waitFor((long) timeout,
-                    getTimeUnit(timeUnit),
-                    () -> Matchers.is(isNotNull()).matches(createFinder().find(target)));
-            return createFinder().find(target);
-
+            WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) != null);
+            Node node = createFinder().find(target);
+            WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
+            return node;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found within given timeout of "
-                    + Integer.toString(timeout) + " " + timeUnit);
+                    + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
             throw new JavaFXLibraryNonFatalException("waitUntilExist failed: " + e);

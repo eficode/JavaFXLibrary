@@ -17,7 +17,9 @@
 
 package javafxlibrary.matchers;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafxlibrary.utils.HelperFunctions;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -48,5 +50,11 @@ public class ExtendedNodeMatchers {
     private static boolean hoverable(Node node) {
         new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node);
         return node.isHover();
+    }
+
+    public static boolean hasValidCoordinates(Node node) {
+        Bounds bounds = HelperFunctions.objectToBounds(node);
+        return !(Double.isNaN(bounds.getMinX()) || Double.isNaN(bounds.getMinY()) ||
+                 Double.isNaN(bounds.getMaxX()) || Double.isNaN(bounds.getMaxY()));
     }
 }
