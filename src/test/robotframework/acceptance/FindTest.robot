@@ -8,6 +8,7 @@ Force Tags          set-find
 ${CURRENT_APPLICATION}    NOT SET
 ${BOUNDS_APP}             javafxlibrary.testapps.TestBoundsLocation
 ${WINDOW_APP}             javafxlibrary.testapps.TestMultipleWindows
+${FINDER_APP}             javafxlibrary.testapps.FinderApp
 
 *** Test Cases ***
 Find With TestFX Query
@@ -209,6 +210,15 @@ Find All From Multiple Windows Using Chained Selector
     Set Test App        ${WINDOW_APP}
     ${nodes}            Find All    css=HBox css=.label
     Length Should Be    ${nodes}        3
+
+Find All From Multiple Windows Containing Multiple Matches Using Chained Selector
+    [Tags]              not-ready    bug
+    Set Test App        ${FINDER_APP}
+    # TODO: Nodes should contain ALL matching nodes from every window, fix the recursion in Finder!
+    ${nodes}            Find All    css=VBox css=HBox css=.button
+
+    :FOR    ${node}    IN    @{nodes}
+    \    LOG    ${node}
 
 *** Keywords ***
 Set Test App

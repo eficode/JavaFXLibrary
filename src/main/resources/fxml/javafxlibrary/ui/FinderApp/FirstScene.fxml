@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml">
+    <Label>Scene type 1</Label>
+    <VBox>
+        <HBox>
+            <Button fx:id="firstButton">1</Button>
+            <Button>2</Button>
+            <Button>3</Button>
+            <Button>4</Button>
+        </HBox>
+    </VBox>
+    <VBox>
+        <HBox>
+            <Button>5</Button>
+            <Button>6</Button>
+            <Button>7</Button>
+            <Button>8</Button>
+        </HBox>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@../css/FinderApp.css" />
+    </stylesheets>
+</VBox>

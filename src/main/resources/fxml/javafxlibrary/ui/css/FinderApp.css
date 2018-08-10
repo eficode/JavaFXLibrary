@@ -1,0 +1,18 @@
+.button {
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-background-color: #323232;
+    -fx-border-color: #929292;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 100px;
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+VBox > .button {
+    -fx-pref-width: 200px;
+}
