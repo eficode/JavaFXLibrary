@@ -82,6 +82,7 @@ public class HelperFunctions {
         try {
             WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) != null);
             Node node = createFinder().find(target);
+            // TODO: Add null checks for node.getScene()
             WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
             return node;
         } catch (TimeoutException te) {

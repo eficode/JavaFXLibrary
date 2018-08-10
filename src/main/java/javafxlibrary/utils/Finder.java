@@ -29,6 +29,8 @@ public class Finder {
         this.currentRoot = robot.listTargetWindows().get(0).getScene().getRoot();
     }
 
+    // TODO: Add more debug logging about find status
+    // TODO: Use newFind as default
     public Node find(String query) {
         if (containsPrefixes(query)) {
             originalQuery = query;
@@ -136,6 +138,8 @@ public class Finder {
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
 
+    // TODO: Add parseWholeQuery for findAll -> this.currentRoot = (Parent) newFind(rootQuery); only looks from a single parent
+    // TODO: Add support for using indexes in queries (css=VBox[3]), xPath already implements this
     private String parseWholeQuery(String query) {
 
         while (containsMultiplePrefixes(query)) {
@@ -149,6 +153,7 @@ public class Finder {
                     this.currentRoot = (Parent) newFind(rootQuery);
                     RobotLog.debug("New root set for find: " + this.currentRoot);
 
+                    // TODO: Continue search if there are roots left in other windows / return values
                     if (this.currentRoot == null)
                         throw new JavaFXLibraryNonFatalException("Could not find a Parent node with query: \"" +
                                 rootQuery + "\" to be used as the next root node, quitting find!");
