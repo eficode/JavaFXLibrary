@@ -24,11 +24,11 @@ First, the JavaFXLibrary needs to be taken into use in the settings table.
 
 === 2.2 Usage in remote mode(Jython & Python) ===
 When using the test library in remote mode, the library needs to be started at the remote end first. This can be done as follows:
-- _java -jar JavaFXLibrary-<version>.jar_
+- _java -jar javafxlibrary-<version>.jar_
 This will start the remote server listening at default port number 8270.
 
 If there is a need to use a different port the library can be started with optional parameter:
-- _java -jar JavaFXLibrary-<version>.jar 1234_
+- _java -jar javafxlibrary-<version>.jar 1234_
 This will start the remote server listening on port 1234.
 
 JavaFXLibrary can be taken into use as remote library in settings table as follows:

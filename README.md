@@ -17,13 +17,13 @@ See keyword [documentation](https://eficode.github.io/JavaFXLibrary/JavaFXLibrar
 1. Download latest JavaFXLibrary and documentation from https://github.com/robotframework/JavaFXLibrary/releases/
 2. Copy(if needed) JAR to desired location and run from command line using
     ```
-    java -jar JavaFXLibrary-<version>.jar
+    java -jar javafxlibrary-<version>.jar
 
     ```
 3. JavaFXLibrary in RemoteServer mode should now be running in port [8270](http://localhost:8270)
 4. Optionally JAR can be launched with port number as an optional argument:
     ```
-    java -jar JavaFXLibrary-<version>.jar 1234
+    java -jar javafxlibrary-<version>.jar 1234
     ```
 5. JavaFXLibrary in RemoteServer mode should now be running in port [1234](http://localhost:1234)
 
@@ -68,12 +68,12 @@ mvn verify
 
 Windows command line:
 ```
-java -cp "target\JavaFXLibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src\test\robotframework/
+java -cp "target\javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src\test\robotframework/
 ```
 
 Linux/OSX command line:
 ```
-java -cp "target/JavaFXLibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src/test/robotframework/
+java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src/test/robotframework/
 
 ```
 

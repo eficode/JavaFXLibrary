@@ -19,16 +19,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.robotframework</groupId>
-    <artifactId>JavaFXLibrary</artifactId>
+    <artifactId>javafxlibrary</artifactId>
     <packaging>jar</packaging>
     <version>0.4.2-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <name>JavaFXLibrary</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>JavaFXLibrary for the Robot Framework.</description>
     <url>https://github.com/eficode/JavaFXLibrary/</url>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -37,13 +38,67 @@
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Jukka Haavisto</name>
+            <email>jukka.haavisto@eficode.com</email>
+            <organization>Eficode</organization>
+            <organizationUrl>http://www.eficode.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Sami Pesonen</name>
+            <email>sami.pesonen@eficode.com</email>
+            <organization>Eficode</organization>
+            <organizationUrl>http://www.eficode.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Pasi Saikkonen</name>
+            <email>pasi.saikkonen@eficode.com</email>
+            <organization>Eficode</organization>
+            <organizationUrl>http://www.eficode.com</organizationUrl>
+        </developer>
+    </developers>
+
     <issueManagement>
         <system>Github Issues</system>
         <url>https://github.com/eficode/JavaFXLibrary/issues</url>
     </issueManagement>
 
+    <scm>
+        <connection>scm:git:git://github.com/eficode/JavaFXLibrary.git</connection>
+        <developerConnection>scm:git:ssh://github.com:eficode/JavaFXLibrary.git</developerConnection>
+        <url>http://github.com/eficode/JavaFXLibrary/tree/master</url>
+    </scm>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
@@ -125,7 +180,7 @@
                         <configuration>
                             <libdoc>
                                 <outputFile>${project.artifactId}.html</outputFile>
-                                <libraryOrResourceFile>${project.artifactId}</libraryOrResourceFile>
+                                <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
                                 <version>${project.version}</version>
                             </libdoc>
                         </configuration>
@@ -139,7 +194,7 @@
                         <configuration>
                             <libdoc>
                                 <outputFile>${project.artifactId}.xml</outputFile>
-                                <libraryOrResourceFile>${project.artifactId}</libraryOrResourceFile>
+                                <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
                                 <version>${project.version}</version>
                             </libdoc>
                         </configuration>

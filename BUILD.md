@@ -20,16 +20,15 @@ JavaFXLibrary uses Apache Maven as a build tool.
   mismatches with Google Guava dependencies.  See https://maven.apache.org/plugins/maven-shade-plugin/ for more info.
 
 
-
 ## Releasing
 
 * update library version to x.x.x in pom.xml
 * run tests ``mvn clean verify``
-* copy target/robotframework/libdoc/JavaFXLibrary.html under docs directory
-* ``git commit -m "version to x.x.x" pom.xml docs/JavaFXLibrary.html``
+* copy target/robotframework/libdoc/javafxlibrary.html under docs directory (check that README.md links to correct file)
+* ``git commit -m "version to x.x.x" pom.xml docs/javafxlibrary.html``
 * create tag ``git tag -a x.x.x``
 * push ``git push origin master`` and ``git push origin x.x.x``
-* create a new release and upload the jar file, html documentation and xml file to https://github.com/robotframework/JavaFXLibrary/releases
+* create a new release and upload the jar file, html documentation and xml file to https://github.com/eficode/JavaFXLibrary/releases 
 * upload to Maven Repository (TBD)
 
 ## Announcements

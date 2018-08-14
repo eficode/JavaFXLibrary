@@ -91,7 +91,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
     public String getKeywordDocumentation(String keywordName) {
         if (keywordName.equals("__intro__")) {
             try {
-                return FileUtils.readFileToString(new File("libdoc-documentation.txt"), "utf-8");
+                return FileUtils.readFileToString(new File("./src/main/java/libdoc-documentation.txt"), "utf-8");
             } catch (IOException e) {
                 e.printStackTrace();
                 return "IOException occured while reading the documentation file!";
