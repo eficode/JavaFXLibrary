@@ -4,197 +4,176 @@ import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.service.query.NodeQuery;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static javafxlibrary.utils.TestFxAdapter.robot;
 
 public class Finder {
 
     public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH, PSEUDO }
-    private String[] prefixes;
-    protected Parent currentRoot;
-    private  Parent originalRoot;
-    private Set<Parent> rootNodes;
-    private String originalQuery;
 
-    public Finder() {
-        this.prefixes = new String[]{"id=", "css=", "class=", "text=", "xpath=", "pseudo="};
-        this.currentRoot = robot.listTargetWindows().get(0).getScene().getRoot();
-    }
+    private String[] queries;
+    private Set<Node> results = new LinkedHashSet<>();
 
-    // TODO: Add more debug logging about find status
-    // TODO: Use newFind as default
     public Node find(String query) {
-        if (containsPrefixes(query)) {
-            originalQuery = query;
-            rootNodes = robot.fromAll().queryAll();
-            return newFind(parseWholeQuery(query));
+        // TODO: Remove old style lookup queries
+        // Use TestFX lookup for queries with no prefixes
+        if (!QueryParser.startsWithPrefix(query)) {
+            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+                    "the updated lookup query syntax.");
+            return robot.lookup(query).query();
         }
-        return robot.lookup(query).query();
+
+        List<Window> windows = robot.listTargetWindows();
+        RobotLog.debug("Finding with query \"" + query + "\" from " + windows.size() + " windows");
+
+        for (Window window : windows) {
+            RobotLog.debug("Finding from window " + window);
+            Node result = find(query, window.getScene().getRoot());
+            if (result != null)
+                return result;
+
+        }
+        RobotLog.debug("Find finished, nothing was found with query: " + query);
+        return null;
     }
 
     public Node find(String query, Parent root) {
-        if (containsPrefixes(query)) {
-            this.currentRoot = root;
-            return newFind(parseWholeQuery(query));
+        // TODO: Remove old style lookup queries
+        // Use TestFX lookup for queries with no prefixes
+        if (!QueryParser.startsWithPrefix(query)) {
+            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+                    "the updated lookup query syntax.");
+            return robot.from(root).lookup(query).query();
         }
-        return robot.from(root).lookup(query).query();
+
+        this.queries = QueryParser.getIndividualQueries(query);
+        return find(root, 0);
+    }
+
+    private Node find(Parent root, int queryIndex) {
+        String query = queries[queryIndex];
+
+        if (queryIndex < queries.length - 1) {
+            // lookupResults might be unmodifiable, copy contents to a new Set
+            Set<Node> lookupResults = executeFindAll(root, query);
+            Set<Node> nodes = new LinkedHashSet<>();
+            nodes.addAll(lookupResults);
+            nodes.remove(root);
+
+            for (Node node : nodes) {
+                if (node instanceof Parent) {
+                    Node result = find((Parent) node, queryIndex + 1);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        } else {
+            return executeFind(root, query);
+        }
     }
 
     public Set<Node> findAll(String query) {
-        if (containsPrefixes(query)) {
-            originalQuery = query;
-            originalRoot = this.currentRoot;
-            rootNodes = robot.fromAll().queryAll();
-            Set<Node> allNodes = new HashSet<>();
-            return newFindAll(parseWholeQuery(query), allNodes);
+        // TODO: Remove old style lookup queries
+        // Use TestFX lookup for queries with no prefixes
+        if (!QueryParser.startsWithPrefix(query)) {
+            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+                    "the updated lookup query syntax.");
+            return robot.lookup(query).queryAll();
         }
-        return robot.lookup(query).queryAll();
+
+        List<Window> windows = robot.listTargetWindows();
+        RobotLog.debug("Finding All with query \"" + query + "\" from " + windows.size() + " windows");
+
+        for (Window window : windows) {
+            RobotLog.debug("Finding all from window " + window);
+            findAll(query, window.getScene().getRoot());
+        }
+        return results;
     }
 
     public Set<Node> findAll(String query, Parent root) {
-        RobotLog.debug("Executing Finder.findAll using query: " + query + " and root: " + root);
-        if (containsPrefixes(query)) {
-            this.currentRoot = root;
-            Set<Node> allNodes = new HashSet<>();
-            return newFindAll(parseWholeQuery(query), allNodes);
+        // TODO: Remove old style lookup queries
+        // Use TestFX lookup for queries with no prefixes
+        if (!QueryParser.startsWithPrefix(query)) {
+            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+                    "the updated lookup query syntax.");
+            return robot.from(root).lookup(query).query();
         }
-        return robot.from(root).lookup(query).queryAll();
+
+        this.queries = QueryParser.getIndividualQueries(query);
+        return findAll(root, 0);
     }
 
-    private Node newFind(String query) {
+    private Set<Node> findAll(Parent root, int queryIndex) {
+        String query = queries[queryIndex];
+        Set<Node> lookupResults = executeFindAll(root, query);
+        Set<Node> nodes = new LinkedHashSet<>();
+        nodes.addAll(lookupResults);
+        nodes.remove(root);
+
+        if (queryIndex < queries.length - 1) {
+            for (Node node : nodes)
+                if (node instanceof Parent)
+                    findAll((Parent) node, queryIndex + 1);
+        } else {
+            results.addAll(nodes);
+        }
+
+        return results;
+    }
+
+    private Node executeFind(Parent root, String query) {
+        RobotLog.debug("Executing find with root: " + root + " and query: " + query);
         FindPrefix prefix = getPrefix(query);
-        Node result = executeLookup(query, prefix);
 
-        if (result == null && rootNodes != null && rootNodes.size() > 1) {
-            RobotLog.debug("Could not find anything from " + originalRoot + ", moving to the next root node");
-            rootNodes.remove(originalRoot);
-            originalRoot = rootNodes.iterator().next();
-            currentRoot = originalRoot;
-            result = newFind(parseWholeQuery(originalQuery));
-        }
-
-        return result;
-    }
-
-    private Set<Node> newFindAll(String query, Set<Node> allNodes) {
-        FindPrefix prefix = getPrefix(query);
-        Set<Node> nodes = executeLookupAll(query, prefix);
-        allNodes.addAll(nodes);
-
-        if (rootNodes != null && rootNodes.iterator().hasNext() && rootNodes.size() > 1) {
-            RobotLog.debug("Finished lookup with root " + originalRoot + ", moving to the next root node");
-            rootNodes.remove(originalRoot);
-            originalRoot = rootNodes.iterator().next();
-            currentRoot = originalRoot;
-            RobotLog.debug("Starting another lookup using new root: " + currentRoot);
-            newFindAll(parseWholeQuery(originalQuery), allNodes);
-        }
-        return allNodes;
-    }
-
-    private Node executeLookup(String query, FindPrefix prefix) {
         switch (prefix) {
             case ID:
-                return this.currentRoot.lookup("#" + query.substring(3));
+                return root.lookup("#" + query.substring(3));
             case CSS:
-                return this.currentRoot.lookup(query.substring(4));
+                return root.lookup(query.substring(4));
             case CLASS:
-                return classLookup(query).query();
+                return classLookup(root, query).query();
             case TEXT:
                 query = query.substring(6, query.length() - 1);
-                return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).query();
+                return robot.from(root).lookup(LabeledMatchers.hasText(query)).query();
             case XPATH:
-                return new XPathFinder().find(query.substring(6), currentRoot);
+                return new XPathFinder().find(query.substring(6), root);
             case PSEUDO:
-                return pseudoLookup(query).query();
+                return pseudoLookup(root, query).query();
         }
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
 
-    private Set<Node> executeLookupAll(String query, FindPrefix prefix) {
-        switch (prefix) {
-            case ID:
-                return this.currentRoot.lookupAll("#" + query.substring(3));
-            case CSS:
-                return this.currentRoot.lookupAll(query.substring(4));
-            case CLASS:
-                return classLookup(query).queryAll();
-            case TEXT:
-                query = query.substring(6, query.length() - 1);
-                return robot.from(this.currentRoot).lookup(LabeledMatchers.hasText(query)).queryAll();
-            case XPATH:
-                return new XPathFinder().findAll(query.substring(6), currentRoot);
-            case PSEUDO:
-                return pseudoLookup(query).queryAll();
-        }
-        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
-    }
-
-    // TODO: Add parseWholeQuery for findAll -> this.currentRoot = (Parent) newFind(rootQuery); only looks from a single parent
     // TODO: Add support for using indexes in queries (css=VBox[3]), xPath already implements this
-    private String parseWholeQuery(String query) {
+    private Set<Node> executeFindAll(Parent root, String query) {
+        RobotLog.debug("Executing find all with root: " + root + " and query: " + query);
+        FindPrefix prefix = getPrefix(query);
 
-        while (containsMultiplePrefixes(query)) {
-
-            String[] queryArray = splitQuery(query);
-
-            for (int i = 1; i < queryArray.length; i++) {
-                if (containsPrefixes(queryArray[i])) {
-                    String rootQuery = String.join(" ", Arrays.copyOfRange(queryArray, 0, i ));
-                    RobotLog.debug("Finding next root using query: " + rootQuery);
-                    this.currentRoot = (Parent) newFind(rootQuery);
-                    RobotLog.debug("New root set for find: " + this.currentRoot);
-
-                    // TODO: Continue search if there are roots left in other windows / return values
-                    if (this.currentRoot == null)
-                        throw new JavaFXLibraryNonFatalException("Could not find a Parent node with query: \"" +
-                                rootQuery + "\" to be used as the next root node, quitting find!");
-
-                    String[] remainingQuery = Arrays.copyOfRange(queryArray, i, queryArray.length);
-                    query = String.join(" ", remainingQuery);
-                    break;
-                }
-            }
-
-            /*  Break when the last query has been checked. Without this block query values containing accepted prefixes
-                like xpath=//Rectangle[@id="nodeId"] will cause an infinite loop. */
-            if (queryArray.length == 1)
-                break;
+        switch (prefix) {
+            case ID:
+                return root.lookupAll("#" + query.substring(3));
+            case CSS:
+                return root.lookupAll(query.substring(4));
+            case CLASS:
+                return classLookup(root, query).queryAll();
+            case TEXT:
+                query = query.substring(6, query.length() - 1);
+                return robot.from(root).lookup(LabeledMatchers.hasText(query)).queryAll();
+            case XPATH:
+                return new XPathFinder().findAll(query.substring(6), root);
+            case PSEUDO:
+                return pseudoLookup(root, query).queryAll();
         }
-        return query;
-    }
-
-    protected String[] splitQuery(String query) {
-        // Replace spaces of text values with temporary tag to prevent them interfering with parsing of the query
-        boolean replaceSpaces = false;
-
-        for (int i = 0; i < query.length(); i++) {
-            char current = query.charAt(i);
-
-            if (current == '"')
-                replaceSpaces = !replaceSpaces;
-
-            // Query can have escaped quotation marks in it, skip these
-            if (current == '\\' && query.charAt(i + 1) == '"')
-                query = query.substring(0, i) + "" + query.substring(i + 1);
-
-            if (replaceSpaces && current == ' ')
-                query = query.substring(0, i) + ";javafxlibraryfinderspace;" + query.substring(i + 1);
-        }
-        String [] splittedQuery = query.split(" ");
-
-        for (int i = 0; i < splittedQuery.length; i++)
-            splittedQuery[i] = splittedQuery[i].replace(";javafxlibraryfinderspace;", " ");
-
-        return splittedQuery;
+        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
 
     protected FindPrefix getPrefix(String query) {
@@ -223,28 +202,9 @@ public class Finder {
         }
     }
 
-    // True if starts with known prefix
-    protected boolean containsPrefixes(String query) {
-        for (String prefix : prefixes)
-            if (query.startsWith(prefix))
-                return true;
-
-        return false;
-    }
-
-    // NOTE: Returns true when a single query contains known prefixes, e.g. in xpath=[@id="something"] !
-    protected boolean containsMultiplePrefixes(String query) {
-        String subQuery = query.substring(query.indexOf('='));
-        for (String prefix : prefixes)
-            if (subQuery.contains(prefix))
-                return true;
-
-        return false;
-    }
-
-    private NodeQuery pseudoLookup(String query) {
+    private NodeQuery pseudoLookup(Parent root, String query) {
         String[] queries = query.substring(7).split(";");
-        return robot.from(this.currentRoot).lookup((Node n) -> {
+        return robot.from(root).lookup((Node n) -> {
             int matching = 0;
             ObservableSet<PseudoClass> pseudoStates = n.getPseudoClassStates();
 
@@ -253,15 +213,15 @@ public class Finder {
                     if (c.getPseudoClassName().equals(q))
                         matching++;
 
-            return n != this.currentRoot && (matching == queries.length);
+            return n != root && (matching == queries.length);
         });
     }
 
-    private NodeQuery classLookup(String query) {
+    private NodeQuery classLookup(Parent root, String query) {
         try {
             Class<?> clazz = Class.forName(query.substring(6));
             InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
-            return robot.from(this.currentRoot).lookup(matcher);
+            return robot.from(root).lookup(matcher);
         } catch (ClassNotFoundException e) {
             throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
                     "Node lookup: class was not found");

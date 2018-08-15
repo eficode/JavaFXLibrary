@@ -14,13 +14,13 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.testfx.api.FxRobot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FinderTest extends TestFxAdapterTest {
 
     private Finder finder;
     @Mocked Stage stage;
-    @Mocked List<Window> windows;
     @Mocked VBox root;
 
     @Rule
@@ -28,14 +28,6 @@ public class FinderTest extends TestFxAdapterTest {
 
     @Before
     public void setup() {
-        new Expectations() {
-            {
-                getRobot().listTargetWindows(); result = windows;
-                windows.get(0); result = stage;
-                stage.getScene().getRoot(); result = root;
-            }
-        };
-
         finder = new Finder();
     }
 
@@ -53,9 +45,13 @@ public class FinderTest extends TestFxAdapterTest {
         hBox.setId("testNode");
         hBox.getChildren().add(group);
 
+        List<Window> windows = new ArrayList<>();
+        windows.add(stage);
         new Expectations() {
             {
-                root.lookup((String) any); result = hBox;
+                getRobot().listTargetWindows(); result = windows;
+                stage.getScene().getRoot(); result = root;
+                root.lookupAll((String) any); result = hBox;
             }
         };
         Node result = finder.find("id=testNode css=.test.orangeBG .sub=group css=.anotherClass");
@@ -85,31 +81,6 @@ public class FinderTest extends TestFxAdapterTest {
     }
 
     @Test
-    public void containsPrefixes_AcceptedValues() {
-        Assert.assertTrue(finder.containsPrefixes("css=.Vbox .button"));
-        Assert.assertTrue(finder.containsPrefixes("id=testNode"));
-        Assert.assertTrue(finder.containsPrefixes("class=java.lang.String"));
-        Assert.assertTrue(finder.containsPrefixes("xpath=//Rectangle"));
-        Assert.assertTrue(finder.containsPrefixes("pseudo=hover"));
-        Assert.assertTrue(finder.containsPrefixes("text=\"Text\""));
-    }
-
-    @Test
-    public void containsPrefixes_InvalidValue() {
-        Assert.assertFalse(finder.containsPrefixes("invalid=should be false"));
-    }
-
-    @Test
-    public void containsMultiplePrefixes_Contains() {
-        Assert.assertTrue(finder.containsMultiplePrefixes("css=VBox xpath=[@id=\"special\"]"));
-    }
-
-    @Test
-    public void containsMultiplePrefixes_DoesNotContain() {
-        Assert.assertFalse(finder.containsMultiplePrefixes("id=wrapper"));
-    }
-
-    @Test
     public void getPrefix_AcceptedValues() {
         Assert.assertEquals(Finder.FindPrefix.ID, finder.getPrefix("id=nodeId"));
         Assert.assertEquals(Finder.FindPrefix.CLASS, finder.getPrefix("class=java.lang.String"));
@@ -132,21 +103,4 @@ public class FinderTest extends TestFxAdapterTest {
         thrown.expectMessage("Query \"notaprefix=someValue\" does not contain any supported prefix");
         finder.getPrefix("notaprefix=someValue");
     }
-
-    @Test
-    public void splitQuery_WithSpaces() {
-        String[] result = finder.splitQuery("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" id=sub");
-        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "id=sub" };
-        Assert.assertArrayEquals(target, result);
-    }
-
-    @Test
-    public void splitQuery_WithQuotes() {
-        String[] result = finder.splitQuery("text=\"Teemu \\\"The Finnish Flash\\\" Selanne\"");
-        String[] target = { "text=\"Teemu \"The Finnish Flash\" Selanne\"" };
-        Assert.assertArrayEquals(target, result);
-    }
-
-
-
 }

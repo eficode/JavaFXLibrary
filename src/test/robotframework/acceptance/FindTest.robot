@@ -90,11 +90,17 @@ Find All With CSS query
     Length Should Be    ${nodes2}       3
     Length Should Be    ${nodes3}       2
 
+Find All With Class
+    [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
+    ${nodes}            Find All        class=javafx.scene.shape.Rectangle
+    Length Should Be    ${nodes}        10
+
 Find All With Chained Selectors
     [Tags]              smoke
     Set Test App        ${BOUNDS_APP}
-    @{nodes1}           Find All        css=VBox HBox xpath=//Rectangle
-    @{nodes2}           Find All        css=VBox HBox xpath=//Rectangle[@width="75.0"]
+    @{nodes1}           Find All        css=VBox HBox VBox xpath=//Rectangle
+    @{nodes2}           Find All        css=VBox HBox StackPane xpath=//Rectangle[@width="75.0"]
     Length Should Be    ${nodes1}       6
     Length Should Be    ${nodes2}       4
 
@@ -208,17 +214,14 @@ Find All From Multiple Windows
 Find All From Multiple Windows Using Chained Selector
     [Tags]              smoke
     Set Test App        ${WINDOW_APP}
-    ${nodes}            Find All    css=HBox css=.label
+    ${nodes}            Find All        css=HBox css=.label
     Length Should Be    ${nodes}        3
 
 Find All From Multiple Windows Containing Multiple Matches Using Chained Selector
-    [Tags]              not-ready    bug
+    [Tags]              smoke
     Set Test App        ${FINDER_APP}
-    # TODO: Nodes should contain ALL matching nodes from every window, fix the recursion in Finder!
-    ${nodes}            Find All    css=VBox css=HBox css=.button
-
-    :FOR    ${node}    IN    @{nodes}
-    \    LOG    ${node}
+    ${nodes}            Find All        css=VBox css=HBox css=.button
+    Length Should Be    ${nodes}        24
 
 *** Keywords ***
 Set Test App
