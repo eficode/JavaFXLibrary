@@ -29,7 +29,36 @@ JavaFXLibrary uses Apache Maven as a build tool.
 * create tag ``git tag -a x.x.x``
 * push ``git push origin master`` and ``git push origin x.x.x``
 * create a new release and upload the jar file, html documentation and xml file to https://github.com/eficode/JavaFXLibrary/releases 
-* upload to Maven Repository (TBD)
+* upload to Maven Repository (uses release profile)
+  * In your .m2/settings.xml
+  ````
+  <settings>
+   <servers>
+      <server>
+          <id>ossrh</id>
+          <username>sonatype username</username>
+          <password>sonatype password</password>
+      </server>
+      <server>
+        <id>key id from gpg --list-keys</id>
+        <passphrase>passphrase for the key</passphrase>
+      </server>
+   </servers>
+   <profiles>
+      <profile>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <gpg.keyname>key id from gpg --list-keys</gpg.keyname>
+        </properties>
+      </profile>
+    </profiles>
+  </settings>
+  ````
+  * ``mvn clean deploy -P release``
+  * snapshots can be found from https://oss.sonatype.org/content/repositories/snapshots/org/robotframework/javafxlibrary/
+  * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field.
 
 ## Announcements
 
