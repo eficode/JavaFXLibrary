@@ -30,6 +30,7 @@ JavaFXLibrary uses Apache Maven as a build tool.
 * push ``git push origin master`` and ``git push origin x.x.x``
 * create a new release and upload the jar file, html documentation and xml file to https://github.com/eficode/JavaFXLibrary/releases 
 * upload to Maven Repository (uses release profile)
+  * Create pgp key if not already: https://central.sonatype.org/pages/working-with-pgp-signatures.html
   * In your .m2/settings.xml
   ````
   <settings>
@@ -56,7 +57,7 @@ JavaFXLibrary uses Apache Maven as a build tool.
     </profiles>
   </settings>
   ````
-  * ``mvn clean deploy -P release``
+  * Release snapshot or actual release (depending what is in version tag in pom.xml)``mvn clean deploy -P release``
   * snapshots can be found from https://oss.sonatype.org/content/repositories/snapshots/org/robotframework/javafxlibrary/
   * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field.
 
