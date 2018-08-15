@@ -90,7 +90,7 @@ public class HelperFunctions {
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("waitUntilExist failed: " + e);
+            throw new JavaFXLibraryNonFatalException("waitUntilExist failed: ", e);
         }
     }
 
@@ -150,7 +150,7 @@ public class HelperFunctions {
         if (object != null) {
             if (isCompatible(object))
                 return object;
-            String key = object.hashCode() + object.toString();
+            String key = (object.hashCode() + object.toString()).replaceAll("\r", "").replaceAll("\n", "");
             objectMap.put(key, object);
             return key;
         }
