@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.ProgressBarMatchers;
+import javafxlibrary.utils.finder.Finder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.maven.model.Model;
@@ -563,7 +564,7 @@ public class HelperFunctions {
     }
 
 
-    // Deprecated: Use javafxlibrary.utils.Finder instead
+    // Deprecated: Use javafxlibrary.utils.finder.finder instead
     @Deprecated
     public static Node findNode(Node node, String query) {
 
@@ -605,7 +606,7 @@ public class HelperFunctions {
         }
     }
 
-    // Deprecated: Use javafxlibrary.utils.Finder instead
+    // Deprecated: Use javafxlibrary.utils.finder.finder instead
     @Deprecated
     public static Node findNode(String query) {
         return findNode(robot.listTargetWindows().get(0).getScene().getRoot(), query);

@@ -2,7 +2,7 @@ package javafxlibrary.keywords.AdditionalKeywords;
 
 import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.Finder;
+import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.RobotLog;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;

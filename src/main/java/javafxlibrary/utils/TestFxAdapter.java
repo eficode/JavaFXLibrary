@@ -33,6 +33,7 @@ public class TestFxAdapter {
     public static void setRobot(FxRobotInterface robot) {
         TestFxAdapter.robot = robot;
     }
+    public static FxRobotInterface getRobot() { return robot; }
 
     // current robot context
     protected static FxRobotContext robotContext;

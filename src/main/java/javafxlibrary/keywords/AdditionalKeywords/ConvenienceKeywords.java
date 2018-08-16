@@ -39,7 +39,7 @@ import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
-import javafxlibrary.utils.XPathFinder;
+import javafxlibrary.utils.finder.XPathFinder;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
@@ -57,7 +57,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @Deprecated
     @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n" +
-            "Finder that mimics _xpath_ style search.\n\n"
+            "finder that mimics _xpath_ style search.\n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"

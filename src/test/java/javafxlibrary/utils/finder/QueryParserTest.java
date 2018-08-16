@@ -1,4 +1,4 @@
-package javafxlibrary.utils;
+package javafxlibrary.utils.finder;
 
 import org.junit.Assert;
 import org.junit.Test;

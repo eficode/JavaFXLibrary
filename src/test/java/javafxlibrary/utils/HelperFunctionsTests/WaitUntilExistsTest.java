@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.Finder;
+import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.*;
 import org.junit.*;

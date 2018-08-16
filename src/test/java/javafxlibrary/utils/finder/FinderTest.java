@@ -1,4 +1,4 @@
-package javafxlibrary.utils;
+package javafxlibrary.utils.finder;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.TestFxAdapterTest;
+import javafxlibrary.utils.TestFxAdapter;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.*;
@@ -69,6 +70,7 @@ public class FinderTest extends TestFxAdapterTest {
         // Use a real FxRobot instance for this test
         FxRobot robot = new FxRobot();
         TestFxAdapter.setRobot(robot);
+        finder = new Finder();
 
         new Expectations() {
             {

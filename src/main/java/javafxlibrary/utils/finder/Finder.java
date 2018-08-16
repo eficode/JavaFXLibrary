@@ -1,4 +1,4 @@
-package javafxlibrary.utils;
+package javafxlibrary.utils.finder;
 
 import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
@@ -7,12 +7,15 @@ import javafx.scene.Parent;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
+import javafxlibrary.utils.RobotLog;
+import javafxlibrary.utils.TestFxAdapter;
+import org.testfx.api.FxRobotInterface;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.service.query.NodeQuery;
 
 import java.util.*;
 
-import static javafxlibrary.utils.TestFxAdapter.robot;
+// import static javafxlibrary.utils.TestFxAdapter.robot;
 
 public class Finder {
 
@@ -20,6 +23,11 @@ public class Finder {
 
     private String[] queries;
     private Set<Node> results = new LinkedHashSet<>();
+    private FxRobotInterface robot;
+
+    public Finder() {
+        this.robot = TestFxAdapter.getRobot();
+    }
 
     public Node find(String query) {
         // TODO: Remove old style lookup queries
