@@ -17,61 +17,60 @@ ${B_DECORATION_HEIGHT}      ${EMPTY}
 
 *** Test Cases ***
 Move By
-    [Tags]                  smoke    demo-set
-    Move By                 75    75
-    Verify String           \#locationLabel     75 | 75
+    [Tags]                  smoke                   demo-set
+    Move By                 75                      75
+    Verify String           id=locationLabel        75 | 75
 
 Move To Coordinates
-    [Tags]                  smoke    demo-set
-    ${X}                    Evaluate    ${SCENE_MINX} + ${200}
-    ${Y}                    Evaluate    ${SCENE_MINY} + ${200}
-    Move To Coordinates     ${X}    ${Y}
-    Verify String           \#locationLabel    200 | 200
-
+    [Tags]                  smoke                           demo-set
+    ${X}                    Evaluate                        ${SCENE_MINX} + ${200}
+    ${Y}                    Evaluate                        ${SCENE_MINY} + ${200}
+    Move To Coordinates     ${X}                            ${Y}
+    Verify String           id=locationLabel                200 | 200
     ${MSG}                  Run Keyword And Expect Error    *    Move To Coordinates     ${X}    ${Y}    NotValidMotion
-    Should Contain          ${MSG}    "NotValidMotion" is not a valid Motion. Accepted values are:
+    Should Contain          ${MSG}                          "NotValidMotion" is not a valid Motion. Accepted values are:
 
 Move To Query
-    [Tags]                  smoke    demo-set
-    Move To                 \#rectangle
-    Verify String           \#locationLabel    25 | 475
+    [Tags]                  smoke               demo-set
+    Move To                 id=rectangle
+    Verify String           id=locationLabel    25 | 475
 
 Move To XPath Query
     [Tags]                  smoke
     Move To                 xpath=//Rectangle[@id="rectangle"]
-    Verify String           \#locationLabel    25 | 475
+    Verify String           id=locationLabel    25 | 475
 
 Move To ID Query
     [Tags]                  smoke
     Move To                 id=rectangle
-    Verify String           \#locationLabel    25 | 475
+    Verify String           id=locationLabel    25 | 475
 
 Move To Point Query
     [Tags]                  smoke
-    ${POINTQUERY}           Point To            \#rectangle
+    ${POINTQUERY}           Point To            id=rectangle
     Move To                 ${POINTQUERY}
-    Verify String           \#locationLabel     25 | 475
+    Verify String           id=locationLabel    25 | 475
 
 Move To Point
     [Tags]                  smoke
-    ${X}                    Evaluate    ${400} + ${SCENE_MINX}
-    ${Y}                    Evaluate    ${150} + ${SCENE_MINY}
-    ${POINT}                Create Point    ${X}    ${Y}
+    ${X}                    Evaluate            ${400} + ${SCENE_MINX}
+    ${Y}                    Evaluate            ${150} + ${SCENE_MINY}
+    ${POINT}                Create Point        ${X}    ${Y}
     Move To                 ${POINT}
-    Verify String           \#locationLabel    400 | 150
+    Verify String           id=locationLabel    400 | 150
 
 Move To Bounds
     [Tags]                  smoke
-    ${NODE}                 Find                \#rectangle
+    ${NODE}                 Find                id=rectangle
     ${BOUNDS}               Get Bounds          ${NODE}
     Move To                 ${BOUNDS}
-    Verify String           \#locationLabel     25 | 475
+    Verify String           id=locationLabel    25 | 475
 
 Move To Scene
     [Tags]                  smoke
-    ${SCENE}                Get Nodes Scene    \#rectangle
+    ${SCENE}                Get Scene           id=rectangle
     Move To                 ${SCENE}
-    Verify String           \#locationLabel    250 | 250
+    Verify String           id=locationLabel    250 | 250
 
 Move To Window
     [Tags]                  smoke
@@ -83,7 +82,7 @@ Move To Window
     ${Y}                    Evaluate                ${250} - ${HEIGHT_OFFSET}
     ${X}                    Convert To Integer      ${X}
     ${Y}                    Convert To Integer      ${Y}
-    Verify String           \#locationLabel         ${X} | ${Y}
+    Verify String           id=locationLabel        ${X} | ${Y}
 
 *** Keywords ***
 Setup all tests
@@ -100,40 +99,40 @@ Move To Top Left Corner
 
 Get Left Decoration Width
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WIDTH}                Call Object Method    ${SCENE}    getX
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Scene               ${ROOT}
+    ${WIDTH}                Call Object Method      ${SCENE}    getX
     [Return]                ${WIDTH}
 
 Get Right Decoration Width
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WINDOWWIDTH}          Call Object Method    ${WINDOW}    getWidth
-    ${SCENEX}               Call Object Method    ${SCENE}    getX
-    ${SCENEWIDTH}           Call Object Method    ${SCENE}    getWidth
-    ${DECOWIDTH}            Evaluate    ${WINDOWWIDTH} - ${SCENEWIDTH} - ${SCENEX}
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Scene               ${ROOT}
+    ${WINDOWWIDTH}          Call Object Method      ${WINDOW}       getWidth
+    ${SCENEX}               Call Object Method      ${SCENE}        getX
+    ${SCENEWIDTH}           Call Object Method      ${SCENE}        getWidth
+    ${DECOWIDTH}            Evaluate                ${WINDOWWIDTH} - ${SCENEWIDTH} - ${SCENEX}
     [Return]                ${DECOWIDTH}
 
 Get Top Decoration Height
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${HEIGHT}               Call Object Method    ${SCENE}    getY
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Scene               ${ROOT}
+    ${HEIGHT}               Call Object Method      ${SCENE}        getY
     [Return]                ${HEIGHT}
 
 Get Bottom Decoration Height
     [Arguments]             ${WINDOW}
-    ${ROOT}                 Get Root Node Of    ${WINDOW}
-    ${SCENE}                Get Nodes Scene     ${ROOT}
-    ${WINDOWHEIGHT}         Call Object Method    ${WINDOW}    getHeight
-    ${SCENEY}               Call Object Method    ${SCENE}    getY
-    ${SCENEHEIGHT}          Call Object Method    ${SCENE}    getHeight
-    ${DECOHEIGHT}           Evaluate    ${WINDOWHEIGHT} - ${SCENEHEIGHT} - ${SCENEY}
+    ${ROOT}                 Get Root Node Of        ${WINDOW}
+    ${SCENE}                Get Scene               ${ROOT}
+    ${WINDOWHEIGHT}         Call Object Method      ${WINDOW}       getHeight
+    ${SCENEY}               Call Object Method      ${SCENE}        getY
+    ${SCENEHEIGHT}          Call Object Method      ${SCENE}        getHeight
+    ${DECOHEIGHT}           Evaluate                ${WINDOWHEIGHT} - ${SCENEHEIGHT} - ${SCENEY}
     [Return]                ${DECOHEIGHT}
 
 Set Scene Bounds Values
-    ${SCENE}                Get Nodes Scene                 \#rectangle
+    ${SCENE}                Get Scene                       id=rectangle
     ${BOUNDS}               Get Bounds                      ${SCENE}
     ${MIN_X}                Call Object Method              ${BOUNDS}    getMinX
     ${MIN_Y}                Call Object Method              ${BOUNDS}    getMinY
@@ -154,8 +153,8 @@ Set Decoration Values
     Set Suite Variable      ${B_DECORATION_HEIGHT}          ${BOTTOM_HEIGHT}
     
 Verify String
-    [Documentation]    Verifies that string is equal in location
-    [Arguments]                   ${query}          ${string}
-    ${target_node}=               Find              ${query}
-    ${text_label}=                Get Node Text     ${target_node}
-    Should Be Equal As Strings    ${string}         ${text_label}
+    [Documentation]                 Verifies that string is equal in location
+    [Arguments]                     ${query}          ${string}
+    ${target_node}                  Find              ${query}
+    ${text_label}                   Get Node Text     ${target_node}
+    Should Be Equal As Strings      ${string}         ${text_label}

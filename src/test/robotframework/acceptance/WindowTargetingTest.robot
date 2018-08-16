@@ -11,17 +11,17 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestMultipleWindows
 *** Test Cases ***
 Target Window By Window
     [Tags]                  smoke
-    ${TARGET}               Get Window    Second window
+    ${TARGET}               Get Window      Second window
     Set Target Window       ${TARGET}
     ${WINDOW}               Get Target Window
-    Should Be Equal         ${TARGET}    ${WINDOW}    msg=Were not able to set target window according to target window!
+    Should Be Equal         ${TARGET}       ${WINDOW}    msg=Were not able to set target window according to target window!
 
 Target Window By Window Index
     [Tags]                  smoke
-    ${TARGET}               Get Window    1
+    ${TARGET}               Get Window      1
     Set Target Window       1
     ${WINDOW}               Get Target Window
-    Should Be Equal         ${TARGET}    ${WINDOW}    msg=Were not able to set target window according to target window index!
+    Should Be Equal         ${TARGET}       ${WINDOW}    msg=Were not able to set target window according to target window index!
 
 Target Window By Title
     [Tags]                  smoke
@@ -39,19 +39,19 @@ Target Window By Title Pattern
 
 Target Window By Scene
     [Tags]                  smoke
-    ${TARGET}               Get Window           Second window
-    ${SCENE}                Get Nodes Scene      \#secondWindowAnchorPane
+    ${TARGET}               Get Window          Second window
+    ${SCENE}                Get Scene           id=secondWindowAnchorPane
     Set Target Window       ${SCENE}
     ${WINDOW}               Get Target Window
-    Should Be Equal         ${TARGET}            ${WINDOW}    msg=Were not able to set target window according to target window scene!
+    Should Be Equal         ${TARGET}           ${WINDOW}    msg=Were not able to set target window according to target window scene!
 
 Target Window By Node
     [Tags]                  smoke
-    ${TARGET}               Get Window            Third window
-    ${NODE}                 Find                  \#thirdWindowLabel
+    ${TARGET}               Get Window          Third window
+    ${NODE}                 Find                id=thirdWindowLabel
     Set Target Window       ${NODE}
     ${WINDOW}               Get Target Window
-    Should Be Equal         ${TARGET}             ${WINDOW}    msg=Were not able to set target window according to target window node!
+    Should Be Equal         ${TARGET}           ${WINDOW}    msg=Were not able to set target window according to target window node!
 
 *** Keywords ***
 Setup all tests

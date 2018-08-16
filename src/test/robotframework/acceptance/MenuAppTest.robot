@@ -11,75 +11,74 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.MenuApp
 *** Test Cases ***
 Select Context Menu Item
     [Tags]          smoke
-    ${menuitems}    Create List                 JavaFXLibrary    Is easy    And fun to use
-    ${location}     Point To With Offset        \#bgRectangle    -300       0
+    ${menuitems}    Create List                 JavaFXLibrary       Is easy    And fun to use
+    ${location}     Point To With Offset        id=bgRectangle      -300       0
     :FOR            ${menuitem}    IN           @{menuitems}
     \               Right Click On              ${location}
     \               Select Context Menu Item    ${menuitem}
-    \               Verify String               .textLabel       ${menuitem}
+    \               Verify String               css=.textLabel      ${menuitem}
 
 Select Context Menu Item Using Click On Keyword
-    [Tags]          smoke    demo-set
-    ${menuitems}    Create List                 JavaFXLibrary    Is easy    And fun to use
-    ${location}     Point To With Offset        \#bgRectangle    -300       0
+    [Tags]          smoke                       demo-set
+    ${menuitems}    Create List                 JavaFXLibrary       Is easy    And fun to use
+    ${location}     Point To With Offset        id=bgRectangle      -300       0
     :FOR            ${menuitem}    IN           @{menuitems}
     \               Right Click On              ${location}
-    \               Click On                    ${menuitem}
-    \               Verify String               .textLabel       ${menuitem}
+    \               Click On                    text="${menuitem}"
+    \               Verify String               css=.textLabel      ${menuitem}
 
 Menus - Navigate
-    [Tags]                  smoke    demo-set
-    Click On                Learn
-    Click On                Test Automation & Robot Framework
-    Verify String           .textLabel    Test Automation & Robot Framework
+    [Tags]                  smoke                   demo-set
+    Click On                text="Learn"
+    Click On                text="Test Automation & Robot Framework"
+    Verify String           css=.textLabel          Test Automation & Robot Framework
 
 Use ComboBoxes With Text Values
-    [Tags]                  smoke    demo-set
-    Click On                Select amount
-    Click On                50 pc
-    Click On                Select price
-    Click On                75 €
-    Verify String           \#total     3750 €
+    [Tags]                  smoke                   demo-set
+    Click On                text="Select amount"
+    Click On                text="50 pc"
+    Click On                text="Select price"
+    Click On                text="75 €"
+    Verify String           id=total                3750 €
 
 Menus - Change Theme
-    [Tags]                  smoke    demo-set
-    Click On                Settings
-    Click On                Theme
-    Click On                JavaFX               HORIZONTAL_FIRST
-    ${SCENE}                Get Nodes Scene      .textLabel
-    @{STYLESHEET}           Call Object Method   ${SCENE}        getStylesheets
-    Should Contain          @{STYLESHEET}[0]     Javastyle.css
+    [Tags]                  smoke                   demo-set
+    Click On                text="Settings"
+    Click On                text="Theme"
+    Click On                text="JavaFX"           HORIZONTAL_FIRST
+    ${SCENE}                Get Scene               css=.textLabel
+    @{STYLESHEET}           Call Object Method      ${SCENE}            getStylesheets
+    Should Contain          @{STYLESHEET}[0]        Javastyle.css
 
 Menus - Change Font Size
-    [Tags]                  smoke    demo-set
-    Click On                Settings
-    Move To                 Font size
-    Click On                26px                 HORIZONTAL_FIRST
-    ${LABEL}                Find                 \.textLabel
-    ${STYLE}                Call Object Method   ${LABEL}            getStyle
-    Should Contain          ${STYLE}             -fx-font-size: 26px
+    [Tags]                  smoke                   demo-set
+    Click On                text="Settings"
+    Move To                 text="Font size"
+    Click On                text="26px"             HORIZONTAL_FIRST
+    ${LABEL}                Find                    css=.textLabel
+    ${STYLE}                Call Object Method      ${LABEL}            getStyle
+    Should Contain          ${STYLE}                -fx-font-size: 26px
 
 Combined
-    [Tags]                  smoke    demo-set
-    Click On                Settings
-    Move To                 Theme
+    [Tags]                  smoke                   demo-set
+    Click On                text="Settings"
+    Move To                 text="Theme"
     # Horizontal first is required because submenu closes if the cursor moves outside of menu bounds
-    Click On                Gradient              HORIZONTAL_FIRST
-    ${SCENE}                Get Nodes Scene       .textLabel
-    @{STYLESHEET}           Call Object Method    ${SCENE}    getStylesheets
-    Should Contain          @{STYLESHEET}[0]      Gradientstyle.css
-
-    Click On                Services
-    Click On                Analyze
-    Verify String          .textLabel          Analyze
+    Click On                text="Gradient"         HORIZONTAL_FIRST
+    ${SCENE}                Get Scene               css=.textLabel
+    @{STYLESHEET}           Call Object Method      ${SCENE}            getStylesheets
+    Should Contain          @{STYLESHEET}[0]        Gradientstyle.css
+    Click On                text="Services"
+    Click On                text="Analyze"
+    Verify String           css=.textLabel          Analyze
 
     # Using Find All instead of text-value based css-selector here to avoid dependencies with the second test case
-    @{COMBOBOXES}           Find All            .combo-box
+    @{COMBOBOXES}           Find All                css=.combo-box
     Click On                @{COMBOBOXES}[0]
-    Click On                25 pc
+    Click On                text="25 pc"
     Click On                @{COMBOBOXES}[1]
-    Click On                50 €
-    Verify String           \#total             1250 €
+    Click On                text="50 €"
+    Verify String           id=total                1250 €
 
 *** Keywords ***
 Setup all tests

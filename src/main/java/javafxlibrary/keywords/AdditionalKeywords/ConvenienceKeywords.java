@@ -156,7 +156,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* descendant nodes of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
@@ -195,7 +195,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED!!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``pseudo`` is a String value specifying pseudo class value.\n\n"

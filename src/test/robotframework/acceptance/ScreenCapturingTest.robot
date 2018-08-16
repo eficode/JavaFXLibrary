@@ -12,25 +12,25 @@ ${COMPARISON}           src/main/resources/screencapturing/comparison/
 *** Test Cases ***
 Capture Node
     [Tags]                      smoke
-    ${NODE}                     Find            \#subRectangles
+    ${NODE}                     Find            id=subRectangles
     ${RESULT}                   Capture Image   ${NODE}
     ${TARGET}                   Load Image      ${COMPARISON}bounds.png
     Images Should Match         ${RESULT}       ${TARGET}    ${99}
 
 Capture Screen Region
     [Tags]                      smoke
-    ${NODE}                     Find                            .root
-    ${BOUNDS}                   Get Bounds                      ${NODE}
-    ${MINX}                     Call Object Method              ${BOUNDS}    getMinX
-    ${MINY}                     Call Object Method              ${BOUNDS}    getMinY
-    ${RECTANGLE}                Create Rectangle                ${MINX}      ${MINY}    240    240
-    ${IMAGE1}                   Capture Image                   ${RECTANGLE}
-    ${IMAGE2}                   Load Image                      ${COMPARISON}screen_region.png
-    Images Should Match         ${IMAGE1}                       ${IMAGE2}          ${99}
+    ${NODE}                     Find                    css=.root
+    ${BOUNDS}                   Get Bounds              ${NODE}
+    ${MINX}                     Call Object Method      ${BOUNDS}       getMinX
+    ${MINY}                     Call Object Method      ${BOUNDS}       getMinY
+    ${RECTANGLE}                Create Rectangle        ${MINX}         ${MINY}    240    240
+    ${IMAGE1}                   Capture Image           ${RECTANGLE}
+    ${IMAGE2}                   Load Image              ${COMPARISON}screen_region.png
+    Images Should Match         ${IMAGE1}               ${IMAGE2}       ${99}
 
 Capture Bounds
     [Tags]                      smoke
-    ${SCENE}                    Get Nodes Scene         \#rectangleContainer
+    ${SCENE}                    Get Scene               id=rectangleContainer
     ${SCENE_BOUNDS}             Get Bounds              ${SCENE}
     ${SCENE_MINX}               Call Object Method      ${SCENE_BOUNDS}    getMinX
     ${SCENE_MINY}               Call Object Method      ${SCENE_BOUNDS}    getMinY
@@ -48,11 +48,11 @@ Load Image From URL
 
 Save And Load Image With Path
     [Tags]          smoke
-    ${NODE}=        Find            \#rectangleContainer
-    ${IMAGE1}=      Capture Image   ${NODE}
+    ${NODE}         Find            id=rectangleContainer
+    ${IMAGE1}       Capture Image   ${NODE}
     Save Image As   ${IMAGE1}       ${TEMPDIR}${/}image.png
     Log             <img src="${TEMPDIR}${/}image.png" widht="800">   html=true
-    ${IMAGE2}=      Load Image      ${TEMPDIR}${/}image.png
+    ${IMAGE2}       Load Image      ${TEMPDIR}${/}image.png
     Images Should Match             ${IMAGE1}       ${IMAGE2}
 
 Images Should Match
