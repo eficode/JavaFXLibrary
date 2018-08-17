@@ -1,9 +1,14 @@
 package javafxlibrary.utils.finder;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class QueryParserTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void startsWithPrefix_AcceptedValues() {
@@ -32,5 +37,29 @@ public class QueryParserTest {
         String[] result = QueryParser.getIndividualQueries("text=\"Teemu \\\"The Finnish Flash\\\" Selanne\"");
         String[] target = { "text=\"Teemu \"The Finnish Flash\" Selanne\"" };
         Assert.assertArrayEquals(target, result);
+    }
+
+    @Test
+    public void getPrefix_AcceptedValues() {
+        Assert.assertEquals(FindPrefix.ID, QueryParser.getPrefix("id=nodeId"));
+        Assert.assertEquals(FindPrefix.CLASS, QueryParser.getPrefix("class=java.lang.String"));
+        Assert.assertEquals(FindPrefix.CSS, QueryParser.getPrefix("css=.vBox .hBox"));
+        Assert.assertEquals(FindPrefix.XPATH, QueryParser.getPrefix("xpath=//Rectangle[@id=\"lime\"]"));
+        Assert.assertEquals(FindPrefix.PSEUDO, QueryParser.getPrefix("pseudo=hover"));
+        Assert.assertEquals(FindPrefix.TEXT, QueryParser.getPrefix("text=\"Text\""));
+    }
+
+    @Test
+    public void getPrefix_NoEquals() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Query \"noEquals\" does not contain any supported prefix");
+        QueryParser.getPrefix("noEquals");
+    }
+
+    @Test
+    public void getPrefix_InvalidValue() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Query \"notaprefix=someValue\" does not contain any supported prefix");
+        QueryParser.getPrefix("notaprefix=someValue");
     }
 }

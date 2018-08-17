@@ -1,3 +1,20 @@
+/*
+ * Copyright 2017-2018   Eficode Oy
+ * Copyright 2018-       Robot Framework Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package javafxlibrary.utils.finder;
 
 import java.util.ArrayList;
@@ -60,5 +77,48 @@ public class QueryParser {
             if (query.startsWith(prefix))
                 return true;
         return false;
+    }
+
+    protected static FindPrefix getPrefix(String query) {
+
+        try {
+            String prefix = query.substring(0, query.indexOf('='));
+
+            switch (prefix) {
+                case "id":
+                    return FindPrefix.ID;
+                case "css":
+                    return FindPrefix.CSS;
+                case "class":
+                    return FindPrefix.CLASS;
+                case "text":
+                    return FindPrefix.TEXT;
+                case "xpath":
+                    return FindPrefix.XPATH;
+                case "pseudo":
+                    return FindPrefix.PSEUDO;
+                default:
+                    throw new IllegalArgumentException("Query \"" + query + "\" does not contain any supported prefix");
+            }
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Query \"" + query + "\" does not contain any supported prefix");
+        }
+    }
+
+    protected static String removePrefix(String query, FindPrefix prefix) {
+        switch (prefix) {
+            case ID:
+                return "#" + query.substring(3);
+            case CSS:
+                return query.substring(4);
+            case CLASS:
+            case XPATH:
+                return query.substring(6);
+            case TEXT:
+                return query.substring(6, query.length() - 1);
+            case PSEUDO:
+                return query.substring(7);
+        }
+        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
     }
 }

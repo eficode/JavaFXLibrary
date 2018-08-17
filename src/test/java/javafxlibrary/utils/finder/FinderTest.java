@@ -81,28 +81,4 @@ public class FinderTest extends TestFxAdapterTest {
         Node result = finder.find(".button", group);
         Assert.assertEquals(button, result);
     }
-
-    @Test
-    public void getPrefix_AcceptedValues() {
-        Assert.assertEquals(Finder.FindPrefix.ID, finder.getPrefix("id=nodeId"));
-        Assert.assertEquals(Finder.FindPrefix.CLASS, finder.getPrefix("class=java.lang.String"));
-        Assert.assertEquals(Finder.FindPrefix.CSS, finder.getPrefix("css=.vBox .hBox"));
-        Assert.assertEquals(Finder.FindPrefix.XPATH, finder.getPrefix("xpath=//Rectangle[@id=\"lime\"]"));
-        Assert.assertEquals(Finder.FindPrefix.PSEUDO, finder.getPrefix("pseudo=hover"));
-        Assert.assertEquals(Finder.FindPrefix.TEXT, finder.getPrefix("text=\"Text\""));
-    }
-
-    @Test
-    public void getPrefix_NoEquals() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Query \"noEquals\" does not contain any supported prefix");
-        finder.getPrefix("noEquals");
-    }
-
-    @Test
-    public void getPrefix_InvalidValue() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Query \"notaprefix=someValue\" does not contain any supported prefix");
-        finder.getPrefix("notaprefix=someValue");
-    }
 }

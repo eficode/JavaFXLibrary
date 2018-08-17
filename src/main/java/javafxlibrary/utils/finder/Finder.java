@@ -1,25 +1,32 @@
+/*
+ * Copyright 2017-2018   Eficode Oy
+ * Copyright 2018-       Robot Framework Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package javafxlibrary.utils.finder;
 
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.stage.Window;
-import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.matcher.control.LabeledMatchers;
-import org.testfx.service.query.NodeQuery;
 
 import java.util.*;
 
-// import static javafxlibrary.utils.TestFxAdapter.robot;
-
 public class Finder {
-
-    public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH, PSEUDO }
 
     private String[] queries;
     private Set<Node> results = new LinkedHashSet<>();
@@ -141,98 +148,14 @@ public class Finder {
 
     private Node executeFind(Parent root, String query) {
         RobotLog.debug("Executing find with root: " + root + " and query: " + query);
-        FindPrefix prefix = getPrefix(query);
-
-        switch (prefix) {
-            case ID:
-                return root.lookup("#" + query.substring(3));
-            case CSS:
-                return root.lookup(query.substring(4));
-            case CLASS:
-                return classLookup(root, query).query();
-            case TEXT:
-                query = query.substring(6, query.length() - 1);
-                return robot.from(root).lookup(LabeledMatchers.hasText(query)).query();
-            case XPATH:
-                return new XPathFinder().find(query.substring(6), root);
-            case PSEUDO:
-                return pseudoLookup(root, query).query();
-        }
-        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
+        FindOperation findOperation = new FindOperation(root, new Query(query), false);
+        return (Node) findOperation.executeLookup();
     }
 
     // TODO: Add support for using indexes in queries (css=VBox[3]), xPath already implements this
     private Set<Node> executeFindAll(Parent root, String query) {
         RobotLog.debug("Executing find all with root: " + root + " and query: " + query);
-        FindPrefix prefix = getPrefix(query);
-
-        switch (prefix) {
-            case ID:
-                return root.lookupAll("#" + query.substring(3));
-            case CSS:
-                return root.lookupAll(query.substring(4));
-            case CLASS:
-                return classLookup(root, query).queryAll();
-            case TEXT:
-                query = query.substring(6, query.length() - 1);
-                return robot.from(root).lookup(LabeledMatchers.hasText(query)).queryAll();
-            case XPATH:
-                return new XPathFinder().findAll(query.substring(6), root);
-            case PSEUDO:
-                return pseudoLookup(root, query).queryAll();
-        }
-        throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
-    }
-
-    protected FindPrefix getPrefix(String query) {
-
-        try {
-            String prefix = query.substring(0, query.indexOf('='));
-
-            switch (prefix) {
-                case "id":
-                    return FindPrefix.ID;
-                case "css":
-                    return FindPrefix.CSS;
-                case "class":
-                    return FindPrefix.CLASS;
-                case "text":
-                    return FindPrefix.TEXT;
-                case "xpath":
-                    return FindPrefix.XPATH;
-                case "pseudo":
-                    return FindPrefix.PSEUDO;
-                default:
-                    throw new IllegalArgumentException("Query \"" + query + "\" does not contain any supported prefix");
-            }
-        } catch (StringIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("Query \"" + query + "\" does not contain any supported prefix");
-        }
-    }
-
-    private NodeQuery pseudoLookup(Parent root, String query) {
-        String[] queries = query.substring(7).split(";");
-        return robot.from(root).lookup((Node n) -> {
-            int matching = 0;
-            ObservableSet<PseudoClass> pseudoStates = n.getPseudoClassStates();
-
-            for (PseudoClass c : pseudoStates)
-                for (String q : queries)
-                    if (c.getPseudoClassName().equals(q))
-                        matching++;
-
-            return n != root && (matching == queries.length);
-        });
-    }
-
-    private NodeQuery classLookup(Parent root, String query) {
-        try {
-            Class<?> clazz = Class.forName(query.substring(6));
-            InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
-            return robot.from(root).lookup(matcher);
-        } catch (ClassNotFoundException e) {
-            throw new JavaFXLibraryNonFatalException("Could not use \"" + query.substring(6) + "\" for " +
-                    "Node lookup: class was not found");
-        }
+        FindOperation findOperation = new FindOperation(root, new Query(query), true);
+        return (Set<Node>) findOperation.executeLookup();
     }
 }
