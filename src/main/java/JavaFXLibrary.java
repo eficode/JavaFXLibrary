@@ -21,8 +21,13 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
@@ -32,6 +37,8 @@ import org.python.google.common.base.Throwables;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
 import org.robotframework.remoteserver.RemoteServer;
+import org.testfx.util.WaitForAsyncUtils;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -70,10 +77,32 @@ public class JavaFXLibrary extends AnnotationLibrary {
         else
             finalArgs = args;
 
+        AtomicReference<Object> retval = new AtomicReference<>();
+        AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
+
         try {
-            return super.runKeyword(keywordName, finalArgs);
-        } catch (RuntimeException e) {
+            // timeout + 1 so that underlying timeout has a chance to expire first
+            WaitForAsyncUtils.waitFor(getWaitUntilTimeout() + 1, TimeUnit.SECONDS, () -> {
+
+                try {
+                    retval.set(super.runKeyword(keywordName, finalArgs));
+                    return true;
+
+                } catch (JavaFXLibraryTimeoutException jfxte){
+                    // timeout already expired, catch exception and jump out
+                    retExcep.set(jfxte);
+                    throw jfxte;
+
+                } catch (RuntimeException e){
+                    // catch exception and continue trying
+                    retExcep.set(e);
+                    return false;
+                }
+            });
+        } catch (TimeoutException te) {
+            RuntimeException e = retExcep.get();
             runOnFailure.runOnFailure();
+
             if (e.getCause() instanceof JavaFXLibraryFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
@@ -84,7 +113,11 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
             }
+        } catch (JavaFXLibraryTimeoutException jfxte){
+            RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
+            throw jfxte;
         }
+        return retval.get();
     }
 
     @Override

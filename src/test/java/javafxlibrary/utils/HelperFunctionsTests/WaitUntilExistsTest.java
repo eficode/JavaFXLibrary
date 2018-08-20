@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.*;
@@ -70,7 +71,7 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
             }
         };
 
-        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given element \".button\" was not found within given timeout of 500 MILLISECONDS");
         HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
     }
