@@ -158,12 +158,11 @@ public class XPathFinder {
 
         // TODO: Nodes with LabeledText containing ']'-characters will have an effect on the last attribute, fix
         String attributes = " " + nodeString.substring(nodeString.indexOf('[') + 1, nodeString.lastIndexOf(']'));
-        String[] attributeArray = attributes.split(",");
+        String[] attributeArray = attributes.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
         StringBuilder attributeBuilder = new StringBuilder();
         boolean unsupported = false;
 
         for (String att : attributeArray) {
-            att = att.replace(",", "");
 
             if (!unsupported) {
                 if (!att.contains("[")) {
@@ -193,4 +192,5 @@ public class XPathFinder {
         // TODO: Are there more possible characters for type selectors that require replacing?
         return node.getTypeSelector().replaceAll("\\$", "");
     }
+
 }

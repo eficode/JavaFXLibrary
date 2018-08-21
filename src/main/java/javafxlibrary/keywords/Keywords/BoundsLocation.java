@@ -20,6 +20,7 @@ package javafxlibrary.keywords.Keywords;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -127,10 +128,12 @@ public class BoundsLocation extends TestFxAdapter {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
+
+        } catch (JavaFXLibraryTimeoutException | JavaFXLibraryNonFatalException e){
+            throw e;
+
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException )
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"");
+            throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"", e);
         }
     }
 }

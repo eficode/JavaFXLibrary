@@ -28,6 +28,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.matchers.ProgressBarMatchers;
 import javafxlibrary.utils.finder.Finder;
 import org.apache.commons.lang3.StringUtils;
@@ -87,7 +88,7 @@ public class HelperFunctions {
             WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
             return node;
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found within given timeout of "
+            throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
@@ -111,7 +112,7 @@ public class HelperFunctions {
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given target \"" + target + "\" did not become visible within given timeout of "
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become visible within given timeout of "
                     + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be visible: " + e.getMessage());
@@ -132,7 +133,7 @@ public class HelperFunctions {
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("Given target \"" + target + "\" did not become enabled within given timeout of "
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become enabled within given timeout of "
                     + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be enabled: " + e.getMessage());
@@ -443,10 +444,10 @@ public class HelperFunctions {
             checkClickLocation(target);
             return target;
 
+        } catch (JavaFXLibraryTimeoutException | JavaFXLibraryNonFatalException jfxe) {
+            throw jfxe;
         } catch (Exception e) {
-            if (e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage());
+            throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage(), e);
         }
     }
 

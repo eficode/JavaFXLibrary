@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Mock;
 import mockit.MockUp;
@@ -46,7 +47,7 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
     @Test
     public void waitUntilEnabled_IsNotEnabled() {
         button.setDisable(true);
-        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.");
         HelperFunctions.waitUntilEnabled(".button", 1);
     }

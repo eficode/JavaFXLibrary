@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.*;
 import org.junit.*;
@@ -47,7 +48,7 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
     @Test
     public void waitUntilVisible_IsNotVisible() {
         button.setVisible(false);
-        thrown.expect(JavaFXLibraryNonFatalException.class);
+        thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 1 seconds.");
         HelperFunctions.waitUntilVisible(".button", 1);
     }
