@@ -23,10 +23,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
+import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.testfx.api.FxRobotInterface;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.service.query.NodeQuery;
+
+import java.util.*;
 
 public class FindOperation {
 
@@ -43,9 +46,30 @@ public class FindOperation {
     }
 
     protected Object executeLookup() {
-        FindPrefix prefix = query.getPrefix();
-        String lookupQuery = query.getQuery();
+        // If find is called with a query that contains an index, use findAll methods instead
+        if (!findAll && query.containsIndex()) {
+            return executeOverriddenLookup();
+        } else if (query.containsIndex()) {
+            Set<Node> lookupResults = new LinkedHashSet<>((Set<Node>)executeLookup(query.getPrefix(), query.getQuery()));
+            lookupResults.remove(root);
+            Node nodeAtIndex = getLookupResultByIndex(lookupResults, query.getIndex());
 
+            if (nodeAtIndex != null)
+                return new LinkedHashSet<>(Collections.singletonList(nodeAtIndex));
+            return Collections.emptySet();
+        }
+
+        return executeLookup(query.getPrefix(), query.getQuery());
+    }
+
+    protected Object executeOverriddenLookup() {
+        this.findAll = true;
+        Set<Node> result = new LinkedHashSet<>((Set<Node>)executeLookup(query.getPrefix(), query.getQuery()));
+        result.remove(root);
+        return getLookupResultByIndex(result, query.getIndex());
+    }
+
+    private Object executeLookup(FindPrefix prefix, String lookupQuery) {
         switch (prefix) {
             case ID:
             case CSS:
@@ -89,6 +113,14 @@ public class FindOperation {
         } catch (ClassNotFoundException e) {
             throw new JavaFXLibraryNonFatalException("Could not use \"" + query + "\" for " +
                     "Node lookup: class was not found");
+        }
+    }
+
+    private Node getLookupResultByIndex(Set<Node> lookupResults, int index) {
+        try {
+            return new ArrayList<>(lookupResults).get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
         }
     }
 }

@@ -5,14 +5,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.testfx.api.FxToolkit;
 
 public class FinderApp extends Application {
 
     int scale = 200;
 
     @Override
-    public void start(Stage firstStage) throws Exception {
+    public void init() throws Exception {
+        FxToolkit.registerStage(() -> new Stage());
+    }
 
+    @Override
+    public void start(Stage firstStage) throws Exception {
         Stage secondStage = new Stage();
         Stage thirdStage = new Stage();
         Stage fourthStage = new Stage();
@@ -27,14 +33,14 @@ public class FinderApp extends Application {
 
         for (int i = 0; i < stages.length; i++) {
             Stage current = stages[i];
+            current.initStyle(StageStyle.DECORATED);
             current.setWidth(scale);
             current.setHeight(scale);
             current.setX(i * scale);
+            current.setY(100);
             current.setScene(scenes[i]);
             current.setTitle("Window " + (i + 1));
             current.show();
-
-
         }
 
     }

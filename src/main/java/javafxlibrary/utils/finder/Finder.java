@@ -73,13 +73,10 @@ public class Finder {
     }
 
     private Node find(Parent root, int queryIndex) {
-        String query = queries[queryIndex];
+        Query query = new Query(queries[queryIndex]);
 
         if (queryIndex < queries.length - 1) {
-            // lookupResults might be unmodifiable, copy contents to a new Set
-            Set<Node> lookupResults = executeFindAll(root, query);
-            Set<Node> nodes = new LinkedHashSet<>();
-            nodes.addAll(lookupResults);
+            Set<Node> nodes = new LinkedHashSet<>(executeFindAll(root, query));
             nodes.remove(root);
 
             for (Node node : nodes) {
@@ -129,12 +126,8 @@ public class Finder {
     }
 
     private Set<Node> findAll(Parent root, int queryIndex) {
-        String query = queries[queryIndex];
-        Set<Node> lookupResults = executeFindAll(root, query);
-        Set<Node> nodes = new LinkedHashSet<>();
-        nodes.addAll(lookupResults);
-        nodes.remove(root);
-
+        Query query = new Query(queries[queryIndex]);
+        Set<Node> nodes = new LinkedHashSet<>(executeFindAll(root, query));
         if (queryIndex < queries.length - 1) {
             for (Node node : nodes)
                 if (node instanceof Parent)
@@ -146,16 +139,15 @@ public class Finder {
         return results;
     }
 
-    private Node executeFind(Parent root, String query) {
-        RobotLog.debug("Executing find with root: " + root + " and query: " + query);
-        FindOperation findOperation = new FindOperation(root, new Query(query), false);
+    private Node executeFind(Parent root, Query query) {
+        RobotLog.debug("Executing find with root: " + root + " and query: " + query.getQuery());
+        FindOperation findOperation = new FindOperation(root, query, false);
         return (Node) findOperation.executeLookup();
     }
 
-    // TODO: Add support for using indexes in queries (css=VBox[3]), xPath already implements this
-    private Set<Node> executeFindAll(Parent root, String query) {
-        RobotLog.debug("Executing find all with root: " + root + " and query: " + query);
-        FindOperation findOperation = new FindOperation(root, new Query(query), true);
-        return (Set<Node>) findOperation.executeLookup();
+    private Set<Node> executeFindAll(Parent root, Query query) {
+        RobotLog.debug("Executing find all with root: " + root + " and query: " + query.getQuery());
+        FindOperation findOperation = new FindOperation(root, query, true);
+        return new LinkedHashSet<>((Set<Node>)findOperation.executeLookup());
     }
 }

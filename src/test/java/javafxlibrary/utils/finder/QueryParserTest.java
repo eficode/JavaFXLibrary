@@ -62,4 +62,31 @@ public class QueryParserTest {
         thrown.expectMessage("Query \"notaprefix=someValue\" does not contain any supported prefix");
         QueryParser.getPrefix("notaprefix=someValue");
     }
+
+    @Test
+    public void containsIndex() {
+        Assert.assertTrue(QueryParser.containsIndex("Rectangle[0]"));
+        Assert.assertTrue(QueryParser.containsIndex("Rectangle[8]"));
+        Assert.assertTrue(QueryParser.containsIndex("Rectangle[22]"));
+        Assert.assertTrue(QueryParser.containsIndex("Rectangle[1995]"));
+        Assert.assertFalse(QueryParser.containsIndex("Node1"));
+        Assert.assertFalse(QueryParser.containsIndex("xpath=Text[@text='text[2]'"));
+    }
+
+    @Test
+    public void getQueryIndex() {
+        Assert.assertTrue(0 == QueryParser.getQueryIndex("Rectangle[1]"));
+        Assert.assertTrue(8 == QueryParser.getQueryIndex("Rectangle[9]"));
+        Assert.assertTrue(22 == QueryParser.getQueryIndex("Rectangle[23]"));
+        Assert.assertTrue(1995 == QueryParser.getQueryIndex("Rectangle[1996]"));
+    }
+
+    @Test
+    public void removeQueryIndex() {
+        Assert.assertEquals("Rectangle", QueryParser.removeQueryIndex("Rectangle[0]"));
+        Assert.assertEquals("Rectangle", QueryParser.removeQueryIndex("Rectangle[22]"));
+        Assert.assertEquals("Rectangle", QueryParser.removeQueryIndex("Rectangle[1995]"));
+        Assert.assertEquals("VBox", QueryParser.removeQueryIndex("VBox[2]"));
+        Assert.assertEquals("SomeClass", QueryParser.removeQueryIndex("SomeClass[12]"));
+    }
 }
