@@ -6,10 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.testfx.api.FxToolkit;
 
 public class FinderApp extends Application {
 
     int scale = 200;
+
+    @Override
+    public void init() throws Exception {
+        FxToolkit.registerStage(() -> new Stage());
+    }
 
     @Override
     public void start(Stage firstStage) throws Exception {
