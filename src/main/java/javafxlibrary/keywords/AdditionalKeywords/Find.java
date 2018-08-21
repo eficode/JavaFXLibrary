@@ -70,7 +70,6 @@ public class Find {
             if (failIfNotFound)
                 throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
             return "";
-
         } catch (JavaFXLibraryFatalException e) {
             throw e;
         } catch (Exception e) {
@@ -115,6 +114,8 @@ public class Find {
             if (failIfNotFound)
                 throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
             return new ArrayList<>();
+        } catch (JavaFXLibraryFatalException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
