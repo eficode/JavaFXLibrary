@@ -163,7 +163,6 @@ public class XPathFinder {
         boolean unsupported = false;
 
         for (String att : attributeArray) {
-            att = att.replace(",", "");
 
             if (!unsupported) {
                 if (!att.contains("[")) {
