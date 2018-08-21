@@ -17,13 +17,25 @@
 
 package javafxlibrary.utils.finder;
 
+import javafxlibrary.exceptions.JavaFXLibraryFatalException;
+
 public class Query {
 
     private FindPrefix prefix;
     private String query;
+    private int index = -1;
 
     public Query(String query) {
         this.prefix = QueryParser.getPrefix(query);
+
+        if (this.prefix != FindPrefix.XPATH && QueryParser.containsIndex(query)) {
+            this.index = QueryParser.getQueryIndex(query);
+            if (this.index < 0) {
+                throw new JavaFXLibraryFatalException("Invalid query \"" + query + "\": Minimum index value is 1!");
+            }
+            query = QueryParser.removeQueryIndex(query);
+        }
+
         this.query = QueryParser.removePrefix(query, this.prefix);
     }
 
@@ -33,5 +45,13 @@ public class Query {
 
     public String getQuery() {
         return this.query;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public boolean containsIndex() {
+        return this.index != -1;
     }
 }

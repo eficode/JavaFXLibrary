@@ -220,8 +220,52 @@ Find All From Multiple Windows Using Chained Selector
 Find All From Multiple Windows Containing Multiple Matches Using Chained Selector
     [Tags]              smoke
     Set Test App        ${FINDER_APP}
-    ${nodes}            Find All        css=VBox css=HBox css=.button
-    Length Should Be    ${nodes}        24
+    ${nodes}            Find All            css=VBox css=HBox css=.button
+    Length Should Be    ${nodes}            24
+
+Find With Index
+    [Tags]              smoke
+    Set Test App        ${FINDER_APP}
+    ${root}             Get Node Parent     id=firstButton
+    ${target}           Find                xpath=/HBox/Button[4]    true    ${root}
+    ${button}           Find                css=Button[4]
+    Should Be Equal     ${button}           ${target}
+
+Find With Index - Chained Selector
+    [Tags]              smoke
+    Set Test App        ${FINDER_APP}
+    ${button}           Find                id=firstButton
+    Click On            ${button}
+    ${node}             Find                css=VBox pseudo=hover[2]
+    Should Be Equal     ${node}             ${button}
+
+Find With Index - Chained Selector Contains Index
+    [Tags]              smoke
+    Set Test App        ${FINDER_APP}
+    ${node}             Find                css=VBox[2] css=HBox Button
+    ${root}             Get Node Parent     text="Scene type 1"
+    ${target}           Find                xpath=/VBox/VBox[2]/HBox/Button    true    ${root}
+    Should Be Equal     ${node}             ${target}
+
+Find All With Index
+    [Tags]                          smoke
+    Set Test App                    ${FINDER_APP}
+    ${nodes}                        Find All        css=Button[2]
+    Length Should Be                ${nodes}        4
+    All Nodes Should Have Text      ${nodes}        2
+
+Find All With Index - Chained Selector Contains Index
+    [Tags]                          smoke
+    Set Test App                    ${FINDER_APP}
+    ${nodes}                        Find All        css=VBox[2] css=HBox Button[1]
+    Length Should Be                ${nodes}        3
+    All Nodes Should Have Text      ${nodes}        5
+
+Find With Index Below Minimum Value
+    [Tags]              smoke                           negative
+    Set Test App        ${FINDER_APP}
+    ${msg}              Run Keyword And Expect Error    *           Find        css=VBox[0]
+    Should Be Equal     ${msg}                          Invalid query "css=VBox[0]": Minimum index value is 1!
 
 *** Keywords ***
 Set Test App
@@ -237,3 +281,9 @@ Change Current Application
 
 Teardown all tests
     Close Javafx Application
+
+All Nodes Should Have Text
+    [Arguments]     ${nodes}            ${text}
+    :FOR            ${node}             IN                  @{nodes}
+    \               ${value}            Get Node Text       ${node}
+    \               Should Be Equal     ${value}            ${text}

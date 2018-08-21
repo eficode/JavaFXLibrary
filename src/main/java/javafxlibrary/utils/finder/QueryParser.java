@@ -20,6 +20,8 @@ package javafxlibrary.utils.finder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class QueryParser {
 
@@ -120,5 +122,19 @@ public class QueryParser {
                 return query.substring(7);
         }
         throw new IllegalArgumentException("FindPrefix value " + prefix + " of query " + query + " is not supported");
+    }
+
+    protected static boolean containsIndex(String query) {
+        Pattern pattern = Pattern.compile(".*\\[\\d*]$");
+        Matcher matcher = pattern.matcher(query);
+        return matcher.matches();
+    }
+
+    protected static int getQueryIndex(String query) {
+        return Integer.parseInt(query.substring(query.lastIndexOf('[') + 1, query.length() - 1)) - 1;
+    }
+
+    protected static String removeQueryIndex(String query) {
+        return query.substring(0, query.lastIndexOf('['));
     }
 }

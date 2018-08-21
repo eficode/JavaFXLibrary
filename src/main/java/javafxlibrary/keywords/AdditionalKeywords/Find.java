@@ -1,6 +1,7 @@
 package javafxlibrary.keywords.AdditionalKeywords;
 
 import javafx.scene.Parent;
+import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.RobotLog;
@@ -46,11 +47,12 @@ public class Find {
         try {
             return mapObject(new Finder().find(query, root));
 
-        } catch (JavaFXLibraryNonFatalException e){
+        } catch (JavaFXLibraryNonFatalException e) {
             if (failIfNotFound)
                 throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
             return "";
-
+        } catch (JavaFXLibraryFatalException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
@@ -69,6 +71,8 @@ public class Find {
                 throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
             return "";
 
+        } catch (JavaFXLibraryFatalException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
@@ -95,6 +99,8 @@ public class Find {
             if (failIfNotFound)
                 throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
             return new ArrayList<>();
+        } catch (JavaFXLibraryFatalException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
