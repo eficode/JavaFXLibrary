@@ -18,17 +18,7 @@
 package javafxlibrary.exceptions;
 
 @SuppressWarnings("serial")
-public class JavaFXLibraryTimeoutException  extends JavaFXLibraryKeywordException {
-
-    /**
-     * This will be a non-fatal exception
-     */
-    public static final boolean ROBOT_EXIT_ON_FAILURE = false;
-
-    /**
-     * Avoid adding the exception type as a prefix to this failure exception
-     */
-    public static final boolean ROBOT_SUPPRESS_NAME = true;
+public class JavaFXLibraryTimeoutException  extends JavaFXLibraryNonFatalException {
 
     public JavaFXLibraryTimeoutException() {
         super();

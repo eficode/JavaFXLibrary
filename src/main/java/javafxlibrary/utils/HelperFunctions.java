@@ -444,7 +444,7 @@ public class HelperFunctions {
             checkClickLocation(target);
             return target;
 
-        } catch (JavaFXLibraryTimeoutException | JavaFXLibraryNonFatalException jfxe) {
+        } catch (JavaFXLibraryNonFatalException jfxe) {
             throw jfxe;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage(), e);
