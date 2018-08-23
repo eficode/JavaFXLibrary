@@ -1,6 +1,6 @@
 package javafxlibrary.utils.finder;
 
-import javafxlibrary.exceptions.JavaFXLibraryFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryQueryException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class QueryTest {
 
     @Test
     public void invalidQueryIndex() {
-        thrown.expect(JavaFXLibraryFatalException.class);
+        thrown.expect(JavaFXLibraryQueryException.class);
         thrown.expectMessage("Invalid query \"css=VBox[0]\": Minimum index value is 1!");
         new Query("css=VBox[0]");
     }
