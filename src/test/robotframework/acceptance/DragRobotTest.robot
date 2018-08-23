@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.DragRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force tags        set-dragrobot
@@ -264,7 +264,7 @@ Set Coordinates To Use
     ${SET_Y}              Convert To Integer   ${SET_Y}
     Set Suite Variable    ${COORD_X}           ${SET_X}
     Set Suite Variable    ${COORD_Y}           ${SET_Y}
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

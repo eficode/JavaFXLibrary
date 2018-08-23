@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       Tests for handling Swing embedded JavaFX nodes
-Library             JavaFXLibrary
+Resource          ../resource.robot
 Force Tags          set-embedded
 
 *** Testcases ***

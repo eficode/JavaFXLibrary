@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test DatePicker related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Test Teardown     Clear Text Input    css=.text-field

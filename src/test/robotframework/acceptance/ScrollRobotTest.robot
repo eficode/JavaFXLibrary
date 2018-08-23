@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.ScrollRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-scrollrobot
@@ -92,7 +92,7 @@ Count Distance
     [Arguments]    ${WHEEL_TICKS}
     ${DISTANCE}    Evaluate    ${WHEEL_TICKS} * ${SCROLL_LENGTH}
     [Return]       ${DISTANCE}
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

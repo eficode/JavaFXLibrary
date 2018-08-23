@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       Tests for AdditionalKeywords
-Library             JavaFXLibrary
+Resource          ../resource.robot
 Library             Collections
 Library             String
 Suite Teardown      Close Javafx Application

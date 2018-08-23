@@ -1,0 +1,23 @@
+FROM ubuntu:16.04 as builder
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-install-recommends --allow-unauthenticated -y \
+  openjdk-8-jdk \
+  openjfx \
+  python3-pip \
+  maven \
+  git-all \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir code
+COPY . /code
+WORKDIR /code
+RUN mvn package -Dmaven.test.skip=true
+# ENTRYPOINT java -jar /code/target/javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar
+
+FROM ubuntu:16.04
+RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-install-recommends --allow-unauthenticated -y \
+  openjdk-8-jre \
+  openjfx \
+  && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /code/target/javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar .
+EXPOSE 8270
+ENTRYPOINT java -jar javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar

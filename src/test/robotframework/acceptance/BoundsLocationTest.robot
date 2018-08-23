@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.BoundsLocation related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-boundslocation

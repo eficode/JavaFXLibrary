@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests for Window Management
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-windowmanagement

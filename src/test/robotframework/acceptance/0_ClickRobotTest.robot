@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.ClickRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Test Setup        Reset Counters
@@ -307,7 +307,7 @@ Reset Counters
     Verify String    id=buttonLabel               Button has been clicked 0 times.
     Verify String    id=rightClickButtonLabel     Button has been right-clicked 0 times.
     Verify String    id=doubleClickButtonLabel    Button has been double-clicked 0 times.
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

@@ -77,6 +77,26 @@ java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework
 
 ```
 
+## JavaFXLibrary Dockerized environment over remote library
+Requirements:
+* VNC viewer e.g. https://www.realvnc.com/en/connect/download/viewer/
+* Docker CE: https://docs.docker.com/install/
+* Docker-compose: https://docs.docker.com/compose/install/
+* VNC port: vnc://localhost:5900
+
+Build & Start Dockerized Environment:
+```
+docker-compose up -d robot-framework javafxcompile
+```
+Take VNC connecion to: <i>vnc://<docker_daemon_ip>:5900</i>
+<br>Password is: 1234
+<br>Right click a mouse in VNC desktop and open shell.
+<br>Execute in shell:
+```
+robot -d /robot/results /robot/acceptance
+```
+FYI: remote server is running in different container than tests just GUIs are forwarded to VNC container
+
 ## Known issues
 
 * If the remote library server and tests are running on the same machine, the server must be restarted between test executions. If the server is not restarted, test applications will launch behind other windows, causing tests to fail when robot is trying to interact with them.

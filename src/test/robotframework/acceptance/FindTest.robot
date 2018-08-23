@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       Tests to test javafxlibrary.keywords.AdditionalKeywords.Find related keywords
-Library             JavaFXLibrary
+Resource          ../resource.robot
 Suite Teardown      Teardown all tests
 Force Tags          set-find
 
