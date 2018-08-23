@@ -17,70 +17,20 @@
 
 package javafxlibrary.testapps.controllers;
 
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestMultipleWindowsController implements Initializable {
 
     private boolean combinationPressed;
-    private Stage secondWindow;
-    private Stage thirdWindow;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        openOtherWindows();
         combinationPressed = false;
-    }
-
-    private void openOtherWindows() {
-        Parent root;
-        try {
-            secondWindow = new Stage();
-            thirdWindow = new Stage();
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-            // Load FXML for secondWindow
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/javafxlibrary/ui/MultipleWindowsSubUIs/SecondUI.fxml"));
-            root = fxmlLoader.load();
-
-            // Second window settings
-            secondWindow.setScene(new Scene(root));
-            secondWindow.setTitle("Second window");
-            secondWindow.setX(screenBounds.getMinX() + 200);
-            secondWindow.initStyle(StageStyle.DECORATED);
-            secondWindow.getScene().setOnKeyPressed(event -> keyCombinationListener(event));
-            secondWindow.getScene().setOnKeyReleased(event -> keyReleaseListener(event));
-            secondWindow.show();
-
-            // Load FXML for thirdWindow
-            fxmlLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/javafxlibrary/ui/MultipleWindowsSubUIs/ThirdUI.fxml"));
-            root = fxmlLoader.load();
-
-            // Third window settings
-            thirdWindow.setScene(new Scene(root));
-            thirdWindow.setTitle("Third window");
-            thirdWindow.setX(screenBounds.getMinX() + 600);
-            thirdWindow.initStyle(StageStyle.DECORATED);
-            thirdWindow.getScene().setOnKeyPressed(event -> keyCombinationListener(event));
-            thirdWindow.getScene().setOnKeyReleased(event -> keyReleaseListener(event));
-            thirdWindow.show();
-
-        } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-        }
     }
 
     public void keyCombinationListener(KeyEvent event) {
