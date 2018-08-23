@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.RobotLog;
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.countMatches;
 
 public class XPathFinder {
 
@@ -170,6 +173,11 @@ public class XPathFinder {
                         attributeBuilder.append(att.replace("=", "=\""));
                         attributeBuilder.append("\"");
                     } else {
+                        if(countMatches(att, "\"") > 2) {
+                            att = att.replaceAll("\"", "&quot;");
+                            att = att.replaceFirst("&quot;", "\"");
+                            att = att.replaceAll("&quot;$", "\"");
+                        }
                         attributeBuilder.append(att);
                     }
                 } else {
