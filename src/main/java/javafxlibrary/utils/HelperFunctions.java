@@ -414,6 +414,10 @@ public class HelperFunctions {
         return waitUntilTimeout;
     }
 
+    public static long getWaitUntilTimeout(TimeUnit timeUnit) {
+        return timeUnit.convert(waitUntilTimeout, TimeUnit.SECONDS);
+    }
+
     public static void checkClickLocation(int x, int y) {
         checkClickLocation(new Point2D(x, y));
     }
