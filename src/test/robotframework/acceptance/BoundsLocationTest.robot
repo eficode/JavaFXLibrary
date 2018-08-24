@@ -78,15 +78,14 @@ Get Bounds Using XPath Query
 
 Get Bounds Of Id That Does Not Exist
     [Tags]              smoke    negative
-    Set Timeout         ${1}
     ${MSG}              Run Keyword And Expect Error    *    Get Bounds    id=idThatDoesNotExist
     Should Be Equal     ${MSG}    Given element "id=idThatDoesNotExist" was not found within given timeout of 1 SECONDS
-    Set Timeout         ${5}
 
 *** Keywords ***
 Setup all tests
-    Launch Javafx Application    ${TEST_APPLICATION}
-    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    Set Timeout                     1
+    Launch Javafx Application       ${TEST_APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Offsets
 
 Teardown all tests

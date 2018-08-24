@@ -17,7 +17,7 @@
 
 package javafxlibrary.utils.finder;
 
-import javafxlibrary.exceptions.JavaFXLibraryFatalException;
+import javafxlibrary.exceptions.JavaFXLibraryQueryException;
 
 public class Query {
 
@@ -31,7 +31,7 @@ public class Query {
         if (this.prefix != FindPrefix.XPATH && QueryParser.containsIndex(query)) {
             this.index = QueryParser.getQueryIndex(query);
             if (this.index < 0) {
-                throw new JavaFXLibraryFatalException("Invalid query \"" + query + "\": Minimum index value is 1!");
+                throw new JavaFXLibraryQueryException("Invalid query \"" + query + "\": Minimum index value is 1!");
             }
             query = QueryParser.removeQueryIndex(query);
         }

@@ -414,6 +414,10 @@ public class HelperFunctions {
         return waitUntilTimeout;
     }
 
+    public static long getWaitUntilTimeout(TimeUnit timeUnit) {
+        return timeUnit.convert(waitUntilTimeout, TimeUnit.SECONDS);
+    }
+
     public static void checkClickLocation(int x, int y) {
         checkClickLocation(new Point2D(x, y));
     }
@@ -444,7 +448,7 @@ public class HelperFunctions {
             checkClickLocation(target);
             return target;
 
-        } catch (JavaFXLibraryTimeoutException | JavaFXLibraryNonFatalException jfxe) {
+        } catch (JavaFXLibraryNonFatalException jfxe) {
             throw jfxe;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage(), e);

@@ -21,11 +21,13 @@ Scroll up
 
 Scroll right
     [Tags]                  smoke                           demo-set
+    Skip Test On Linux
     Scroll Horizontally     RIGHT                           50
     Verify String           id=horizontalScrollLocation     max
 
 Scroll left
     [Tags]                  smoke                           demo-set
+    Skip Test On Linux
     Scroll Horizontally     LEFT                            50
     Verify String           id=horizontalScrollLocation     min
 
@@ -42,11 +44,13 @@ Scroll up once
 
 Scroll Right Once
     [Tags]                              smoke
+    Skip Test On Linux
     Scroll Horizontally                 RIGHT                           1
     Verify String Should Not Match      id=horizontalScrollLocation     min
 
 Scroll Left Once
     [Tags]                  smoke
+    Skip Test On Linux
     Scroll Horizontally     LEFT                            1
     Verify String           id=horizontalScrollLocation     min
 
@@ -55,6 +59,10 @@ Setup all tests
     Launch Javafx Application   ${TEST_APPLICATION}
     Set Screenshot Directory    ${OUTPUT_DIR}${/}report-images
     Move To                     id=scrollPane
+
+Skip Test On Linux
+    ${os}                   Get System Property     os.name
+    Pass Execution If       '${os}'=='Linux'        This test can not be executed on Linux
 
 Reset Image If Necessary
     ${VERTICAL}         Get Node Text           id=verticalScrollLocation

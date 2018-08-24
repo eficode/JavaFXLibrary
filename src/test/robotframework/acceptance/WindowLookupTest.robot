@@ -45,12 +45,11 @@ Window By Pattern
 Window By Index
     [Tags]              smoke
     ${TARGET}           Get Window         First window
-    ${WINDOW}           Get Window         2
+    ${WINDOW}           Get Window         0
     ${TITLE}            Get Window Title   ${WINDOW}
     Should Be Equal     ${TARGET}          ${WINDOW}   msg=Window searched with title and index (string) does not match!
-
     ${TARGET}           Get Window         Second window
-    ${WINDOW}           Get Window         ${0}
+    ${WINDOW}           Get Window         1
     ${TITLE}            Get Window Title   ${WINDOW}
     Should Be Equal     ${TARGET}          ${WINDOW}   msg=Window searched with title and index (integer) does not match!
 
@@ -75,16 +74,14 @@ List Target Windows
 # Keyword is located in ConvenienceKeywords
 Bring Stage To Front
     [Tags]                  smoke
-    ${SECOND_WINDOW}        Get Window              Second window
-    ${THIRD_WINDOW}         Get Window              Third window
+    ${second_window}        Get Window              Second window
     Bring Stage To Front    ${SECOND_WINDOW}
-    Sleep                   1                       SECONDS
-    ${SECOND_ISFOCUSED}     Call Object Method      ${SECOND_WINDOW}    isFocused
-    Should Be True          ${SECOND_ISFOCUSED}     msg=Second window was not focused!
-    Bring Stage To Front    ${THIRD_WINDOW}
-    Sleep                   1                       SECONDS
-    ${THIRD_ISFOCUSED}      Call Object Method      ${THIRD_WINDOW}     isFocused
-    Should Be True          ${THIRD_ISFOCUSED}      msg=Third window was not focused!
+    ${target}               Get Target Window
+    Should Be Equal         ${second_window}        ${target}
+    ${third_window}         Get Window              Third window
+    Bring Stage To Front    ${third_window}
+    ${target}               Get Target Window
+    Should Be Equal         ${third_window}         ${target}
 
 # On Mac the testing application had to be modified to register CMD + W.
 # Close Current Window uses ALT + F4 on Windows, so it should work with no changes to the testing application.

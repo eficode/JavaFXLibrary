@@ -170,6 +170,7 @@ Set New Target Position
 
 *** Keywords ***
 Setup all tests
+    Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Decoration Values

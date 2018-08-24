@@ -260,11 +260,10 @@ Setup all tests
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Values
     Set Window Values
-    Set Timeout                     ${1}
+    Set Timeout                     1
 
 Teardown all tests
     Close Javafx Application
-    Set Timeout                     ${5}
 
 Set Scene Values
     ${SCENE}                        Get Scene               id=button

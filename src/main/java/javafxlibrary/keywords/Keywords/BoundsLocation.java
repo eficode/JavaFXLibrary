@@ -129,7 +129,7 @@ public class BoundsLocation extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
 
-        } catch (JavaFXLibraryTimeoutException | JavaFXLibraryNonFatalException e){
+        } catch (JavaFXLibraryNonFatalException e){
             throw e;
 
         } catch (Exception e) {

@@ -19,6 +19,7 @@ package javafxlibrary.testapps;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -26,6 +27,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafxlibrary.testapps.controllers.TestMultipleWindowsController;
 import org.testfx.api.FxToolkit;
+
+import java.io.IOException;
 
 public class TestMultipleWindows extends Application {
 
@@ -58,6 +61,37 @@ public class TestMultipleWindows extends Application {
 
         stage.show();
         stage.centerOnScreen();
+
+        try {
+            Stage secondWindow = new Stage();
+            Stage thirdWindow = new Stage();
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+            // Second Window
+            fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/javafxlibrary/ui/MultipleWindowsSubUIs/SecondUI.fxml"));
+            Parent secondRoot = fxmlLoader.load();
+            secondWindow.setScene(new Scene(secondRoot));
+            secondWindow.setTitle("Second window");
+            secondWindow.setX(screenBounds.getMinX() + 200);
+            secondWindow.initStyle(StageStyle.DECORATED);
+            secondWindow.getScene().setOnKeyPressed(event -> controller.keyCombinationListener(event));
+            secondWindow.getScene().setOnKeyReleased(event -> controller.keyReleaseListener(event));
+            secondWindow.show();
+
+            // Third Window
+            fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/javafxlibrary/ui/MultipleWindowsSubUIs/ThirdUI.fxml"));
+            Parent thirdRoot = fxmlLoader.load();
+            thirdWindow.setScene(new Scene(thirdRoot));
+            thirdWindow.setTitle("Third window");
+            thirdWindow.setX(screenBounds.getMinX() + 600);
+            thirdWindow.initStyle(StageStyle.DECORATED);
+            thirdWindow.getScene().setOnKeyPressed(event -> controller.keyCombinationListener(event));
+            thirdWindow.getScene().setOnKeyReleased(event -> controller.keyReleaseListener(event));
+            thirdWindow.show();
+
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
