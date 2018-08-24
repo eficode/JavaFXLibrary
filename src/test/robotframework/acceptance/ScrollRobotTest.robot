@@ -45,6 +45,7 @@ Scroll Once Vertically
 
 Scroll Left
     [Tags]                  smoke
+    Skip Test On Linux
     Move to horizontal listener
     ${TARGET_DISTANCE}      Count Distance          25
     Scroll Horizontally     LEFT                    25
@@ -54,6 +55,7 @@ Scroll Left
 
 Scroll Right
     [Tags]                  smoke
+    Skip Test On Linux
     Reset counters
     Move to horizontal listener
     ${TARGET_DISTANCE}      Count Distance          10
@@ -68,6 +70,10 @@ Setup all tests
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
     Set Variables
     Move to vertical listener
+
+Skip Test On Linux
+    ${os}                   Get System Property     os.name
+    Pass Execution If       '${os}'=='Linux'        This test can not be executed on Linux
 
 Move to vertical listener
     Move To     id=greenLabel
