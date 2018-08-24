@@ -1,7 +1,8 @@
 *** Settings ***
 Documentation       Tests for handling Swing embedded JavaFX nodes
-Resource          ../resource.robot
+Resource            ../resource.robot
 Force Tags          set-embedded
+Suite Setup         Import JavaFXLibrary
 
 *** Testcases ***
 Swing Embedded JavaFX Click Test

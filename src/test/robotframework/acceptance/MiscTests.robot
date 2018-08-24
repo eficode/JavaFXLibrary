@@ -3,7 +3,7 @@ Documentation       Tests for AdditionalKeywords
 Resource          ../resource.robot
 Library             Collections
 Library             String
-Suite Setup         Set Timeout    0
+Suite Setup         Setup All Tests
 Suite Teardown      Close Javafx Application
 
 *** Variables ***
@@ -297,6 +297,10 @@ Get Scene (Window)
 Set Test Application
     [Arguments]             ${APPLICATION}
     Run Keyword Unless      '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
+
+Setup All Tests
+    Import JavaFXLibrary
+    Set Timeout    0
 
 Change Current Application
     [Arguments]                     ${APPLICATION}

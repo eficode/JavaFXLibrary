@@ -256,6 +256,7 @@ Click On Unsupported Type
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Values

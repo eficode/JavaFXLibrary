@@ -102,6 +102,7 @@ Activate window
     Click On                ${window_node}
 
 Setup all tests
+    Import JavaFXLibrary
     Launch Javafx Application    ${TEST_APPLICATION}
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
 

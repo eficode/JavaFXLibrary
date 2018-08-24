@@ -83,6 +83,7 @@ Get Bounds Of Id That Does Not Exist
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                     1
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images

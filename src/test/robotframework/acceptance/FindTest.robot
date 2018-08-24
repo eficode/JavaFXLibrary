@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation       Tests to test javafxlibrary.keywords.AdditionalKeywords.Find related keywords
-Resource          ../resource.robot
+Resource            ../resource.robot
+Suite Setup         Setup All Tests
 Suite Teardown      Teardown all tests
-Suite Setup         Set Timeout    0
 Force Tags          set-find
 
 *** Variables ***
@@ -279,6 +279,10 @@ Change Current Application
     Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
     Launch Javafx Application       ${APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+
+Setup All Tests
+    Import JavaFXLibrary
+    Set Timeout    0
 
 Teardown all tests
     Close Javafx Application

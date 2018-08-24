@@ -82,7 +82,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
         try {
             // timeout + 100 ms so that underlying timeout has a chance to expire first
-            WaitForAsyncUtils.waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 100, TimeUnit.MILLISECONDS, () -> {
+            WaitForAsyncUtils.waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
 
                 try {
                     retval.set(super.runKeyword(keywordName, finalArgs));
