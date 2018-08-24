@@ -3,6 +3,7 @@ Documentation       Tests for AdditionalKeywords
 Library             JavaFXLibrary
 Library             Collections
 Library             String
+Suite Setup         Set Timeout    0
 Suite Teardown      Close Javafx Application
 
 *** Variables ***

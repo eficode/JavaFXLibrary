@@ -2,6 +2,7 @@
 Documentation       Tests to test javafxlibrary.keywords.AdditionalKeywords.Find related keywords
 Library             JavaFXLibrary
 Suite Teardown      Teardown all tests
+Suite Setup         Set Timeout    0
 Force Tags          set-find
 
 *** Variables ***

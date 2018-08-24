@@ -96,8 +96,9 @@ Try To Compare Different Size Images
 
 *** Keywords ***
 Setup all tests
-    Launch Javafx Application    ${TEST_APPLICATION}
-    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    Set Timeout                     0
+    Launch Javafx Application       ${TEST_APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
 
 Teardown all tests
     Close Javafx Application

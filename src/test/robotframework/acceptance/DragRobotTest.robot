@@ -242,11 +242,12 @@ Drag From + Drop To Using XPath Query
 
 *** Keywords ***
 Setup all tests
-    Launch Javafx Application     ${TEST_APPLICATION}
-    Set Screenshot Directory      ${OUTPUT_DIR}${/}report-images
-    ${SCENE}                      Get Scene           css=.button
-    ${BOUNDS}                     Get Bounds          ${SCENE}
-    Set Suite Variable            ${SCENE_BOUNDS}     ${BOUNDS}
+    Set Timeout                     0
+    Launch Javafx Application       ${TEST_APPLICATION}
+    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+    ${SCENE}                        Get Scene           css=.button
+    ${BOUNDS}                       Get Bounds          ${SCENE}
+    Set Suite Variable              ${SCENE_BOUNDS}     ${BOUNDS}
 
 Teardown all tests
     Close Javafx Application
