@@ -11,7 +11,7 @@ RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-i
   && mkdir code
 RUN wget latest https://github.com/eficode/JavaFXLibrary/releases Source code.zip && unzip
 WORKDIR /code
-RUN mvn package -Dmaven.test.skip=true
+RUN mvn package
 
 FROM ubuntu:16.04
 RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-install-recommends --allow-unauthenticated -y \

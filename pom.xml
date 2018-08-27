@@ -323,6 +323,12 @@
             <version>4.0.13-alpha</version>
         </dependency>
         <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>8u76-b04</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.robotframework</groupId>
             <artifactId>javalib-core</artifactId>
             <version>1.2.1</version>

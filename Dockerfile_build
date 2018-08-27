@@ -10,7 +10,7 @@ RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-i
   && mkdir code
 COPY . /code
 WORKDIR /code
-RUN mvn package -Dmaven.test.skip=true
+RUN mvn package
 # ENTRYPOINT java -jar /code/target/javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar
 
 FROM ubuntu:16.04
