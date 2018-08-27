@@ -40,8 +40,8 @@ public class Finder {
         // TODO: Remove old style lookup queries
         // Use TestFX lookup for queries with no prefixes
         if (!QueryParser.startsWithPrefix(query)) {
-            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
-                    "the updated lookup query syntax.");
+            //RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+            //        "the updated lookup query syntax.");
             return robot.lookup(query).query();
         }
 
@@ -63,8 +63,8 @@ public class Finder {
         // TODO: Remove old style lookup queries
         // Use TestFX lookup for queries with no prefixes
         if (!QueryParser.startsWithPrefix(query)) {
-            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
-                    "the updated lookup query syntax.");
+            //RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+            //        "the updated lookup query syntax.");
             return robot.from(root).lookup(query).query();
         }
 
@@ -97,8 +97,8 @@ public class Finder {
         // TODO: Remove old style lookup queries
         // Use TestFX lookup for queries with no prefixes
         if (!QueryParser.startsWithPrefix(query)) {
-            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
-                    "the updated lookup query syntax.");
+            //RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+            //        "the updated lookup query syntax.");
             return robot.lookup(query).queryAll();
         }
 
@@ -116,8 +116,8 @@ public class Finder {
         // TODO: Remove old style lookup queries
         // Use TestFX lookup for queries with no prefixes
         if (!QueryParser.startsWithPrefix(query)) {
-            RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
-                    "the updated lookup query syntax.");
+            //RobotLog.warn("You are using deprecated lookup queries! See library documentation for information about " +
+            //        "the updated lookup query syntax.");
             return robot.from(root).lookup(query).query();
         }
 
