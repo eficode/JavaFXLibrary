@@ -103,6 +103,7 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
 Wait For Events In Fx Application Thread
     [Tags]                                          smoke    demo-set
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    Set Timeout                                     3
     ${node}                                         Find        id=red
     Call Object Method In Fx Application Thread     ${node}     changeFillAfterTwoSeconds
     Wait For Events In Fx Application Thread
@@ -113,6 +114,7 @@ Wait For Events In Fx Application Thread
     Wait For Events In Fx Application Thread
     ${result}                                       Find        id=red
     Should End With                                 ${result}   fill=0xff0000ff]
+    Set Timeout                                     0
 
 Find From Node
     [Tags]                  smoke

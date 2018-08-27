@@ -81,7 +81,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
 
         try {
-            // timeout + 100 ms so that underlying timeout has a chance to expire first
+            // timeout + 500 ms so that underlying timeout has a chance to expire first
             WaitForAsyncUtils.waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
 
                 try {

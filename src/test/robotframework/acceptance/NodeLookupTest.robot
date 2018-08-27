@@ -43,7 +43,7 @@ Root Node Of XPath Query
     Should Be Equal     ${ROOT_NODE}        ${TARGET}
 
 Root Node Of Node That Does Not Exist
-    [Tags]              smoke
+    [Tags]              smoke    negative
     ${MSG}              Run Keyword And Expect Error    *    Get Root Node Of    id=non-existent-node-id
     Should Contain      ${MSG}    Unable to find any node with query: "id=non-existent-node-id"
 
@@ -52,6 +52,7 @@ Setup all tests
     Import JavaFXLibrary
     Launch Javafx Application    ${TEST_APPLICATION}
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
+    Set Timeout                     1
 
 Teardown all tests
     Close Javafx Application
