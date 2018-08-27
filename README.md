@@ -10,7 +10,7 @@ You can connect to applications running on your local machine or even on a diffe
 
 
 ## Keyword documentation
-See keyword [documentation](https://eficode.github.io/JavaFXLibrary/JavaFXLibrary.html).
+See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrary.html).
 
 ## Installation
 
