@@ -1144,8 +1144,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
             + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
     @ArgumentNames({ "timeout=" })
-    public static void waitForEventsInFxApplicationThread(int timeout) {
+    public static void waitForEventsInFxApplicationThread(int timeout) throws Throwable {
 
+        final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];
         try {
             Semaphore semaphore = new Semaphore(0);
             Platform.runLater(() -> semaphore.release());
@@ -1165,8 +1166,13 @@ public class ConvenienceKeywords extends TestFxAdapter {
                             "Fx Application Thread: " + e.getMessage());
                 }
             });
+            t.setUncaughtExceptionHandler((thread, e) -> threadException[0] = e);
             t.start();
             semaphore.acquire();
+
+            if (threadException[0] != null)
+                throw threadException[0];
+
         } catch (InterruptedException e) {
             throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
                     + e.getMessage());
@@ -1174,7 +1180,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeywordOverload
-    public static void waitForEventsInFxApplicationThread() {
+    public static void waitForEventsInFxApplicationThread() throws Throwable {
         waitForEventsInFxApplicationThread(HelperFunctions.getWaitUntilTimeout());
     }
 }
