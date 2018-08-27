@@ -76,7 +76,3 @@ Linux/OSX command line:
 java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src/test/robotframework/
 
 ```
-
-## Known issues
-
-* If the remote library server and tests are running on the same machine, the server must be restarted between test executions. If the server is not restarted, test applications will launch behind other windows, causing tests to fail when robot is trying to interact with them.
