@@ -893,7 +893,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the CheckBox element, see "
             + "`3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
-    public static Boolean getCheckBoxSelection(Object locator) {
+    public Boolean getCheckBoxSelection(Object locator) {
 
         try {
             CheckBox box = (CheckBox) objectToNode(locator);
@@ -908,7 +908,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the RadioButton element, see "
             + "`3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
-    public static Object getSelectedRadioButton(Object locator) {
+    public Object getSelectedRadioButton(Object locator) {
 
         try{
             RadioButton rb = (RadioButton)objectToNode(locator);
@@ -1130,7 +1130,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ToggleButton element, see "
             + " `3. Locating or specifying UI elements`. \n\n")
     @ArgumentNames({ "locator" })
-    public static Object getProgressBarValue(Object locator) {
+    public Object getProgressBarValue(Object locator) {
         try{
             ProgressBar pb = (ProgressBar) objectToNode(locator);
             return mapObject(pb.getProgress());
@@ -1144,7 +1144,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
             + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
     @ArgumentNames({ "timeout=" })
-    public static void waitForEventsInFxApplicationThread(int timeout) throws Throwable {
+    public void waitForEventsInFxApplicationThread(int timeout) {
 
         final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];
         try {
@@ -1171,7 +1171,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             semaphore.acquire();
 
             if (threadException[0] != null)
-                throw threadException[0];
+                throw new JavaFXLibraryNonFatalException(threadException[0].getMessage());
 
         } catch (InterruptedException e) {
             throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
@@ -1180,7 +1180,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeywordOverload
-    public static void waitForEventsInFxApplicationThread() throws Throwable {
+    public void waitForEventsInFxApplicationThread() {
         waitForEventsInFxApplicationThread(HelperFunctions.getWaitUntilTimeout());
     }
 }
