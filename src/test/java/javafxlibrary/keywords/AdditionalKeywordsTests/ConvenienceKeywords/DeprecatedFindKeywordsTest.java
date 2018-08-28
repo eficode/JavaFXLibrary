@@ -42,7 +42,7 @@ public class DeprecatedFindKeywordsTest extends TestFxAdapterTest {
     private static ConvenienceKeywords keywords;
 
     @BeforeClass
-    public static void setupAllTests() {
+    public static void setupKeywords() {
         keywords = new ConvenienceKeywords();
     }
 

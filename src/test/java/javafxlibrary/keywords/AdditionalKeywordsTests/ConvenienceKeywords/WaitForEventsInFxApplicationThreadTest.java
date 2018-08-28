@@ -36,7 +36,7 @@ public class WaitForEventsInFxApplicationThreadTest extends TestFxAdapterTest {
     private static ConvenienceKeywords keywords;
 
     @BeforeClass
-    public static void setupTests() {
+    public static void setupKeywords() {
         keywords = new ConvenienceKeywords();
     }
 
