@@ -9,6 +9,8 @@ services:
     volumes:
       - './src/test/robotframework/:/robot'
       - screen-thing:/tmp/.X11-unix
+      - './src/:/src' # ScreenCapturingTest.robot require this.
+      - javafxbinaryshare:/javafxbinary
     networks:
       - testapp
 
@@ -20,8 +22,10 @@ services:
     networks:
       - testapp
     volumes:
+      - './src/test/robotframework/:/robot' # Screen capures are saved to here "hack until remote usage copy photos to results folder"
       - './src/:/src' # ScreenCapturingTest.robot require this.
       - screen-thing:/tmp/.X11-unix
+      - javafxbinaryshare:/javafxbinary
     environment:
       - DISPLAY=:20.0
 
@@ -44,3 +48,4 @@ networks:
   testapp:
 volumes:
   screen-thing:
+  javafxbinaryshare:

@@ -18,6 +18,7 @@ RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-i
   openjdk-8-jre \
   openjfx \
   && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /code/target/javafxlibrary-*-jar-with-dependencies.jar .
+COPY --from=builder /code/target/javafxlibrary-*-jar-with-dependencies.jar /.
 EXPOSE 8270
-ENTRYPOINT java -jar javafxlibrary-*-jar-with-dependencies.jar
+COPY entrypoint_build.sh /.
+ENTRYPOINT /entrypoint_build.sh
