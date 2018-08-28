@@ -84,11 +84,17 @@ java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework
 * Docker-compose: https://docs.docker.com/compose/install/
 * VNC port: vnc://localhost:5900
 
-### Running the demo
+### Running the demo with testing env
 1. Build & Start Dockerized Environment: `docker-compose up -d robot-framework javafxcompile`
 2. Take VNC connection to: <i>vnc://<docker_daemon_ip>:5900</i>
 3. Password is: 1234
 4. Open shell by right clicking in VNC desktop and selecting Applications > Shells > Bash
-5. Execute tests: `robot --include smoke -d /robot/results /robot/acceptance`
+5. Execute tests: `test.sh`
 
-Remote server and tests run in separate containers, and their GUIs are forwarded to the VNC container.
+FYI:
+Single testcase execution in locale and remote (replace spaces with _ ):<br>
+`test.sh all '--include tag_name' '-t test_case_name'`<br>
+Single suite execution in locale and remote (replace spaces with _ ):<br>
+`test.sh all '--include tag_name' '-s suite_name'`
+<br>
+NOTE: smoke tag is default included.

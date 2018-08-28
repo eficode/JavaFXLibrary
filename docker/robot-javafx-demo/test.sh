@@ -2,9 +2,10 @@
 EXIT_VALUE=0
 
 function local() {
+  echo "**********************"
   echo "INFO: Local execution:"
   file=$(ls -1 /javafxbinary/javafxlibrary-*-jar-with-dependencies.jar)
-  java -cp "${file}" org.robotframework.RobotFramework -d /robot/results/local --include smoke $@ /robot/acceptance
+  java -cp ${file} org.robotframework.RobotFramework -d /robot/results/local --include smoke $@ /robot/acceptance
 #  $@ #just to testing script
   if [[ "$?" != "0" ]]; then
     EXIT_VALUE=$((EXIT_VALUE+1))
@@ -12,6 +13,7 @@ function local() {
 }
 
 function remote() {
+  echo "***********************"
   echo "INFO: Remote execution:"
   robot -d /robot/results/remote --include smoke $@ /robot/acceptance
 #  $@ #just to testing script
@@ -38,6 +40,8 @@ case $1 in
     ;;
   * )
     echo "ERROR:$@ is not supported parameter"
+    echo "Supported parameters: local, remote, all, demo ...and same with capitals"
+    echo "From README.md more info about usage"
     EXIT_VALUE=$((EXIT_VALUE+4))
     ;;
 esac
