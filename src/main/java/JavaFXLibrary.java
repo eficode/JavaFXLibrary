@@ -81,6 +81,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
 
         try {
+            RobotLog.ignoreDuplicates();
             // timeout + 500 ms so that underlying timeout has a chance to expire first
             WaitForAsyncUtils.waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
 
@@ -100,6 +101,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 }
             });
         } catch (TimeoutException te) {
+            RobotLog.reset();
             RuntimeException e = retExcep.get();
             runOnFailure.runOnFailure();
 
@@ -113,10 +115,12 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
             }
-        } catch (JavaFXLibraryTimeoutException jfxte){
+        } catch (JavaFXLibraryTimeoutException jfxte) {
+            RobotLog.reset();
             RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
             throw jfxte;
         }
+        RobotLog.reset();
         return retval.get();
     }
 
