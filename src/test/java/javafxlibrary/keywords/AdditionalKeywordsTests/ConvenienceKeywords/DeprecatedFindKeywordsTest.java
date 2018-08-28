@@ -15,30 +15,36 @@
  * limitations under the License.
  */
 
-package javafxlibrary.keywords.AdditionalKeywords;
+package javafxlibrary.keywords.AdditionalKeywordsTests.ConvenienceKeywords;
 
 import java.util.List;
 import com.google.common.collect.ImmutableSet;
 import javafx.css.PseudoClass;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
-import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
+import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.service.query.NodeQuery;
 
-public class ConvenienceKeywordsTest extends TestFxAdapterTest {
+public class DeprecatedFindKeywordsTest extends TestFxAdapterTest {
 
     @Mocked
     NodeQuery rootQuery;
 
     private Button button;
     private Button button2;
-    private ConvenienceKeywords keywords = new ConvenienceKeywords();
+    private static ConvenienceKeywords keywords;
+
+    @BeforeClass
+    public static void setupAllTests() {
+        keywords = new ConvenienceKeywords();
+    }
 
     @Before
     public void setup() {
@@ -57,7 +63,6 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
     @Test
     public void findAllWithPseudoClass() {
         expectTwoButtonsFromNodeQuery();
-
         List<Object> allWithPseudoClass = keywords.findAllWithPseudoClass("rootId", "selected");
         Assert.assertEquals(HelperFunctions.mapObject(button), allWithPseudoClass.get(0));
     }
@@ -65,12 +70,8 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
     @Test
     public void findNoPseudoClasses() {
         expectTwoButtonsFromNodeQuery();
-        try {
-            List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
-            Assert.assertEquals(0, hits.size());
-        } catch (JavaFXLibraryNonFatalException e) {
-
-        }
+        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
+        Assert.assertEquals(0, hits.size());
     }
 
     @Test
@@ -81,12 +82,8 @@ public class ConvenienceKeywordsTest extends TestFxAdapterTest {
                 result = ImmutableSet.of();
             }
         };
-        try {
-            List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
-            Assert.assertEquals(0, hits.size());
-        } catch (JavaFXLibraryNonFatalException e) {
-
-        }
+        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
+        Assert.assertEquals(0, hits.size());
     }
 
     private void expectTwoButtonsFromNodeQuery() {
