@@ -17,11 +17,13 @@
 
 package javafxlibrary;
 
-import javafx.application.Platform;
 import javafxlibrary.utils.TestFxAdapter;
 import mockit.Mocked;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.testfx.api.FxRobotInterface;
+
+import static junit.framework.TestCase.fail;
 
 public abstract class TestFxAdapterTest {
     public FxRobotInterface getRobot() {
@@ -31,11 +33,22 @@ public abstract class TestFxAdapterTest {
     @Mocked
     private FxRobotInterface robot;
 
-    @Before
-    public void initJfxToolkit() {
-        new javafx.embed.swing.JFXPanel();
-        TestFxAdapter.setRobot(robot);
-        Platform.setImplicitExit(false);
+    @BeforeClass
+    public static void setupTests() {
+        System.setProperty("testfx.robot", "glass");
+        System.setProperty("testfx.headless", "true");
+        System.setProperty("prism.order", "sw");
+        System.setProperty("prism.text", "t2k");
+        try {
+            org.testfx.api.FxToolkit.registerPrimaryStage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Initialization failed");
+        }
     }
 
+    @Before
+    public void initJfxToolkit() {
+        TestFxAdapter.setRobot(robot);
+    }
 }

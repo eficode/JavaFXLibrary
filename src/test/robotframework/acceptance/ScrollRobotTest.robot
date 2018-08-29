@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.ScrollRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-scrollrobot
@@ -66,6 +66,7 @@ Scroll Right
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Launch Javafx Application    ${TEST_APPLICATION}
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
     Set Variables
@@ -98,7 +99,7 @@ Count Distance
     [Arguments]    ${WHEEL_TICKS}
     ${DISTANCE}    Evaluate    ${WHEEL_TICKS} * ${SCROLL_LENGTH}
     [Return]       ${DISTANCE}
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

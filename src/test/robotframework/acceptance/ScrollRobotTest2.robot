@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.ScrollRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-scrollrobot
@@ -56,6 +56,7 @@ Scroll Left Once
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Launch Javafx Application   ${TEST_APPLICATION}
     Set Screenshot Directory    ${OUTPUT_DIR}${/}report-images
     Move To                     id=scrollPane

@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.NodeLookup related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-nodelookup
@@ -49,8 +49,9 @@ Root Node Of Node That Does Not Exist
 
 *** Keywords ***
 Setup all tests
-    Launch Javafx Application       ${TEST_APPLICATION}
-    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+    Import JavaFXLibrary
+    Launch Javafx Application    ${TEST_APPLICATION}
+    Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
     Set Timeout                     1
 
 Teardown all tests

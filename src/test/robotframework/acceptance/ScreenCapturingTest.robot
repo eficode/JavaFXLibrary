@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.ScreenCapturing related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-screencapturing
@@ -96,6 +96,7 @@ Try To Compare Different Size Images
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images

@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.DragRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force tags        set-dragrobot
@@ -242,6 +242,7 @@ Drag From + Drop To Using XPath Query
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
@@ -265,7 +266,7 @@ Set Coordinates To Use
     ${SET_Y}              Convert To Integer   ${SET_Y}
     Set Suite Variable    ${COORD_X}           ${SET_X}
     Set Suite Variable    ${COORD_Y}           ${SET_Y}
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

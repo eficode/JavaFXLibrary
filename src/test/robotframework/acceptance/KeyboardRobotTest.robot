@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.KeyboardRobot related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-keyboardrobot
@@ -80,6 +80,7 @@ Write special characters
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                 0
     Launch Javafx Application   ${TEST_APPLICATION}
     Set Screenshot Directory    ${OUTPUT_DIR}${/}report-images

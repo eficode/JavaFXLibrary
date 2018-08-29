@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.WindowTargeting related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-windowtargeting
@@ -55,6 +55,7 @@ Target Window By Node
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Launch Javafx Application    ${TEST_APPLICATION}
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
 

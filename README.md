@@ -76,3 +76,25 @@ Linux/OSX command line:
 java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src/test/robotframework/
 
 ```
+
+## Remote library demo with Docker
+### Requirements:
+* VNC viewer e.g. https://www.realvnc.com/en/connect/download/viewer/
+* Docker CE: https://docs.docker.com/install/
+* Docker-compose: https://docs.docker.com/compose/install/
+* VNC port: vnc://localhost:5900
+
+### Running the demo with testing env
+1. Build & Start Dockerized Environment: `docker-compose up -d robot-framework javafxcompile`
+2. Take VNC connection to: <i>vnc://<docker_daemon_ip>:5900</i>
+3. Password is: 1234
+4. Open shell by right clicking in VNC desktop and selecting Applications > Shells > Bash
+5. Execute tests: `test.sh`
+
+FYI:
+Single testcase execution in locale and remote (replace spaces with _ ):<br>
+`test.sh all '--include tag_name' '-t test_case_name'`<br>
+Single suite execution in locale and remote (replace spaces with _ ):<br>
+`test.sh all '--include tag_name' '-s suite_name'`
+<br>
+NOTE: smoke tag is default included.

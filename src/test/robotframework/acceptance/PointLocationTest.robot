@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test javafxlibrary.keywords.PointLocation and PointOffset related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Force Tags        set-pointlocation    set-pointoffset
@@ -170,6 +170,7 @@ Set New Target Position
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
@@ -236,7 +237,7 @@ Set Decoration Values
     Set Suite Variable      ${R_DECORATION_WIDTH}           ${RIGHT_WIDTH}
     Set Suite Variable      ${T_DECORATION_HEIGHT}          ${TOP_HEIGHT}
     Set Suite Variable      ${B_DECORATION_HEIGHT}          ${BOTTOM_HEIGHT}
-    
+
 Verify String
     [Documentation]                 Verifies that string is equal in location
     [Arguments]                     ${query}          ${string}

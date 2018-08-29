@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     Tests to test DatePicker related keywords
-Library           JavaFXLibrary
+Resource          ../resource.robot
 Suite Setup       Setup all tests
 Suite Teardown    Teardown all tests
 Test Teardown     Clear Text Input    css=.text-field
@@ -32,6 +32,7 @@ Select JavaFX Release Date
 
 *** Keywords ***
 Setup all tests
+    Import JavaFXLibrary
     Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images

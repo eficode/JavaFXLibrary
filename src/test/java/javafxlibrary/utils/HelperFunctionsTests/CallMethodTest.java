@@ -1,6 +1,6 @@
 package javafxlibrary.utils.HelperFunctionsTests;
 
-import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
@@ -54,27 +54,20 @@ public class CallMethodTest extends TestFxAdapterTest {
 
     @Test
     public void callMethod_InJavaFXThread_WithArgs() {
-        Stage stage = setupStageInJavaFXThread();
-        stage.setTitle("Original title");
-        Platform.runLater(() -> stage.show());
+        Button button = new Button("Button");
+        Object[] arguments = {"Changed"};
+        HelperFunctions.callMethod(button, "setText", arguments, true);
         waitForEventsInJavaFXThread();
-
-        Object[] arguments = {"Changed Title"};
-        HelperFunctions.callMethod(stage, "setTitle", arguments, true);
-        waitForEventsInJavaFXThread();
-
-        Assert.assertEquals("Changed Title", stage.getTitle());
-        Platform.runLater(() -> stage.close());
+        Assert.assertEquals("Changed", button.getText());
     }
 
     @Test
     public void callMethod_InJavaFXThread_NoArgs() {
-        Stage stage = setupStageInJavaFXThread();
-        Assert.assertFalse(stage.isShowing());
-        HelperFunctions.callMethod(stage, "show", new Object[]{}, true);
+        Button button = new Button("Button");
+        button.setOnAction((e) -> button.setText("Clicked"));
+        HelperFunctions.callMethod(button, "fire", new Object[]{}, true);
         waitForEventsInJavaFXThread();
-        Assert.assertTrue(stage.isShowing());
-        Platform.runLater(() -> stage.close());
+        Assert.assertEquals("Clicked", button.getText());
     }
 
     @Test
