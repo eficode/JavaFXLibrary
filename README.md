@@ -32,7 +32,7 @@ See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrar
 Import the library:
 ```
 ***Settings***
-Library    Remote    http://localhost:8270/    WITH NAME    JavaFXLibrary
+Library    Remote    http://127.0.0.1:8270    WITH NAME    JavaFXLibrary
 ```
 Now the keywords can be used as usual:
 ```
@@ -46,8 +46,8 @@ In case of duplicate keywords(multiple keywords found with same name) use e.g. `
 If you need to use the Remote library multiple times in a test suite, or just want to give it a more descriptive name, you can import it using the WITH NAME syntax.
 ```
 ***Settings***
-Library    Remote    http://localhost:8270/    WITH NAME    client1
-Library    Remote    http://localhost:8272/    WITH NAME    client2
+Library    Remote    http://127.0.0.1:8270    WITH NAME    client1
+Library    Remote    http://127.0.0.1:8270    WITH NAME    client2
 ```
 
 Now the keywords can be used as `client1.List Windows` and `client2.List Windows`

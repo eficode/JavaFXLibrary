@@ -155,7 +155,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         JavaFXLibraryRemoteServer.configureLogging();
         System.out.println("-------------------- JavaFXLibrary --------------------- ");
         RemoteServer server = new JavaFXLibraryRemoteServer();
-        server.putLibrary("/", new JavaFXLibrary());
+        server.putLibrary("/RPC2", new JavaFXLibrary());
         int port = 8270;
         InetAddress ipAddr = InetAddress.getLocalHost();
 
