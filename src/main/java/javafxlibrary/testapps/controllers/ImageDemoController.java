@@ -32,15 +32,15 @@ public class ImageDemoController implements Initializable {
 
     private @FXML TextField search;
     private @FXML VBox rowWrapper;
-    private List<File> files;
+    //private List<File> files;
     private List<File> imageFiles;
     private List<ImageFile> images;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        File folder = new File("src/main/resources/ScreenCapturing/comparison");
-        files = Arrays.asList(folder.listFiles());
-        imageFiles = new ArrayList<>(files);
+        //File folder = new File("src/main/resources/ScreenCapturing/comparison");
+        //files = Arrays.asList(folder.listFiles());
+        imageFiles = new ArrayList<>(/*files*/);
         imageFiles.add(new File("src/main/resources/fxml/javafxlibrary/ui/uiresources/ejlogo.png"));
         images = new ArrayList<>();
         Collections.shuffle(imageFiles);

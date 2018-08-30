@@ -1,13 +1,14 @@
 *** Settings ***
-Documentation     Tests to test javafxlibrary.keywords.ScreenCapturing related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Force Tags        set-screencapturing
+Documentation       Tests to test javafxlibrary.keywords.ScreenCapturing related keywords
+Library             String
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Force Tags          set-screencapturing
 
 *** Variables ***
 ${TEST_APPLICATION}     javafxlibrary.testapps.TestScreenCapturing
-${COMPARISON}           src/main/resources/screencapturing/comparison/
+${COMPARISON}           ${EMPTY}
 
 *** Test Cases ***
 Capture Node
@@ -95,6 +96,12 @@ Setup all tests
     Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+    Set comparison path
 
 Teardown all tests
     Close Javafx Application
+
+Set comparison path
+    ${dir_path}             Fetch From Left     ${CURDIR}           acceptance
+    ${comparison_path}      Catenate            SEPARATOR=          ${dir_path}    resources/screencapturingtest/
+    Set Suite Variable      ${COMPARISON}       ${comparison_path}

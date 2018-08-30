@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM dorowu/ubuntu-desktop-lxde-vnc
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -21,12 +21,14 @@ RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-i
   openjfx \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir \
-  robotframework
-
-COPY entrypoint.sh /entrypoint.sh
 COPY test.sh /bin/test.sh
-RUN mkdir ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd && chmod 555 /entrypoint.sh /bin/test.sh
-EXPOSE 5900
+RUN pip install --no-cache-dir \
+  robotframework && chmod 555 /bin/test.sh
 
-ENTRYPOINT ["x11vnc", "-create", "-forever", "-env", "FD_PROG=/entrypoint.sh", "-env", "X11VNC_CREATE_GEOM=${1:-1024x768x16}", "-usepw"]
+# JUST VNC
+#COPY entrypoint.sh /entrypoint.sh
+#RUN mkdir ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd && chmod 555 /entrypoint.sh /bin/test.sh
+#ENTRYPOINT ["x11vnc", "-create", "-forever", "-env", "FD_PROG=/entrypoint.sh", "-env", "X11VNC_CREATE_GEOM=${1:-1024x768x16}", "-usepw"]
+
+EXPOSE 5900 80
+ENTRYPOINT ["/startup.sh"]

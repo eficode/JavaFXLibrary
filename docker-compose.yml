@@ -5,7 +5,8 @@ services:
     build:
       context: ./docker/robot-javafx-demo
     ports:
-      - '5900:5900'
+      #- '5900:5900'
+      - '80:80'
     volumes:
       - './src/test/robotframework/:/robot'
       - screen-thing:/tmp/.X11-unix
@@ -13,6 +14,8 @@ services:
       - javafxbinaryshare:/javafxbinary
     networks:
       - testapp
+    environment:
+      - RESOLUTION=1920x1080
 
   javafxcompile:
     build:
@@ -27,7 +30,7 @@ services:
       - screen-thing:/tmp/.X11-unix
       - javafxbinaryshare:/javafxbinary
     environment:
-      - DISPLAY=:20.0
+      - DISPLAY=:1
 
 #  javafxrelease:
 #    build:
