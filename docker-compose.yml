@@ -15,7 +15,7 @@ services:
     networks:
       - testapp
     environment:
-      - RESOLUTION=1027x768
+      - RESOLUTION=1920x1080
 
   javafxcompile:
     build:
