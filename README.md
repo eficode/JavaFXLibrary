@@ -49,17 +49,15 @@ Library's acceptance test suite can be used as a JavaFXLibrary demo. Running the
 
 ### Running the demo using Docker
 #### Requirements:
-* VNC viewer e.g. https://www.realvnc.com/en/connect/download/viewer/
 * Docker CE: https://docs.docker.com/install/
 * Docker-compose: https://docs.docker.com/compose/install/
-* VNC port: vnc://localhost:5900
+* Port 80 is free in your machine
 
 #### Running the tests
 1. Build & start the Dockerized environment: `docker-compose up -d robot-framework javafxcompile`
-2. Take VNC connection to: <i>vnc://<docker_daemon_ip>:5900</i>
-3. Password is: 1234
-4. Open shell by right clicking in VNC desktop and selecting Applications > Shells > Bash
-5. Execute tests: `test.sh`
+2. Open browser to <docker_daemon_ip>
+3. Open xterm from Start menu > System tools > xterm
+4. Execute tests: `test.sh`
 
 Executing _test.sh_ runs the acceptance suite twice: first using JavaFXLibrary as a local Robot Framework library on Jython, and after that using the library in remote mode executing the same tests on python version of Robot Framework.
 
