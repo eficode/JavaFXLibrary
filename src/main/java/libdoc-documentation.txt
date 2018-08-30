@@ -33,12 +33,12 @@ This will start the remote server listening on port 1234.
 
 JavaFXLibrary can be taken into use as remote library in settings table as follows:
 | *Settings* | *Value* |
-| Library | Remote | http://localhost:8270/ | WITH NAME | JavaFXLibrary |
+| Library | Remote | http://localhost:8270 | WITH NAME | JavaFXLibrary |
 
 Multiple JavaFXLibraries in remote mode:
 | *Settings* | *Value* |
-| Library | Remote | ip_address:8270/ | WITH NAME | my_application |
-| Library | Remote | ip_address:8271/ | WITH NAME | my_other_application |
+| Library | Remote | ip_address:8270 | WITH NAME | my_application |
+| Library | Remote | ip_address:8271 | WITH NAME | my_other_application |
 
 
 

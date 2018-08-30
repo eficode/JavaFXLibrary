@@ -1,100 +1,66 @@
 # JavaFXLibrary
 
-[Robot Framework](http://robotframework.org) library for testing and connecting to a JavaFX java process and using [TestFX](https://github.com/TestFX/TestFX).
+[TestFX](https://github.com/TestFX/TestFX) based [Robot Framework](http://robotframework.org) library for testing JavaFX Applications.
 
-This library allows you to use robot/pybot (Python version of Robot Framework) to run test cases over remote library interface although it also works if you are running with jybot (Jython version of Robot Framework). This means that you can use your other pure Python libraries in your test cases that will not work when runnin with Jython.
+JavaFXLibrary works with both Jython (local and remote use) and Python (remote only) versions of Robot Framework. This means JavaFXLibrary can be used with Jython incompatible test libraries too by importing it as a remote library.
 
 JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
-
-You can connect to applications running on your local machine or even on a different machine.
-
 
 ## Keyword documentation
 See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrary.html).
 
-## Installation
-
-1. Download latest JavaFXLibrary and documentation from https://github.com/robotframework/JavaFXLibrary/releases/
-2. Copy(if needed) JAR to desired location and run from command line using
-    ```
-    java -jar javafxlibrary-<version>.jar
-
-    ```
-3. JavaFXLibrary in RemoteServer mode should now be running in port [8270](http://localhost:8270)
-4. Optionally JAR can be launched with port number as an optional argument:
-    ```
-    java -jar javafxlibrary-<version>.jar 1234
-    ```
-5. JavaFXLibrary in RemoteServer mode should now be running in port [1234](http://localhost:1234)
-
-## Usage in Robot suite settings
-
-Import the library:
+## Taking the library into use
+### As a local library
+1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/)
+2. Import JavaFXLibrary in test settings:
 ```
-***Settings***
+*** Settings ***
+Library    JavaFXLibrary
+```
+3. Add library jar to Jython [module search path](http://robotframework.org/robotframework/3.0b1/RobotFrameworkUserGuide.html#configuring-where-to-search-libraries-and-other-extensions) and run your tests:
+```
+jython -J-cp javafxlibrary-<version>.jar -m robot.run tests.robot
+```
+
+### As a remote library
+1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/)
+2. Start JavaFXLibrary as a remote library: `java -jar javafxlibrary-<version>.jar`
+  - Remote library starts in port [8270](http://localhost:8270) by default.
+  - Port number can also be defined in the start command: `java -jar javafxlibrary-<version>.jar 1234`
+3. Import JavaFXLibrary in test settings:
+```
+*** Settings ***
 Library    Remote    http://127.0.0.1:8270    WITH NAME    JavaFXLibrary
 ```
-Now the keywords can be used as usual:
-```
-Launch Javafx Application    javafxlibrary.testapps.TestClickRobot
-```
+4. Run your tests: `robot tests.robot`
 
-In case of duplicate keywords(multiple keywords found with same name) use e.g. `JavaFXLibrary.'Keyword Name'` to get rid of warnings.
+## Identifying JavaFX UI objects
+[Scenic View](http://fxexperience.com/scenic-view/) is a tool that allows you to inspect the JavaFX application scenegraph. This can be useful especially when you do not have access to the source code.
 
-## Using multiple remote libraries
-
-If you need to use the Remote library multiple times in a test suite, or just want to give it a more descriptive name, you can import it using the WITH NAME syntax.
-```
-***Settings***
-Library    Remote    http://127.0.0.1:8270    WITH NAME    client1
-Library    Remote    http://127.0.0.1:8270    WITH NAME    client2
-```
-
-Now the keywords can be used as `client1.List Windows` and `client2.List Windows`
-
-## JavaFX UI objects
-
-With [Scenic View](http://fxexperience.com/scenic-view/) you can see all your JavaFX applications UI objects.
-See [keyword documentation](#keyword-documentation) for additional info how to use them with keywords.
+See [keyword documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrary.html#3.%20Locating%20JavaFX%20Nodes) for detailed information about handling UI elements with the library.
 
 ## JavaFXLibrary demo
 
-This can be also used as JavaFXLibrary demo.
+Library's acceptance test suite can be used as a JavaFXLibrary demo. Running the test suite requires [Maven](https://maven.apache.org) installation.
 
-Generic way with Maven (in repository root):
-```
-mvn verify
-```
+### Running the demo locally
+- Clone the repository: `git clone https://github.com/eficode/JavaFXLibrary.git`
+- Run acceptance tests (in repository root): `mvn verify`
 
-Windows command line:
-```
-java -cp "target\javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src\test\robotframework/
-```
-
-Linux/OSX command line:
-```
-java -cp "target/javafxlibrary-<version>.jar"  org.robotframework.RobotFramework --include smoke src/test/robotframework/
-
-```
-
-## Remote library demo with Docker
-### Requirements:
+### Running the demo using Docker
+#### Requirements:
 * VNC viewer e.g. https://www.realvnc.com/en/connect/download/viewer/
 * Docker CE: https://docs.docker.com/install/
 * Docker-compose: https://docs.docker.com/compose/install/
 * VNC port: vnc://localhost:5900
 
-### Running the demo with testing env
-1. Build & Start Dockerized Environment: `docker-compose up -d robot-framework javafxcompile`
+#### Running the tests
+1. Build & start the Dockerized environment: `docker-compose up -d robot-framework javafxcompile`
 2. Take VNC connection to: <i>vnc://<docker_daemon_ip>:5900</i>
 3. Password is: 1234
 4. Open shell by right clicking in VNC desktop and selecting Applications > Shells > Bash
 5. Execute tests: `test.sh`
 
-FYI:
-Single testcase execution in locale and remote (replace spaces with _ ):<br>
-`test.sh all '--include tag_name' '-t test_case_name'`<br>
-Single suite execution in locale and remote (replace spaces with _ ):<br>
-`test.sh all '--include tag_name' '-s suite_name'`
-<br>
-NOTE: smoke tag is default included.
+Executing _test.sh_ runs the acceptance suite twice: first using JavaFXLibrary as a local Robot Framework library on Jython, and after that using the library in remote mode executing the same tests on python version of Robot Framework.
+
+If you want the suite to run only once, you can define which type of library to use by including **local** or **remote** as an argument. For example command `test.sh remote` will execute the suite only in remote mode.
