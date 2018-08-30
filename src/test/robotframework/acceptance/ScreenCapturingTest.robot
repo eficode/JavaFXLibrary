@@ -41,19 +41,14 @@ Capture Bounds
     ${IMAGE2}                   Load Image              ${COMPARISON}bounds.png
     Images Should Match         ${IMAGE1}               ${IMAGE2}       ${99}
 
-Load Image From URL
-    [Tags]          smoke
-    ${IMAGE}        Load Image From Url     http://i.imgur.com/A99VNbK.png
-    ${TARGET}       Load Image              ${COMPARISON}url.png
-
 Save And Load Image With Path
-    [Tags]          smoke
-    ${NODE}         Find            id=rectangleContainer
-    ${IMAGE1}       Capture Image   ${NODE}
-    Save Image As   ${IMAGE1}       ${TEMPDIR}${/}image.png
-    Log             <img src="${TEMPDIR}${/}image.png" widht="800">   html=true
-    ${IMAGE2}       Load Image      ${TEMPDIR}${/}image.png
-    Images Should Match             ${IMAGE1}       ${IMAGE2}
+    [Tags]                  smoke
+    ${NODE}                 Find            id=rectangleContainer
+    ${IMAGE1}               Capture Image   ${NODE}
+    Save Image As           ${IMAGE1}       ${TEMPDIR}${/}image.png
+    Log                     <img src="${TEMPDIR}${/}image.png" widht="800">   html=true
+    ${IMAGE2}               Load Image      ${TEMPDIR}${/}image.png
+    Images Should Match     ${IMAGE1}       ${IMAGE2}
 
 Images Should Match
     [Tags]                  smoke
