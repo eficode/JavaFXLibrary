@@ -45,7 +45,10 @@ import static javafxlibrary.utils.HelperFunctions.*;
 @RobotKeywords
 public class ScreenCapturing extends TestFxAdapter {
 
-    @RobotKeyword
+    @RobotKeyword("Sets whether to log images into the log.html file or not.\n\n"
+            + "Argument ``value`` is a string. Accepted values are \"on\" and \"off\". They can be given in uppercase as well. \n\n"
+            + "\nExample:\n"
+            + "| Set Image Logging | OFF |\n")
     @ArgumentNames({ "value" })
     public void setImageLogging(String value) {
         if (value.toLowerCase().equals("on"))
