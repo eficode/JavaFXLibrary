@@ -32,6 +32,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -84,14 +85,22 @@ public class ScreenCapturing extends TestFxAdapter {
             image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
             robotContext.getCaptureSupport().saveImage(image, path);
-            File imageFile = path.toFile();
-            /*  TODO: Copy and resize image to a temporary file and embed that instead
-                Add path to the original file in logs in case greater resolution is needed */
-            byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
-            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
 
             if (logImage) {
-                Double printSize = ( targetBounds.getWidth() > 800 ) ? 800 : targetBounds.getWidth();
+                Image resizedImage = resizeImage(image, path);
+                Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
+                robotContext.getCaptureSupport().saveImage(resizedImage, tempPath);
+
+                File imageFile = tempPath.toFile();
+                byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
+                String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+                if (imageFile.delete())
+                    RobotLog.debug("Deleted temporary image file successfully.");
+                else
+                    RobotLog.debug("Could not delete the file: " + imageFile.toString());
+
+                Double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
                 System.out.println("*HTML* <img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
             }
             return mapObject(image);
@@ -159,11 +168,28 @@ public class ScreenCapturing extends TestFxAdapter {
         File errDir = new File(errorImageFilePath);
         if(!errDir.exists())
             errDir.mkdirs();
-        return Paths.get( errorImageFilePath, errorImageFilename);
+        return Paths.get(errorImageFilePath, errorImageFilename);
     }
 
     private static String formatErrorTimestamp(ZonedDateTime dateTime, String dateTimePattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimePattern);
         return dateTime.format(formatter);
+    }
+
+    private static Image resizeImage(Image image, Path path) {
+        double width = image.getWidth();
+        double height = image.getHeight();
+
+        if (width < 800)
+            return image;
+
+        RobotLog.info("Full resolution image can be found at " + path);
+        double multiplier = width / 800;
+        try {
+            String url = path.toUri().toURL().toString();
+            return new Image(url, width / multiplier, height / multiplier, true, false);
+        } catch (MalformedURLException e) {
+            throw new JavaFXLibraryNonFatalException("Unable to log the screenshot: image resizing failed!");
+        }
     }
 }
