@@ -3,6 +3,8 @@ Documentation       Tests to test javafxlibrary.keywords.AdditionalKeywords.Find
 Resource            ../resource.robot
 Suite Setup         Setup All Tests
 Suite Teardown      Teardown all tests
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Enable Image Logging
 Force Tags          set-find
 
 *** Variables ***

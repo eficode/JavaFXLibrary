@@ -1,10 +1,11 @@
 *** Settings ***
-Documentation     Tests to test javafxlibrary.keywords.MoveRobot related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Test Setup        Move To Top Left Corner
-Force Tags        set-moverobot
+Documentation       Tests to test javafxlibrary.keywords.MoveRobot related keywords
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Test Setup          Setup test case
+Test Teardown       Enable Image Logging
+Force Tags          set-moverobot
 
 *** Variables ***
 ${TEST_APPLICATION}         javafxlibrary.testapps.TestPointLocation
@@ -22,7 +23,7 @@ Move By
     Verify String           id=locationLabel        75 | 75
 
 Move To Coordinates
-    [Tags]                  smoke                           demo-set
+    [Tags]                  smoke                           demo-set                     negative
     ${X}                    Evaluate                        ${SCENE_MINX} + ${200}
     ${Y}                    Evaluate                        ${SCENE_MINY} + ${200}
     Move To Coordinates     ${X}                            ${Y}
@@ -92,6 +93,10 @@ Setup all tests
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Bounds Values
     Set Decoration Values
+
+Setup test case
+    Move To Top Left Corner
+    Disable Image Logging For Negative Tests
 
 Teardown all tests
     Close Javafx Application

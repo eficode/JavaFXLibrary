@@ -22,6 +22,7 @@ import javafx.geometry.Bounds;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.io.IOUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywordOverload;
@@ -29,19 +30,35 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+
 import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class ScreenCapturing extends TestFxAdapter {
 
+    @RobotKeyword
+    @ArgumentNames({ "value" })
+    public void setImageLogging(String value) {
+        if (value.toLowerCase().equals("on"))
+            TestFxAdapter.logImages = true;
+        else if (value.toLowerCase().equals("off"))
+            TestFxAdapter.logImages = false;
+        else
+            throw new JavaFXLibraryNonFatalException("Value \"" + value + "\" is not supported! Value must be either " +
+                    "\"ON\" or \"OFF\"");
+    }
+
     @RobotKeywordOverload
     public Object captureImage(Object locator){
-        return captureImage(locator, true);
+        return captureImage(locator, TestFxAdapter.logImages);
     }
 
     @RobotKeyword("Returns a screenshot of the given locator.\n\n"
@@ -56,7 +73,7 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Image | \\#id | logImage=False |\n" )
     @ArgumentNames({"locator", "logImage=True"})
     public Object captureImage(Object locator, boolean logImage){
-        if(locator == null)
+        if (locator == null)
             throw new JavaFXLibraryNonFatalException("Unable to capture image, given locator was null!");
 
         RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
@@ -67,18 +84,24 @@ public class ScreenCapturing extends TestFxAdapter {
             image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
             robotContext.getCaptureSupport().saveImage(image, path);
+            File imageFile = path.toFile();
+            /*  TODO: Copy and resize image to a temporary file and embed that instead
+                Add path to the original file in logs in case greater resolution is needed */
+            byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
+            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
 
-            if(logImage) {
+            if (logImage) {
                 Double printSize = ( targetBounds.getWidth() > 800 ) ? 800 : targetBounds.getWidth();
-                System.out.println("*HTML* <img src=\"" + path + "\" width=\"" + printSize + "px\">");
+                System.out.println("*HTML* <img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
             }
-
             return mapObject(image);
 
+        } catch (IOException e) {
+            throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator + "\"", e);
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator.toString() + "\"", e);
+            throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator + "\"", e);
         }
     }
 

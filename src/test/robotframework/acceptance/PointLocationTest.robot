@@ -1,9 +1,11 @@
 *** Settings ***
-Documentation     Tests to test javafxlibrary.keywords.PointLocation and PointOffset related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Force Tags        set-pointlocation    set-pointoffset
+Documentation       Tests to test javafxlibrary.keywords.PointLocation and PointOffset related keywords
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Enable Image Logging
+Force Tags          set-pointlocation    set-pointoffset
 
 *** Variables ***
 ${TEST_APPLICATION}         javafxlibrary.testapps.TestPointLocation

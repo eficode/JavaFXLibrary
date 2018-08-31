@@ -4,6 +4,8 @@ Library             String
 Resource            ../resource.robot
 Suite Setup         Setup all tests
 Suite Teardown      Teardown all tests
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Enable Image Logging
 Force Tags          set-screencapturing
 
 *** Variables ***

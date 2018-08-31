@@ -1,10 +1,11 @@
 *** Settings ***
-Documentation     Tests to test javafxlibrary.keywords.ClickRobot related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Test Setup        Reset Counters
-Force tags        set-clickrobot
+Documentation       Tests to test javafxlibrary.keywords.ClickRobot related keywords
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Test Setup          Setup test case
+Test Teardown       Enable Image Logging
+Force tags          set-clickrobot
 
 *** Variables ***
 ${TEST_APPLICATION}         javafxlibrary.testapps.TestClickRobot
@@ -262,6 +263,10 @@ Setup all tests
     Set Scene Values
     Set Window Values
     Set Timeout                     1
+
+Setup test case
+    Reset Counters
+    Disable Image Logging For Negative Tests
 
 Teardown all tests
     Close Javafx Application

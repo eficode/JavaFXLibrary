@@ -44,6 +44,8 @@ public class TestFxAdapter {
     // TODO: consider adding support for multiple sessions
     private static Session activeSession = null;
 
+    protected static boolean logImages = true;
+
     // internal book keeping for objects
     public static HashMap objectMap = new HashMap();
 

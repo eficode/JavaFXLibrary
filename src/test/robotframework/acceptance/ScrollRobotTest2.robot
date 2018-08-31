@@ -1,9 +1,11 @@
 *** Settings ***
-Documentation     Tests to test javafxlibrary.keywords.ScrollRobot related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Force Tags        set-scrollrobot
+Documentation       Tests to test javafxlibrary.keywords.ScrollRobot related keywords
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Enable Image Logging
+Force Tags          set-scrollrobot
 
 *** Variables ***
 ${TEST_APPLICATION}   javafxlibrary.testapps.TestScrollRobot2

@@ -3,7 +3,8 @@ Documentation       Tests for handling Swing embedded JavaFX nodes
 Resource            ../resource.robot
 Force Tags          set-embedded
 Suite Setup         Import JavaFXLibrary
-Test Teardown       Close Test Application
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Teardown Test Case
 
 *** Testcases ***
 Swing Embedded JavaFX Click Test
@@ -31,6 +32,10 @@ Launch Swing Application Using External Wrapper Class
     Wait Until Keyword Succeeds     3 sec           250ms       Text Value Should Be    JavaFXLibrary
 
 *** Keywords ***
+Teardown Test Case
+    Close Test Application
+    Enable Image Logging
+
 Text Value Should Be
     [Arguments]         ${value}
     ${text}             Get Node Text       id=textValue

@@ -1,10 +1,11 @@
 *** Settings ***
-Documentation     Tests to test DatePicker related keywords
-Resource          ../resource.robot
-Suite Setup       Setup all tests
-Suite Teardown    Teardown all tests
-Test Teardown     Clear Text Input    css=.text-field
-Force Tags        set-datepicker
+Documentation       Tests to test DatePicker related keywords
+Resource            ../resource.robot
+Suite Setup         Setup all tests
+Suite Teardown      Teardown all tests
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Teardown test case
+Force Tags          set-datepicker
 
 *** Variables ***
 ${TEST_APPLICATION}   javafxlibrary.testapps.DatePickerApp
@@ -39,6 +40,10 @@ Setup all tests
 
 Teardown all tests
     Close Javafx Application
+
+Teardown test case
+    Clear Text Input    css=.text-field
+    Enable Image Logging
 
 Set Year
     [Arguments]                 ${year}

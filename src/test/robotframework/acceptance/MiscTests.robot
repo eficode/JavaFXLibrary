@@ -5,6 +5,8 @@ Library             Collections
 Library             String
 Suite Setup         Setup All Tests
 Suite Teardown      Close Javafx Application
+Test Setup          Disable Image Logging For Negative Tests
+Test Teardown       Enable Image Logging
 
 *** Variables ***
 ${CURRENT_APPLICATION}    NOT SET
@@ -88,7 +90,7 @@ Change Node Fill Using Call Method In JavaFX Application Thread
     Should End With                                 ${after_reset}          ffff00ff
 
 Set Node Visibility (Call Method With Argument Types That Require Casting)
-    [Tags]                                          smoke    demo-set
+    [Tags]                                          smoke       demo-set    negative
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
     ${node}    Find                                 id=yellow
     Node Should Be Visible                          ${node}
