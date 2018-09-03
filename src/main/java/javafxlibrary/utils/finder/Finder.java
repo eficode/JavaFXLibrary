@@ -23,6 +23,7 @@ import javafx.stage.Window;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.testfx.api.FxRobotInterface;
+import org.testfx.service.query.EmptyNodeQueryException;
 
 import java.util.*;
 
@@ -141,13 +142,21 @@ public class Finder {
 
     private Node executeFind(Parent root, Query query) {
         RobotLog.debug("Executing find with root: " + root + " and query: " + query.getQuery());
-        FindOperation findOperation = new FindOperation(root, query, false);
-        return (Node) findOperation.executeLookup();
+        try {
+            FindOperation findOperation = new FindOperation(root, query, false);
+            return (Node) findOperation.executeLookup();
+        } catch (EmptyNodeQueryException e) {
+            return null;
+        }
     }
 
     private Set<Node> executeFindAll(Parent root, Query query) {
         RobotLog.debug("Executing find all with root: " + root + " and query: " + query.getQuery());
-        FindOperation findOperation = new FindOperation(root, query, true);
-        return new LinkedHashSet<>((Set<Node>)findOperation.executeLookup());
+        try {
+            FindOperation findOperation = new FindOperation(root, query, true);
+            return new LinkedHashSet<>((Set<Node>)findOperation.executeLookup());
+        } catch (EmptyNodeQueryException e) {
+            return Collections.emptySet();
+        }
     }
 }
