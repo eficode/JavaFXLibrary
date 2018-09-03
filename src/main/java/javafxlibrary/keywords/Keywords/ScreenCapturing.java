@@ -29,9 +29,8 @@ import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -94,14 +93,10 @@ public class ScreenCapturing extends TestFxAdapter {
                 Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
                 robotContext.getCaptureSupport().saveImage(resizedImage, tempPath);
 
-                File imageFile = tempPath.toFile();
+                File imageFile = convertToJpeg(tempPath);
                 byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
                 String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-
-                if (imageFile.delete())
-                    RobotLog.debug("Deleted temporary image file successfully.");
-                else
-                    RobotLog.debug("Could not delete the file: " + imageFile.toString());
+                imageFile.delete();
 
                 Double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
                 System.out.println("*HTML* <img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
@@ -190,9 +185,21 @@ public class ScreenCapturing extends TestFxAdapter {
         double multiplier = width / 800;
         try {
             String url = path.toUri().toURL().toString();
-            return new Image(url, width / multiplier, height / multiplier, true, false);
+            return new Image(url, width / multiplier, height / multiplier, true, true);
         } catch (MalformedURLException e) {
             throw new JavaFXLibraryNonFatalException("Unable to log the screenshot: image resizing failed!");
         }
+    }
+
+    private File convertToJpeg(Path path) throws IOException {
+        BufferedImage bufferedImage;
+        bufferedImage = ImageIO.read(path.toFile());
+        BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
+        path.toFile().delete();
+        Path tempPathJpeg = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.jpg");
+        ImageIO.write(newBufferedImage, "jpg", tempPathJpeg.toFile());
+        return tempPathJpeg.toFile();
     }
 }
