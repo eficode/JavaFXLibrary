@@ -27,7 +27,6 @@ import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.api.annotation.Unstable;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -65,7 +64,6 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Release | CONTROL | SHIFT | G | \n"
             + "Note: passing in an empty list will release all pressed keys.\n\n")
     @ArgumentNames({ "*keys" })
-    @Unstable(reason = "could be renamed to accept empty arrays")
     public FxRobotInterface release(String... keys) {
         try {
             RobotLog.info("Releasing keys: " + Arrays.asList(keys));
@@ -145,7 +143,6 @@ public class KeyboardRobot extends TestFxAdapter {
     }
 
     @RobotKeyword("Closes the current window, same as ALT + F4 in Windows \n\n")
-    @Unstable(reason = "maybe extract this into a new class")
     public FxRobotInterface closeCurrentWindow() {
         try {
             if (isMac()) {

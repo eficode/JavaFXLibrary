@@ -25,7 +25,6 @@ import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.api.annotation.Unstable;
 
 import java.util.Arrays;
 
@@ -37,7 +36,6 @@ public class MouseRobot extends TestFxAdapter {
             + "\nExample: \n"
             + "| Press Mouse Button | PRIMARY | \n")
     @ArgumentNames({ "*buttons" })
-    @Unstable(reason = "could be renamed to accept empty arrays")
     public FxRobotInterface pressMouseButton(String... buttons) {
 
         try {
@@ -55,7 +53,6 @@ public class MouseRobot extends TestFxAdapter {
             + "\nExample: \n"
             + "| Release Mouse Button | SECONDARY | \n")
     @ArgumentNames({ "*buttons" })
-    @Unstable(reason = "could be renamed to accept empty arrays")
     public FxRobotInterface releaseMouseButton(String... buttons) {
         try {
             RobotLog.info("Releasing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
