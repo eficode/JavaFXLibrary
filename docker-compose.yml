@@ -5,12 +5,10 @@ services:
     build:
       context: ./docker/robot-javafx-demo
     ports:
-      #- '5900:5900'
       - '80:80'
     volumes:
       - './src/test/robotframework/:/robot'
       - screen-thing:/tmp/.X11-unix
-      - './src/:/src' # ScreenCapturingTest.robot require this.
       - javafxbinaryshare:/javafxbinary
     networks:
       - testapp
@@ -25,8 +23,7 @@ services:
     networks:
       - testapp
     volumes:
-      - './src/test/robotframework/:/robot' # Screen capures are saved to here "hack until remote usage copy photos to results folder"
-      - './src/:/src' # ScreenCapturingTest.robot require this.
+      - './src/test/robotframework/:/robot' # Required for executing tests from robot-framework container
       - screen-thing:/tmp/.X11-unix
       - javafxbinaryshare:/javafxbinary
     environment:
