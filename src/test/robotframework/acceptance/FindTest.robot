@@ -146,7 +146,18 @@ Find All With Pseudo Class
     Length Should Be    ${hovered}      3
     Should Contain      ${hovered}      ${node}
 
-# TODO: Add test for text= prefix when next TestFX version comes out (4.0.14-alpha)
+Find Text Node With Text
+    [Tags]                      smoke
+    Set Test App                ${BOUNDS_APP}
+    ${result}                   Find            text="300x150"
+    Parents Should Be Equal     ${result}       id=darkblue
+
+Find All Text Nodes With Text
+    [Tags]              smoke
+    Set Test App        ${BOUNDS_APP}
+    @{result}           Find All        text="75x75"
+    Length Should Be    ${result}       6
+    Get Length          ${result}
 
 Nothing Is Found
     [Tags]              smoke       negative
@@ -195,6 +206,45 @@ Previous Query Returns Nothing In Chained Selector With Find All When failIfNotF
     Set Test App        ${BOUNDS_APP}
     ${msg}              Run Keyword And Expect Error    *    Find All    css=VBox css=ZBox Pane id=lime    true
     Should Be Equal     ${msg}    Unable to find anything with query: "css=VBox css=ZBox Pane id=lime"
+
+Find Labeled Node With Text
+    [Tags]              smoke
+    Set Test App        javafxlibrary.testapps.TestWindowManagement
+    ${target}           Find            id=navigationDialog
+    ${result}           Find            text="Dialog Example"
+    Should Be Equal     ${result}       ${target}
+
+Find All Labeled Nodes With Text
+    [Tags]              smoke
+    Set Test App        javafxlibrary.testapps.TestWindowManagement
+    Open Dialog In Window Management App
+    Write To            id=nameField            labeled text
+    Write To            id=phoneField           labeled text
+    Click On            text="Add"
+    ${result}           Find All                text="labeled text"
+    # Lookup returns textareas and their text as separate nodes
+    Length Should Be    ${result}               4
+
+Find TextInputControl Node With Text
+    [Tags]              smoke
+    Set Test App        javafxlibrary.testapps.TestWindowManagement
+    Open Dialog In Window Management App
+    Write To            id=nameField            Text input
+    ${result}           Find                    text="Text input"
+    ${target}           Find                    id=nameField
+    Click On            text="Add"
+    Should Be Equal     ${result}               ${target}
+
+Find All TextInputControl Nodes With Text
+    [Tags]              smoke
+    Set Test App        javafxlibrary.testapps.TestWindowManagement
+    Open Dialog In Window Management App
+    Write To            id=nameField            Finder test
+    Write To            id=phoneField           Finder test
+    ${result}           Find All                text="Finder test"
+    Click On            text="Add"
+    # Lookup returns textareas and their text as separate nodes
+    Length Should Be    ${result}               4
 
 Find From Another Window
     [Tags]              smoke
@@ -281,6 +331,16 @@ Change Current Application
     Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
     Launch Javafx Application       ${APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
+
+Parents Should Be Equal
+    [Arguments]         ${node1}            ${node2}
+    ${parent1}          Get Node Parent     ${node1}
+    ${parent2}          Get Node Parent     ${node2}
+    Should Be Equal     ${parent1}          ${parent2}
+
+Open Dialog In Window Management App
+    Click On            id=navigationDialog
+    Click On            id=addEmployeeButton
 
 Setup All Tests
     Import JavaFXLibrary

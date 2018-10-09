@@ -25,8 +25,8 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.TestFxAdapter;
 import org.testfx.api.FxRobotInterface;
-import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.service.query.NodeQuery;
+import org.testfx.util.NodeQueryUtils;
 
 import java.util.*;
 
@@ -77,7 +77,7 @@ public class FindOperation {
                 NodeQuery classLookupResults = classLookup(root, lookupQuery);
                 return findAll ? classLookupResults.queryAll() : classLookupResults.query();
             case TEXT:
-                NodeQuery textLookupResults = robot.from(root).lookup(LabeledMatchers.hasText(lookupQuery));
+                NodeQuery textLookupResults = robot.from(root).lookup(NodeQueryUtils.hasText(lookupQuery));
                 return findAll ? textLookupResults.queryAll() : textLookupResults.query();
             case XPATH:
                 XPathFinder xPathFinder = new XPathFinder();
