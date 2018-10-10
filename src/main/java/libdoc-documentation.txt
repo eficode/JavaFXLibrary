@@ -148,7 +148,7 @@ with complex data structures.
 == 5. Used ENUMs ==
 | [https://github.com/TestFX/TestFX/blob/master/subprojects/testfx-core/src/main/java/org/testfx/robot/Motion.java|Motion] | DEFAULT, DIRECT, HORIZONTAL_FIRST, VERTICAL_FIRST |
 | [https://docs.oracle.com/javafx/2/api/javafx/scene/input/MouseButton.html|MouseButton] | MIDDLE, NONE, PRIMARY, SECONDARY |
-| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html|KeyCode] | Check the link |
+| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html|KeyCode] | Check the link 'KeyCode' on the left |
 | [https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/TimeUnit.html|TimeUnit] | DAYS, HOURS, MICROSECONDS, MILLISECONDS, MINUTES, NANOSECONDS, SECONDS |
 | [https://docs.oracle.com/javafx/2/api/javafx/geometry/VerticalDirection.html|VerticalDirection] | UP, DOWN |
 | [https://docs.oracle.com/javafx/2/api/javafx/geometry/HorizontalDirection.html|HorizontalDirection] | LEFT, RIGHT |
