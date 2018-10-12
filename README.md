@@ -11,7 +11,7 @@ See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrar
 
 ## Taking the library into use
 ### As a local library
-1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/)
+1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/) or [Maven Central](https://search.maven.org/artifact/org.robotframework/javafxlibrary).
 2. Import JavaFXLibrary in test settings:
 ```
 *** Settings ***
@@ -23,7 +23,7 @@ jython -J-cp javafxlibrary-<version>.jar -m robot.run tests.robot
 ```
 
 ### As a remote library
-1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/)
+1. Download JavaFXLibrary jar file from [releases](https://github.com/eficode/JavaFXLibrary/releases/) or [Maven Central](https://search.maven.org/artifact/org.robotframework/javafxlibrary).
 2. Start JavaFXLibrary as a remote library: `java -jar javafxlibrary-<version>.jar`
   - Remote library starts in port [8270](http://localhost:8270) by default.
   - Port number can also be defined in the start command: `java -jar javafxlibrary-<version>.jar 1234`
