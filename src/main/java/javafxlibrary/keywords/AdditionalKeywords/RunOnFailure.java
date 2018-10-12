@@ -55,18 +55,15 @@ public class RunOnFailure extends TestFxAdapter{
 
         runningOnFailureRoutine = true;
 
+        RobotLog.info("JavaFXLibrary keyword has failed!");
         if (robot == null) {
             RobotLog.error("FxRobot not initialized, launch test application with the library");
-        } else if (TestFxAdapter.logImages) {
-            RobotLog.info("JavaFxLibrary keyword has failed! Below a screenshot from erroneous situation:");
-            if (robot.targetWindow() != null) {
-                new ScreenCapturing().captureImage(robot.targetWindow());
-            } else
-                new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());
+        }
+
+        if (robot.targetWindow() != null) {
+            new ScreenCapturing().captureImage(robot.targetWindow());
         } else {
-            RobotLog.info("JavaFXLibrary keyword has failed!");
-            RobotLog.info("Not taking a screenshot since Set Image Logging is set to off. To enable screenshots " +
-                    "on failed keywords, use keyword 'Set Image Logging    ON'");
+            new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());
         }
 
         runningOnFailureRoutine = false;

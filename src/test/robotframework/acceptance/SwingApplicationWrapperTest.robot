@@ -3,7 +3,7 @@ Documentation       Tests for handling Swing embedded JavaFX nodes
 Resource            ../resource.robot
 Force Tags          set-embedded
 Suite Setup         Import JavaFXLibrary
-Test Setup          Disable Image Logging For Negative Tests
+Test Setup          Disable Embedded Image Logging For Negative Tests
 Test Teardown       Teardown Test Case
 
 *** Testcases ***

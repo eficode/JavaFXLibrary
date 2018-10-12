@@ -22,6 +22,11 @@ public class RobotLog {
             System.out.println("*INFO* " + message);
     }
 
+    public static void html(String message) {
+        if (shouldLogMessage(message))
+            System.out.println("*HTML* " + message);
+    }
+
     public static void debug(String message) {
         if (shouldLogMessage(message))
             System.out.println("*DEBUG* " + message);

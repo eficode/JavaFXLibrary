@@ -96,7 +96,7 @@ Setup all tests
 
 Setup test case
     Move To Top Left Corner
-    Disable Image Logging For Negative Tests
+    Disable Embedded Image Logging For Negative Tests
 
 Teardown all tests
     Close Javafx Application

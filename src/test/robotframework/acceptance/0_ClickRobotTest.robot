@@ -266,7 +266,7 @@ Setup all tests
 
 Setup test case
     Reset Counters
-    Disable Image Logging For Negative Tests
+    Disable Embedded Image Logging For Negative Tests
 
 Teardown all tests
     Close Javafx Application

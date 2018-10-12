@@ -5,7 +5,7 @@ Library             Collections
 Library             String
 Suite Setup         Setup All Tests
 Suite Teardown      Close Javafx Application
-Test Setup          Disable Image Logging For Negative Tests
+Test Setup          Disable Embedded Image Logging For Negative Tests
 Test Teardown       Enable Image Logging
 
 *** Variables ***

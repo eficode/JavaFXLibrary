@@ -44,24 +44,24 @@ import static javafxlibrary.utils.HelperFunctions.*;
 @RobotKeywords
 public class ScreenCapturing extends TestFxAdapter {
 
-    @RobotKeyword("Sets whether to log images into the log.html file or not.\n\n"
-            + "Argument ``value`` is a string. Accepted values are \"on\" and \"off\". They can be given in uppercase as well. \n\n"
+    @RobotKeyword("Sets whether to embed log images directly into the log.html file or as a link to a file on local disk.\n\n"
+            + "Argument ``value`` is a string. Accepted values are ``embedded`` (initial value) and ``diskonly``. They can be given in uppercase as well. \n\n"
             + "\nExample:\n"
-            + "| Set Image Logging | OFF |\n")
+            + "| Set Image Logging | DISKONLY |\n")
     @ArgumentNames({ "value" })
     public void setImageLogging(String value) {
-        if (value.toLowerCase().equals("on"))
-            TestFxAdapter.logImages = true;
-        else if (value.toLowerCase().equals("off"))
-            TestFxAdapter.logImages = false;
+        if (value.toLowerCase().equals("embedded"))
+            TestFxAdapter.logImages = "embedded";
+        else if (value.toLowerCase().equals("diskonly"))
+            TestFxAdapter.logImages = "diskonly";
         else
             throw new JavaFXLibraryNonFatalException("Value \"" + value + "\" is not supported! Value must be either " +
-                    "\"ON\" or \"OFF\"");
+                    "\"EMBEDDED\" or \"DISKONLY\"");
     }
 
     @RobotKeywordOverload
     public Object captureImage(Object locator){
-        return captureImage(locator, TestFxAdapter.logImages);
+            return captureImage(locator, true);
     }
 
     @RobotKeyword("Returns a screenshot of the given locator.\n\n"
@@ -89,17 +89,24 @@ public class ScreenCapturing extends TestFxAdapter {
             robotContext.getCaptureSupport().saveImage(image, path);
 
             if (logImage) {
-                Image resizedImage = resizeImage(image, path);
-                Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
-                robotContext.getCaptureSupport().saveImage(resizedImage, tempPath);
-
-                File imageFile = convertToJpeg(tempPath);
-                byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
-                String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-                imageFile.delete();
-
                 Double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
-                System.out.println("*HTML* <img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
+
+                if(TestFxAdapter.logImages.toLowerCase().equals("embedded")) {
+                    Image resizedImage = resizeImage(image, path);
+                    Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
+                    robotContext.getCaptureSupport().saveImage(resizedImage, tempPath);
+
+                    File imageFile = convertToJpeg(tempPath);
+                    byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
+                    String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+                    imageFile.delete();
+
+                    RobotLog.html("<img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
+
+                } else {
+                    // diskonly option
+                    RobotLog.html("<img src=\"" + path + "\" width=\"" + printSize + "px\">");
+                }
             }
             return mapObject(image);
 
@@ -181,7 +188,7 @@ public class ScreenCapturing extends TestFxAdapter {
         if (width < 800)
             return image;
 
-        RobotLog.info("Full resolution image can be found at " + path);
+        RobotLog.html("Full resolution image can be found from <a href=" + path + " >" + path + "</a>.");
         double multiplier = width / 800;
         try {
             String url = path.toUri().toURL().toString();
