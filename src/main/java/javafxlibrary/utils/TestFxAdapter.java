@@ -35,12 +35,6 @@ public class TestFxAdapter {
     }
     public static FxRobotInterface getRobot() { return robot; }
 
-    // current robot context
-    protected static FxRobotContext robotContext;
-    public static void setRobotContext(FxRobotContext context) {
-        TestFxAdapter.robotContext = context;
-    }
-
     // TODO: consider adding support for multiple sessions
     private static Session activeSession = null;
 
@@ -62,14 +56,12 @@ public class TestFxAdapter {
         }
 
         setRobot(activeSession.sessionRobot);
-        setRobotContext(activeSession.robotContext());
 
     }
 
     public void createNewSession(Application application) {
         activeSession = new Session(application);
         setRobot(activeSession.sessionRobot);
-        setRobotContext(activeSession.robotContext());
     }
 
     public void deleteSession() {
@@ -95,17 +87,17 @@ public class TestFxAdapter {
 
     public void setCurrentSessionScreenshotDirectory(String dir){
 
-        if(activeSession != null) {
+        if (activeSession != null) {
             File errDir = new File(dir);
-            if(!errDir.exists())
+            if (!errDir.exists())
                 errDir.mkdirs();
             activeSession.screenshotDirectory = dir;
-        }
-        else
+        } else {
             throw new JavaFXLibraryNonFatalException("Unable to set screenshot directory, no application is currently open!");
+        }
     }
 
     public static FxRobotContext robotContext() {
-        return robotContext;
+        return activeSession.sessionRobot.robotContext();
     }
 }

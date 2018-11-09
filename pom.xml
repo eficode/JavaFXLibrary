@@ -319,11 +319,6 @@
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
-            <artifactId>testfx-junit</artifactId>
-            <version>4.0.14-alpha</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
             <version>8u76-b04</version>
             <scope>test</scope>
