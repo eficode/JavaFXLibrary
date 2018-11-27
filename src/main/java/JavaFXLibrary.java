@@ -60,6 +60,9 @@ public class JavaFXLibrary extends AnnotationLibrary {
     public JavaFXLibrary() {
         super(includePatterns);
         deleteScreenshotsFrom("report-images/imagecomparison");
+        //v4.0.15-alpha sets default robot as glass, which breaks rolling
+        //Forcing usage of awt robot as previous versions
+        System.setProperty("testfx.robot", "awt");
    }
 
     @Autowired
