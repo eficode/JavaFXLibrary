@@ -272,6 +272,10 @@
                                     <pattern>com.google.common</pattern>
                                     <shadedPattern>shaded.com.google.common</shadedPattern>
                                 </relocation>
+                              	<relocation>
+	                                <pattern>org.apache.commons</pattern>
+	                                <shadedPattern>shaded.org.apache.commons</shadedPattern>
+                                </relocation>
                             </relocations>
                             <artifactSet>
                                 <includes>
