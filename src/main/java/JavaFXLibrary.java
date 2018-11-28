@@ -58,12 +58,23 @@ public class JavaFXLibrary extends AnnotationLibrary {
 	}};
 
     public JavaFXLibrary() {
+    	this(false);
+    }
+    
+    public JavaFXLibrary(boolean headless) {
         super(includePatterns);
         deleteScreenshotsFrom("report-images/imagecomparison");
-        //v4.0.15-alpha sets default robot as glass, which breaks rolling
-        //Forcing usage of awt robot as previous versions
-        System.setProperty("testfx.robot", "awt");
-   }
+        if (headless) {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+        } else {
+	        //v4.0.15-alpha sets default robot as glass, which breaks rolling
+	        //Forcing usage of awt robot as previous versions
+	        System.setProperty("testfx.robot", "awt");
+        }
+    }
 
     @Autowired
     protected RunOnFailure runOnFailure;
@@ -136,8 +147,21 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 e.printStackTrace();
                 return "IOException occured while reading the documentation file!";
             }
+        } else if (keywordName.equals("__init__")) {
+        	try {
+                return FileUtils.readFileToString(new File("./src/main/java/libdoc-init-documentation.txt"), "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "IOException occured while reading the init documentation file!";
+            }
+        } else {
+        	try {
+                return super.getKeywordDocumentation(keywordName);
+            }
+            catch (Exception e) {
+                return keywordName;
+            }
         }
-        return super.getKeywordDocumentation(keywordName);
     }
 
     /**

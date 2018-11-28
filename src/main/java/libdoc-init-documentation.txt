@@ -1,0 +1,3 @@
+JavaFXLibrary can be imported with one optional arguments.
+
+- ``headless``: Determines if tests will be run in headless mode using [https://wiki.openjdk.java.net/display/OpenJFX/Monocle|Monocle]. Default value is ``false``.
