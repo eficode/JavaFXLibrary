@@ -24,14 +24,13 @@ import javafx.stage.Stage;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit.ApplicationTest;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.TimeoutException;
 
-public class Session extends ApplicationTest {
+public class Session {
 
     public Stage primaryStage;
     public FxRobot sessionRobot;
@@ -40,7 +39,7 @@ public class Session extends ApplicationTest {
     public String screenshotDirectory = null;
 
     public Session(String appName, String... appArgs) {
-        try{
+        try {
             // start the client
             this.primaryStage = FxToolkit.registerPrimaryStage();
             this.sessionApplication = FxToolkit.setupApplication((Class)Class.forName(appName), appArgs);
@@ -88,7 +87,7 @@ public class Session extends ApplicationTest {
             sessionRobot.release(new KeyCode[] {});
             sessionRobot.release(new MouseButton[] {});
             FxToolkit.cleanupApplication(sessionApplication);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Problem shutting down the application: " + e.getMessage(), e);
         }
     }

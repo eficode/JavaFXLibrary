@@ -5,7 +5,8 @@ function local() {
   echo "**********************"
   echo "INFO: Local execution:"
   file=$(ls -1 /javafxbinary/javafxlibrary-*-jar-with-dependencies.jar)
-  java -cp ${file} org.robotframework.RobotFramework -d /robot/results/local --include smoke $@ /robot/acceptance
+  testJar=$(ls -1 /javafxbinary/javafxlibrary-*-tests.jar)
+  java -cp ${file} org.robotframework.RobotFramework -d /robot/results/local --include smoke --variable appJar:${testJar} $@ /robot/acceptance
 #  $@ #just to testing script
   if [[ "$?" != "0" ]]; then
     EXIT_VALUE=$((EXIT_VALUE+1))
@@ -15,7 +16,8 @@ function local() {
 function remote() {
   echo "***********************"
   echo "INFO: Remote execution:"
-  robot -d /robot/results/remote --include smoke $@ /robot/acceptance
+  testJar=$(ls -1 /javafxbinary/javafxlibrary-*-tests.jar)
+  robot -d /robot/results/remote --include smoke --variable appJar:${testJar} $@ /robot/acceptance
 #  $@ #just to testing script
   if [[ "$?" != "0" ]]; then
     EXIT_VALUE=$((EXIT_VALUE+2))

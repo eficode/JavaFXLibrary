@@ -34,6 +34,15 @@ Library    Remote    http://127.0.0.1:8270    WITH NAME    JavaFXLibrary
 ```
 4. Run your tests: `robot tests.robot`
 
+## Using JavaFXLibrary on macOS Mojave
+MacOS Mojave introduced changes to security settings and disabled some of the features JavaFXLibrary uses by default.
+To use JavaFXLibrary on macOS Mojave you must enable the accessibility features for terminal in system preferences:
+- Navigate to `Apple menu > System Preferences > Security & Privacy > Privacy > Accessibility`
+- Click the lock and enter your password to change these settings
+- If terminal has requested accessibility features before it should show in the list
+- If not, add it by clicking :heavy_plus_sign: and selecting `Applications > Utilities > Terminal`
+- Enable accessibility features by checking the box: :white_check_mark: Terminal
+
 ## Identifying JavaFX UI objects
 [Scenic View](http://fxexperience.com/scenic-view/) is a tool that allows you to inspect the JavaFX application scenegraph. This can be useful especially when you do not have access to the source code.
 

@@ -842,6 +842,28 @@ public class HelperFunctions {
         }
     }
 
+    public static Application createThreadedWrapperApplication(Class c, String... appArgs) {
+        try {
+            Method main = c.getMethod("main", String[].class);
+            return new Application() {
+                @Override
+                public void start(Stage primaryStage) {
+                    Thread t = new Thread (() -> {
+                        try {
+                            main.invoke(null, (Object) appArgs);
+
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new JavaFXLibraryNonFatalException("Unable to launch application: " + c.getName(), e);
+                        }
+                    });
+                    t.start();
+                }
+            };
+        } catch (NoSuchMethodException e) {
+            throw new JavaFXLibraryNonFatalException("Couldn't create wrapper application for " + c.getName(), e);
+        }
+    }
+
     public static Finder createFinder() {
         return new Finder();
     }

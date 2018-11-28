@@ -21,7 +21,7 @@
     <groupId>org.robotframework</groupId>
     <artifactId>javafxlibrary</artifactId>
     <packaging>jar</packaging>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.2</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -102,6 +102,33 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- Upload also documentation -->
+                    <plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<id>attach-artifacts</id>
+								<phase>package</phase>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+								<configuration>
+									<artifacts>
+										<artifact>
+											<file>${project.build.directory}/${project.artifactId}.html</file>
+											<type>html</type>
+										</artifact>
+										<artifact>
+											<file>${project.build.directory}/${project.artifactId}.xml</file>
+											<type>xml</type>
+										</artifact>
+									</artifacts>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -138,6 +165,11 @@
 
     <build>
         <plugins>
+        			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M1</version>
+			</plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -219,6 +251,9 @@
                             </excludes>
                             <logLevel>TRACE:INFO</logLevel>
                             <dryrun>false</dryrun>
+                            <variables>
+                            	<variable>appJar:${project.build.directory}/${project.artifactId}*tests.jar</variable>
+                            </variables>
                         </configuration>
                     </execution>
                     <execution>
@@ -229,6 +264,7 @@
                         </goals>
                         <configuration>
                             <libdoc>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
                                 <outputFile>${project.artifactId}.html</outputFile>
                                 <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
                                 <version>${project.version}</version>
@@ -243,6 +279,7 @@
                         </goals>
                         <configuration>
                             <libdoc>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
                                 <outputFile>${project.artifactId}.xml</outputFile>
                                 <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
                                 <version>${project.version}</version>
@@ -272,6 +309,10 @@
                                     <pattern>com.google.common</pattern>
                                     <shadedPattern>shaded.com.google.common</shadedPattern>
                                 </relocation>
+                              	<relocation>
+	                                <pattern>org.apache.commons</pattern>
+	                                <shadedPattern>shaded.org.apache.commons</shadedPattern>
+                                </relocation>
                             </relocations>
                             <artifactSet>
                                 <includes>
@@ -299,7 +340,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.3.9</version>
+            <version>3.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.jmockit</groupId>
@@ -315,12 +356,7 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.14-alpha</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testfx</groupId>
-            <artifactId>testfx-junit</artifactId>
-            <version>4.0.14-alpha</version>
+            <version>4.0.15-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
@@ -336,7 +372,7 @@
         <dependency>
             <groupId>org.robotframework</groupId>
             <artifactId>robotframework</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -346,7 +382,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>23.0</version>
+            <version>27.0.1-jre</version>
         </dependency>
         <dependency>
             <groupId>com.github.ombre42</groupId>

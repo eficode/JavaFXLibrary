@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 rm -rvf /javafxbinary/*
 cp -vf /javafxlibrary-*-jar-with-dependencies.jar /javafxbinary/.
-chmod 555 /javafxbinary/javafxlibrary-*-jar-with-dependencies.jar
+cp -vf /javafxlibrary-*-tests.jar /javafxbinary/.
+chmod 555 /javafxbinary/*
 java -jar /javafxlibrary-*-jar-with-dependencies.jar

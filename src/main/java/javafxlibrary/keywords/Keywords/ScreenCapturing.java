@@ -86,7 +86,7 @@ public class ScreenCapturing extends TestFxAdapter {
         try {
             image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
-            robotContext.getCaptureSupport().saveImage(image, path);
+            robotContext().getCaptureSupport().saveImage(image, path);
 
             if (logImage) {
                 Double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
@@ -94,7 +94,7 @@ public class ScreenCapturing extends TestFxAdapter {
                 if(TestFxAdapter.logImages.toLowerCase().equals("embedded")) {
                     Image resizedImage = resizeImage(image, path);
                     Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
-                    robotContext.getCaptureSupport().saveImage(resizedImage, tempPath);
+                    robotContext().getCaptureSupport().saveImage(resizedImage, tempPath);
 
                     File imageFile = convertToJpeg(tempPath);
                     byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
@@ -157,7 +157,7 @@ public class ScreenCapturing extends TestFxAdapter {
     public void saveImageAs(Image image, String path) {
         try {
             RobotLog.info("Saving image \"" + image + "\" to path \"" + path + "\"");
-            robotContext.getCaptureSupport().saveImage(image, Paths.get(path));
+            robotContext().getCaptureSupport().saveImage(image, Paths.get(path));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;

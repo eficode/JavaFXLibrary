@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
+import static javafxlibrary.utils.HelperFunctions.createThreadedWrapperApplication;
 import static javafxlibrary.utils.HelperFunctions.createWrapperApplication;
 import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
 
@@ -66,21 +67,40 @@ public class ApplicationLauncher extends TestFxAdapter {
     @ArgumentNames({"appName", "*args"})
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
-        Class c;
-
-        try {
-            if (appName.endsWith(".jar"))
-                c = getMainClassFromJarFile(appName);
-            else
-                c = Class.forName(appName);
-
-        } catch (ClassNotFoundException e) {
-            throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
-        }
-
+        Class c = getMainClass(appName);
         Application app = createWrapperApplication(c, appArgs);
         createNewSession(app);
         RobotLog.info("Application: " + appName + " started.");
+    }
+
+    @RobotKeyword("Creates a wrapper application the same way as in `Launch Swing Application`, but starts it in a new " +
+            "thread. This is required when main method of the test application is blocked and execution does not " +
+            "return after calling it until the application gets closed. Be sure to set the library timeout with " +
+            "`Set Timeout` so that the test application will have enough time to load, as the test execution will " +
+            "continue instantly after calling the main method.\n\n"
+            + "``appName`` is the name of the application to launch. \n\n"
+            + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
+            + "Example:\n"
+            + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application In Separate Thread | _TestApplication.jar_ |\n")
+    @ArgumentNames({"appName", "*args"})
+    public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {
+        RobotLog.info("Starting application:" + appName);
+        Class c = getMainClass(appName);
+        Application app = createThreadedWrapperApplication(c, appArgs);
+        createNewSession(app);
+        RobotLog.info("Application: " + appName + " started.");
+    }
+
+    private Class getMainClass(String appName) {
+        try {
+            if (appName.endsWith(".jar"))
+                return getMainClassFromJarFile(appName);
+            else
+                return Class.forName(appName);
+        } catch (ClassNotFoundException e) {
+            throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
+        }
     }
 
     private void _addPathToClassPath(String path) {

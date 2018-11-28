@@ -252,7 +252,7 @@ public class Verifiers extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Images must be same size to compare: Image1 is " + (int)image1.getWidth()
                     + "x" + (int)image1.getHeight() + " and Image2 is " + (int)image2.getWidth() + "x" + (int)image2.getHeight());
 
-        PixelMatcherResult result = robotContext.getCaptureSupport().matchImages(image1, image2, new PixelMatcherRgb());
+        PixelMatcherResult result = robotContext().getCaptureSupport().matchImages(image1, image2, new PixelMatcherRgb());
         int sharedPixels = (int) (result.getMatchFactor() * 100);
         RobotLog.info("Matching pixels: " + sharedPixels + "%");
 
@@ -280,7 +280,7 @@ public class Verifiers extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Images must be same size to compare: Image1 is " + (int)image1.getWidth()
                     + "x" + (int)image1.getHeight() + " and Image2 is " + (int)image2.getWidth() + "x" + (int)image2.getHeight());
 
-        PixelMatcherResult result = robotContext.getCaptureSupport().matchImages(image1, image2, new PixelMatcherRgb());
+        PixelMatcherResult result = robotContext().getCaptureSupport().matchImages(image1, image2, new PixelMatcherRgb());
         int nonSharedPixels = (int) (result.getNonMatchFactor() * 100);
         RobotLog.info("Matching pixels: " + nonSharedPixels + "%");
 
