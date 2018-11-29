@@ -58,8 +58,12 @@ JavaFXLibrary uses Apache Maven as a build tool.
   </settings>
   ````
   * Release snapshot or actual release (depending what is in version tag in pom.xml)``mvn clean deploy -P release``
+  * In case of release log in to https://oss.sonatype.org:
+    * from left choose `Staging repositories` and scroll down, choose `robotframework-*` repository and review
+    * choose from top toolbar `Release`, add to reason field `x.y.z release` and submit
+    * sync takes typically hours before visible in Maven Central
   * snapshots can be found from https://oss.sonatype.org/content/repositories/snapshots/org/robotframework/javafxlibrary/
-  * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field.
+  * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field. 
 
 ## Announcements
 
