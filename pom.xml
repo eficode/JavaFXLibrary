@@ -21,7 +21,7 @@
     <groupId>org.robotframework</groupId>
     <artifactId>javafxlibrary</artifactId>
     <packaging>jar</packaging>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.3-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.44</jmockit.version>

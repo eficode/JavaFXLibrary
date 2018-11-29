@@ -204,7 +204,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "`3. Locating or specifying UI elements`. \n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
-            + "| Write | Robot Framework | \n")
+            + "| Write To | .css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
     public FxRobotInterface writeTo(Object locator, String text) {
         RobotLog.info("Writing to " + locator);
