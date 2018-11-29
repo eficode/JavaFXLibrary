@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
+import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.matchers.ProgressBarMatchers;
 import javafxlibrary.utils.finder.Finder;
 import org.apache.commons.lang3.StringUtils;
@@ -425,6 +426,7 @@ public class HelperFunctions {
     public static void checkClickLocation(Object object) {
 
         RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
+        verifyClickLocationOnFront(object);
 
         if (safeClicking) {
 
@@ -437,6 +439,10 @@ public class HelperFunctions {
             }
         }
         RobotLog.trace("Target location checks out OK, it is within active window");
+    }
+    
+    public static void verifyClickLocationOnFront(Object object) {
+    	new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
     }
 
     public static Object checkClickTarget(Object target) {
