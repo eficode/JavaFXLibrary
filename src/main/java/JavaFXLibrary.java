@@ -31,6 +31,7 @@ import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.keywords.AdditionalKeywords.RunOnFailure;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
+import javafxlibrary.utils.TestFxAdapter;
 import javafxlibrary.utils.TestListener;
 import org.apache.commons.io.FileUtils;
 import org.python.google.common.base.Throwables;
@@ -69,6 +70,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
             System.setProperty("testfx.headless", "true");
             System.setProperty("prism.order", "sw");
             System.setProperty("prism.text", "t2k");
+            TestFxAdapter.isHeadless = true;
         } else {
 	        //v4.0.15-alpha sets default robot as glass, which breaks rolling
 	        //Forcing usage of awt robot as previous versions

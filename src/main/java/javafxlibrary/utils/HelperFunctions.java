@@ -426,7 +426,6 @@ public class HelperFunctions {
     public static void checkClickLocation(Object object) {
 
         RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
-        verifyClickLocationOnFront(object);
 
         if (safeClicking) {
 
@@ -442,15 +441,20 @@ public class HelperFunctions {
     }
     
     public static void verifyClickLocationOnFront(Object object) {
-    	new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
+    	try {
+    		new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
+    	} catch (Exception e) {
+			RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: "+object);
+		}
     }
 
     public static Object checkClickTarget(Object target) {
         try {
 
-            if (target instanceof String || target instanceof Node)
+            if (target instanceof String || target instanceof Node) {
                 target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
-
+                verifyClickLocationOnFront(target);
+            }
             checkClickLocation(target);
             return target;
 
