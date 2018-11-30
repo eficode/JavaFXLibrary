@@ -7,7 +7,9 @@ JavaFXLibrary works with both Jython (local and remote use) and Python (remote o
 JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
 
 ## Keyword documentation
-See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrary.html).
+See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.2/javafxlibrary-0.5.2.html).
+
+For editors (IDEs) keyword documentation can be obtained from [here](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.2/javafxlibrary-0.5.2.xml).
 
 ## Taking the library into use
 ### As a local library
@@ -17,7 +19,7 @@ See keyword [documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrar
 *** Settings ***
 Library    JavaFXLibrary
 ```
-3. Add library jar to Jython [module search path](http://robotframework.org/robotframework/3.0b1/RobotFrameworkUserGuide.html#configuring-where-to-search-libraries-and-other-extensions) and run your tests:
+3. Add library jar to Jython [module search path](http://robotframework.org/robotframework/3.0.4/RobotFrameworkUserGuide.html#configuring-where-to-search-libraries-and-other-extensions) and run your tests:
 ```
 jython -J-cp javafxlibrary-<version>.jar -m robot.run tests.robot
 ```
@@ -71,3 +73,28 @@ Library's acceptance test suite can be used as a JavaFXLibrary demo. Running the
 Executing _test.sh_ runs the acceptance suite twice: first using JavaFXLibrary as a local Robot Framework library on Jython, and after that using the library in remote mode executing the same tests on python version of Robot Framework.
 
 If you want the suite to run only once, you can define which type of library to use by including **local** or **remote** as an argument. For example command `test.sh remote` will execute the suite only in remote mode.
+
+## Experimental: Headless support
+Library supports headless operation utilizing [Monocle](https://wiki.openjdk.java.net/display/OpenJFX/Monocle). The support for this is still at experimental level. 
+
+### Main issues with headless function
+* Scrolling doesn't work same way as with screen
+** "Tick" (amount of scrolling) is much smaller in headless than normally
+** Vertical (left/right) scrolling is not working
+* Separate app windows' can't be closed (unless app offers that functionality itself)
+* Swing applications can't be tested in headless mode.
+
+### Enabling headless mode
+Headless mode can be enabled by setting first library initialization to "True".
+
+Locally:
+```
+*** Settings ***
+Library    JavaFXLibrary    ${True}
+```
+
+Remote:
+```
+*** Settings ***
+Library    Remote    http://127.0.0.1:8270    ${True}    WITH NAME    JavaFXLibrary
+```

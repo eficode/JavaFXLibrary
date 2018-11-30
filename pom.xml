@@ -255,6 +255,9 @@
 							<excludes>
 								<exclude>not-ready</exclude>
 							</excludes>
+							<nonCriticalTags>
+								<nonCriticalTag>monocle-issue</nonCriticalTag>
+							</nonCriticalTags>
 							<logLevel>TRACE:INFO</logLevel>
 							<dryrun>false</dryrun>
 							<variables>
