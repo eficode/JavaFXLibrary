@@ -79,8 +79,8 @@ Library supports headless operation utilizing [Monocle](https://wiki.openjdk.jav
 
 ### Main issues with headless function
 * Scrolling doesn't work same way as with screen
-** "Tick" (amount of scrolling) is much smaller in headless than normally
-** Vertical (left/right) scrolling is not working
+  * "Tick" (amount of scrolling) is much smaller in headless than normally
+  * Vertical (left/right) scrolling is not working
 * Separate app windows' can't be closed (unless app offers that functionality itself)
 * Swing applications can't be tested in headless mode.
 
