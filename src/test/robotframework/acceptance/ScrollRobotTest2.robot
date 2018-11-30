@@ -13,23 +13,27 @@ ${TEST_APPLICATION}   javafxlibrary.testapps.TestScrollRobot2
 *** Test Cases ***
 Scroll down
     [Tags]                  smoke                           demo-set
+    Verify String Should Not Match    id=verticalScrollLocation       max
     Scroll Vertically       DOWN                            50
     Verify String           id=verticalScrollLocation       max
 
 Scroll up
     [Tags]                  smoke                           demo-set
+    Verify String Should Not Match    id=verticalScrollLocation       min
     Scroll Vertically       UP                              50
     Verify String           id=verticalScrollLocation       min
 
 Scroll right
     [Tags]                  smoke                           demo-set
     Skip Test On Linux
+    Verify String Should Not Match           id=horizontalScrollLocation     max
     Scroll Horizontally     RIGHT                           50
     Verify String           id=horizontalScrollLocation     max
 
 Scroll left
     [Tags]                  smoke                           demo-set
     Skip Test On Linux
+    Verify String Should Not Match           id=horizontalScrollLocation     min
     Scroll Horizontally     LEFT                            50
     Verify String           id=horizontalScrollLocation     min
 
@@ -41,24 +45,28 @@ Scroll down once
 
 Scroll up once
     [Tags]              smoke
+    Verify String Should Not Match           id=verticalScrollLocation     min
     Scroll Vertically   UP                             1
     Verify String       id=verticalScrollLocation      min
 
 Scroll Right Once
     [Tags]                              smoke
     Skip Test On Linux
+    Verify String      id=horizontalScrollLocation     min
     Scroll Horizontally                 RIGHT                           1
     Verify String Should Not Match      id=horizontalScrollLocation     min
 
 Scroll Left Once
     [Tags]                  smoke
     Skip Test On Linux
+    Verify String Should Not Match           id=horizontalScrollLocation     min
     Scroll Horizontally     LEFT                            1
     Verify String           id=horizontalScrollLocation     min
 
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
+    Run Keyword If    ${headless}    Set Tags    monocle-issue
     Launch Javafx Application   ${TEST_APPLICATION}
     Set Screenshot Directory    ${OUTPUT_DIR}${/}report-images
     Move To                     id=scrollPane

@@ -91,6 +91,7 @@ Bring Stage To Front
 # Keyword is located in TypeRobot
 Close Current Window
     [Tags]                  smoke           set-todo
+    Run Keyword If    ${headless}    Set Tags    monocle-issue
     ${START}                List Windows
     Activate window         @{START}[0]
     Close Current Window

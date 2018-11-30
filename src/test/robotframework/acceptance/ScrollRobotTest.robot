@@ -69,6 +69,7 @@ Scroll Right
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
+    Run Keyword If    ${headless}    Set Tags    monocle-issue
     Launch Javafx Application    ${TEST_APPLICATION}
     Set Screenshot Directory     ${OUTPUT_DIR}${/}report-images
     Set Variables
