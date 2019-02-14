@@ -183,20 +183,25 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Write Fast | Robot Framework | \n")
     @ArgumentNames({ "text" })
     public void writeFast(String text) {
-        try {
-            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringSelection testData = new StringSelection(text);
-            c.setContents(testData, testData);
-
-            if(isMac())
-                robot.push(KeyCode.META, KeyCode.V).sleep(100);
-            else
-                robot.push(KeyCode.CONTROL, KeyCode.V).sleep(100);
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to write text using copy/paste method.", e);
-        }
+    	if (TestFxAdapter.isHeadless) {
+    		RobotLog.info("Fast write not working in headless mode. Writing text normally");
+    		this.write(text);
+    	} else {
+	        try {
+	            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+	            StringSelection testData = new StringSelection(text);
+	            c.setContents(testData, testData);
+	
+	            if(isMac())
+	                robot.push(KeyCode.META, KeyCode.V).sleep(100);
+	            else
+	                robot.push(KeyCode.CONTROL, KeyCode.V).sleep(100);
+	        } catch (Exception e) {
+	            if(e instanceof JavaFXLibraryNonFatalException)
+	                throw e;
+	            throw new JavaFXLibraryNonFatalException("Unable to write text using copy/paste method.", e);
+	        }
+    	}
     }
 
     @RobotKeyword("Writes a given text characters one after the other to given locator.\n\n"

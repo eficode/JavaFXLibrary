@@ -21,6 +21,9 @@ First, the JavaFXLibrary needs to be taken into use in the settings table.
 | *Settings* | *Value* |
 | Library | JavaFXLibrary |
 
+Experimental headless mode can be activated at the import time by setting first argument to ${True}
+| *Settings* | *Value* |
+| Library | JavaFXLibrary | ${True} |
 
 === 2.2 Usage in remote mode(Jython & Python) ===
 When using the test library in remote mode, the library needs to be started at the remote end first. This can be done as follows:
@@ -40,7 +43,9 @@ Multiple JavaFXLibraries in remote mode:
 | Library | Remote | ip_address:8270 | WITH NAME | my_application |
 | Library | Remote | ip_address:8271 | WITH NAME | my_other_application |
 
-
+Experimental headless mode can be activated in remote mode at the import time by setting first argument to ${True}
+| *Settings* | *Value* |
+| Library | Remote | http://localhost:8270 | ${True} | WITH NAME | JavaFXLibrary |
 
 == 3. Locating JavaFX Nodes ==
 === 3.1 Locator syntax ===

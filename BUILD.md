@@ -16,8 +16,8 @@ JavaFXLibrary uses Apache Maven as a build tool.
   are being used by both JavaFXLibrary and the AUT. It's not uncommon that a specific version is needed for AUT and another
   version of the same dependency is required for JavaFXLibrary(e.g. TestFX dependency for Google Guava). Not always are these
   dependencies backwards compatible and therefore JavaFXLibrary has adopted Apache Maven Shade Plugin to cope with this issue.
-  Currently the package com.google.common  has been renamed in JavaFXLibrary as shaded.com.google.common to avoid version
-  mismatches with Google Guava dependencies.  See https://maven.apache.org/plugins/maven-shade-plugin/ for more info.
+  Currently the package com.google.common  has been renamed in JavaFXLibrary as shaded.com.google.common and org.apache.commons as shaded.org.apache.commons to avoid version
+  mismatches with dependencies in AUT and internally.  See https://maven.apache.org/plugins/maven-shade-plugin/ for more info.
 
 
 ## Releasing

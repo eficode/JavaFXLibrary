@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
+import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.matchers.ProgressBarMatchers;
 import javafxlibrary.utils.finder.Finder;
 import org.apache.commons.lang3.StringUtils;
@@ -438,13 +439,22 @@ public class HelperFunctions {
         }
         RobotLog.trace("Target location checks out OK, it is within active window");
     }
+    
+    public static void verifyClickLocationOnFront(Object object) {
+    	try {
+    		new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
+    	} catch (Exception e) {
+			RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: "+object);
+		}
+    }
 
     public static Object checkClickTarget(Object target) {
         try {
 
-            if (target instanceof String || target instanceof Node)
+            if (target instanceof String || target instanceof Node) {
                 target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
-
+                verifyClickLocationOnFront(target);
+            }
             checkClickLocation(target);
             return target;
 
