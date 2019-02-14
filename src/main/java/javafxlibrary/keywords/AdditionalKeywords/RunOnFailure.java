@@ -17,10 +17,14 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
 import javafxlibrary.keywords.Keywords.ScreenCapturing;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 @RobotKeywords
@@ -30,7 +34,7 @@ public class RunOnFailure extends TestFxAdapter{
     private String runOnFailureKeyword = "Take Screenshot";
 
     // Only run keyword on failure if false
-    private boolean runningOnFailureRoutine = false;
+    private static boolean runningOnFailureRoutine = false;
 
 
     // ##############################
@@ -55,17 +59,19 @@ public class RunOnFailure extends TestFxAdapter{
 
         runningOnFailureRoutine = true;
 
-        RobotLog.info("JavaFXLibrary keyword has failed!");
-        if (robot == null) {
-            RobotLog.error("FxRobot not initialized, launch test application with the library");
-        }
-
-        if (robot.targetWindow() != null) {
-            new ScreenCapturing().captureImage(robot.targetWindow());
-        } else {
-            new ScreenCapturing().captureImage(Screen.getPrimary().getBounds());
-        }
-
-        runningOnFailureRoutine = false;
+        try {
+	        RobotLog.info("JavaFXLibrary keyword has failed!");
+	        if (robot == null) {
+	            RobotLog.error("FxRobot not initialized, launch test application with the library");
+	        } else {
+	        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	        	RobotLog.debug("Capturing screenshot from primary screen with resolution "+gd.getDisplayMode().getWidth()+"x"+gd.getDisplayMode().getHeight()+".");
+	            new ScreenCapturing().captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()));
+	        }
+        } catch (Exception e) {
+			RobotLog.error("Error when capturing screenshot. Actual error: "+e.getMessage());
+		} finally {
+			runningOnFailureRoutine = false;
+		}
     }
 }
