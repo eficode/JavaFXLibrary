@@ -14,8 +14,9 @@ RUN mvn package
 # ENTRYPOINT java -jar /code/target/javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar
 
 FROM ubuntu:16.04
-COPY --from=builder /code/target/javafxlibrary-*-SNAPSHOT-jar-with-dependencies.jar /.
-COPY --from=builder /code/target/javafxlibrary-*-SNAPSHOT-tests.jar /.
+COPY --from=builder /code/target/javafxlibrary-*-jar-with-dependencies.jar /.
+COPY --from=builder /code/target/javafxlibrary-*-tests.jar /.
+RUN echo "Built following jar files" && ls -latr /*.jar
 COPY entrypoint_build.sh /.
 RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-install-recommends --allow-unauthenticated -y \
   openjdk-8-jre \
