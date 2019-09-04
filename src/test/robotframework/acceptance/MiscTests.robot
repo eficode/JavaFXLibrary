@@ -15,15 +15,15 @@ ${CURRENT_APPLICATION}    NOT SET
 Find Id That Does Not Exist
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${MSG}                  Run Keyword And Expect Error    *     Find    id=idThatDoesNotExist    failIfNotFound=True
+    ${MSG}                  Run Keyword And Expect Error    *     Find    id=idThatDoesNotExist    ${True}     # TODO: failIfNotFound=True
     Should Be Equal         ${MSG}    Unable to find anything with query: "id=idThatDoesNotExist"       msg=Find does not fail with expected error message when query not found
-    ${MSG}                  Run Keyword     Find      id=idThatDoesNotExist    failIfNotFound=False
+    ${MSG}                  Run Keyword     Find      id=idThatDoesNotExist    ${False}    # TODO: failIfNotFound=False
     Should Be Equal         ${MSG}    ${EMPTY}    msg=Find does not return None value when query not found
 
 Find All With Wrong Style Class
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${MSG}                  Run Keyword And Expect Error    *    Find All    css=.thisIsNotAStyleClass    failIfNotFound=True
+    ${MSG}                  Run Keyword And Expect Error    *    Find All    css=.thisIsNotAStyleClass    ${True}   # TODO: failIfNotFound=True
     Should Be Equal         ${MSG}    Unable to find anything with query: "css=.thisIsNotAStyleClass"
 
 Print Child Nodes Of Incompatible Node
