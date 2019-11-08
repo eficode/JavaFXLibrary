@@ -10,7 +10,12 @@ RUN apt-get -qq update && apt-get dist-upgrade -y  && apt-get install -qq --no-i
   python-setuptools \
   wget \
   openjdk-8-jre \
-  openjfx \
+  # Install older version of openjfx, current version is incompatible with openjdk8
+  # Bug ticket: https://bugs.launchpad.net/ubuntu/+source/openjfx/+bug/1799946
+  openjfx=8u161-b12-1ubuntu2 \
+  libopenjfx-java=8u161-b12-1ubuntu2 \
+  libopenjfx-jni=8u161-b12-1ubuntu2 \
+  openjfx-source=8u161-b12-1ubuntu2 \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY test.sh /bin/test.sh
