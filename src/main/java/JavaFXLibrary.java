@@ -44,6 +44,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 public class JavaFXLibrary extends AnnotationLibrary {
 
@@ -64,7 +65,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
     
     public JavaFXLibrary(boolean headless) {
         super(includePatterns);
-        deleteScreenshotsFrom("report-images/imagecomparison");
         if (headless) {
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
@@ -99,7 +99,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         try {
             RobotLog.ignoreDuplicates();
             // timeout + 500 ms so that underlying timeout has a chance to expire first
-            WaitForAsyncUtils.waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
+            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
 
                 try {
                     retval.set(super.runKeyword(keywordName, finalArgs));
@@ -182,7 +182,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
     public static void main(String[] args) throws Exception {
         JavaFXLibraryRemoteServer.configureLogging();
-        System.out.println("-------------------- JavaFXLibrary --------------------- ");
+        System.out.println("---------------------------= JavaFXLibrary =---------------------------- ");
         RemoteServer server = new JavaFXLibraryRemoteServer();
         server.putLibrary("/RPC2", new JavaFXLibrary());
         int port = 8270;
@@ -192,12 +192,13 @@ public class JavaFXLibrary extends AnnotationLibrary {
             if (args.length > 0)
                 port = Integer.parseInt(args[0]);
             else
-                System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port +
-                        ". If you wish to use another port, restart the library and give port number as an argument.");
+                System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port + ".\n" +
+                        "If you wish to use another port, restart the library and give port number\n" +
+                        "as an argument.");
 
             server.setPort(port);
             server.start();
-            System.out.println("\n        JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " +
+            System.out.println("\n    JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " +
                     ipAddr.getHostAddress() + ":" + port + "\n");
 
         } catch (NumberFormatException nfe) {
