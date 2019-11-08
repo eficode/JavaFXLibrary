@@ -54,7 +54,6 @@ import java.lang.*;
 
 import javafx.scene.input.KeyCode;
 import org.testfx.service.query.PointQuery;
-import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -68,6 +67,9 @@ import static javafxlibrary.matchers.ExtendedNodeMatchers.hasValidCoordinates;
 import static javafxlibrary.utils.TestFxAdapter.objectMap;
 import static javafxlibrary.utils.TestFxAdapter.robot;
 import static org.testfx.matcher.base.NodeMatchers.*;
+import static org.testfx.util.WaitForAsyncUtils.waitFor;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 public class HelperFunctions {
 
@@ -83,10 +85,15 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) != null);
-            Node node = createFinder().find(target);
+            waitFor(timeout, getTimeUnit(timeUnit), () -> {
+                return asyncFx(() -> createFinder().find(target) != null).get();
+            });
+            Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
-            WaitForAsyncUtils.waitFor((long) timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
+            waitFor(timeout, getTimeUnit(timeUnit), () -> {
+                return asyncFx(() -> hasValidCoordinates(node)).get();
+            });
+            waitForFxEvents();
             return node;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
@@ -108,7 +115,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -129,7 +136,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -143,7 +150,7 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            WaitForAsyncUtils.waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
