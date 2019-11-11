@@ -16,8 +16,8 @@ JavaFXLibrary uses Apache Maven as a build tool.
   are being used by both JavaFXLibrary and the AUT. It's not uncommon that a specific version is needed for AUT and another
   version of the same dependency is required for JavaFXLibrary(e.g. TestFX dependency for Google Guava). Not always are these
   dependencies backwards compatible and therefore JavaFXLibrary has adopted Apache Maven Shade Plugin to cope with this issue.
-  Currently the package com.google.common  has been renamed in JavaFXLibrary as shaded.com.google.common to avoid version
-  mismatches with Google Guava dependencies.  See https://maven.apache.org/plugins/maven-shade-plugin/ for more info.
+  Currently the package com.google.common  has been renamed in JavaFXLibrary as shaded.com.google.common and org.apache.commons as shaded.org.apache.commons to avoid version
+  mismatches with dependencies in AUT and internally.  See https://maven.apache.org/plugins/maven-shade-plugin/ for more info.
 
 
 ## Releasing
@@ -58,8 +58,12 @@ JavaFXLibrary uses Apache Maven as a build tool.
   </settings>
   ````
   * Release snapshot or actual release (depending what is in version tag in pom.xml)``mvn clean deploy -P release``
+  * In case of release log in to https://oss.sonatype.org:
+    * from left choose `Staging repositories` and scroll down, choose `robotframework-*` repository and review
+    * choose from top toolbar `Release`, add to reason field `x.y.z release` and submit
+    * sync takes typically hours before visible in Maven Central
   * snapshots can be found from https://oss.sonatype.org/content/repositories/snapshots/org/robotframework/javafxlibrary/
-  * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field.
+  * actual releases can be found from https://search.maven.org/ and typing `javafxlibrary` in the search field. 
 
 ## Announcements
 

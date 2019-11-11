@@ -28,6 +28,7 @@ import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
 
 public class TestFxAdapter {
 
+	public static boolean isHeadless = false;
     // current robot instance in use
     protected static FxRobotInterface robot;
     public static void setRobot(FxRobotInterface robot) {
