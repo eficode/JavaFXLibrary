@@ -7,9 +7,9 @@ JavaFXLibrary works with both Jython (local and remote use) and Python (remote o
 JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
 
 ## Keyword documentation
-See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.2/javafxlibrary-0.5.2.html).
+See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.3/javafxlibrary-0.5.3.html).
 
-For editors (IDEs) keyword documentation can be obtained from [here](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.2/javafxlibrary-0.5.2.xml).
+For editors (IDEs) keyword documentation can be obtained from [here](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.3/javafxlibrary-0.5.3.xml).
 
 ## Taking the library into use
 ### As a local library
@@ -19,7 +19,7 @@ For editors (IDEs) keyword documentation can be obtained from [here](https://rep
 *** Settings ***
 Library    JavaFXLibrary
 ```
-3. Add library jar to Jython [module search path](http://robotframework.org/robotframework/3.0.4/RobotFrameworkUserGuide.html#configuring-where-to-search-libraries-and-other-extensions) and run your tests:
+3. Add library jar to Jython [module search path](http://robotframework.org/robotframework/3.1.2/RobotFrameworkUserGuide.html#configuring-where-to-search-libraries-and-other-extensions) and run your tests:
 ```
 jython -J-cp javafxlibrary-<version>.jar -m robot.run tests.robot
 ```
