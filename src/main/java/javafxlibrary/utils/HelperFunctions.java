@@ -95,6 +95,8 @@ public class HelperFunctions {
             });
             waitForFxEvents();
             return node;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
                     + timeout + " " + timeUnit);
