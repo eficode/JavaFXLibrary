@@ -895,7 +895,6 @@ public class HelperFunctions {
     }
 
     public static Object[] useMappedObjects(Object[] arr) {
-
         Object[] replaced = new Object[arr.length];
 
         for (int i = 0; i < arr.length; i++) {
@@ -918,7 +917,7 @@ public class HelperFunctions {
     }
 
     public static List<Object> useMappedObjects(List<Object> list) {
-        List<Object> replaced = new ArrayList<>();
+        List<Object> replaced = new ArrayList<>(list);
 
         for (int i = 0; i < list.size(); i++) {
             Object o = list.get(i);
@@ -931,9 +930,8 @@ public class HelperFunctions {
                 if (objectMap.containsKey(o)) {
                     replaced.set(i, objectMap.get(o));
                 } else {
-                    replaced.set(i, list.get(i));
+                    replaced.set(i, o);
                 }
-
             }
         }
         return replaced;
