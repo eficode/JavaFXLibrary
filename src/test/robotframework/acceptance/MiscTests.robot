@@ -233,7 +233,7 @@ Get Table Cell Value Using Index That Is Out Of Bounds
     Set Test Application    javafxlibrary.testapps.TestTableManagement
     ${TABLE}                Find    id=table
     ${MSG}                  Run Keyword And Expect Error    *    Get Table Cell Value    ${TABLE}    0    40
-    Should Be Equal         ${MSG}    Out of table bounds: Index: 40, Size: 5
+    Should Be Equal         ${MSG}    Out of table bounds: Index 40 out of bounds for length 5
 
 Get Object Property
     [Tags]                  smoke

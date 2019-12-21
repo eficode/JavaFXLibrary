@@ -17,8 +17,6 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import com.sun.javafx.scene.control.skin.TableViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
@@ -532,9 +530,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                     RobotLog.trace("Method getImage() found. Invoking it on node: \"" + node + "\"");
                     try {
                         Object result = m.invoke(node, null);
-                        Image image = (Image) result;
-                        RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
-                        return image.impl_getUrl();
+                        return ((Image) result).getUrl();
                     } catch (Exception e) {
                         throw new JavaFXLibraryNonFatalException("Problem calling method: .getImage(): " + e.getMessage(), e);
                     }
@@ -733,13 +729,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
+    // TODO: Implement without sun.com packages
     @RobotKeyword("Returns a list of *visible* cells(Nodes) of the given table column.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating or specifying UI elements`. \n\n"
             + "``column`` Integer value for the column")
     @ArgumentNames({ "table", "column" })
     public List<Object> getTableColumnCells(Object locator, int column) {
-        try {
+        RobotLog.error("Get Table Column Cells is not supported in Java 11");
+        throw new JavaFXLibraryNonFatalException("Get Table Column Cells is not supported in Java 11");
+        /*try {
             TableView table = (TableView) objectToNode(locator);
             List<Object> columnCells = new ArrayList<>();
             VirtualFlow<?> vf = (VirtualFlow<?>) ( (TableViewSkin<?>) table.getSkin() ).getChildren().get( 1 );
@@ -753,7 +752,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
-        }
+        }*/
     }
 
     @RobotKeyword("Returns the given table row cells in a dictionary in form of name:node pairs. \n\n"

@@ -17,7 +17,6 @@
 
 package javafxlibrary.testapps.controllers;
 
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,20 +39,14 @@ public class TestKeyboardRobotController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         textArea.textProperty().addListener(e -> textAreaLabel.setText(textArea.getText()));
 
-        // TAB changes focus to the button, SHIFT+TAB inserts 4 spaces into the text
+        // Insert 4 spaces on tab
         textArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.TAB)) {
-                    if(event.isShiftDown()) {
-                        textArea.setText(textArea.getText() + "    ");
-                        textArea.positionCaret(textArea.getText().length());
-                        event.consume();
-                    } else {
-                        TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
-                        skin.getBehavior().traverseNext();
-                        event.consume();
-                    }
+                    textArea.setText(textArea.getText() + "    ");
+                    textArea.positionCaret(textArea.getText().length());
+                    event.consume();
                 }
             }
         });

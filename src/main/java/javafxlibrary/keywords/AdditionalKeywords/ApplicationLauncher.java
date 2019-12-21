@@ -104,15 +104,10 @@ public class ApplicationLauncher extends TestFxAdapter {
     }
 
     private void _addPathToClassPath(String path) {
-        URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-
         RobotLog.info("Setting following path to Classpath: " + path);
-
         try {
-            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            method.setAccessible(true);
-            method.invoke(classLoader, (new File(path)).toURI().toURL() );
-
+            URL[] urls = new URL[]{new File(path).toURI().toURL()};
+            URLClassLoader classLoader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
         } catch (Exception e) {
             throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path , e);
         }
@@ -149,7 +144,9 @@ public class ApplicationLauncher extends TestFxAdapter {
 
     @RobotKeyword("Logs current classpath content")
     public void logApplicationClasspath() {
-        try {
+        // TODO: SystemClassLoader can not be cast to URLClassLoader anymore, see if there is a workaround for Java 11
+        RobotLog.warn("Log Application Classpath is not supported in Java 11A!");
+        /*try {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             URL[] urls = ((URLClassLoader) cl).getURLs();
             RobotLog.info("Printing out classpaths: \n");
@@ -157,7 +154,7 @@ public class ApplicationLauncher extends TestFxAdapter {
                 RobotLog.info(url.getFile());
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to log application classpaths", e);
-        }
+        }*/
     }
 
     @RobotKeyword("Sets system property ``name`` to ``value``. Equals commmand line usage `-Dname=value`.\n"
