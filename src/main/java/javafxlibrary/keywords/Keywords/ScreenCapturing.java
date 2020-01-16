@@ -121,11 +121,15 @@ public class ScreenCapturing extends TestFxAdapter {
                     String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
                     imageFile.delete();
 
-                    RobotLog.html("<img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
+                    RobotLog.html("<a href=\"" + path + "\">"
+                            + "<img title=\"Click for full size image\" src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">"
+                            + "</a>");
 
                 } else {
                     // diskonly option
-                    RobotLog.html("<img src=\"" + path + "\" width=\"" + printSize + "px\">");
+                    RobotLog.html("<a href=\"" + path + "\">"
+                            + "<img title=\"Click for full size image\" src=\"" + path + "\" width=\"" + printSize + "px\">"
+                            + "</a>");
                 }
             }
             return mapObject(image);
@@ -218,7 +222,6 @@ public class ScreenCapturing extends TestFxAdapter {
         if (width < 800)
             return image;
 
-        RobotLog.html("Full resolution image can be found from <a href=" + path + " >" + path + "</a>.");
         double multiplier = width / 800;
         try {
             String url = path.toUri().toURL().toString();
