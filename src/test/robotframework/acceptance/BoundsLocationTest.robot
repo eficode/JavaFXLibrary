@@ -76,7 +76,13 @@ Get Bounds Using XPath Query
     ${TARGET_Y}                 Evaluate            ${Y_OFFSET} + ${T_DECORATION_HEIGHT} + ${300}
     ${TARGET_X}                 Evaluate            ${X_OFFSET} + ${L_DECORATION_WIDTH}
     ${TARGET}                   Create Bounds       ${TARGET_X}   ${TARGET_Y}    600    300
-    Bounds Should Be Equal      ${BOUNDS}           ${TARGET}
+    Bounds Should Be Equal      ${BOUNDS}          ${TARGET}
+
+Compare Different Size Bounds
+    [Tags]                      smoke
+    ${BOUNDS_BLUE}              Get Bounds          id=blue
+    ${BOUNDS_GREEN}             Get Bounds          id=green
+    Bounds Should Not Be Equal  ${BOUNDS_BLUE}      ${BOUNDS_GREEN}
 
 Get Bounds Of Id That Does Not Exist
     [Tags]              smoke    negative

@@ -1,12 +1,13 @@
 *** Settings ***
 Documentation       Tests for AdditionalKeywords
-Resource          ../resource.robot
+Resource            ../resource.robot
 Library             Collections
 Library             String
 Suite Setup         Setup All Tests
 Suite Teardown      Close Javafx Application
 Test Setup          Disable Embedded Image Logging For Negative Tests
 Test Teardown       Enable Image Logging
+Force Tags          set-misc
 
 *** Variables ***
 ${CURRENT_APPLICATION}    NOT SET
@@ -94,29 +95,36 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
     Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
     ${node}    Find                                 id=yellow
     Node Should Be Visible                          ${node}
+    Run Keyword And Expect Error                    *          Node Should Not Be Visible      ${node}
     Call Object Method In Fx Application Thread     ${node}     setVisible                  (boolean)false
     Wait For Events In Fx Application Thread
     Run Keyword And Expect Error                    *           Node Should Be Visible      ${node}
+    Node Should Not Be Visible                      ${node}
     #Reset visibility to true
     Call Object Method In Fx Application Thread     ${node}     setVisible                  (boolean)true
     Wait For Events In Fx Application Thread
     Node Should Be Visible                          ${node}
 
-Wait For Events In Fx Application Thread
+Check That Element Is Hoverable
     [Tags]                                          smoke    demo-set
-    Set Test Application                            javafxlibrary.testapps.TestBoundsLocation
+    Set Test Application                            javafxlibrary.testapps.TestClickRobot
     Set Timeout                                     3
-    ${node}                                         Find        id=red
-    Call Object Method In Fx Application Thread     ${node}     changeFillAfterTwoSeconds
-    Wait For Events In Fx Application Thread
-    ${result}                                       Find        id=red
-    Should End With                                 ${result}   fill=0x7fffd4ff]
-    # Reset color
-    Call Object Method In Fx Application Thread     ${node}     resetFillToRed
-    Wait For Events In Fx Application Thread
-    ${result}                                       Find        id=red
-    Should End With                                 ${result}   fill=0xff0000ff]
-    Set Timeout                                     0
+    ${target_node}=                                 Find    id=resetButton
+    Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
+    Run Keyword And Expect Error                    *          Node Should Be Hoverable      ${target_node}
+    Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)true
+    Node Should Be Hoverable                        id=resetButton
+    [Teardown]                                      Set Timeout     0
+
+Check That Element Is Not Hoverable
+    [Tags]                      smoke   demo-set    negative
+    Set Test Application                            javafxlibrary.testapps.TestClickRobot
+    Set Timeout                                     3
+    ${target_node}=                                 Find    id=resetButton
+    Run Keyword And Expect Error                    *          Node Should Not Be Hoverable      ${target_node}
+    Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
+    Node Should Not Be Hoverable                        id=resetButton
+    [Teardown]                                      Set Timeout     0
 
 Find From Node
     [Tags]                  smoke
@@ -156,13 +164,71 @@ Get Node Text Of Incompatible Node
     ${MSG}                  Run Keyword And Expect Error    *    Get Node Text    ${NODE}
     Should End With         ${MSG}      Node has no getText method
 
+Wait Until Element Exists
+    [Tags]                          negative   smoke
+    Set Test Application            javafxlibrary.testapps.TestWindowManagement
+    Click On                        id=navigationAlert
+    Run Keyword And Expect Error    Given element "css=.dialog-pane .button" was not found within given timeout of 2 SECONDS
+    ...                             Wait Until Element Exists     css=.dialog-pane .button    ${2}
+    Click On                        css=.button
+    Wait Until Element Exists       css=.dialog-pane .button    ${5}
+    Click On                        css=.dialog-pane .button
+
+Wait Until Element Does Not Exists
+    [Tags]                              negative   smoke
+    Set Test Application                javafxlibrary.testapps.TestWindowManagement
+    Click On                            id=navigationAlert
+    Wait Until Element Does Not Exists  css=.dialog-pane .button    ${5}
+    Click On                            css=.button
+    Wait Until Element Exists           css=.dialog-pane .button    ${5}
+    Run Keyword And Expect Error        Given element "css=.dialog-pane .button" was still found within given timeout of 2 SECONDS
+    ...                                 Wait Until Element Does Not Exists     css=.dialog-pane .button    ${2}
+    Click On                            css=.dialog-pane .button
+
 Wait Until Node Is Visible
     [Tags]                          smoke
     Set Test Application            javafxlibrary.testapps.TestWindowManagement
     Click On                        id=navigationAlert
+    Run Keyword And Expect Error    Given element "css=.dialog-pane .button" was not found within given timeout of 2 SECONDS
+    ...                             Wait Until Node Is Visible     css=.dialog-pane .button    ${2}
     Click On                        css=.button
     Wait Until Node Is Visible      css=.dialog-pane .button    ${5}
     Click On                        css=.dialog-pane .button
+
+Wait Until Node Is Not Visible
+    [Tags]                          smoke
+    Set Test Application            javafxlibrary.testapps.TestWindowManagement
+    Click On                        id=navigationAlert
+    ${target_node}=                 Find    css=.button
+    Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
+    Wait Until Node Is Not Visible                  ${target_node}    ${5}
+    Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)true
+    Click On                        css=.button
+    Run Keyword And Expect Error    REGEXP:Given target ".*" did not become invisible within given timeout of 2 SECONDS
+    ...                             Wait Until Node Is Not Visible      css=.dialog-pane .button    ${2}
+    Click On                        css=.dialog-pane .button
+
+Wait Until Node Is Enabled
+    [Tags]                          smoke
+    Set Test Application            javafxlibrary.testapps.TestWindowManagement
+    Click On                        id=navigationAlert
+    ${target_node}=                 Find    css=.button
+    Call Object Method In Fx Application Thread     ${target_node}    setDisable     (boolean)true
+    ${msg}=                         Run Keyword And Expect Error    REGEXP:Given target.*did not become enabled within given timeout of 2 seconds.
+    ...                             Wait Until Node Is Enabled     css=.button    ${2}
+    Call Object Method In Fx Application Thread     ${target_node}    setDisable     (boolean)false
+    Wait Until Node Is Enabled      css=.button    ${5}
+
+Wait Until Node Is Not Enabled
+    [Tags]                          smoke
+    Set Test Application            javafxlibrary.testapps.TestWindowManagement
+    Click On                        id=navigationAlert
+    ${target_node}=                 Find    css=.button
+    ${msg}=     Run Keyword And Expect Error    REGEXP:Given target.*did not become disabled within given timeout of 2 seconds.
+    ...                             Wait Until Node Is Not Enabled     css=.button    ${2}
+    Call Object Method In Fx Application Thread     ${target_node}    setDisable     (boolean)true
+    Wait Until Node Is Not Enabled                  css=.button    ${5}
+    [Teardown]       Call Object Method In Fx Application Thread     ${target_node}    setDisable     (boolean)false
 
 Find All With Pseudo Class
     [Tags]                  smoke
@@ -298,20 +364,9 @@ Get Scene (Window)
     Should Be Equal         ${target}           ${result}
 
 *** Keywords ***
-Set Test Application
-    [Arguments]             ${APPLICATION}
-    Run Keyword Unless      '${CURRENT_APPLICATION}' == '${APPLICATION}'    Change Current Application    ${APPLICATION}
-
 Setup All Tests
     Import JavaFXLibrary
     Set Timeout    0
-
-Change Current Application
-    [Arguments]                     ${APPLICATION}
-    Run Keyword Unless              '${CURRENT_APPLICATION}' == 'NOT SET'    Close Javafx Application
-    Set Suite Variable              ${CURRENT_APPLICATION}    ${APPLICATION}
-    Launch Javafx Application       ${APPLICATION}
-    Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
 
 Get First Player
     ${TABLE}        Find                    id=table

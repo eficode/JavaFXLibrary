@@ -3,14 +3,17 @@ package javafxlibrary.utils.HelperFunctionsTests;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
-import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
-import mockit.*;
-import org.junit.*;
+import mockit.Mock;
+import mockit.MockUp;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class WaitUntilVisibleTest extends TestFxAdapterTest {
+public class WaitUntilInvisibleTest extends TestFxAdapterTest {
 
     private Button button;
 
@@ -29,35 +32,36 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
     }
 
     @Test
-    public void waitUntilVisible_IsVisible() {
-        Node node = HelperFunctions.waitUntilVisible(".button", 1);
+    public void waitUntilInvisible_IsInvisible() {
+        button.setVisible(false);
+        Node node = HelperFunctions.waitUntilInvisible(".button", 1);
         Assert.assertEquals(button, node);
     }
 
     @Test
-    public void waitUntilVisible_IsVisibleWithDelay() {
+    public void waitUntilInvisible_IsInvisibleWithDelay() {
 
-        button.setVisible(false);
+        button.setVisible(true);
 
-        Thread t = setVisibleAfterTimeout();
+        Thread t = setInvisibleAfterTimeout();
         t.start();
-        Node node = HelperFunctions.waitUntilVisible(".button", 1);
+        Node node = HelperFunctions.waitUntilInvisible(".button", 1);
         Assert.assertEquals(button, node);
     }
 
     @Test
-    public void waitUntilVisible_IsNotVisible() {
-        button.setVisible(false);
+    public void waitUntilInvisible_IsVisible() {
+        button.setVisible(true);
         thrown.expect(JavaFXLibraryTimeoutException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 1 SECONDS");
-        HelperFunctions.waitUntilVisible(".button", 1);
+        thrown.expectMessage("Given target \"" + button + "\" did not become invisible within given timeout of 1 SECONDS");
+        HelperFunctions.waitUntilInvisible(".button", 1);
     }
 
-    private Thread setVisibleAfterTimeout() {
+    private Thread setInvisibleAfterTimeout() {
         return new Thread(() -> {
             try {
                 Thread.sleep(200);
-                button.setVisible(true);
+                button.setVisible(false);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
