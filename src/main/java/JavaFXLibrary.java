@@ -38,13 +38,13 @@ import org.python.google.common.base.Throwables;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
 import org.robotframework.remoteserver.RemoteServer;
-import org.testfx.util.WaitForAsyncUtils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static javafxlibrary.utils.HelperFunctions.*;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
+import java.util.ResourceBundle;
 
 public class JavaFXLibrary extends AnnotationLibrary {
 
@@ -75,6 +75,15 @@ public class JavaFXLibrary extends AnnotationLibrary {
 	        //v4.0.15-alpha sets default robot as glass, which breaks rolling
 	        //Forcing usage of awt robot as previous versions
 	        System.setProperty("testfx.robot", "awt");
+        }
+    }
+
+    public static String loadRobotLibraryVersion() {
+        try {
+            return ResourceBundle.getBundle(JavaFXLibrary.class.getCanonicalName().replace(".", File.separator))
+                    .getString("version");
+        } catch (RuntimeException e) {
+            return "unknown";
         }
     }
 
@@ -213,3 +222,4 @@ public class JavaFXLibrary extends AnnotationLibrary {
         }
     }
 }
+
