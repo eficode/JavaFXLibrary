@@ -59,31 +59,38 @@ List Windows
     [Tags]                      smoke
     ${INDEX}                    Set Variable        ${0}
     ${LIST_WINDOWS}             List Windows
-    :FOR     ${WINDOW}    IN    @{LIST_WINDOWS}
-        \    ${TARGET}          Get Window          ${INDEX}
-        \    Should Be Equal    ${WINDOW}           ${TARGET}    msg=Window lists does not match (index ${INDEX})!
-        \    ${INDEX}           Set Variable        ${INDEX+1}
+    FOR     ${WINDOW}    IN    @{LIST_WINDOWS}
+            ${TARGET}          Get Window          ${INDEX}
+            Should Be Equal    ${WINDOW}           ${TARGET}    msg=Window lists does not match (index ${INDEX})!
+            ${INDEX}           Set Variable        ${INDEX+1}
+    END
 
 List Target Windows
     [Tags]                      smoke
     ${INDEX}                    Set Variable        ${0}
     ${LIST_WINDOWS}             List Target Windows
-    :FOR     ${WINDOW}    IN    @{LIST_WINDOWS}
-        \    ${TARGET}          Get Window          ${INDEX}
-        \    Should Be Equal    ${WINDOW}           ${TARGET}       msg=Window lists does not match (index ${INDEX})!
-        \    ${INDEX}           Set Variable        ${INDEX+1}
+    FOR     ${WINDOW}    IN    @{LIST_WINDOWS}
+            ${TARGET}          Get Window          ${INDEX}
+            Should Be Equal    ${WINDOW}           ${TARGET}       msg=Window lists does not match (index ${INDEX})!
+            ${INDEX}           Set Variable        ${INDEX+1}
+    END
 
-# Keyword is located in ConvenienceKeywords
 Bring Stage To Front
-    [Tags]                  smoke
-    ${second_window}        Get Window              Second window
-    Bring Stage To Front    ${SECOND_WINDOW}
-    ${target}               Get Target Window
-    Should Be Equal         ${second_window}        ${target}
-    ${third_window}         Get Window              Third window
-    Bring Stage To Front    ${third_window}
-    ${target}               Get Target Window
-    Should Be Equal         ${third_window}         ${target}
+    [Tags]                     smoke
+    ${second_window}           Get Window           Second window
+    Bring Stage To Front       ${second_window}
+    Window Should Be Visible   ${second_window}
+    Click On                   ${second_window}
+    Window Should Be Focused   ${second_window}
+    ${target}                  Get Target Window
+    Should Be Equal            ${second_window}     ${target}
+    ${third_window}            Get Window           Third window
+    Bring Stage To Front       ${third_window}
+    ${target}                  Get Target Window
+    Should Be Equal            ${third_window}      ${target}
+    Window Should Not Be Focused   ${second_window}
+    Call Object Method In Fx Application Thread     ${second_window}     hide
+    Window Should Not Be Visible                    ${second_window}
 
 # On Mac the testing application had to be modified to register CMD + W.
 # Close Current Window uses ALT + F4 on Windows, so it should work with no changes to the testing application.

@@ -56,7 +56,7 @@ import static javafxlibrary.utils.HelperFunctions.*;
 public class ConvenienceKeywords extends TestFxAdapter {
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n" +
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n" +
             "finder that mimics _xpath_ style search.\n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
@@ -139,7 +139,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns the *first* node matching the query. \n\n"
             + "``query`` is the Class name String to use in lookup.\n"
             + "\nExample:\n"
@@ -157,7 +157,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find All` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* descendant nodes of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
@@ -196,7 +196,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find All` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
             + "``pseudo`` is a String value specifying pseudo class value.\n\n"
@@ -235,7 +235,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns the *first* descendant node of given node matching the query. \n\n"
             + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
             + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
@@ -437,7 +437,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     // TODO: Should this be deleted? Find All From Node has the same functionality
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
             + "``locator`` is either a _query_ or _Object_ for node whose children will be queried, see "
             + "`3.2 Using locators as keyword arguments`. \n\n"
@@ -488,7 +488,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Find` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns height value of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
             + "`3. Locating or specifying UI elements`. \n\n")
@@ -582,7 +582,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeyword("*DEPRECATED!!* Use keyword `Get Scene` instead.\n\n"
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Get Scene` instead.\n\n"
             +"Returns given locators Scene object. \n\n"
             + "``locator`` is either a _query_ or a _Node_, see `3.2 Using locators as keyword arguments`\n\n")
     @ArgumentNames({ "locator" })
@@ -661,7 +661,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the library version from POM file")
     public String getLibraryVersion() {
-        return HelperFunctions.loadRobotLibraryVersion();
+        return HelperFunctions.getVersion();
     }
 
     @RobotKeyword("Returns the value of cell in the given location\n\n"

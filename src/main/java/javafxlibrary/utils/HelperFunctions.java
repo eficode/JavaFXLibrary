@@ -106,6 +106,26 @@ public class HelperFunctions {
         }
     }
 
+    public static void waitUntilDoesNotExists(String target, int timeout, String timeUnit) {
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
+                + timeout + ", timeUnit=" + timeUnit);
+
+        try {
+            waitFor(timeout, getTimeUnit(timeUnit), () -> {
+                return asyncFx(() -> createFinder().find(target) == null).get();
+            });
+            waitForFxEvents();
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was still found within given timeout of "
+                    + timeout + " " + timeUnit);
+        } catch (Exception e) {
+            RobotLog.trace("Exception in waitUntilDoesNotExists: " + e + "\n" + e.getCause().toString());
+            throw new JavaFXLibraryNonFatalException("waitUntilDoesNotExist failed: ", e);
+        }
+    }
+
     // TODO: Take same parameters as waitUntilExists in all waitUntil methods
     public static Node waitUntilVisible(Object target, int timeout) {
 
@@ -123,9 +143,31 @@ public class HelperFunctions {
             throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become visible within given timeout of "
-                    + timeout + " seconds.");
+                    + timeout + " " + TimeUnit.SECONDS);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be visible: " + e.getMessage());
+        }
+    }
+
+    public static Node waitUntilInvisible(Object target, int timeout) {
+
+        // if target is a query string, let's try to find the relevant node
+        if (target instanceof String)
+            target = waitUntilExists((String) target, timeout, "SECONDS");
+
+        final Object finalTarget = target;
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
+
+        try {
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
+            return (Node) target;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become invisible within given timeout of "
+                    + timeout + " " + TimeUnit.SECONDS);
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be invisible: " + e.getMessage());
         }
     }
 
@@ -147,6 +189,27 @@ public class HelperFunctions {
                     + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be enabled: " + e.getMessage());
+        }
+    }
+
+    public static Node waitUntilDisabled(Object target, int timeout) {
+
+        if (target instanceof String)
+            target = waitUntilExists((String) target, timeout, "SECONDS");
+
+        final Object finalTarget = target;
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
+
+        try {
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget));
+            return (Node) target;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become disabled within given timeout of "
+                    + timeout + " seconds.");
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be disabled: " + e.getMessage());
         }
     }
 
@@ -527,8 +590,8 @@ public class HelperFunctions {
                 }
         }
     }
-
-    public static String loadRobotLibraryVersion() {
+    // TODO: Find way to use ROBOT_LIBRARY_VERSION directly from main class
+    public static String getVersion() {
         try {
             MavenXpp3Reader reader = new MavenXpp3Reader();
             Model model = reader.read(new FileReader("pom.xml"));
