@@ -1000,6 +1000,26 @@ public class HelperFunctions {
         return replaced;
     }
 
+    public static Map<String, Object> useMappedObjects(Map<String, Object> map) {
+        Map<String, Object> replaced = new HashMap();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object o = entry.getValue();
+            if (o.getClass().isArray()) {
+                replaced.put(key, useMappedObjects((Object[]) o));
+            } else if (o instanceof List) {
+                replaced.put(key, useMappedObjects((List<Object>) o));
+            } else {
+                if (objectMap.containsKey(o)) {
+                    replaced.put(key, objectMap.get(o));
+                } else {
+                    replaced.put(key, o);
+                }
+            }
+        }
+        return replaced;
+    }
+
     public static Object[] checkMethodArguments(Object[] arguments) {
         Object[] replaced = new Object[arguments.length];
         for (int i = 0; i < arguments.length; i++) {

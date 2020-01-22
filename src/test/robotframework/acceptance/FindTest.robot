@@ -169,7 +169,7 @@ Nothing Is Found When failIfNotFound Is True
     [Tags]                      smoke    negative
     Set Test Application        ${BOUNDS_APP}
     ${msg}                      Run Keyword And Expect Error    *    Find    css=NoSuchSelector    true
-    Should Be Equal             ${msg}    Unable to find anything with query: "css=NoSuchSelector"
+    Should Be Equal             Find operation failed for query: "css=NoSuchSelector"     ${msg}
 
 Nothing Is Found With Find All
     [Tags]                      smoke       negative
@@ -181,7 +181,7 @@ Nothing Is Found With Find All When failIfNotFound Is True
     [Tags]                      smoke    negative
     Set Test Application        ${BOUNDS_APP}
     ${msg}                      Run Keyword And Expect Error    *    Find All    css=NoSuchSelector    true
-    Should Be Equal             ${msg}    Unable to find anything with query: "css=NoSuchSelector"
+    Should Be Equal             Find operation failed for query: "css=NoSuchSelector"     ${msg}
 
 Previous Query Returns Nothing In Chained Selector
     [Tags]                      smoke    negative
@@ -199,13 +199,13 @@ Previous Query Returns Nothing In Chained Selector When failIfNotFound Is True
     [Tags]                      smoke    negative
     Set Test Application        ${BOUNDS_APP}
     ${msg}                      Run Keyword And Expect Error    *    Find    css=VBox css=ZBox Pane id=lime    true
-    Should Be Equal             ${msg}    Unable to find anything with query: "css=VBox css=ZBox Pane id=lime"
+    Should Be Equal             Find operation failed for query: "css=VBox css=ZBox Pane id=lime"    ${msg}
 
 Previous Query Returns Nothing In Chained Selector With Find All When failIfNotFound Is True
     [Tags]                      smoke    negative
     Set Test Application        ${BOUNDS_APP}
     ${msg}                      Run Keyword And Expect Error    *    Find All    css=VBox css=ZBox Pane id=lime    true
-    Should Be Equal             ${msg}    Unable to find anything with query: "css=VBox css=ZBox Pane id=lime"
+    Should Be Equal             Find operation failed for query: "css=VBox css=ZBox Pane id=lime"    ${msg}
 
 Find Labeled Node With Text
     [Tags]                      smoke

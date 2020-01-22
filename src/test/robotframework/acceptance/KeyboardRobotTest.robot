@@ -98,10 +98,11 @@ Clear Textarea
     Click On    id=textArea
 
 Create 5x5 Grid
-    :FOR    ${INDEX}    IN RANGE    0    5
-    \    LOG                ${index}
-    \    Push Many Times    5    SHIFT    X
-    \    Run Keyword If     ${INDEX} < 4    Push    ENTER
+    FOR    ${INDEX}    IN RANGE    0    5
+        LOG                ${index}
+        Push Many Times    5    SHIFT    X
+        Run Keyword If     ${INDEX} < 4    Push    ENTER
+    END
 
 Verify String
     [Documentation]                 Verifies that string is equal in location

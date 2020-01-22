@@ -36,29 +36,30 @@ Add Multiple Employees
     [Tags]                              smoke
     Click On                            id=navigationDialog
     ${DATA}                             Get Employee Data
-    :FOR    ${ITEM}     IN              @{DATA}
-    \       Click On                    text="Add employee"
-    \       ${FIELDS}                   Find All        css=.dialog-pane .text-field
-    \       Write To                    @{FIELDS}[0]    ${ITEM.name}
-    \       Write To                    @{FIELDS}[1]    ${ITEM.phone}
-    \       Click On                    text="Add"
-    \       Employee Should Be Added    ${ITEM.name}    ${ITEM.phone}
+    FOR    ${ITEM}     IN              @{DATA}
+           Click On                    text="Add employee"
+           ${FIELDS}                   Find All        css=.dialog-pane .text-field
+           Write To                    @{FIELDS}[0]    ${ITEM.name}
+           Write To                    @{FIELDS}[1]    ${ITEM.phone}
+           Click On                    text="Add"
+           Employee Should Be Added    ${ITEM.name}    ${ITEM.phone}
+    END
 
 Find From Node
     [Tags]              smoke
     Click On            id=navigationDialog
     ${NODE}             Find                    id=secondRow
-    ${LABEL}            Find From Node          ${NODE}         .employeeDataCell
-    ${RESULT}           Call Object Method      ${LABEL}        getText
+    ${LABEL}            Find                    css=.employeeDataCell    failIfNotFound=True     root=${NODE}
+    ${RESULT}           Call Object Method      ${LABEL}                getText
     Should Be Equal     ${RESULT}               John
 
 Find All From Node
     [Tags]              smoke
     Click On            id=navigationDialog
     ${NODE}             Find                    id=secondRow
-    ${TEXTFIELDS}       Find All From Node      ${NODE}             .employeeDataCell
+    ${TEXTFIELDS}       Find All                css=.employeeDataCell    failIfNotFound=True     root=${NODE}
     ${PHONE}            Set Variable            @{TEXTFIELDS}[1]
-    ${RESULT}           Call Object Method      ${PHONE}            getText
+    ${RESULT}           Call Object Method      ${PHONE}                getText
     Should Be Equal     ${RESULT}               0401231234
 
 *** Keywords ***

@@ -20,7 +20,6 @@ package javafxlibrary.keywords.Keywords;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -99,7 +98,7 @@ public class BoundsLocation extends TestFxAdapter {
 
     @RobotKeyword("Returns a Bounds object for a region located using given locator. \n\n"
             + "``locator`` is either a _query_ or _Object:Node, Point2D, Scene, or Window_ for identifying the region"
-            + ", see `3. Locating or specifying UI elements`. \n\n"
+            + ", see `3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| ${bounds}= | Get Bounds | ${node} | \n"
             + "| ${target}= | Create Bounds | 150 | 150 | 200 | 200 | \n"

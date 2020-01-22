@@ -25,7 +25,6 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
 import org.testfx.robot.Motion;
@@ -40,7 +39,7 @@ public class MoveRobot extends TestFxAdapter {
 
     @RobotKeyword("Moves mouse over a node located using given locator.\n\n "
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_. \n\n"
             + "\nExample: \n"
             + "| ${x} | Evaluate | ${400} + ${SCENE_MINX} | \n"
@@ -64,11 +63,6 @@ public class MoveRobot extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    public FxRobotInterface moveTo(Object locator) {
-        return moveTo(locator, "DIRECT");
-    }
-
     @RobotKeyword("Moves mouse directly from current location to new location specified by _x_ and _y_ offsets\n\n"
             + "``x`` is an integer value for horizontal axis x-offset. \n\n"
             + "``y`` is an integer value for vertical axis y-offset. \n\n"
@@ -85,11 +79,6 @@ public class MoveRobot extends TestFxAdapter {
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to move by using coordinates: " + x + ", " + y, e);
         }
-    }
-
-    @RobotKeywordOverload
-    public FxRobotInterface moveBy(int x, int y) {
-        return robot.moveBy((double) x, (double) y, Motion.DIRECT);
     }
 
     @RobotKeyword("Moves mouse to given coordinates.\n\n"
@@ -113,10 +102,4 @@ public class MoveRobot extends TestFxAdapter {
                     "] using motion: \"" + motion + "\"", e);
         }
     }
-
-    @RobotKeywordOverload
-    public FxRobotInterface moveToCoordinates(int x, int y) {
-        return moveToCoordinates(x, y, "DIRECT");
-    }
-
 }

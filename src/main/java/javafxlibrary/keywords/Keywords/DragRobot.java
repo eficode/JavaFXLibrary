@@ -25,7 +25,6 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
 
@@ -39,7 +38,7 @@ public class DragRobot extends TestFxAdapter {
 
     @RobotKeyword("Moves mouse on top of the element located using given _locator_ and presses the given mouse _button_.\n\n "
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "Optional parameter ``button`` is the mouse button to be used, defaults to PRIMARY. See `5. Used ENUMs` for different MouseButtons\n\n"
             + "\nExample:\n"
             + "| ${node}= | Find | \\#some-node-id | \n"
@@ -57,14 +56,9 @@ public class DragRobot extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    public FxRobotInterface dragFrom(Object locator) {
-        return dragFrom(locator, "PRIMARY");
-    }
-
     @RobotKeyword("Moves mouse on top of the element located using given _locator_ and and releases the mouse button.\n\n "
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| Drop To | \\#some-node-id | \n")
     @ArgumentNames({ "locator" })

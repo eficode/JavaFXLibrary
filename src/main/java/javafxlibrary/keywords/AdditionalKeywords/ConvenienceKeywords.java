@@ -42,7 +42,6 @@ import javafxlibrary.utils.TestFxAdapter;
 import javafxlibrary.utils.finder.XPathFinder;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.robot.Motion;
 
@@ -58,7 +57,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @Deprecated
     @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n" +
             "finder that mimics _xpath_ style search.\n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
             + "\nExample:\n"
@@ -79,15 +78,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @Deprecated
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public Object findWithPath(String query) {
-        return findWithPath(query, false);
-    }
-
     @RobotKeyword("Brings the given stage to front\n\n"
-            + "``stage`` is an Object:Stage to be set in front of others`, see `3.2 Using objects`. \n\n")
+            + "``stage`` is an Object:Stage to be set in front of others, see `3.2 Using locators as keyword arguments`. \n\n")
     @ArgumentNames({ "stage" })
     public void bringStageToFront(Stage stage) {
         RobotLog.info("Bringing following Stage to front: \"" + stage + "\"");
@@ -100,7 +92,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Calls a given method for a given java object.\n\n"
-            + "``object`` is a Java object retrieved using JavaFXLibrary keywords, see `3.2 Using objects`.\n\n"
+            + "``object`` is a Java object retrieved using JavaFXLibrary keywords, see `3.2 Using locators as keyword arguments`.\n\n"
             + "``method`` is the name of the method that will be called.\n\n"
             + "Optional ``arguments`` are variable-length arguments that will be provided for the method.\n "
             + "If argument type is boolean, byte, char, double, float, int, long or short, it must have \"casting instructions\" "
@@ -159,8 +151,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @Deprecated
     @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* descendant nodes of given node matching the query. \n\n"
-            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using locators as keyword arguments`. \n\n"
+            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
             + "\nExample:\n"
@@ -189,22 +181,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeywordOverload
-    @ArgumentNames({ "node", "query" })
-    public List<Object> findAllFromNode(Object node, String query) {
-            return findAllFromNode(node, query, false);
-    }
-
-    @Deprecated
     @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
             + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
             + "``pseudo`` is a String value specifying pseudo class value.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
             + "\nExample:\n"
             + "| ${my node}= | Find All With Pseudo Class | .check-box-tree-cell .check-box | selected | \n")
-    @ArgumentNames({ "query", "pseudo", "failIfNotFound=" })
+    @ArgumentNames({ "query", "pseudo", "failIfNotFound=False" })
     public List<Object> findAllWithPseudoClass(String query, String pseudo, boolean failIfNotFound) {
         RobotLog.info("Trying to find all nodes with query: \"" + query + "\" that has pseudoclass state as: \"" +
                 pseudo + "\", failIfNotFound= \"" + failIfNotFound + "\"");
@@ -228,23 +213,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @Deprecated
-    @RobotKeywordOverload
-    @ArgumentNames({ "query", "pseudo" })
-    public List<Object> findAllWithPseudoClass(String query, String pseudo) {
-        return findAllWithPseudoClass(query, pseudo, false);
-    }
-
-    @Deprecated
     @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns the *first* descendant node of given node matching the query. \n\n"
-            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using objects`. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using locators as keyword arguments`. \n\n"
+            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
             + "\nExample:\n"
             + "| ${my node}= | Find From Node | ${some node} | .css |\n"
             + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "node", "query", "failIfNotFound=" })
+    @ArgumentNames({ "node", "query", "failIfNotFound=False" })
     public Object findFromNode(Node node, String query, boolean failIfNotFound) {
         RobotLog.info("Trying to find: \"" + query + "\" from node: \"" + node + "\", failIfNotFound= \"" + failIfNotFound + "\"");
         try {
@@ -262,15 +240,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @Deprecated
-    @RobotKeywordOverload
-    @ArgumentNames({ "node", "query" })
-    public Object findFromNode(Node node, String query) {
-        return findFromNode(node, query, false);
-    }
-
     @RobotKeyword("Lists methods available for given node.\n"
-            + "``node`` is the Object:Node which methods to list, see `3.2 Using objects`. \n\n"
+            + "``node`` is the Object:Node which methods to list, see `3.2 Using locators as keyword arguments`. \n\n"
             + "When working with custom components you may use this keyword to discover methods you can call "
             + "with `Call Method` keyword.\n\n"
             + "Example:\n"
@@ -328,15 +299,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    public void printChildNodes() {
-        try {
-            printTreeStructure(robot.listTargetWindows().get(0).getScene().getRoot());
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Unable to find current root node.", e);
-        }
-    }
-
     // TODO: Should printChildNodes be deprecated?
     @RobotKeyword("Generates and prints FXML representation of the application starting from a given node.\n\n"
             + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
@@ -349,13 +311,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         XPathFinder logger = new XPathFinder();
         logger.setNodeLogging(false);
         RobotLog.info(logger.getFxml((Parent) objectToNode(root)));
-    }
-
-    @RobotKeywordOverload
-    public void logFXML() {
-        XPathFinder logger = new XPathFinder();
-        logger.setNodeLogging(false);
-        RobotLog.info(logger.getFxml(robot.listTargetWindows().get(0).getScene().getRoot()));
     }
 
     @RobotKeyword("Enables/Disables clicking outside of visible JavaFX application windows. Safe clicking is on by" +
@@ -419,7 +374,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     // TODO: Implement getNodeProperty keyword and deprecate below get* keywords
     @RobotKeyword("Calls getPseudoClassStates() -method for a given node and returns a list of values returned by the method.\n\n"
             + "``locator`` is either a _query_ or _Object_ for node whose pseudo class states will be queried, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| ${states}= | Get Pseudo Class States | ${node} | \n"
             + "| Log List | ${states} | \n")
@@ -472,7 +427,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns text value of the Node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getText method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public String getNodeText(Object locator) {
         Node node = objectToNode(locator);
@@ -491,7 +446,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
             + "Returns height value of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public String getNodeHeight(Object locator) {
         Node node = objectToNode(locator);
@@ -518,7 +473,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns image name and path of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "Returns full image path by subsequently calling impl_getUrl -method. \n\n"
             + "Note, impl_getUrl -method is deprecated! Support for this method will be removed from Java in the future.")
     @ArgumentNames({ "node" })
@@ -551,7 +506,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the parent node of node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getParent method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "node" })
     public Object getNodeParent(Object locator) {
         Node node = objectToNode(locator);
@@ -568,7 +523,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the class name of a given node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getSimpleName method will be called, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public String getObjectClassName(Object locator) {
         Node node = objectToNode(locator);
@@ -632,7 +587,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the title of the given window. \n\n"
             + "``locator`` is an _Object:Window_ whose getTitle method will be called, see "
-            + "`3.2 Using objects`. This keyword can be coupled with e.g. `List Windows` -keyword.\n\n")
+            + "`3.2 Using locators as keyword arguments`. This keyword can be coupled with e.g. `List Windows` -keyword.\n\n")
     @ArgumentNames({ "window" })
     public String getWindowTitle(Object object) {
         RobotLog.info("Getting the window title for: \"" + object + "\"");
@@ -666,7 +621,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the value of cell in the given location\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the row\n\n"
             + "``column`` Integer value for the column")
     @ArgumentNames({ "table", "row", "column" })
@@ -688,7 +643,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the Node of cell in the given table location\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the row\n\n"
             + "``column`` Integer value for the column")
     @ArgumentNames({ "table", "row", "column" })
@@ -704,7 +659,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns list of values of the given table column.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``column`` Integer value for the column")
     @ArgumentNames({ "table", "column" })
     public List<Object> getTableColumnValues(Object locator, int column) {
@@ -735,7 +690,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns a list of *visible* cells(Nodes) of the given table column.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``column`` Integer value for the column")
     @ArgumentNames({ "table", "column" })
     public List<Object> getTableColumnCells(Object locator, int column) {
@@ -758,7 +713,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the given table row cells in a dictionary in form of name:node pairs. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the column"
             + "\nExample:\n"
             + "| ${row cells}= | Get Table Row Cells | \\#table-id | ${2} | \n"
@@ -784,7 +739,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the given table row cells in a dictionary in form of name:node pairs. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the column"
             + "\nExample:\n"
             + "| ${row cells}= | Get Table Row Cells | \\#table-id | ${2} | \n"
@@ -810,7 +765,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the column count of the given table\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "table" })
     public int getTableColumnCount(Object locator){
         try {
@@ -835,7 +790,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Returns the value of the given field\n\n"
-            + "``object`` is a _Object:Node_ whose property values are to be checked, see `3.2 Using objects`. \n\n"
+            + "``object`` is a _Object:Node_ whose property values are to be checked, see `3.2 Using locators as keyword arguments`. \n\n"
             + "``fieldName`` is a String specifying which field value should be read")
     @ArgumentNames({ "object", "fieldName" })
     public Object getObjectProperty(Object object, String fieldName) {
@@ -843,7 +798,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Prints a list of all fields and their values of the given Java object\n\n"
-            + "``object`` is a _Object:Node_ whose property field values will be printed, see `3.2 Using objects`. \n\n")
+            + "``object`` is a _Object:Node_ whose property field values will be printed, see `3.2 Using locators as keyword arguments`. \n\n")
     @ArgumentNames({ "object" })
     public void printObjectProperties(Object object) {
         printFields(object, object.getClass());
@@ -852,7 +807,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Gets the max value for a given scrollbar. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
     public Double getScrollBarMaxValue(Object locator){
         try {
@@ -865,7 +820,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Gets the min value for a given scrollbar. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
     public Double getScrollBarMinValue(Object locator){
         try{
@@ -878,7 +833,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Gets the current value for a given scrollbar \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
     public Double getScrollBarValue(Object locator){
         try {
@@ -891,7 +846,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the 'Selected' value(true/false) for given checkbox. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the CheckBox element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public Boolean getCheckBoxSelection(Object locator) {
 
@@ -906,7 +861,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the selected RadioButton Node from the same group as given locator points to.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the RadioButton element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public Object getSelectedRadioButton(Object locator) {
 
@@ -922,7 +877,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the current value of given spinner element. \n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the Spinner element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public Object getSpinnerValue(Object locator) {
 
@@ -937,7 +892,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns a dictionary containing key:value pairs for each tab name and tab content(Node).\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TabPane element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| ${tabs}= | Get Tab pane Tabs | \\#tab-pane-id | \n"
             + "| Dictionary Should Contain Key | ${tabs} | tab name | \n")
@@ -966,7 +921,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the selected TabPane Tab as a dictionary entry in form of 'name : Node' pair.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TabPane element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| ${tab}= | Get Tab Pane Selected Tab | \\#pane-id | \n"
             + "| Dictionary Should contain Key | ${tab} | tab name | \n")
@@ -985,9 +940,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Selects the given Tab from TabPane"
+    @RobotKeyword("Selects the given Tab from TabPane.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TabPane element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``tabName`` is the name of the tab to be selected\n"
             + "\nExamples:\n"
             + "| Select Tab Pane Tab | ${Tab Pane} | tab name | \n"
@@ -1019,7 +974,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the vertical value for given ScrollPane element. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollPane element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
     public Double getScrollPaneVerticalValue(Object locator){
         try {
@@ -1032,7 +987,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the horizontal value for given ScrollPane element. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollPane element, see "
-            + "`3. Locating or specifying UI elements`. \n\n")
+            + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
     public Double getScrollPaneHorizontalValue(Object locator){
         try {
@@ -1045,7 +1000,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the selected date from given datepicker element\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the DatePicker element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| ${date}= | Get Selected Date Picker Date | \\#datepicker-id | \n")
     @ArgumentNames({"locator"})
@@ -1060,14 +1015,14 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Clears the text value of given TextInputControl\n\n"
             + "``locator`` is either a _query_ or _TextInputControl_ object. For identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| Clear Text Input | .text-field | \n")
     @ArgumentNames({ "locator" })
     public void clearTextInput(Object locator) {
         try {
             TextInputControl textInputControl = (TextInputControl) objectToNode(locator);
-            new ClickRobot().clickOn(textInputControl);
+            new ClickRobot().clickOn(textInputControl, "DIRECT");
             new KeyboardRobot().selectAll();
             robot.push(KeyCode.BACK_SPACE);
         } catch (ClassCastException e) {
@@ -1097,12 +1052,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         return menuItems;
     }
 
-    @RobotKeywordOverload
-    public Map<String, Object> getContextMenuItems(){
-        List<Window> windows = robot.listTargetWindows();
-        return getContextMenuItems(windows.get(windows.size() - 1));
-    }
-
     @RobotKeyword("Clicks the given item from menu\n\n"
             + "``item`` is the name for the Context Menu item to be clicked. This keyword clicks the first menu item that matches the given "
             + "item name. Search of an item is started from the last target window.\n\n"
@@ -1128,7 +1077,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns the current value for given ProgressBar element. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ToggleButton element, see "
-            + " `3. Locating or specifying UI elements`. \n\n")
+            + " `3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public Object getProgressBarValue(Object locator) {
         try{
@@ -1143,7 +1092,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Waits for current events in Fx Application Thread event queue to finish before continuing.\n\n"
             + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
             + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
-    @ArgumentNames({ "timeout=" })
+    @ArgumentNames({ "timeout=5" })
     public void waitForEventsInFxApplicationThread(int timeout) {
 
         final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];
@@ -1177,10 +1126,5 @@ public class ConvenienceKeywords extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
                     + e.getMessage());
         }
-    }
-
-    @RobotKeywordOverload
-    public void waitForEventsInFxApplicationThread() {
-        waitForEventsInFxApplicationThread(HelperFunctions.getWaitUntilTimeout());
     }
 }

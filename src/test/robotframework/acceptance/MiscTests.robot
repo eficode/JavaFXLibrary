@@ -16,16 +16,16 @@ ${CURRENT_APPLICATION}    NOT SET
 Find Id That Does Not Exist
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${MSG}                  Run Keyword And Expect Error    *     Find    id=idThatDoesNotExist    ${True}     # TODO: failIfNotFound=True
-    Should Be Equal         ${MSG}    Unable to find anything with query: "id=idThatDoesNotExist"       msg=Find does not fail with expected error message when query not found
-    ${MSG}                  Run Keyword     Find      id=idThatDoesNotExist    ${False}    # TODO: failIfNotFound=False
-    Should Be Equal         ${MSG}    ${EMPTY}    msg=Find does not return None value when query not found
+    ${MSG}                  Run Keyword And Expect Error    *     Find    id=idThatDoesNotExist    failIfNotFound=True
+    Should Be Equal         Find operation failed for query: "id=idThatDoesNotExist"       ${MSG}  msg=Find does not fail with expected error message when query not found
+    ${MSG}                  Run Keyword     Find        id=idThatDoesNotExist    failIfNotFound=False
+    Should Be Equal         ${EMPTY}        ${MSG}      msg=Find does not return None value when query not found
 
 Find All With Wrong Style Class
     [Tags]                  negative    smoke
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
-    ${MSG}                  Run Keyword And Expect Error    *    Find All    css=.thisIsNotAStyleClass    ${True}   # TODO: failIfNotFound=True
-    Should Be Equal         ${MSG}    Unable to find anything with query: "css=.thisIsNotAStyleClass"
+    ${MSG}                  Run Keyword And Expect Error    *    Find All    css=.thisIsNotAStyleClass    failIfNotFound=True
+    Should Be Equal         Find operation failed for query: "css=.thisIsNotAStyleClass"     ${MSG}
 
 Print Child Nodes Of Incompatible Node
     [Tags]                  negative    smoke
@@ -46,6 +46,12 @@ Call Method With Wrong Types
     Set Test Application    javafxlibrary.testapps.TestBoundsLocation
     ${NODE}                 Find            id=green
     ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${NODE}    setWidth    20
+    Should End With         ${MSG}          has no method "setWidth" with arguments [class java.lang.String]
+
+Call Method With Empty Object
+    [Tags]                  negative        smoke
+    Set Test Application    javafxlibrary.testapps.TestBoundsLocation
+    ${MSG}                  Run Keyword And Expect Error    *    Call Object Method    ${EMPTY}    setWidth    20
     Should End With         ${MSG}          has no method "setWidth" with arguments [class java.lang.String]
 
 Call Method That Does Not Exist In Fx Application Thread
@@ -132,7 +138,7 @@ Find From Node
     ${NODE}                 Find                    id=yellow
     ${ROOT}                 Get Root Node Of        ${NODE}
     ${RESULT}               Call Object Method      ${ROOT}         lookup    HBox VBox HBox VBox HBox StackPane
-    ${RECT}                 Find From Node          ${RESULT}       Rectangle
+    ${RECT}                 Find                    class=javafx.scene.shape.Rectangle       root=${RESULT}
     Should Be Equal         ${NODE}                 ${RECT}
 
 Find All From Node
@@ -142,7 +148,7 @@ Find All From Node
     ${VIOLET}               Find                    id=violet
     ${ROOT}                 Get Root Node Of        ${YELLOW}
     ${RESULT}               Call Object Method      ${ROOT}         lookup      HBox VBox HBox VBox HBox
-    @{RECT}                 Find All From Node      ${RESULT}       Rectangle
+    @{RECT}                 Find All                css=Rectangle       root=${RESULT}
     Should Be Equal         ${YELLOW}               @{RECT}[0]
     Should Be Equal         ${VIOLET}               @{RECT}[1]
 
@@ -153,7 +159,7 @@ Get Node Children By Class Name
     ${VIOLET}               Find                                id=violet
     ${ROOT}                 Get Root Node Of                    ${YELLOW}
     ${RESULT}               Call Object Method                  ${ROOT}         lookup    HBox VBox HBox VBox HBox
-    @{RECT}                 Get Node Children By Class Name     ${RESULT}       Rectangle
+    @{RECT}                 Find All                            class=javafx.scene.shape.Rectangle       root=${RESULT}
     Should Contain          ${RECT}                             ${YELLOW}
     Should Contain          ${RECT}                             ${VIOLET}
 
@@ -235,8 +241,8 @@ Find All With Pseudo Class
     Set Test Application    javafxlibrary.testapps.TestClickRobot
     ${NODE}                 Find    id=rightClickButton
     Move To                 ${NODE}
-    @{LIST}                 Find All With Pseudo Class    .button    :hover
-    Should Be Equal         @{LIST}[0]    ${NODE}
+    @{LIST}                 Find All      css=HBox pseudo=hover    failIfNotFound=True
+    Should Be Equal         ${NODE}       @{LIST}[0]
 
 Get Table Column Count
     [Tags]                  smoke
