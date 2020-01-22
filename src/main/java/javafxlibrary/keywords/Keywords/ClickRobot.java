@@ -24,7 +24,6 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobotInterface;
 import org.testfx.robot.Motion;
@@ -40,7 +39,7 @@ public class ClickRobot extends TestFxAdapter {
 
     @RobotKeyword("Clicks an element specified by given locator.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_. Especially with submenus, desired motion "
             + "is usually HORIZONTAL_FIRST.\n\n"
             + "\nExample:\n"
@@ -63,14 +62,9 @@ public class ClickRobot extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    public FxRobotInterface clickOn(Object locator ) {
-        return clickOn(locator, "DIRECT");
-    }
-
     @RobotKeyword("Right clicks an element specified by given locator.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_. Especially with submenus, desired motion "
             + "is usually HORIZONTAL_FIRST.\n\n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
@@ -86,14 +80,9 @@ public class ClickRobot extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    public FxRobotInterface rightClickOn(Object locator) {
-        return rightClickOn(locator, "DIRECT");
-    }
-
     @RobotKeyword("Double clicks an element specified by given locator.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_.")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface doubleClickOn(Object locator, String motion) {
@@ -108,11 +97,6 @@ public class ClickRobot extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Could not execute double click on using locator \"" + locator + "\" " +
                     "and motion " + motion + ": " + e.getCause().getMessage(), e);
         }
-    }
-
-    @RobotKeywordOverload
-    public FxRobotInterface doubleClickOn(Object locator) {
-        return doubleClickOn(locator,"DIRECT");
     }
 
     @RobotKeyword("Clicks whatever is under the mouse pointer. \n\n"
@@ -175,12 +159,6 @@ public class ClickRobot extends TestFxAdapter {
         }
     }
 
-    @RobotKeywordOverload
-    @ArgumentNames({ "x", "y" })
-    public FxRobotInterface clickOnCoordinates(int x, int y) {
-        return clickOnCoordinates(x, y, "DIRECT");
-    }
-
     @RobotKeyword("Moves mouse directly to the given coordinates and double clicks the primary mouse button\n\n"
             + "``x`` and ``y`` defines the coordinates as integer values. \n\n"
             + "Optional argument ``motion`` defines how mouse pointer is moved to target. Defaults to _DIRECT_.")
@@ -196,12 +174,6 @@ public class ClickRobot extends TestFxAdapter {
             }
             throw new JavaFXLibraryNonFatalException("Unable to double click on coordinates: " + x + " " + y, e);
         }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "x", "y" })
-    public FxRobotInterface doubleClickOnCoordinates(int x, int y) {
-        return doubleClickOnCoordinates(x, y, "DIRECT");
     }
 
     @RobotKeyword("Moves mouse directly to the given coordinates and right clicks the primary mouse button\n\n"
@@ -220,11 +192,4 @@ public class ClickRobot extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to right click on coordinates: " + x + " " + y, e);
         }
     }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "x", "y" })
-    public FxRobotInterface rightClickOnCoordinates(int x, int y) {
-        return rightClickOnCoordinates(x, y, "DIRECT");
-    }
-
 }

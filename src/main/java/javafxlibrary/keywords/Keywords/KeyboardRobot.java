@@ -208,7 +208,7 @@ public class KeyboardRobot extends TestFxAdapter {
 
     @RobotKeyword("Writes a given text characters one after the other to given locator.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
             + "| Write To | .css-name | Robot Framework | \n")
@@ -216,7 +216,7 @@ public class KeyboardRobot extends TestFxAdapter {
     public FxRobotInterface writeTo(Object locator, String text) {
         RobotLog.info("Writing \"" + text + "\" to " + locator);
         try {
-            clickRobot.clickOn(locator);
+            clickRobot.clickOn(locator,"DIRECT");
             return robot.write(text, sleepMillis);
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)

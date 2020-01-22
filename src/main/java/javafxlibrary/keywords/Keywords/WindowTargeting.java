@@ -48,7 +48,7 @@ public class WindowTargeting extends TestFxAdapter {
 
     @RobotKeyword("Sets active target window\n\n"
             + "``locator`` is either a _query_ or _Object:Node, Scene_ for identifying the Window. In addition to normal _query_, "
-            + "locator can be a search string for _pattern=_, _title=_ or Integer number. See `3. Locating or specifying UI elements`. \n\n"
+            + "locator can be a search string for _pattern=_, _title=_ or Integer number. See `3. Locating JavaFX Nodes`. \n\n"
             + "\nExamples for different kind of locators: \n\n"
             + "pattern (defaults to title):\n"
             + "| Set Target Window | My window title | \n"

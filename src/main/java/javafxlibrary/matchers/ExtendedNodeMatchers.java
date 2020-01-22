@@ -48,7 +48,7 @@ public class ExtendedNodeMatchers {
     }
 
     private static boolean hoverable(Node node) {
-        new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node);
+        new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node,"DIRECT");
         return node.isHover();
     }
 

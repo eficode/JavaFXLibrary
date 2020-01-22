@@ -35,7 +35,7 @@ public class PointOffset extends TestFxAdapter {
 
     @RobotKeyword("Convenience method: Creates and returns a PointQuery pointing to the target with the given offset values. \n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "Parameters ``offsetX`` and ``offsetY`` are Double type values for x- and y-axis offsets.\n "
             + "\nExample: \n"
             + "| ${point query}= | Point To With Offset | ${some node} | 10.0 | -10.0 | \n"

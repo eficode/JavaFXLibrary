@@ -17,21 +17,23 @@
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.robotframework.remoteserver.RemoteServer;
 import org.robotframework.remoteserver.logging.Jetty2Log4J;
 
 public class JavaFXLibraryRemoteServer extends RemoteServer {
 
+    public JavaFXLibraryRemoteServer(int port) {
+        super(port);
+    }
+
     private static Log log = LogFactory.getLog(RemoteServer.class);
 
     public static void configureLogging() {
-        Logger root = Logger.getRootLogger();
-        root.removeAllAppenders();
-        BasicConfigurator.configure();
-        root.setLevel(Level.FATAL);
+        Configurator.initialize(new DefaultConfiguration());
+        Configurator.setRootLevel(Level.FATAL);
         org.eclipse.jetty.util.log.Log.setLog(new Jetty2Log4J());
         LogFactory.releaseAll();
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",

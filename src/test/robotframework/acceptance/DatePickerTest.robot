@@ -51,16 +51,18 @@ Set Year
     ${year_label}               Set Variable    @{time_labels}[1]
     ${left_arrows}              Find All        css=.left-button
     ${prev_year}                Set Variable    @{left_arrows}[1]
-    :FOR    ${i}    IN RANGE    99
-    \       ${current}          Get Node Text   ${year_label}
-    \       Exit For Loop If    ${current} == ${year}
-    \       Click On            ${prev_year}
+    FOR    ${i}    IN RANGE    99
+           ${current}          Get Node Text   ${year_label}
+           Exit For Loop If    ${current} == ${year}
+           Click On            ${prev_year}
+    END
 
 Set Month
     [Arguments]                 ${month}
     ${month_label}              Find            css=.spinner-label
     ${prev_month}               Find            css=.left-button
-    :FOR    ${i}    IN RANGE    99
-    \       ${current}          Get Node Text   ${month_label}
-    \       Exit For Loop If    '${current}' == '${month}'
-    \       Click On            ${prev_month}
+    FOR    ${i}    IN RANGE    99
+           ${current}          Get Node Text   ${month_label}
+           Exit For Loop If    '${current}' == '${month}'
+           Click On            ${prev_month}
+    END
