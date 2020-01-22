@@ -14,9 +14,10 @@ Swing Embedded JavaFX Click Test
     Wait Until Keyword Succeeds         15 sec          250ms           Find          css=.button     	${True}
     ${colors}    Create List            0xdc143cff      0x00fa9aff      0xee82eeff    0xffff00ff        0x00ffffff
     Text Value Should Be                Swing Embedded JavaFX
-    :FOR    ${I}    IN RANGE            0               5
-    \    Click On                       css=.button
-    \    Wait Until Keyword Succeeds    3 sec           250ms           Text Value Should Be       @{colors}[${i}]
+    FOR    ${I}    IN RANGE            0               5
+        Click On                       css=.button
+        Wait Until Keyword Succeeds    3 sec           250ms           Text Value Should Be       @{colors}[${i}]
+    END
 
 Swing Embedded JavaFX Type Test
     [Tags]                          smoke

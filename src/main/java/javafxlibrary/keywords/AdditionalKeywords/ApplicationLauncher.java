@@ -235,6 +235,17 @@ public class ApplicationLauncher extends TestFxAdapter {
 
 
     @RobotKeyword("Returns the class name of currently active JavaFX Application")
+    public String getCurrentApplication() {
+        try {
+            return getCurrentSessionApplicationName();
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Problem getting current application name.", e);
+        }
+    }
+
+    @Deprecated
+    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use `Get Current Application` keyword instead.\n\n"
+            + "Returns the class name of currently active JavaFX Application\n")
     public String currentApplication() {
         try {
             return getCurrentSessionApplicationName();
@@ -242,4 +253,5 @@ public class ApplicationLauncher extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Problem getting current application name.", e);
         }
     }
+
 }

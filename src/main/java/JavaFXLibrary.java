@@ -37,14 +37,13 @@ import org.apache.commons.io.FileUtils;
 import org.python.google.common.base.Throwables;
 import org.robotframework.javalib.annotation.Autowired;
 import org.robotframework.javalib.library.AnnotationLibrary;
-import org.robotframework.remoteserver.RemoteServer;
-import org.testfx.util.WaitForAsyncUtils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static javafxlibrary.utils.HelperFunctions.*;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
+import java.util.ResourceBundle;
 
 public class JavaFXLibrary extends AnnotationLibrary {
 
@@ -78,15 +77,93 @@ public class JavaFXLibrary extends AnnotationLibrary {
         }
     }
 
+    public static String loadRobotLibraryVersion() {
+        try {
+            return ResourceBundle.getBundle(JavaFXLibrary.class.getCanonicalName().replace(".", File.separator))
+                    .getString("version");
+        } catch (RuntimeException e) {
+            return "unknown";
+        }
+    }
+
     @Autowired
     protected RunOnFailure runOnFailure;
+
+    @Override
+    public Object runKeyword(String keywordName, List args, Map kwargs) {
+
+        if (kwargs == null) {
+            kwargs = new HashMap();
+        }
+
+        List finalArgs;
+        Map finalKwargs;
+
+        // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
+        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread"))) {
+            finalArgs = HelperFunctions.useMappedObjects(args);
+            finalKwargs = HelperFunctions.useMappedObjects(kwargs);
+        } else {
+            finalArgs = args;
+            finalKwargs = kwargs;
+        }
+
+
+        AtomicReference<Object> retval = new AtomicReference<>();
+        AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
+
+        try {
+            RobotLog.ignoreDuplicates();
+            // timeout + 500 ms so that underlying timeout has a chance to expire first
+            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
+
+                try {
+                    retval.set(super.runKeyword(keywordName, finalArgs, finalKwargs));
+                    return true;
+
+                } catch (JavaFXLibraryTimeoutException jfxte){
+                    // timeout already expired, catch exception and jump out
+                    retExcep.set(jfxte);
+                    throw jfxte;
+
+                } catch (RuntimeException e){
+                    // catch exception and continue trying
+                    retExcep.set(e);
+                    return false;
+                }
+            });
+        } catch (TimeoutException te) {
+            RobotLog.reset();
+            RuntimeException e = retExcep.get();
+            runOnFailure.runOnFailure();
+
+            if (e.getCause() instanceof JavaFXLibraryFatalException) {
+                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
+                throw e;
+            } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
+                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception: \n" + Throwables.getStackTraceAsString(e));
+                throw e;
+            } else {
+                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
+                throw e;
+            }
+        } catch (JavaFXLibraryTimeoutException jfxte) {
+            RobotLog.reset();
+            RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
+            throw jfxte;
+        }
+        RobotLog.reset();
+        return retval.get();
+    }
 
     // overriding the run method to catch the control in case of failure, so that desired runOnFailureKeyword
     // can be executed in controlled manner.
     @Override
-    public Object runKeyword(String keywordName, Object[] args) {
+    public Object runKeyword(String keywordName, List args) {
+        // TODO: Check if this is ever called anymore
+        RobotLog.info("runKeyword called with args ONLY");
 
-        Object[] finalArgs;
+        List finalArgs;
         // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
         if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread")))
             finalArgs = HelperFunctions.useMappedObjects(args);
@@ -181,22 +258,23 @@ public class JavaFXLibrary extends AnnotationLibrary {
     }
 
     public static void main(String[] args) throws Exception {
-        JavaFXLibraryRemoteServer.configureLogging();
-        System.out.println("---------------------------= JavaFXLibrary =---------------------------- ");
-        RemoteServer server = new JavaFXLibraryRemoteServer();
-        server.putLibrary("/RPC2", new JavaFXLibrary());
         int port = 8270;
         InetAddress ipAddr = InetAddress.getLocalHost();
 
         try {
-            if (args.length > 0)
+            JavaFXLibraryRemoteServer.configureLogging();
+            System.out.println("----------------------------= JavaFXLibrary =-----------------------------");
+            if (args.length > 0) {
                 port = Integer.parseInt(args[0]);
-            else
+            }
+            else {
                 System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port + ".\n" +
                         "If you wish to use another port, restart the library and give port number\n" +
                         "as an argument.");
+            }
 
-            server.setPort(port);
+            JavaFXLibraryRemoteServer server = new JavaFXLibraryRemoteServer(port);
+            server.putLibrary("/RPC2", new JavaFXLibrary());
             server.start();
             System.out.println("\n    JavaFXLibrary " + ROBOT_LIBRARY_VERSION + " is now available at: " +
                     ipAddr.getHostAddress() + ":" + port + "\n");
@@ -210,6 +288,10 @@ public class JavaFXLibrary extends AnnotationLibrary {
         } catch (BindException be) {
             System.out.println("\n        Error! " + be.getMessage() + ": " + ipAddr.getHostAddress() + ":" + port + "\n");
             System.exit(1);
+        } catch (IOException ioe) {
+            System.out.println("\n        Error! " + ioe.getMessage() + ": " + ipAddr.getHostAddress() + ":" + port + "\n");
+            System.exit(1);
         }
     }
 }
+

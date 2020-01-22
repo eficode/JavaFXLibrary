@@ -36,7 +36,7 @@ public class NodeLookup extends TestFxAdapter {
 
     @RobotKeyword("Returns the root node of given element.\n\n"
             + "``locator`` is either a _query_ or _Object:Node, Window, Scene_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExamples for different kind of locators: \n\n"
             + "Window:\n"
             + "| ${window}= | Get Window | title=ClickRobot Test | \n"

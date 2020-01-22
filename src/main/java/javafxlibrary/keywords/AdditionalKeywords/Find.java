@@ -7,7 +7,6 @@ import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.RobotLog;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.util.ArrayList;
@@ -40,88 +39,52 @@ public class Find {
             + "| ${my node}= | Find | css=VBox HBox xpath=//Rectangle[@width=\"600.0\"] | \n"
             + "The example above would first look for a node matching the css selector _VBox HBox_, then continue the search "
             + "using the found HBox as a root node, while looking for a node matching the XPath.\n\n")
-    @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
+    @ArgumentNames({"query", "failIfNotFound=False", "root="})
     public Object find(String query, boolean failIfNotFound, Parent root) {
-        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound= \"" +
-                failIfNotFound + "\", root= \"" + root + "\"");
+        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound=\"" +
+                failIfNotFound + "\", root=\"" + root + "\"");
         try {
-            return mapObject(new Finder().find(query, root));
+            if (root != null) {
+                return mapObject(new Finder().find(query, root));
+            } else {
+                return mapObject(new Finder().find(query));
+            }
         } catch (JavaFXLibraryQueryException e) {
             throw e;
         } catch (JavaFXLibraryNonFatalException e) {
-            if (failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
+            if (failIfNotFound) {
+                RobotLog.info("failIfNotFound was true.");
+                throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"");
+            }
             return "";
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public Object find(String query, boolean failIfNotFound) {
-        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound= \"" +
-                failIfNotFound + "\"");
-        try {
-            return mapObject(new Finder().find(query));
-        } catch (JavaFXLibraryQueryException e) {
-            throw e;
-        } catch (JavaFXLibraryNonFatalException e) {
-            if (failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return "";
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public Object find(String query) {
-        return find(query, false);
     }
 
     @RobotKeyword("Returns *all* nodes matching the query. \n\n"
-            + "``query`` is a query locator, see `3.1 Using queries`.\n\n"
+            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
             + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
             + "keyword returns null in case lookup returns nothing.\n\n"
             + "``root`` is an optional argument pointing to the element which is used as the origin of the lookup. If "
             + "root is defined only its children can be found. By default nodes are being looked from everywhere.\n\n"
             + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "query", "failIfNotFound=False", "root=" })
+    @ArgumentNames({"query", "failIfNotFound=False", "root="})
     public List<Object> findAll(String query, boolean failIfNotFound, Parent root) {
         try {
-            return mapObjects(new Finder().findAll(query, root));
+            if (root != null) {
+                return mapObjects(new Finder().findAll(query, root));
+            } else {
+                return mapObjects(new Finder().findAll(query));
+            }
         } catch (JavaFXLibraryQueryException e) {
             throw e;
         } catch (JavaFXLibraryNonFatalException e) {
             if (failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
+                throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"");
             return new ArrayList<>();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
         }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query", "failIfNotFound=False" })
-    public List<Object> findAll(String query, boolean failIfNotFound) {
-        try {
-            return mapObjects(new Finder().findAll(query));
-        } catch (JavaFXLibraryQueryException e) {
-            throw e;
-        } catch (JavaFXLibraryNonFatalException e) {
-            if (failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return new ArrayList<>();
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
-        }
-    }
-
-    @RobotKeywordOverload
-    @ArgumentNames({ "query" })
-    public List<Object> findAll(String query) {
-        return findAll(query, false);
     }
 }

@@ -15,19 +15,21 @@ Select Context Menu Item
     [Tags]          smoke
     ${menuitems}    Create List                 JavaFXLibrary       Is easy    And fun to use
     ${location}     Point To With Offset        id=bgRectangle      -300       0
-    :FOR            ${menuitem}    IN           @{menuitems}
-    \               Right Click On              ${location}
-    \               Select Context Menu Item    ${menuitem}
-    \               Verify String               css=.textLabel      ${menuitem}
+    FOR            ${menuitem}    IN           @{menuitems}
+                   Right Click On              ${location}
+                   Select Context Menu Item    ${menuitem}
+                   Verify String               css=.textLabel      ${menuitem}
+    END
 
 Select Context Menu Item Using Click On Keyword
     [Tags]          smoke                       demo-set
     ${menuitems}    Create List                 JavaFXLibrary       Is easy    And fun to use
     ${location}     Point To With Offset        id=bgRectangle      -300       0
-    :FOR            ${menuitem}    IN           @{menuitems}
-    \               Right Click On              ${location}
-    \               Click On                    text="${menuitem}"
-    \               Verify String               css=.textLabel      ${menuitem}
+    FOR            ${menuitem}    IN           @{menuitems}
+                   Right Click On              ${location}
+                   Click On                    text="${menuitem}"
+                   Verify String               css=.textLabel      ${menuitem}
+    END
 
 Menus - Navigate
     [Tags]                  smoke                   demo-set

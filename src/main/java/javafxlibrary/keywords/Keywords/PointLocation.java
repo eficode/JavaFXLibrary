@@ -35,7 +35,7 @@ public class PointLocation extends TestFxAdapter {
 
     @RobotKeyword("Sets the current position pointer to a point located using given locator and returns a PointQuery object for it. \n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample: \n"
             + "| ${point query}= | Point To | ${node} |\n"
             + "| Move To | ${point query} | \n"

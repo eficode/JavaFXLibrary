@@ -24,7 +24,6 @@ import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 @RobotKeywords
@@ -46,11 +45,6 @@ public class ScrollRobot extends TestFxAdapter {
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to scroll vertically to direction: \"" + direction + "\"", e);
         }
-    }
-
-    @RobotKeywordOverload
-    public void scrollVertically(String direction) {
-        scrollVertically(direction, 1);
     }
 
     /*
@@ -78,10 +72,4 @@ public class ScrollRobot extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to scroll horizontally to direction: \"" + direction + "\"", e);
         }
     }
-
-    @RobotKeywordOverload
-    public void scrollHorizontally(String direction) {
-        scrollHorizontally(direction, 1);
-    }
-
 }

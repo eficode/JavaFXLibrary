@@ -23,13 +23,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
-import javafxlibrary.keywords.AdditionalKeywords.Find;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.io.IOUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywordOverload;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
@@ -69,23 +67,13 @@ public class ScreenCapturing extends TestFxAdapter {
     @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.")
     public Object capturePrimaryScreen()  {
     	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        return this.captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()));
-    }
-    
-    @RobotKeywordOverload
-    public Object captureImage() {
-    	return captureImage(robot.targetWindow());
-    }
-
-    @RobotKeywordOverload
-    public Object captureImage(Object locator){
-            return captureImage(locator, true);
+        return this.captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
     }
 
     @RobotKeyword("Returns a screenshot of the given locator, or if not given from whole active window.\n\n"
     		+ "Note that active window might only be part of the visible window, it e.g. dialog is active.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, Rectangle, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "Argument ``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
             + "\nExample:\n"
             + "| ${region}= | Create Rectangle | 11 | 22 | 33 | 44 | \n"
@@ -121,11 +109,15 @@ public class ScreenCapturing extends TestFxAdapter {
                     String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
                     imageFile.delete();
 
-                    RobotLog.html("<img src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">");
+                    RobotLog.html("<a href=\"" + path + "\">"
+                            + "<img title=\"Click for full size image\" src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">"
+                            + "</a>");
 
                 } else {
                     // diskonly option
-                    RobotLog.html("<img src=\"" + path + "\" width=\"" + printSize + "px\">");
+                    RobotLog.html("<a href=\"" + path + "\">"
+                            + "<img title=\"Click for full size image\" src=\"" + path + "\" width=\"" + printSize + "px\">"
+                            + "</a>");
                 }
             }
             return mapObject(image);
@@ -140,13 +132,13 @@ public class ScreenCapturing extends TestFxAdapter {
     }
     
     @RobotKeyword("Returns a screenshot of the scene conatining given locator.\n\n"
-            + "``locator`` is a query locator, see `3.1 Using queries`.\n\n "
+            + "``locator`` is a query locator, see `3.1 Locator syntax`.\n\n "
             + "\nExample:\n"
             + "| ${capture}= | Capture Scene Containing Node | ${node} | \n" )
     @ArgumentNames({"locator", "logImage=True"})
     public Object captureSceneContainingNode(Object locator) {
     	Scene scene = (Scene) useMappedObject(new ConvenienceKeywords().getScene(locator));
-    	return this.captureImage(scene);
+    	return this.captureImage(scene,true);
     }
 
     @RobotKeyword("Loads an image from the given _path_ in hard drive \n\n"
@@ -218,7 +210,6 @@ public class ScreenCapturing extends TestFxAdapter {
         if (width < 800)
             return image;
 
-        RobotLog.html("Full resolution image can be found from <a href=" + path + " >" + path + "</a>.");
         double multiplier = width / 800;
         try {
             String url = path.toUri().toURL().toString();

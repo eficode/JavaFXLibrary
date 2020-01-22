@@ -81,18 +81,19 @@ is used as the root of the next query. Only queries with prefixes can be chained
 Locators can be given as arguments for every JavaFXLibrary keyword that accepts a node as an argument. This is useful as it
 helps keeping the test case implementations cleaner and easier to read. However sometimes it is more convenient to have
 a reference to the node saved in a variable. `Find` and `Find All` -keywords can be used to get these references.
-| | *Keyword* | *Argument* | *Description* |
-| | Click On | submit | Clicks on node containing text _submit_ |
-| | Click On | xpath=//Button[@text="submit"] | Clicks on button containing text _submit_ |
-| | | |
-|  ${node} | Find | submit | Finds node containing text _submit_ and returns it |
-| | Click On | ${node} | Click on the node that was found earlier |
+| *Return value* | *Keyword* | *Argument* | *Description* |
+| | Click On | submit | # Clicks on node containing text _submit_ |
+| | Click On | xpath=//Button[@text="submit"] | # Clicks on button containing text _submit_ |
+| | |
+| ${node}= | Find | submit | # Finds node containing text _submit_ and returns it |
+| | Click On | ${node} | # Click on the node that was found earlier |
 
-If we wanted to click every Button of the application, we could use Find All and call the click on keyword in a for loop:
-| ${buttons} | Find All | .button | |
-| :FOR | ${button} | IN | @{buttons} |
-| \ | Click On | ${button} |
-
+If we want to click every Button of the application, we could use Find All and call the click on keyword in a for loop:
+| *Return value* | *Keyword* | *Argument* | | *Description* |
+| ${buttons}= | Find All | .button | | # Get all button nodes to @{buttons} list variable |
+| FOR | ${button} | IN | @{buttons} |
+| | Click On | ${button} | | # Click each button in for loop |
+| END | | |
 
 === 3.3 About XPath queries ===
  The FXML used in XPath lookups is generated on the fly and might differ from the actual FXML file the application uses. For
@@ -123,11 +124,10 @@ before using pseudo-query. Multiple pseudo-classes can be given in a single quer
 nodes by using ';' separator, e.g. _pseudo=hover;focused_.
 
 
-
 == 4. Argument types and return value types ==
-JavaFXLibrary has built in support for [https://github.com/ombre42/jrobotremoteserver|jrobotremoteserver], which provides
+JavaFXLibrary has built in support for [https://github.com/robotframework/jrobotremoteserver|jrobotremoteserver], which provides
 a remote server interface for Robot Framework test libraries. This approach, however, has some limitations when it comes to
-passing different [https://github.com/ombre42/jrobotremoteserver/wiki/User-Guide#Return_Types|return- and parameter types]
+passing different [https://github.com/robotframework/jrobotremoteserver/wiki/User-Guide#Return_Types|return- and parameter types]
 between Robot Framework and Java libraries. All simple object types like Strings, Integers, Booleans etc.. remain as they
 are when passing them between Robot Framework and test libraries but in case of more complex ones, argument types are being
 converted into Strings. For this situation, JavaFXLibrary keeps internal book keeping for mapping complex objects as
@@ -138,22 +138,23 @@ So, even though the return values are Strings, tester is able to use them 'as if
 object methods available for Nodes.
 
 Let's take an example of a table that can contain complex objects, not just simple string values:
+| *Return value* | *Keyword* | *Argument* | *Argument* | *Description* |
 | ${table cells}= | Get Table Row Cells | \#table-id | 2 | # table cell Nodes are stored in map and string representations are returned |
-| Node Should Be Enabled | @{table cells}[column 0] | | | # Library takes the string value as an argument and converts it back to Node |
-| Node Should Have Text | @{table cells}[column 1] | some text | | |
-| Click On | @{table cells}[column 2] | | | # in case this cell is clickable |
+| | Node Should Be Enabled | @{table cells}[column 0] | | # Library takes the string value as an argument and converts it back to Node |
+| | Node Should Have Text | @{table cells}[column 1] | some text | | |
+| | Click On | @{table cells}[column 2] | | # in case this cell is clickable |
 | ${cell buttons}= | Find All From Node | @{table cells}[column 3] | .button  | # Finds all buttons from table cell Node |
-| Click On | @{cell buttons}[0] |  |  | |
+| | Click On | @{cell buttons}[0] |  |  |
 Most of the JavaFXLibrary keywords can use locators directly e.g. `Click On` keyword can take just css selector as an
 argument, but in some cases it can be convenient to be able to pass in a 'Node' as an argument, especially when dealing
 with complex data structures.
 
 
-
 == 5. Used ENUMs ==
+| *Definition* | *Values* |
 | [https://github.com/TestFX/TestFX/blob/master/subprojects/testfx-core/src/main/java/org/testfx/robot/Motion.java|Motion] | DEFAULT, DIRECT, HORIZONTAL_FIRST, VERTICAL_FIRST |
 | [https://docs.oracle.com/javafx/2/api/javafx/scene/input/MouseButton.html|MouseButton] | MIDDLE, NONE, PRIMARY, SECONDARY |
-| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html|KeyCode] | Check the link 'KeyCode' on the left |
+| [https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html|KeyCode] | Check the 'KeyCode' link on the left for allowed values. |
 | [https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/TimeUnit.html|TimeUnit] | DAYS, HOURS, MICROSECONDS, MILLISECONDS, MINUTES, NANOSECONDS, SECONDS |
 | [https://docs.oracle.com/javafx/2/api/javafx/geometry/VerticalDirection.html|VerticalDirection] | UP, DOWN |
 | [https://docs.oracle.com/javafx/2/api/javafx/geometry/HorizontalDirection.html|HorizontalDirection] | LEFT, RIGHT |

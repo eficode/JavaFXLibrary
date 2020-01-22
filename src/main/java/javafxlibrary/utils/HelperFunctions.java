@@ -95,12 +95,34 @@ public class HelperFunctions {
             });
             waitForFxEvents();
             return node;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
             throw new JavaFXLibraryNonFatalException("waitUntilExist failed: ", e);
+        }
+    }
+
+    public static void waitUntilDoesNotExists(String target, int timeout, String timeUnit) {
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
+                + timeout + ", timeUnit=" + timeUnit);
+
+        try {
+            waitFor(timeout, getTimeUnit(timeUnit), () -> {
+                return asyncFx(() -> createFinder().find(target) == null).get();
+            });
+            waitForFxEvents();
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was still found within given timeout of "
+                    + timeout + " " + timeUnit);
+        } catch (Exception e) {
+            RobotLog.trace("Exception in waitUntilDoesNotExists: " + e + "\n" + e.getCause().toString());
+            throw new JavaFXLibraryNonFatalException("waitUntilDoesNotExist failed: ", e);
         }
     }
 
@@ -121,9 +143,31 @@ public class HelperFunctions {
             throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become visible within given timeout of "
-                    + timeout + " seconds.");
+                    + timeout + " " + TimeUnit.SECONDS);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be visible: " + e.getMessage());
+        }
+    }
+
+    public static Node waitUntilInvisible(Object target, int timeout) {
+
+        // if target is a query string, let's try to find the relevant node
+        if (target instanceof String)
+            target = waitUntilExists((String) target, timeout, "SECONDS");
+
+        final Object finalTarget = target;
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
+
+        try {
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
+            return (Node) target;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become invisible within given timeout of "
+                    + timeout + " " + TimeUnit.SECONDS);
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be invisible: " + e.getMessage());
         }
     }
 
@@ -145,6 +189,27 @@ public class HelperFunctions {
                     + timeout + " seconds.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be enabled: " + e.getMessage());
+        }
+    }
+
+    public static Node waitUntilDisabled(Object target, int timeout) {
+
+        if (target instanceof String)
+            target = waitUntilExists((String) target, timeout, "SECONDS");
+
+        final Object finalTarget = target;
+        RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
+
+        try {
+            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget));
+            return (Node) target;
+        } catch (JavaFXLibraryNonFatalException nfe) {
+            throw nfe;
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryTimeoutException("Given target \"" + target + "\" did not become disabled within given timeout of "
+                    + timeout + " seconds.");
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Something went wrong while waiting target to be disabled: " + e.getMessage());
         }
     }
 
@@ -525,8 +590,8 @@ public class HelperFunctions {
                 }
         }
     }
-
-    public static String loadRobotLibraryVersion() {
+    // TODO: Find way to use ROBOT_LIBRARY_VERSION directly from main class
+    public static String getVersion() {
         try {
             MavenXpp3Reader reader = new MavenXpp3Reader();
             Model model = reader.read(new FileReader("pom.xml"));
@@ -893,7 +958,6 @@ public class HelperFunctions {
     }
 
     public static Object[] useMappedObjects(Object[] arr) {
-
         Object[] replaced = new Object[arr.length];
 
         for (int i = 0; i < arr.length; i++) {
@@ -916,7 +980,7 @@ public class HelperFunctions {
     }
 
     public static List<Object> useMappedObjects(List<Object> list) {
-        List<Object> replaced = new ArrayList<>();
+        List<Object> replaced = new ArrayList<>(list);
 
         for (int i = 0; i < list.size(); i++) {
             Object o = list.get(i);
@@ -929,9 +993,28 @@ public class HelperFunctions {
                 if (objectMap.containsKey(o)) {
                     replaced.set(i, objectMap.get(o));
                 } else {
-                    replaced.set(i, list.get(i));
+                    replaced.set(i, o);
                 }
+            }
+        }
+        return replaced;
+    }
 
+    public static Map<String, Object> useMappedObjects(Map<String, Object> map) {
+        Map<String, Object> replaced = new HashMap();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object o = entry.getValue();
+            if (o.getClass().isArray()) {
+                replaced.put(key, useMappedObjects((Object[]) o));
+            } else if (o instanceof List) {
+                replaced.put(key, useMappedObjects((List<Object>) o));
+            } else {
+                if (objectMap.containsKey(o)) {
+                    replaced.put(key, objectMap.get(o));
+                } else {
+                    replaced.put(key, o);
+                }
             }
         }
         return replaced;

@@ -40,9 +40,10 @@ Scroll Once Vertically
     [Tags]    smoke
     Reset counters
     Move to vertical listener
-    :FOR    ${index}    IN RANGE    5
-    \       Scroll Vertically       DOWN                    1
-    \       Sleep                   50milliseconds
+    FOR    ${index}    IN RANGE    5
+           Scroll Vertically       DOWN                    1
+           Sleep                   50milliseconds
+    END
     Verify String                   ${VERTICAL_EVENTS}      5
 
 Scroll Left

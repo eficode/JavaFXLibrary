@@ -63,14 +63,14 @@ public class DeprecatedFindKeywordsTest extends TestFxAdapterTest {
     @Test
     public void findAllWithPseudoClass() {
         expectTwoButtonsFromNodeQuery();
-        List<Object> allWithPseudoClass = keywords.findAllWithPseudoClass("rootId", "selected");
+        List<Object> allWithPseudoClass = keywords.findAllWithPseudoClass("rootId", "selected", true);
         Assert.assertEquals(HelperFunctions.mapObject(button), allWithPseudoClass.get(0));
     }
 
     @Test
     public void findNoPseudoClasses() {
         expectTwoButtonsFromNodeQuery();
-        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
+        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something", false);
         Assert.assertEquals(0, hits.size());
     }
 
@@ -82,7 +82,7 @@ public class DeprecatedFindKeywordsTest extends TestFxAdapterTest {
                 result = ImmutableSet.of();
             }
         };
-        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something");
+        List<Object> hits = keywords.findAllWithPseudoClass("rootId", "something", false);
         Assert.assertEquals(0, hits.size());
     }
 

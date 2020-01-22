@@ -170,6 +170,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Write | Robot Framework | \n")
     @ArgumentNames({ "text" })
     public FxRobotInterface write(String text) {
+        RobotLog.info("Writing \"" + text + "\" with keyboard.");
         try {
             return robot.write(text, sleepMillis);
         } catch (Exception e) {
@@ -187,7 +188,8 @@ public class KeyboardRobot extends TestFxAdapter {
     		RobotLog.info("Fast write not working in headless mode. Writing text normally");
     		this.write(text);
     	} else {
-	        try {
+            RobotLog.info("Writing \"" + text + "\" via clipboard.");
+            try {
 	            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 	            StringSelection testData = new StringSelection(text);
 	            c.setContents(testData, testData);
@@ -206,16 +208,15 @@ public class KeyboardRobot extends TestFxAdapter {
 
     @RobotKeyword("Writes a given text characters one after the other to given locator.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
-            + "`3. Locating or specifying UI elements`. \n\n"
+            + "`3. Locating JavaFX Nodes`. \n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
             + "| Write To | .css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
     public FxRobotInterface writeTo(Object locator, String text) {
-        RobotLog.info("Writing to " + locator);
-
+        RobotLog.info("Writing \"" + text + "\" to " + locator);
         try {
-            clickRobot.clickOn(locator);
+            clickRobot.clickOn(locator,"DIRECT");
             return robot.write(text, sleepMillis);
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
