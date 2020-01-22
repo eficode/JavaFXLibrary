@@ -7,9 +7,9 @@ JavaFXLibrary works with both Jython (local and remote use) and Python (remote o
 JavaFXLibrary is tested to work with Robot Framework 3.0.2 or later.
 
 ## Keyword documentation
-See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.3/javafxlibrary-0.5.3.html).
+See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.4/javafxlibrary-0.5.4.html).
 
-For editors (IDEs) keyword documentation can be obtained from [here](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.3/javafxlibrary-0.5.3.xml).
+For editors (IDEs) keyword documentation can be obtained from [here](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.5.4/javafxlibrary-0.5.4.xml).
 
 ## Taking the library into use
 ### As a local library
@@ -46,7 +46,7 @@ To use JavaFXLibrary on macOS Mojave you must enable the accessibility features 
 - Enable accessibility features by checking the box: :white_check_mark: Terminal
 
 ## Identifying JavaFX UI objects
-[Scenic View](http://fxexperience.com/scenic-view/) is a tool that allows you to inspect the JavaFX application scenegraph. This can be useful especially when you do not have access to the source code.
+[Scenic View](https://github.com/JonathanGiles/scenic-view) is a tool that allows you to inspect the JavaFX application scenegraph. This can be useful especially when you do not have access to the source code.
 
 See [keyword documentation](https://eficode.github.io/JavaFXLibrary/javafxlibrary.html#3.%20Locating%20JavaFX%20Nodes) for detailed information about handling UI elements with the library.
 

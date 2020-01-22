@@ -9,3 +9,7 @@ report-images
 
 # temporary pom file by shade plugin
 dependency-reduced-pom.xml
+
+# TODO: put logs to some other location, e.g. under target that gets cleaned
+# docker demo environment robot reports
+src/test/robotframework/results/
