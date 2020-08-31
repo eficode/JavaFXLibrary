@@ -224,14 +224,14 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 return FileUtils.readFileToString(new File("./src/main/java/libdoc-documentation.txt"), "utf-8");
             } catch (IOException e) {
                 e.printStackTrace();
-                return "IOException occured while reading the documentation file!";
+                return "IOException occurred while reading the documentation file!";
             }
         } else if (keywordName.equals("__init__")) {
         	try {
                 return FileUtils.readFileToString(new File("./src/main/java/libdoc-init-documentation.txt"), "utf-8");
             } catch (IOException e) {
                 e.printStackTrace();
-                return "IOException occured while reading the init documentation file!";
+                return "IOException occurred while reading the init documentation file!";
             }
         } else {
         	try {

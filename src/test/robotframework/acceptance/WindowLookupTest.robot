@@ -100,7 +100,7 @@ Close Current Window
     [Tags]                  smoke           set-todo
     Run Keyword If    ${headless}    Set Tags    monocle-issue
     ${START}                List Windows
-    Activate window         @{START}[0]
+    Activate window         ${START}[0]
     Close Current Window
     ${END}                  List Windows
     Should Not Be Equal     ${START}        ${END}     msg=Unable to close window!   values=False

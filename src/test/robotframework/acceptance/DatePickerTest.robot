@@ -48,9 +48,9 @@ Teardown test case
 Set Year
     [Arguments]                 ${year}
     ${time_labels}              Find All        css=.spinner-label
-    ${year_label}               Set Variable    @{time_labels}[1]
+    ${year_label}               Set Variable    ${time_labels}[1]
     ${left_arrows}              Find All        css=.left-button
-    ${prev_year}                Set Variable    @{left_arrows}[1]
+    ${prev_year}                Set Variable    ${left_arrows}[1]
     FOR    ${i}    IN RANGE    99
            ${current}          Get Node Text   ${year_label}
            Exit For Loop If    ${current} == ${year}

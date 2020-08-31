@@ -27,8 +27,8 @@ Add an employee
     Click On                    id=navigationDialog
     Click On                    id=addEmployeeButton
     ${TEXTFIELDS}               Find All                css=.dialog-pane .text-field
-    Write To                    @{TEXTFIELDS}[0]        Pasi
-    Write To                    @{TEXTFIELDS}[1]        1452754765
+    Write To                    ${TEXTFIELDS}[0]        Pasi
+    Write To                    ${TEXTFIELDS}[1]        1452754765
     Click On                    text="Add"
     Employee Should Be Added    Pasi                    1452754765
 
@@ -39,8 +39,8 @@ Add Multiple Employees
     FOR    ${ITEM}     IN              @{DATA}
            Click On                    text="Add employee"
            ${FIELDS}                   Find All        css=.dialog-pane .text-field
-           Write To                    @{FIELDS}[0]    ${ITEM.name}
-           Write To                    @{FIELDS}[1]    ${ITEM.phone}
+           Write To                    ${FIELDS}[0]    ${ITEM.name}
+           Write To                    ${FIELDS}[1]    ${ITEM.phone}
            Click On                    text="Add"
            Employee Should Be Added    ${ITEM.name}    ${ITEM.phone}
     END
@@ -58,7 +58,7 @@ Find All From Node
     Click On            id=navigationDialog
     ${NODE}             Find                    id=secondRow
     ${TEXTFIELDS}       Find All                css=.employeeDataCell    failIfNotFound=True     root=${NODE}
-    ${PHONE}            Set Variable            @{TEXTFIELDS}[1]
+    ${PHONE}            Set Variable            ${TEXTFIELDS}[1]
     ${RESULT}           Call Object Method      ${PHONE}                getText
     Should Be Equal     ${RESULT}               0401231234
 
@@ -74,8 +74,8 @@ Employee Should Be Added
     ${SIZE}             Get Length              ${CELLS}
     ${NAMEINDEX}        Evaluate                ${SIZE}-${2}
     ${PHONEINDEX}       Evaluate                ${SIZE}-${1}
-    ${NAMELABEL}        Set Variable            @{CELLS}[${NAMEINDEX}]
-    ${PHONELABEL}       Set Variable            @{CELLS}[${PHONEINDEX}]
+    ${NAMELABEL}        Set Variable            ${CELLS}[${NAMEINDEX}]
+    ${PHONELABEL}       Set Variable            ${CELLS}[${PHONEINDEX}]
     ${NAMEVALUE}        Call Object Method      ${NAMELABEL}            getText
     ${PHONEVALUE}       Call Object Method      ${PHONELABEL}           getText
     Should Be Equal     ${NAME}                 ${NAMEVALUE}

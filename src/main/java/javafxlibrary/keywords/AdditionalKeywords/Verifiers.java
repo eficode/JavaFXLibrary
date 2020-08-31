@@ -40,7 +40,7 @@ import org.testfx.service.support.PixelMatcherResult;
 import org.testfx.service.support.impl.PixelMatcherRgb;
 import org.hamcrest.core.IsNot;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static javafxlibrary.utils.HelperFunctions.*;
@@ -330,9 +330,9 @@ public class Verifiers extends TestFxAdapter {
         RobotLog.info("Checking if \"" + firstBounds + "\" equals with \"" + secondBounds + "\".");
         if (firstBounds == null || secondBounds == null )
             throw new JavaFXLibraryNonFatalException("One of the bounds is null. Check log for additional info.");
-        assertTrue("Expected bounds to be equal:\n"
+        assertEquals("Expected bounds to be equal:\n"
                 + "  First bound:  " + firstBounds + "\n"
-                + "  Second bound: " + secondBounds, firstBounds.equals(secondBounds));
+                + "  Second bound: " + secondBounds, firstBounds, secondBounds);
     }
 
     @RobotKeyword("Checks if given two bounds are not equal. \n\n"
@@ -343,9 +343,9 @@ public class Verifiers extends TestFxAdapter {
         RobotLog.info("Checking if \"" + firstBounds + "\" are not equal with \"" + secondBounds + "\".");
         if (firstBounds == null || secondBounds == null )
             throw new JavaFXLibraryNonFatalException("One of the bounds is null. Check log for additional info.");
-        assertTrue("Expected bounds to be not equal:\n"
+        assertNotEquals("Expected bounds to be not equal:\n"
                 + "  First bound:  " + firstBounds + "\n"
-                + "  Second bound: " + secondBounds, !firstBounds.equals(secondBounds));
+                + "  Second bound: " + secondBounds, firstBounds, secondBounds);
     }
 
     @RobotKeyword("Fails if images are not similar enough\n\n"
@@ -443,6 +443,7 @@ public class Verifiers extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as ToggleButton!");
         }
     }
+
     @RobotKeyword("Waits until given ProgressBar is finished or timeout expires. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ToggleButton element, see "
             + " `3. Locating JavaFX Nodes`. \n\n"

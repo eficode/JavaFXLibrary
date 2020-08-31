@@ -29,8 +29,6 @@ public class JavaFXLibraryRemoteServer extends RemoteServer {
         super(port);
     }
 
-    private static Log log = LogFactory.getLog(RemoteServer.class);
-
     public static void configureLogging() {
         Configurator.initialize(new DefaultConfiguration());
         Configurator.setRootLevel(Level.FATAL);
@@ -38,6 +36,6 @@ public class JavaFXLibraryRemoteServer extends RemoteServer {
         LogFactory.releaseAll();
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
                 "org.apache.commons.logging.impl.Log4JLogger");
-        log = LogFactory.getLog(RemoteServer.class);
+        Log log = LogFactory.getLog(RemoteServer.class);
     }
 }

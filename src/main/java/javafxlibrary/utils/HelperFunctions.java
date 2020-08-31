@@ -85,14 +85,10 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> {
-                return asyncFx(() -> createFinder().find(target) != null).get();
-            });
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) != null).get());
             Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
-            waitFor(timeout, getTimeUnit(timeUnit), () -> {
-                return asyncFx(() -> hasValidCoordinates(node)).get();
-            });
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
             waitForFxEvents();
             return node;
         } catch (JavaFXLibraryNonFatalException nfe) {
@@ -102,7 +98,7 @@ public class HelperFunctions {
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("waitUntilExist failed: ", e);
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found.", e);
         }
     }
 
@@ -111,9 +107,7 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> {
-                return asyncFx(() -> createFinder().find(target) == null).get();
-            });
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
             waitForFxEvents();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -122,7 +116,7 @@ public class HelperFunctions {
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
             RobotLog.trace("Exception in waitUntilDoesNotExists: " + e + "\n" + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("waitUntilDoesNotExist failed: ", e);
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was still found.", e);
         }
     }
 
@@ -137,7 +131,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -159,7 +153,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
 
         try {
-            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -180,7 +174,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -201,7 +195,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
 
         try {
-            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -215,7 +209,7 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            waitFor((long) timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
@@ -453,9 +447,12 @@ public class HelperFunctions {
         try {
             File directory = new File(path);
             File[] fileList = directory.listFiles();
+            assert fileList != null;
             for (File file : fileList) {
                 if (file.getName().endsWith(".png"))
-                    file.delete();
+                    if (!file.delete()) {
+                        RobotLog.warn("Screenshot \"" + file.getAbsolutePath() + "\" deletion failed.");
+                    }
             }
         } catch (NullPointerException e) {
             System.out.println("No directory found at " + path);
@@ -466,9 +463,12 @@ public class HelperFunctions {
         try {
             File directory = new File(path);
             File[] fileList = directory.listFiles();
+            assert fileList != null;
             for (File file : fileList) {
                 if (file.getName().endsWith(".png") && file.getName().contains(regex))
-                    file.delete();
+                    if (!file.delete()) {
+                        RobotLog.warn("Screenshot \"" + file.getAbsolutePath() + "\" deletion failed.");
+                    }
             }
         } catch (NullPointerException e) {
             System.out.println("No directory found at " + path);
@@ -678,7 +678,7 @@ public class HelperFunctions {
                     return findNode(nodelist.get(getQueryIndex(currentQuery)), nextQuery);
                 } else {
                     // no index given, continue search with all matches
-                    Node newNode = null;
+                    Node newNode;
 
                     for (Node n : nodelist) {
                         newNode = findNode(n, nextQuery);
@@ -775,7 +775,7 @@ public class HelperFunctions {
                     System.out.println("<li>" + field.getName() + " : " + field.get(o) + "</li>");
                 }
                 System.out.println("</ul>");
-                System.out.println("");
+                System.out.println();
             }
 
             if (c.getSuperclass() != null) {

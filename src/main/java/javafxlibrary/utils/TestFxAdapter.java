@@ -91,7 +91,9 @@ public class TestFxAdapter {
         if (activeSession != null) {
             File errDir = new File(dir);
             if (!errDir.exists())
-                errDir.mkdirs();
+                if(!errDir.mkdirs()) {
+                    RobotLog.warn("Screenshot directory \"" + dir + "\" creation failed!");
+                }
             activeSession.screenshotDirectory = dir;
         } else {
             throw new JavaFXLibraryNonFatalException("Unable to set screenshot directory, no application is currently open!");

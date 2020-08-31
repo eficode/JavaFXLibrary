@@ -149,8 +149,8 @@ Find All From Node
     ${ROOT}                 Get Root Node Of        ${YELLOW}
     ${RESULT}               Call Object Method      ${ROOT}         lookup      HBox VBox HBox VBox HBox
     @{RECT}                 Find All                css=Rectangle       root=${RESULT}
-    Should Be Equal         ${YELLOW}               @{RECT}[0]
-    Should Be Equal         ${VIOLET}               @{RECT}[1]
+    Should Be Equal         ${YELLOW}               ${RECT}[0]
+    Should Be Equal         ${VIOLET}               ${RECT}[1]
 
 Get Node Children By Class Name
     [Tags]                  smoke
@@ -242,7 +242,7 @@ Find All With Pseudo Class
     ${NODE}                 Find    id=rightClickButton
     Move To                 ${NODE}
     @{LIST}                 Find All      css=HBox pseudo=hover    failIfNotFound=True
-    Should Be Equal         ${NODE}       @{LIST}[0]
+    Should Be Equal         ${NODE}       ${LIST}[0]
 
 Get Table Column Count
     [Tags]                  smoke

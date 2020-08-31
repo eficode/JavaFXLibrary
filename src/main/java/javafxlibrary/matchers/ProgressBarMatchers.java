@@ -49,36 +49,27 @@ public class ProgressBarMatchers {
     }
 
     public static Matcher<ProgressBar> isComplete() {
-        return progressMatcher("finished", pb -> complete(pb), "not finished!" );
+        return progressMatcher("finished", ProgressBarMatchers::complete, "not finished!" );
     }
 
     public static Matcher<ProgressBar> isLessThan(Double value) {
-        return progressMatcher("less than " + Double.toString(value), pb -> lessThan(pb, value), "not less than " + Double.toString(value) );
+        return progressMatcher("less than " + value, pb -> lessThan(pb, value), "not less than " + value);
     }
 
     public static Matcher<ProgressBar> isMoreThan(Double value) {
-        return progressMatcher("more than " + Double.toString(value), pb -> moreThan(pb, value), "not more than " + Double.toString(value) );
+        return progressMatcher("more than " + value, pb -> moreThan(pb, value), "not more than " + value);
     }
 
 
     private static boolean complete(ProgressBar pb) {
-        if(pb.getProgress() == 1d )
-            return true;
-        else
-            return false;
+        return pb.getProgress() == 1d;
     }
 
     private static boolean lessThan(ProgressBar pb, Double value) {
-        if(pb.getProgress() <= value )
-            return true;
-        else
-            return false;
+        return pb.getProgress() <= value;
     }
     private static boolean moreThan(ProgressBar pb, Double value) {
-        if(pb.getProgress() >= value )
-            return true;
-        else
-            return false;
+        return pb.getProgress() >= value;
     }
 
 

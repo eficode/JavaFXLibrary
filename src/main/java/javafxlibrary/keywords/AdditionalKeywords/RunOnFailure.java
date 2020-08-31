@@ -30,9 +30,6 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 @RobotKeywords
 public class RunOnFailure extends TestFxAdapter{
 
-    // The keyword to run an failure
-    private String runOnFailureKeyword = "Take Screenshot";
-
     // Only run keyword on failure if false
     private static boolean runningOnFailureRoutine = false;
 
@@ -49,6 +46,8 @@ public class RunOnFailure extends TestFxAdapter{
 
     public void runOnFailure() {
 
+        // The keyword to run an failure
+        String runOnFailureKeyword = "Take Screenshot";
         RobotLog.debug("Executing cleanup functions by running: " + runOnFailureKeyword);
         RobotLog.debug("runningOnFailureRoutine: " + runningOnFailureRoutine);
 

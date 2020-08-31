@@ -72,6 +72,8 @@ public class Find {
     @ArgumentNames({"query", "failIfNotFound=False", "root="})
     public List<Object> findAll(String query, boolean failIfNotFound, Parent root) {
         try {
+            RobotLog.info("Trying to find all nodes matching the query: \"" + query + "\", failIfNotFound=\"" +
+                    failIfNotFound + "\", root=\"" + root + "\"");
             if (root != null) {
                 return mapObjects(new Finder().findAll(query, root));
             } else {

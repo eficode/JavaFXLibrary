@@ -86,7 +86,7 @@ public class BoundsLocation extends TestFxAdapter {
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createRectangle(double minX, double minY, double width, double height) {
         try {
-            RobotLog.info("Creating retangle object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" +
+            RobotLog.info("Creating rectangle object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" +
                     width + "\" and height=\"" + height + "\"");
             return mapObject(new Rectangle2D(minX, minY, width, height));
         } catch (Exception e) {

@@ -140,11 +140,11 @@ object methods available for Nodes.
 Let's take an example of a table that can contain complex objects, not just simple string values:
 | *Return value* | *Keyword* | *Argument* | *Argument* | *Description* |
 | ${table cells}= | Get Table Row Cells | \#table-id | 2 | # table cell Nodes are stored in map and string representations are returned |
-| | Node Should Be Enabled | @{table cells}[column 0] | | # Library takes the string value as an argument and converts it back to Node |
-| | Node Should Have Text | @{table cells}[column 1] | some text | | |
-| | Click On | @{table cells}[column 2] | | # in case this cell is clickable |
-| ${cell buttons}= | Find All From Node | @{table cells}[column 3] | .button  | # Finds all buttons from table cell Node |
-| | Click On | @{cell buttons}[0] |  |  |
+| | Node Should Be Enabled | ${table cells}[column 0] | | # Library takes the string value as an argument and converts it back to Node |
+| | Node Should Have Text | ${table cells}[column 1] | some text | | |
+| | Click On | ${table cells}[column 2] | | # in case this cell is clickable |
+| ${cell buttons}= | Find All From Node | ${table cells}[column 3] | .button  | # Finds all buttons from table cell Node |
+| | Click On | ${cell buttons}[0] |  |  |
 Most of the JavaFXLibrary keywords can use locators directly e.g. `Click On` keyword can take just css selector as an
 argument, but in some cases it can be convenient to be able to pass in a 'Node' as an argument, especially when dealing
 with complex data structures.
