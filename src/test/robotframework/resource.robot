@@ -10,8 +10,9 @@ Import JavaFXLibrary
     Set To Classpath    ${appJar}
 
 Disable Embedded Image Logging For Negative Tests
-    :FOR    ${tag}    IN    @{TEST TAGS}
-    \       Run Keyword If    '${tag}' == 'negative'    Set Image Logging    DISKONLY
+    FOR    ${tag}    IN    @{TEST TAGS}
+           Run Keyword If    '${tag}' == 'negative'    Set Image Logging    DISKONLY
+    END
 
 Enable Image Logging
     Set Image Logging    EMBEDDED

@@ -41,7 +41,7 @@ public class InstanceOfMatcher extends BaseMatcher<Node> {
     @Override
     public void describeTo(Description description) {
         if (last != null) {
-        description.appendText(String.format("Expected type %s%n but got ", type, last));
+        description.appendText("Expected type " + type + " but got " + last);
         }
     }
 

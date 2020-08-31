@@ -52,7 +52,7 @@ Menus - Change Theme
     Click On                text="JavaFX"           HORIZONTAL_FIRST
     ${SCENE}                Get Scene               css=.textLabel
     @{STYLESHEET}           Call Object Method      ${SCENE}            getStylesheets
-    Should Contain          @{STYLESHEET}[0]        Javastyle.css
+    Should Contain          ${STYLESHEET}[0]        Javastyle.css
 
 Menus - Change Font Size
     [Tags]                  smoke                   demo-set
@@ -71,16 +71,16 @@ Combined
     Click On                text="Gradient"         HORIZONTAL_FIRST
     ${SCENE}                Get Scene               css=.textLabel
     @{STYLESHEET}           Call Object Method      ${SCENE}            getStylesheets
-    Should Contain          @{STYLESHEET}[0]        Gradientstyle.css
+    Should Contain          ${STYLESHEET}[0]        Gradientstyle.css
     Click On                text="Services"
     Click On                text="Analyze"
     Verify String           css=.textLabel          Analyze
 
     # Using Find All instead of text-value based css-selector here to avoid dependencies with the second test case
     @{COMBOBOXES}           Find All                css=.combo-box
-    Click On                @{COMBOBOXES}[0]
+    Click On                ${COMBOBOXES}[0]
     Click On                text="25 pc"
-    Click On                @{COMBOBOXES}[1]
+    Click On                ${COMBOBOXES}[1]
     Click On                text="50 €"
     Verify String           id=total                1250 €
 

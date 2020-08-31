@@ -68,7 +68,7 @@ public class PointLocation extends TestFxAdapter {
     public Object pointToCoordinates(int x, int y) {
         try {
             RobotLog.info("Returning a pointquery to coordinates: [" + x + ", " + y + "]");
-            return HelperFunctions.mapObject(robot.point((double) x, (double) y));
+            return HelperFunctions.mapObject(robot.point(x, y));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;

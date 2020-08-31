@@ -38,7 +38,7 @@ public class ScrollRobot extends TestFxAdapter {
     @ArgumentNames({ "direction", "amount=1" })
     public void scrollVertically(String direction, int amount) {
         try {
-            RobotLog.info("Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
+            RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
             robot.scroll(amount, HelperFunctions.getVerticalDirection(direction));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
@@ -62,7 +62,7 @@ public class ScrollRobot extends TestFxAdapter {
     public void scrollHorizontally(String direction, int amount) {
 
         try {
-            RobotLog.info("Scrolling \"" + direction + "\" by \"" + Integer.toString(amount) + "\" ticks.");
+            RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
             robot.press(KeyCode.SHIFT);
             robot.scroll(amount, HelperFunctions.getHorizontalDirection(direction));
             robot.release(KeyCode.SHIFT);
