@@ -29,6 +29,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
 import java.util.*;
 
 import static javafxlibrary.utils.HelperFunctions.createThreadedWrapperApplication;
@@ -106,7 +107,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     private void _addPathToClassPath(String path) {
         URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
-        RobotLog.info("Setting following path to Classpath: " + path);
+        RobotLog.info("Setting following path to classpath: " + path);
 
         try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
@@ -133,11 +134,14 @@ public class ApplicationLauncher extends TestFxAdapter {
           try {
               File directory = new File(path);
               File[] fileList = directory.listFiles();
-
-              for (File file : fileList) {
-                  if (file.getName().endsWith(".jar"))
+              boolean jarsFound = false;
+              for (File file : Objects.requireNonNull(fileList)) {
+                  if (file.getName().endsWith(".jar")) {
+                      jarsFound = true;
                       _addPathToClassPath(file.getAbsolutePath());
+                  }
               }
+              if(!jarsFound) throw new JavaFXLibraryNonFatalException("No jar files found from classpath: " + FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString());
           } catch (NullPointerException e) {
               throw new JavaFXLibraryFatalException("Directory not found: " + path + "\n" + e.getMessage(), e);
           }
@@ -160,7 +164,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Sets system property ``name`` to ``value``. Equals commmand line usage `-Dname=value`.\n"
+    @RobotKeyword("Sets system property ``name`` to ``value``. Equals command line usage `-Dname=value`.\n"
             + "\nExample:\n"
             + "| Set System Property | locale | en_US | \n")
     @ArgumentNames({ "name", "value" })

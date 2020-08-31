@@ -25,6 +25,7 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -97,7 +98,7 @@ public class ScreenCapturing extends TestFxAdapter {
             robotContext().getCaptureSupport().saveImage(image, path);
 
             if (logImage) {
-                Double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
+                double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
 
                 if(TestFxAdapter.logImages.toLowerCase().equals("embedded")) {
                     Image resizedImage = resizeImage(image, path);
@@ -105,10 +106,13 @@ public class ScreenCapturing extends TestFxAdapter {
                     robotContext().getCaptureSupport().saveImage(resizedImage, tempPath);
 
                     File imageFile = convertToJpeg(tempPath);
-                    byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
+                    byte[] imageBytes = FileUtils.readFileToByteArray(imageFile);
                     String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-                    imageFile.delete();
-
+                    if(imageFile.exists()) {
+                        if (!imageFile.delete()) {
+                            RobotLog.warn("Capture temporary image \"" + imageFile.getAbsolutePath() + "\" deletion failed.");
+                        }
+                    }
                     RobotLog.html("<a href=\"" + path + "\">"
                             + "<img title=\"Click for full size image\" src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">"
                             + "</a>");
@@ -131,7 +135,7 @@ public class ScreenCapturing extends TestFxAdapter {
         }
     }
     
-    @RobotKeyword("Returns a screenshot of the scene conatining given locator.\n\n"
+    @RobotKeyword("Returns a screenshot of the scene containing given locator.\n\n"
             + "``locator`` is a query locator, see `3.1 Locator syntax`.\n\n "
             + "\nExample:\n"
             + "| ${capture}= | Capture Scene Containing Node | ${node} | \n" )
@@ -189,17 +193,19 @@ public class ScreenCapturing extends TestFxAdapter {
 
     private Path createNewImageFileNameWithPath(){
         ZonedDateTime errorDateTime = ZonedDateTime.now();
-        String errorTimestamp = formatErrorTimestamp(errorDateTime, "yyyyMMdd-HHmmss-SSS");
+        String errorTimestamp = formatErrorTimestamp(errorDateTime);
         String errorImageFilename = "JavaFXLib-" + errorTimestamp + ".png";
         String errorImageFilePath = getCurrentSessionScreenshotDirectory();
         File errDir = new File(errorImageFilePath);
         if(!errDir.exists())
-            errDir.mkdirs();
+            if (!errDir.mkdirs()) {
+                RobotLog.warn("Capture image directory \"" + errorImageFilePath + "\" creation failed.");
+            }
         return Paths.get(errorImageFilePath, errorImageFilename);
     }
 
-    private static String formatErrorTimestamp(ZonedDateTime dateTime, String dateTimePattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimePattern);
+    private static String formatErrorTimestamp(ZonedDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS");
         return dateTime.format(formatter);
     }
 
@@ -225,7 +231,11 @@ public class ScreenCapturing extends TestFxAdapter {
         BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
                 bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
-        path.toFile().delete();
+        if(path.toFile().exists()) {
+            if (!path.toFile().delete()) {
+                RobotLog.warn("Capture temporary image \"" + path + "\" deletion failed.");
+            }
+        }
         Path tempPathJpeg = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.jpg");
         ImageIO.write(newBufferedImage, "jpg", tempPathJpeg.toFile());
         return tempPathJpeg.toFile();

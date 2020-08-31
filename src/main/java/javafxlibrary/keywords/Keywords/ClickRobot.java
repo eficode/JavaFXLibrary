@@ -150,7 +150,7 @@ public class ClickRobot extends TestFxAdapter {
         checkClickLocation(x, y);
 
         try {
-            return robot.clickOn((double) x, (double) y, getMotion(motion), MouseButton.PRIMARY);
+            return robot.clickOn(x, y, getMotion(motion), MouseButton.PRIMARY);
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
@@ -167,7 +167,7 @@ public class ClickRobot extends TestFxAdapter {
         checkClickLocation(x, y);
         try {
             RobotLog.info("Double clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
-            return robot.doubleClickOn((double) x, (double) y, getMotion(motion), MouseButton.PRIMARY);
+            return robot.doubleClickOn(x, y, getMotion(motion), MouseButton.PRIMARY);
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
@@ -184,7 +184,7 @@ public class ClickRobot extends TestFxAdapter {
         checkClickLocation(x, y);
         try {
             RobotLog.info("Right clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
-            return robot.rightClickOn((double) x, (double) y, getMotion(motion));
+            return robot.rightClickOn(x, y, getMotion(motion));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;

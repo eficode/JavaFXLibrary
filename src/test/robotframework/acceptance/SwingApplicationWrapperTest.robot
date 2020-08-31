@@ -16,7 +16,7 @@ Swing Embedded JavaFX Click Test
     Text Value Should Be                Swing Embedded JavaFX
     FOR    ${I}    IN RANGE            0               5
         Click On                       css=.button
-        Wait Until Keyword Succeeds    3 sec           250ms           Text Value Should Be       @{colors}[${i}]
+        Wait Until Keyword Succeeds    3 sec           250ms           Text Value Should Be       ${colors}[${i}]
     END
 
 Swing Embedded JavaFX Type Test

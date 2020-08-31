@@ -35,8 +35,8 @@ public class Session {
     public Stage primaryStage;
     public FxRobot sessionRobot;
     public Application sessionApplication;
-    public String applicationName = null;
-    public String screenshotDirectory = null;
+    public String applicationName;
+    public String screenshotDirectory;
 
     public Session(String appName, String... appArgs) {
         try {

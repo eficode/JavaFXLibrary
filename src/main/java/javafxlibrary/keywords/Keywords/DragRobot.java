@@ -113,7 +113,7 @@ public class DragRobot extends TestFxAdapter {
 
         try {
             RobotLog.info("Dropping by x=\"" + x + "\" and y=\"" + y + "\"");
-            return robot.dropBy((double) x, (double) y);
+            return robot.dropBy(x, y);
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
@@ -134,7 +134,7 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dragFromCoordinates(int x, int y, String... buttons) {
         try {
             RobotLog.info("Dragging from x=\"" + x + "\" and y=\"" + y + "\" with buttons \"" + Arrays.toString(buttons) + "\"");
-            return robot.drag((double) x, (double) y, HelperFunctions.getMouseButtons(buttons));
+            return robot.drag(x, y, HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
@@ -153,7 +153,7 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dropToCoordinates(int x, int y) {
         try {
             RobotLog.info("Dropping to x=\"" + x + "\" and y=\"" + y + "\"");
-            return robot.dropTo((double) x, (double) y);
+            return robot.dropTo(x, y);
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException ) {
                 throw e;

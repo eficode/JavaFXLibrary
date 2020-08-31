@@ -85,7 +85,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         RobotLog.info("Bringing following Stage to front: \"" + stage + "\"");
         try {
             robot.targetWindow(stage);
-            Platform.runLater(() -> stage.toFront());
+            Platform.runLater(stage::toFront);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to bring stage to front.", e);
         }
@@ -251,7 +251,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         RobotLog.info("Listing all available methods for node: \"" + node + "\"");
         try {
             Class klass = node.getClass();
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             System.out.println("*INFO*");
             while (klass != null) {
                 String name = String.format("\n*%s*\n", klass.getName());
@@ -264,21 +264,21 @@ public class ConvenienceKeywords extends TestFxAdapter {
                 }
                 klass = klass.getSuperclass();
             }
-            return list.toArray(new String[list.size()]);
+            return list.toArray(new String[0]);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Listing node methods failed.", e);
         }
     }
 
     private String getMethodDescription(Method m) {
-        String entry = m.getReturnType().getName() + " ";
-        entry += m.getName();
-        entry += "(";
+        StringBuilder entry = new StringBuilder(m.getReturnType().getName() + " ");
+        entry.append(m.getName());
+        entry.append("(");
         Class[] args = m.getParameterTypes();
         for (int i = 0; i < args.length; i++) {
-            entry += args[i].getName();
+            entry.append(args[i].getName());
             if (i != args.length - 1)
-                entry += ", ";
+                entry.append(", ");
         }
         return entry + ")";
     }
@@ -405,12 +405,11 @@ public class ConvenienceKeywords extends TestFxAdapter {
         Node node = objectToNode(locator);
         RobotLog.info("Getting node: \"" + node + "\" children by class name: \"" + className + "\"");
         try {
-            Set<Object> keys = new HashSet<Object>();
+            Set<Object> keys = new HashSet<>();
             Set childNodes = node.lookupAll("*");
-            Iterator iter = childNodes.iterator();
 
-            while (iter.hasNext()) {
-                Node childNode = (Node) iter.next();
+            for (Object o : childNodes) {
+                Node childNode = (Node) o;
                 if (childNode.getClass().getSimpleName().equals(className)) {
                     RobotLog.trace("Classname: \"" + className + "\" found: \"" + childNode + "\"");
                     keys.add(mapObject(childNode));
@@ -455,7 +454,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             for (Method m : methods) {
                 if (m.getName().equals("getHeight")) {
                     try {
-                        Object result = m.invoke(node, null);
+                        Object result = m.invoke(node, (Object) null);
                         return result.toString();
                     } catch (Exception e) {
                         throw new JavaFXLibraryNonFatalException("Problem calling method: .getHeight(): " + e.getMessage(), e);
@@ -486,7 +485,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                 if (m.getName().equals("getImage") && m.getParameterCount() == 0) {
                     RobotLog.trace("Method getImage() found. Invoking it on node: \"" + node + "\"");
                     try {
-                        Object result = m.invoke(node, null);
+                        Object result = m.invoke(node, (Object) null);
                         Image image = (Image) result;
                         RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
                         return image.impl_getUrl();
@@ -594,7 +593,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
         try {
             Method m = object.getClass().getMethod("getTitle");
-            return (String) m.invoke(object, null);
+            return (String) m.invoke(object, (Object[]) null);
         } catch (NoSuchMethodException e) {
             RobotLog.info("This window type has no getTitle() -method. Returning null");
             return "";
@@ -700,7 +699,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             VirtualFlow<?> vf = (VirtualFlow<?>) ( (TableViewSkin<?>) table.getSkin() ).getChildren().get( 1 );
 
             for(int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
-                RobotLog.info("Index number: " + Integer.toString(i));
+                RobotLog.info("Index number: " + i);
                 columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
             }
 
@@ -867,7 +866,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
         try{
             RadioButton rb = (RadioButton)objectToNode(locator);
-            return (Node)rb.getToggleGroup().getSelectedToggle();
+            return rb.getToggleGroup().getSelectedToggle();
 
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as RadioButton!");
@@ -998,7 +997,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    @RobotKeyword("Returns the selected date from given datepicker element\n\n"
+    @RobotKeyword("Returns the selected date from given DatePicker element\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the DatePicker element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
@@ -1098,7 +1097,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];
         try {
             Semaphore semaphore = new Semaphore(0);
-            Platform.runLater(() -> semaphore.release());
+            Platform.runLater(semaphore::release);
             Thread t = new Thread(() -> {
                 int passed = 0;
                 try {

@@ -21,7 +21,7 @@
     <groupId>org.robotframework</groupId>
     <artifactId>javafxlibrary</artifactId>
     <packaging>jar</packaging>
-    <version>0.5.4</version>
+    <version>0.5.5-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.44</jmockit.version>
@@ -80,7 +80,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -93,7 +93,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>3.2.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -107,7 +107,7 @@
                     <plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>3.0.0</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-artifacts</id>
@@ -195,7 +195,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>1.6.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -232,8 +232,9 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -256,7 +257,7 @@
 			<plugin>
 				<groupId>org.robotframework</groupId>
 				<artifactId>robotframework-maven-plugin</artifactId>
-				<version>1.5.1</version>
+				<version>1.7.1</version>
 				<executions>
 					<execution>
 						<id>acceptance tests</id>
@@ -316,7 +317,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -366,7 +367,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.6.2</version>
+            <version>3.6.3</version>
         </dependency>
         <dependency>
             <groupId>org.jmockit</groupId>
@@ -377,7 +378,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
@@ -397,7 +398,7 @@
         <dependency>
             <groupId>org.robotframework</groupId>
             <artifactId>robotframework</artifactId>
-            <version>3.1.2</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -407,7 +408,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>28.1-jre</version>
+            <version>29.0-jre</version>
         </dependency>
 		<dependency>
 			<groupId>org.robotframework</groupId>
@@ -417,12 +418,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <version>3.11</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
     </dependencies>
 </project>

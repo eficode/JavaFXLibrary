@@ -85,6 +85,10 @@ Move To Window
     ${Y}                    Convert To Integer      ${Y}
     Verify String           id=locationLabel        ${X} | ${Y}
 
+Move To Nonexistent Location
+    [Tags]                           smoke
+    Run Keyword And Expect Error     Unable to move as locator "css=\#rectangleNOTfound" not found!          Move To                 css=\#rectangleNOTfound
+
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary

@@ -49,9 +49,15 @@ public class MoveRobot extends TestFxAdapter {
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
         RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
-
-        if (locator instanceof String)
+        if (locator instanceof String) {
+            String originalLocator = (String) locator;
             locator = new Finder().find((String) locator);
+            if(locator==null) {
+                throw new JavaFXLibraryNonFatalException("Unable to move as locator \"" + originalLocator + "\" not found!");
+            } else {
+                RobotLog.info("Locator at this point: " + locator);
+            }
+        }
 
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
 
@@ -73,7 +79,7 @@ public class MoveRobot extends TestFxAdapter {
     public FxRobotInterface moveBy(int x, int y, String motion) {
         try {
             RobotLog.info("Moving by [" + x + ", " + y + "] using motion: \"" + motion  + "\"");
-            return robot.moveBy((double) x, (double) y, HelperFunctions.getMotion(motion));
+            return robot.moveBy(x, y, HelperFunctions.getMotion(motion));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -94,7 +100,7 @@ public class MoveRobot extends TestFxAdapter {
     public FxRobotInterface moveToCoordinates(int x, int y, String motion) {
         try {
             RobotLog.info("Moving to coordinates: [" + x + ", " + y + "] using motion: \"" + motion + "\"");
-            return robot.moveTo((double) x, (double) y, HelperFunctions.getMotion(motion));
+            return robot.moveTo(x, y, HelperFunctions.getMotion(motion));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
