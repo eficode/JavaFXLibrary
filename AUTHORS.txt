@@ -8,4 +8,4 @@ Tatu Lahtela             Find All With Pseudo Class and Find Class keywords
 Sakari Hoisko            Dockerized linux env with X
 Juho Lehtonen            Optimized docker environment.
 Juho Saarinen            Package improvements, initial monocle support, screenshot bug fix
-
+Turo Soisenniemi         Initial java agent support
