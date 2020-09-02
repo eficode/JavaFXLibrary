@@ -369,6 +369,12 @@ Get Scene (Window)
     ${result}               Get Root Node Of    ${scene}
     Should Be Equal         ${target}           ${result}
 
+Is not Java agent
+    [Tags]                  smoke
+    Set Test Application    javafxlibrary.testapps.TestBoundsLocation
+    ${IS_JAVA_AGENT} =      Is Java Agent
+    Should Be Equal         ${False}            ${IS_JAVA_AGENT}
+
 *** Keywords ***
 Setup All Tests
     Import JavaFXLibrary

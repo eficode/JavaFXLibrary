@@ -18,9 +18,11 @@
 package javafxlibrary.utils;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
@@ -28,6 +30,11 @@ import org.testfx.api.FxToolkit;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 public class Session {
@@ -42,7 +49,7 @@ public class Session {
         try {
             // start the client
             this.primaryStage = FxToolkit.registerPrimaryStage();
-            this.sessionApplication = FxToolkit.setupApplication((Class)Class.forName(appName), appArgs);
+            this.sessionApplication = FxToolkit.setupApplication((Class) Class.forName(appName), appArgs);
             this.sessionRobot = new FxRobot();
             this.applicationName = appName;
             this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
@@ -80,6 +87,24 @@ public class Session {
 
     }
 
+    /**
+     * Used when JavaFXLibrary is attached with java agent
+     */
+    public Session(String applicationName) {
+        try {
+            Optional<Stage> existingStage = getExistingPrimaryStage();
+            if (!existingStage.isPresent()) {
+                throw new JavaFXLibraryNonFatalException("Could not hook to existing application: stage not found");
+            }
+            this.primaryStage = FxToolkit.registerStage(existingStage::get);
+            this.sessionRobot = new FxRobot();
+            this.applicationName = applicationName;
+            this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Problem launching the application: " + e.getMessage(), e);
+        }
+    }
+
     public void closeApplication() {
         try {
             FxToolkit.hideStage();
@@ -105,5 +130,43 @@ public class Session {
         }
 
         closeApplication();
+    }
+
+    /**
+     * When running JavaFXLibrary as java agent this method tries to find first showing stage.
+     */
+    private Optional<Stage> getExistingPrimaryStage() {
+
+        try {
+            ObservableList<Window> windows;
+            // getWindows method is added in Java 9
+            windows = (ObservableList<Window>) Window.class.getMethod("getWindows")
+                                                           .invoke(null);
+            return windows.stream()
+                          .filter(Stage.class::isInstance)
+                          .map(Stage.class::cast)
+                          .filter(Stage::isShowing)
+                          .findFirst();
+        } catch (InvocationTargetException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException e) {
+            // java 8 implementation
+            try {
+                Iterator<Window> it = (Iterator<Window>) Window.class.getMethod("impl_getWindows")
+                                                                     .invoke(null);
+                List<Window> windows = new ArrayList<>();
+                while (it.hasNext()) {
+                    windows.add(it.next());
+                }
+                return windows.stream()
+                              .filter(Stage.class::isInstance)
+                              .map(Stage.class::cast)
+                              .filter(Stage::isShowing)
+                              .findFirst();
+            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                    | SecurityException ex) {
+                e.printStackTrace();
+            }
+
+        }
+        return Optional.empty();
     }
 }
