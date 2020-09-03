@@ -56,12 +56,12 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("javafxlibrary/keywords/Keywords/*.class");
         add("javafxlibrary/keywords/*.class");
         add("javafxlibrary/tests/*.class");
-	}};
+    }};
 
     public JavaFXLibrary() {
-    	this(false);
+        this(false);
     }
-    
+
     public JavaFXLibrary(boolean headless) {
         super(includePatterns);
         if (headless) {
@@ -71,9 +71,9 @@ public class JavaFXLibrary extends AnnotationLibrary {
             System.setProperty("prism.text", "t2k");
             TestFxAdapter.isHeadless = true;
         } else {
-	        //v4.0.15-alpha sets default robot as glass, which breaks rolling
-	        //Forcing usage of awt robot as previous versions
-	        System.setProperty("testfx.robot", "awt");
+            // v4.0.15-alpha sets default robot as glass, which breaks rolling
+            // Forcing usage of awt robot as previous versions
+            System.setProperty("testfx.robot", "awt");
         }
     }
 
@@ -108,7 +108,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
             finalKwargs = kwargs;
         }
 
-
         AtomicReference<Object> retval = new AtomicReference<>();
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
 
@@ -121,12 +120,12 @@ public class JavaFXLibrary extends AnnotationLibrary {
                     retval.set(super.runKeyword(keywordName, finalArgs, finalKwargs));
                     return true;
 
-                } catch (JavaFXLibraryTimeoutException jfxte){
+                } catch (JavaFXLibraryTimeoutException jfxte) {
                     // timeout already expired, catch exception and jump out
                     retExcep.set(jfxte);
                     throw jfxte;
 
-                } catch (RuntimeException e){
+                } catch (RuntimeException e) {
                     // catch exception and continue trying
                     retExcep.set(e);
                     return false;
@@ -165,10 +164,11 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
         List finalArgs;
         // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
-        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread")))
+        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread"))) {
             finalArgs = HelperFunctions.useMappedObjects(args);
-        else
+        } else {
             finalArgs = args;
+        }
 
         AtomicReference<Object> retval = new AtomicReference<>();
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
@@ -182,12 +182,12 @@ public class JavaFXLibrary extends AnnotationLibrary {
                     retval.set(super.runKeyword(keywordName, finalArgs));
                     return true;
 
-                } catch (JavaFXLibraryTimeoutException jfxte){
+                } catch (JavaFXLibraryTimeoutException jfxte) {
                     // timeout already expired, catch exception and jump out
                     retExcep.set(jfxte);
                     throw jfxte;
 
-                } catch (RuntimeException e){
+                } catch (RuntimeException e) {
                     // catch exception and continue trying
                     retExcep.set(e);
                     return false;
@@ -227,17 +227,16 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 return "IOException occurred while reading the documentation file!";
             }
         } else if (keywordName.equals("__init__")) {
-        	try {
+            try {
                 return FileUtils.readFileToString(new File("./src/main/java/libdoc-init-documentation.txt"), "utf-8");
             } catch (IOException e) {
                 e.printStackTrace();
                 return "IOException occurred while reading the init documentation file!";
             }
         } else {
-        	try {
+            try {
                 return super.getKeywordDocumentation(keywordName);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return keywordName;
             }
         }
@@ -258,6 +257,27 @@ public class JavaFXLibrary extends AnnotationLibrary {
     }
 
     public static void main(String[] args) throws Exception {
+        startServer(args);
+    }
+
+    public static void premain(String args) {
+        TestFxAdapter.isAgent = true;
+        Thread agentThread = new Thread(() -> {
+            try {
+                if (args == null) {
+                    startServer();
+                } else {
+                    startServer(args);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        agentThread.setDaemon(true);
+        agentThread.start();
+    }
+
+    public static void startServer(String... args) throws Exception {
         int port = 8270;
         InetAddress ipAddr = InetAddress.getLocalHost();
 
@@ -266,8 +286,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
             System.out.println("----------------------------= JavaFXLibrary =-----------------------------");
             if (args.length > 0) {
                 port = Integer.parseInt(args[0]);
-            }
-            else {
+            } else {
                 System.out.println("RemoteServer for JavaFXLibrary will be started at default port of: " + port + ".\n" +
                         "If you wish to use another port, restart the library and give port number\n" +
                         "as an argument.");
@@ -294,4 +313,3 @@ public class JavaFXLibrary extends AnnotationLibrary {
         }
     }
 }
-

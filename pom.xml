@@ -221,6 +221,9 @@
 							<addClasspath>true</addClasspath>
 							<mainClass>JavaFXLibrary</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Premain-Class>JavaFXLibrary</Premain-Class>
+						</manifestEntries>
 					</archive>
 				</configuration>
 				<executions>
