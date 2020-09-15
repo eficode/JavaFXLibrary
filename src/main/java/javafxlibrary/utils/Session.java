@@ -44,6 +44,7 @@ public class Session {
     public Application sessionApplication;
     public String applicationName;
     public String screenshotDirectory;
+    public String screenshotDirectoryInLogs;
 
     public Session(String appName, String... appArgs) {
         try {

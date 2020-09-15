@@ -776,11 +776,24 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Sets the screenshot directory for current application\n\n"
-            + "``directory`` is a path to a folder which is to be set as current screenshot directory")
-    @ArgumentNames({ "directory" })
-    public void setScreenshotDirectory(String dir){
-        RobotLog.info("Setting new screenshot directory: " + dir);
-        setCurrentSessionScreenshotDirectory(dir);
+            + "Notice that relative paths are from current work dir of JavaFXLibrary:\n"
+            + "- In case of Java Agent it comes from Application Under Test (AUT).\n"
+            + "- In case of JavaFXLibrary is started with \"java -jar *\" command it uses the current working directory as source.\n"
+            + "``directory`` is a path to a folder which is to be set as current screenshot directory in host where "
+            + "JavaFXLibrary is run.\n\n"
+            + "``logDirectory`` is a path that is put to log.html files that can be used after screenshots are moved "
+            + "from target system to e.g. CI workspace. Typically this is relative path.\n\n\n"
+            + "Example:\n"
+            + "| Set Screenshot Directory | /Users/robotuser/output/AUT-screenshots/ | ./output/AUT-screenshots/ | \n"
+            + "or\n"
+            + "| Set Screenshot Directory | ./output/AUT-screenshots/ | \n")
+    @ArgumentNames({ "directory", "logDirectory=" })
+    public void setScreenshotDirectory(String dir, String logDir){
+        RobotLog.info("Setting screenshot directory to \"" + dir + "\".");
+        if (logDir != null && !logDir.isEmpty()) {
+            RobotLog.info("Log directory is set to \"" + logDir + "\"");
+        }
+        setCurrentSessionScreenshotDirectory(dir, logDir);
     }
 
     @RobotKeyword("Gets the screenshot directory for current application")
