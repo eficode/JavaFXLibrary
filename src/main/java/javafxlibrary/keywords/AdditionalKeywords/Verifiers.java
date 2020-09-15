@@ -158,16 +158,6 @@ public class Verifiers extends TestFxAdapter {
         verifyThat(objectToNode(locator), isInvisible() );
     }
 
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use `Node Should Not Be Visible` instead.\n\n"
-            + "Verifies that node is invisible. \n\n"
-            + "``locator`` is either a _query_ or _Object:Node_ for identifying the Node, see "
-            + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
-    public static void nodeShouldBeInvisible(Object locator) {
-        verifyThat(objectToNode(locator), isInvisible() );
-    }
-
     @RobotKeyword("Verifies that node is focused. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the Node, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
@@ -201,16 +191,6 @@ public class Verifiers extends TestFxAdapter {
     @ArgumentNames({ "locator" })
     public static void nodeShouldNotBeEnabled(Object locator) {
         RobotLog.info("Checking that locator node is not enabled: \"" + locator + "\".");
-        verifyThat(objectToNode(locator), NodeMatchers.isDisabled() );
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use `Node Should Not Be Enabled` instead."
-            + "Verifies that node is disabled. \n\n"
-            + "``locator`` is either a _query_ or _Object:Node_ for identifying the Node, see "
-            + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
-    public static void nodeShouldBeDisabled(Object locator) {
         verifyThat(objectToNode(locator), NodeMatchers.isDisabled() );
     }
 
@@ -287,14 +267,6 @@ public class Verifiers extends TestFxAdapter {
     @ArgumentNames({ "window" })
     public static void windowShouldBeVisible(Object window) {
         RobotLog.info("Checking if window \"" + window + "\" is visible.");
-        verifyThat((Window) window, WindowMatchers.isShowing());
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Please use `Window Should Be Visible` instead.\n\n" +"Verifies that given window is showing. \n\n"
-            + "``window`` is the _Object:Window_ that specifies which window should be showing, see `3.2 Using locators as keyword arguments`.")
-    @ArgumentNames({ "window" })
-    public static void windowShouldBeShowing(Object window) {
         verifyThat((Window) window, WindowMatchers.isShowing());
     }
 

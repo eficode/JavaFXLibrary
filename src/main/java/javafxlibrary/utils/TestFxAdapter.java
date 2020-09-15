@@ -106,8 +106,14 @@ public class TestFxAdapter {
         }
     }
 
-    public void setCurrentSessionScreenshotDirectory(String dir) {
-
+    public String getCurrentSessionScreenshotDirectoryInLogs() {
+        if (activeSession != null) {
+            return activeSession.screenshotDirectoryInLogs;
+        } else {
+            throw new JavaFXLibraryNonFatalException("Unable to get screenshot directory in logs, no application is currently open!");
+        }
+    }
+    public void setCurrentSessionScreenshotDirectory(String dir, String logDir) {
         if (activeSession != null) {
             File errDir = new File(dir);
             if (!errDir.exists()) {
@@ -116,6 +122,9 @@ public class TestFxAdapter {
                 }
             }
             activeSession.screenshotDirectory = dir;
+            if (logDir != null && !logDir.isEmpty()) {
+                activeSession.screenshotDirectoryInLogs = logDir;
+            }
         } else {
             throw new JavaFXLibraryNonFatalException("Unable to set screenshot directory, no application is currently open!");
         }

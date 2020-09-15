@@ -125,7 +125,7 @@ public class BoundsLocation extends TestFxAdapter {
             return HelperFunctions.mapObject(bounds.query());
 
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\": "
+            throw new JavaFXLibraryNonFatalException("getBounds: Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
 
         } catch (JavaFXLibraryNonFatalException e){

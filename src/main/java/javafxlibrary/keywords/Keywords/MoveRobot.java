@@ -48,23 +48,21 @@ public class MoveRobot extends TestFxAdapter {
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
-        RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
-        if (locator instanceof String) {
-            String originalLocator = (String) locator;
-            locator = new Finder().find((String) locator);
-            if(locator==null) {
-                throw new JavaFXLibraryNonFatalException("Unable to move as locator \"" + originalLocator + "\" not found!");
-            } else {
-                RobotLog.info("Locator at this point: " + locator);
-            }
-        }
-
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
-
         try {
+            RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
+            if (locator instanceof String) {
+                String originalLocator = (String) locator;
+                locator = new Finder().find((String) locator);
+                if(locator==null) {
+                    throw new JavaFXLibraryNonFatalException("Unable to move as locator \"" + originalLocator + "\" not found!");
+                } else {
+                    RobotLog.info("Locator at this point: " + locator);
+                }
+            }
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
             return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new JavaFXLibraryNonFatalException("Could not execute move to using locator \"" + locator + "\" " +
+            throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
                     "and motion " + motion + ": " + e.getCause().getMessage(), e);
         }
     }

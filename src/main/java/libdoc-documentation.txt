@@ -47,11 +47,11 @@ Experimental headless mode can be activated in remote mode at the import time by
 | *Settings* | *Value* |
 | Library | Remote | http://localhost:8270 | ${True} | WITH NAME | JavaFXLibrary |
 
-Experimental: Java agent support
+Experimental Java agent support
 
 Library can be used as java agent. Launch application with `-javaagent:/path/to/javafxlibrary-<version>.jar`.
 Default port is 8270 and can be changed with adding `=<port>` to java agent command. Only remote library is supported.
-Using launch keyword is still required but instead of starting new application keyword initializes Stage for library.
+Using `Launch JavaFX Application` is still required but instead of starting new application keyword initializes Stage for library.
 
 == 3. Locating JavaFX Nodes ==
 === 3.1 Locator syntax ===
