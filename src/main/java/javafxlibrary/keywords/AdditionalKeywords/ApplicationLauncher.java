@@ -122,15 +122,19 @@ public class ApplicationLauncher extends TestFxAdapter {
 
     @RobotKeyword("Loads given path to classpath.\n\n"
             + "``path`` is the path to add.\n\n"
+            + "``failIfNotFound`` is either True or False, default False. In case of False error is written as warning.\n\n"
             + "If directory path has asterisk(*) after directory separator all jar files are added from directory.\n"
             + "\nExample:\n"
             + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder | \n"
-            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder${/}* | \n")
-    @ArgumentNames({ "path" })
-    public void setToClasspath(String path) {
+            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder${/}* | \n"
+            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder2${/}* | failIfNotFound=${True} | \n")
+    @ArgumentNames({ "path", "failIfNotFound=False" })
+    public void setToClasspath(String path, boolean failIfNotFound) {
+        RobotLog.info("Setting \"" + path + "\" to classpath, failIfNotFound=\"" + failIfNotFound + "\"");
         if (path.endsWith("*")) {
             path = path.substring(0, path.length() - 1);
-            RobotLog.info("Adding all jars from directory: " + path);
+            RobotLog.info("Adding all jars from directory.");
+            String fullPath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
 
             try {
                 File directory = new File(path);
@@ -143,11 +147,20 @@ public class ApplicationLauncher extends TestFxAdapter {
                     }
                 }
                 if (!jarsFound) {
-                    throw new JavaFXLibraryNonFatalException("No jar files found from classpath: "
-                            + FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString());
+                    String jarsNotFoundError = "No jar files found from classpath: " + fullPath;
+                    if (failIfNotFound) {
+                        throw new JavaFXLibraryNonFatalException(jarsNotFoundError);
+                    } else {
+                        RobotLog.warn(jarsNotFoundError);
+                    }
                 }
             } catch (NullPointerException e) {
-                throw new JavaFXLibraryFatalException("Directory not found: " + path + "\n" + e.getMessage(), e);
+                String directoryNotFoundError = "Directory not found: " + fullPath;
+                if (failIfNotFound) {
+                    throw new JavaFXLibraryFatalException(directoryNotFoundError);
+                } else {
+                    RobotLog.warn(directoryNotFoundError);
+                }
             }
         } else {
             _addPathToClassPath(path);
