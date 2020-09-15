@@ -28,13 +28,18 @@ import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
 
 public class TestFxAdapter {
 
-	public static boolean isHeadless = false;
+    public static boolean isHeadless = false;
+    public static boolean isAgent = false;
     // current robot instance in use
     protected static FxRobotInterface robot;
+
     public static void setRobot(FxRobotInterface robot) {
         TestFxAdapter.robot = robot;
     }
-    public static FxRobotInterface getRobot() { return robot; }
+
+    public static FxRobotInterface getRobot() {
+        return robot;
+    }
 
     // TODO: consider adding support for multiple sessions
     private static Session activeSession = null;
@@ -45,23 +50,36 @@ public class TestFxAdapter {
     public static HashMap objectMap = new HashMap();
 
     public void createNewSession(String appName, String... appArgs) {
-
-        /* Applications using FXML-files for setting controllers must have
-           FXMLLoader.setDefaultClassLoader(getClass().getClassLoader());
-           in their start method for the controller class to load properly */
-        if (appName.endsWith(".jar")) {
-            Class mainClass = getMainClassFromJarFile(appName);
-            activeSession = new Session(mainClass, appArgs);
+        if (isAgent) {
+            createNewSession(appName.endsWith(".jar") ? getMainClassFromJarFile(appName).toString() : appName);
         } else {
-            activeSession = new Session(appName, appArgs);
+            /*
+             * Applications using FXML-files for setting controllers must have
+             * FXMLLoader.setDefaultClassLoader(getClass().getClassLoader()); in their start method for the controller
+             * class to load properly
+             */
+            if (appName.endsWith(".jar")) {
+                Class mainClass = getMainClassFromJarFile(appName);
+                activeSession = new Session(mainClass, appArgs);
+            } else {
+                activeSession = new Session(appName, appArgs);
+            }
+
+            setRobot(activeSession.sessionRobot);
         }
-
-        setRobot(activeSession.sessionRobot);
-
     }
 
     public void createNewSession(Application application) {
-        activeSession = new Session(application);
+        if (isAgent) {
+            createNewSession("JavaFXLibrary SwingWrapper");
+        } else {
+            activeSession = new Session(application);
+            setRobot(activeSession.sessionRobot);
+        }
+    }
+
+    private void createNewSession(String applicationName) {
+        activeSession = new Session(applicationName);
         setRobot(activeSession.sessionRobot);
     }
 
@@ -74,27 +92,39 @@ public class TestFxAdapter {
     }
 
     public String getCurrentSessionApplicationName() {
-        if (activeSession != null)
+        if (activeSession != null) {
             return activeSession.applicationName;
+        }
         return null;
     }
 
     public String getCurrentSessionScreenshotDirectory() {
-        if (activeSession != null)
+        if (activeSession != null) {
             return activeSession.screenshotDirectory;
-        else
+        } else {
             throw new JavaFXLibraryNonFatalException("Unable to get screenshot directory, no application is currently open!");
+        }
     }
 
-    public void setCurrentSessionScreenshotDirectory(String dir){
-
+    public String getCurrentSessionScreenshotDirectoryInLogs() {
+        if (activeSession != null) {
+            return activeSession.screenshotDirectoryInLogs;
+        } else {
+            throw new JavaFXLibraryNonFatalException("Unable to get screenshot directory in logs, no application is currently open!");
+        }
+    }
+    public void setCurrentSessionScreenshotDirectory(String dir, String logDir) {
         if (activeSession != null) {
             File errDir = new File(dir);
-            if (!errDir.exists())
-                if(!errDir.mkdirs()) {
+            if (!errDir.exists()) {
+                if (!errDir.mkdirs()) {
                     RobotLog.warn("Screenshot directory \"" + dir + "\" creation failed!");
                 }
+            }
             activeSession.screenshotDirectory = dir;
+            if (logDir != null && !logDir.isEmpty()) {
+                activeSession.screenshotDirectoryInLogs = logDir;
+            }
         } else {
             throw new JavaFXLibraryNonFatalException("Unable to set screenshot directory, no application is currently open!");
         }

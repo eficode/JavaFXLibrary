@@ -45,8 +45,8 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch JavaFX Application | _javafxlibrary.testapps.MenuApp_ |\n"
             + "| Launch JavaFX Application | _TestApplication.jar_ |\n")
-    @ArgumentNames({"appName", "*args"})
-    public void launchJavafxApplication(String appName, String... appArgs)  {
+    @ArgumentNames({ "appName", "*args" })
+    public void launchJavafxApplication(String appName, String... appArgs) {
         try {
             RobotLog.info("Starting application:" + appName);
             createNewSession(appName, appArgs);
@@ -65,7 +65,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication |\n"
             + "| Launch Swing Application | _TestApplication.jar_ |\n")
-    @ArgumentNames({"appName", "*args"})
+    @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
         Class c = getMainClass(appName);
@@ -84,7 +84,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication |\n"
             + "| Launch Swing Application In Separate Thread | _TestApplication.jar_ |\n")
-    @ArgumentNames({"appName", "*args"})
+    @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
         Class c = getMainClass(appName);
@@ -95,10 +95,11 @@ public class ApplicationLauncher extends TestFxAdapter {
 
     private Class getMainClass(String appName) {
         try {
-            if (appName.endsWith(".jar"))
+            if (appName.endsWith(".jar")) {
                 return getMainClassFromJarFile(appName);
-            else
+            } else {
                 return Class.forName(appName);
+            }
         } catch (ClassNotFoundException e) {
             throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
         }
@@ -112,41 +113,56 @@ public class ApplicationLauncher extends TestFxAdapter {
         try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
-            method.invoke(classLoader, (new File(path)).toURI().toURL() );
+            method.invoke(classLoader, (new File(path)).toURI().toURL());
 
         } catch (Exception e) {
-            throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path , e);
+            throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path, e);
         }
     }
 
     @RobotKeyword("Loads given path to classpath.\n\n"
-        + "``path`` is the path to add.\n\n"
-        + "If directory path has asterisk(*) after directory separator all jar files are added from directory.\n"
-        + "\nExample:\n"
-        + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder | \n"
-        + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder${/}* | \n")
-    @ArgumentNames({"path"})
-    public void setToClasspath(String path)  {
+            + "``path`` is the path to add.\n\n"
+            + "``failIfNotFound`` is either True or False, default False. In case of False error is written as warning.\n\n"
+            + "If directory path has asterisk(*) after directory separator all jar files are added from directory.\n"
+            + "\nExample:\n"
+            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder | \n"
+            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder${/}* | \n"
+            + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder2${/}* | failIfNotFound=${True} | \n")
+    @ArgumentNames({ "path", "failIfNotFound=False" })
+    public void setToClasspath(String path, boolean failIfNotFound) {
+        RobotLog.info("Setting \"" + path + "\" to classpath, failIfNotFound=\"" + failIfNotFound + "\"");
         if (path.endsWith("*")) {
-          path = path.substring(0, path.length() - 1);
-          RobotLog.info("Adding all jars from directory: " + path);
+            path = path.substring(0, path.length() - 1);
+            RobotLog.info("Adding all jars from directory.");
+            String fullPath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
 
-          try {
-              File directory = new File(path);
-              File[] fileList = directory.listFiles();
-              boolean jarsFound = false;
-              for (File file : Objects.requireNonNull(fileList)) {
-                  if (file.getName().endsWith(".jar")) {
-                      jarsFound = true;
-                      _addPathToClassPath(file.getAbsolutePath());
-                  }
-              }
-              if(!jarsFound) throw new JavaFXLibraryNonFatalException("No jar files found from classpath: " + FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString());
-          } catch (NullPointerException e) {
-              throw new JavaFXLibraryFatalException("Directory not found: " + path + "\n" + e.getMessage(), e);
-          }
-        }
-        else {
+            try {
+                File directory = new File(path);
+                File[] fileList = directory.listFiles();
+                boolean jarsFound = false;
+                for (File file : Objects.requireNonNull(fileList)) {
+                    if (file.getName().endsWith(".jar")) {
+                        jarsFound = true;
+                        _addPathToClassPath(file.getAbsolutePath());
+                    }
+                }
+                if (!jarsFound) {
+                    String jarsNotFoundError = "No jar files found from classpath: " + fullPath;
+                    if (failIfNotFound) {
+                        throw new JavaFXLibraryNonFatalException(jarsNotFoundError);
+                    } else {
+                        RobotLog.warn(jarsNotFoundError);
+                    }
+                }
+            } catch (NullPointerException e) {
+                String directoryNotFoundError = "Directory not found: " + fullPath;
+                if (failIfNotFound) {
+                    throw new JavaFXLibraryFatalException(directoryNotFoundError);
+                } else {
+                    RobotLog.warn(directoryNotFoundError);
+                }
+            }
+        } else {
             _addPathToClassPath(path);
         }
     }
@@ -157,8 +173,9 @@ public class ApplicationLauncher extends TestFxAdapter {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             URL[] urls = ((URLClassLoader) cl).getURLs();
             RobotLog.info("Printing out classpaths: \n");
-            for (URL url : urls)
+            for (URL url : urls) {
                 RobotLog.info(url.getFile());
+            }
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to log application classpaths", e);
         }
@@ -237,7 +254,6 @@ public class ApplicationLauncher extends TestFxAdapter {
         objectMap.clear();
     }
 
-
     @RobotKeyword("Returns the class name of currently active JavaFX Application")
     public String getCurrentApplication() {
         try {
@@ -247,15 +263,9 @@ public class ApplicationLauncher extends TestFxAdapter {
         }
     }
 
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use `Get Current Application` keyword instead.\n\n"
-            + "Returns the class name of currently active JavaFX Application\n")
-    public String currentApplication() {
-        try {
-            return getCurrentSessionApplicationName();
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Problem getting current application name.", e);
-        }
+    @RobotKeyword("Returns if JavaFXLibrary is started as java agent.")
+    public boolean isJavaAgent() {
+        return TestFxAdapter.isAgent;
     }
 
 }

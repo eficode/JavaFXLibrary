@@ -91,11 +91,18 @@ public class ScreenCapturing extends TestFxAdapter {
         RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
         Image image;
         Bounds targetBounds = objectToBounds(locator);
+        String logPath;
 
         try {
             image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
             robotContext().getCaptureSupport().saveImage(image, path);
+
+            if (getCurrentSessionScreenshotDirectoryInLogs() != null) {
+                logPath = getCurrentSessionScreenshotDirectoryInLogs()+"/"+path.getFileName();
+            } else {
+                logPath = path.toString();
+            }
 
             if (logImage) {
                 double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
@@ -113,13 +120,13 @@ public class ScreenCapturing extends TestFxAdapter {
                             RobotLog.warn("Capture temporary image \"" + imageFile.getAbsolutePath() + "\" deletion failed.");
                         }
                     }
-                    RobotLog.html("<a href=\"" + path + "\">"
+                    RobotLog.html("<a href=\"" + logPath + "\">"
                             + "<img title=\"Click for full size image\" src=\"data:image/png;base64," + encodedImage + "\" width=\"" + printSize + "px\">"
                             + "</a>");
 
                 } else {
                     // diskonly option
-                    RobotLog.html("<a href=\"" + path + "\">"
+                    RobotLog.html("<a href=\"" + logPath + "\">"
                             + "<img title=\"Click for full size image\" src=\"" + path + "\" width=\"" + printSize + "px\">"
                             + "</a>");
                 }

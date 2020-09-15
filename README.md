@@ -75,7 +75,7 @@ Executing _test.sh_ runs the acceptance suite twice: first using JavaFXLibrary a
 If you want the suite to run only once, you can define which type of library to use by including **local** or **remote** as an argument. For example command `test.sh remote` will execute the suite only in remote mode.
 
 ## Experimental: Headless support
-Library supports headless operation utilizing [Monocle](https://wiki.openjdk.java.net/display/OpenJFX/Monocle). The support for this is still at experimental level. 
+Library supports headless operation utilizing [Monocle](https://wiki.openjdk.java.net/display/OpenJFX/Monocle). The support for this is still at experimental level.
 
 ### Main issues with headless function
 * Scrolling doesn't work same way as with screen
@@ -98,3 +98,6 @@ Remote:
 *** Settings ***
 Library    Remote    http://127.0.0.1:8270    ${True}    WITH NAME    JavaFXLibrary
 ```
+
+## Experimental: Java agent support
+Library can be used as java agent. Launch application with `-javaagent:/path/to/javafxlibrary-<version>.jar`. Default port is 8270 and can be changed with adding `=<port>` to java agent command. Only remote library is supported. Using launch keyword is still required but instead of starting new application keyword initializes Stage for library.

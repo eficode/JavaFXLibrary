@@ -60,7 +60,6 @@ public class ExtendedNodeMatchers {
             waitFor(HelperFunctions.getWaitUntilTimeout(), HelperFunctions.getTimeUnit("SECONDS"), () -> {
                 return asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT") != null).get();
             });
-            waitForFxEvents();
             return node.isHover();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;

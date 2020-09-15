@@ -54,30 +54,6 @@ import static javafxlibrary.utils.HelperFunctions.*;
 @RobotKeywords
 public class ConvenienceKeywords extends TestFxAdapter {
 
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n" +
-            "finder that mimics _xpath_ style search.\n\n"
-            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + " | ${node}= | Find With Path | .main-view[0] .split-pane[0] \\#node-id class=GridPane .toggle-button[3] sometext | ")
-    @ArgumentNames({"query", "failIfNotFound=False"})
-    public Object findWithPath(String query, boolean failIfNotFound){
-
-        try {
-            return mapObject(findNode(query));
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw new JavaFXLibraryNonFatalException("Unable to find anything with query: \"" + query + "\"");
-            return "";
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find operation failed for query: \"" + query + "\"", e);
-        }
-    }
-
     @RobotKeyword("Brings the given stage to front\n\n"
             + "``stage`` is an Object:Stage to be set in front of others, see `3.2 Using locators as keyword arguments`. \n\n")
     @ArgumentNames({ "stage" })
@@ -128,116 +104,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         Object[] tempArgs = HelperFunctions.checkMethodArguments(arguments);
         Object[] finalArgs = HelperFunctions.useMappedObjects(tempArgs);
         callMethod(object, method, finalArgs, true);
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
-            + "Returns the *first* node matching the query. \n\n"
-            + "``query`` is the Class name String to use in lookup.\n"
-            + "\nExample:\n"
-            + "| ${my node}= | Find | javafx.scene.control.Button | # button class |")
-    @ArgumentNames({ "query" })
-    public Object findClass(final String query) {
-        try {
-            Class<?> clazz = Class.forName(query);
-            InstanceOfMatcher matcher = new InstanceOfMatcher(clazz);
-            return mapObject(robot.lookup(matcher).query());
-        } catch (Exception e) {
-            RobotLog.trace("Problem has occurred during node lookup: " + e);
-            return "";
-        }
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
-            + "Returns *all* descendant nodes of given node matching the query. \n\n"
-            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using locators as keyword arguments`. \n\n"
-            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + "| ${my nodes}= | Find All From Node | ${some node} | .css | \n"
-            + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "node", "query", "failIfNotFound=False" })
-    public List<Object> findAllFromNode(Object node, String query, boolean failIfNotFound) {
-        try {
-            if ( node instanceof Node ) {
-                RobotLog.info("Trying to find all nodes with query: \"" + query + "\" that are under starting " +
-                        "point node: \"" + node + "\", failIfNotFound= \"" + failIfNotFound + "\"");
-                return mapObjects(((Node) node).lookupAll(query));
-            }
-            // fail in case no valid node argument.
-            failIfNotFound = true;
-            throw new JavaFXLibraryNonFatalException("Illegal argument type for node.");
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw e;
-            return Collections.emptyList();
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find all from node operation failed for node: \"" + node.toString() +
-                    "\" and query: " + query, e);
-        }
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find All` instead.\n\n"
-            + "Returns *all* nodes matching query AND given pseudo-class state. \r\n"
-            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
-            + "``pseudo`` is a String value specifying pseudo class value.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + "| ${my node}= | Find All With Pseudo Class | .check-box-tree-cell .check-box | selected | \n")
-    @ArgumentNames({ "query", "pseudo", "failIfNotFound=False" })
-    public List<Object> findAllWithPseudoClass(String query, String pseudo, boolean failIfNotFound) {
-        RobotLog.info("Trying to find all nodes with query: \"" + query + "\" that has pseudoclass state as: \"" +
-                pseudo + "\", failIfNotFound= \"" + failIfNotFound + "\"");
-        try {
-            Set<Node> nodes = robot.lookup(query).queryAll();
-            Set<Node> matches = nodes.stream()
-                    .filter(n -> n.getPseudoClassStates().stream().
-                            map(PseudoClass::getPseudoClassName).anyMatch(pseudo::contains))
-                    .collect(Collectors.toSet());
-            return mapObjects(matches);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw e;
-            return Collections.emptyList();
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find all with pseudo class operation failed for query: \"" +
-                    query + "\" and pseudo: \"" + pseudo + "\"", e);
-        }
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
-            + "Returns the *first* descendant node of given node matching the query. \n\n"
-            + "``node`` is the starting point Object:Node from where to start looking, see `3.2 Using locators as keyword arguments`. \n\n"
-            + "``query`` is a query locator, see `3.1 Locator syntax`.\n\n"
-            + "``failIfNotFound`` specifies if keyword should fail if nothing is found. By default it's false and "
-            + "keyword returns null in case lookup returns nothing.\n\n"
-            + "\nExample:\n"
-            + "| ${my node}= | Find From Node | ${some node} | .css |\n"
-            + "See keyword `Find` for further examples of query usage.\n")
-    @ArgumentNames({ "node", "query", "failIfNotFound=False" })
-    public Object findFromNode(Node node, String query, boolean failIfNotFound) {
-        RobotLog.info("Trying to find: \"" + query + "\" from node: \"" + node + "\", failIfNotFound= \"" + failIfNotFound + "\"");
-        try {
-            Node childNode = node.lookup(query);
-            return mapObject(childNode);
-
-        } catch (JavaFXLibraryNonFatalException e){
-            if(failIfNotFound)
-                throw e;
-            return "";
-
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Find from node operation failed for node: \"" + node +
-                    "\" and query: " + query, e);
-        }
     }
 
     @RobotKeyword("Lists methods available for given node.\n"
@@ -390,40 +256,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
         }
     }
 
-    // TODO: Should this be deleted? Find All From Node has the same functionality
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
-            + "Returns *all* descendant nodes of given node matching the given Java class name. \n\n"
-            + "``locator`` is either a _query_ or _Object_ for node whose children will be queried, see "
-            + "`3.2 Using locators as keyword arguments`. \n\n"
-            + "``className`` is the Java class name to look for.\n"
-            + "\nExample:\n"
-            + "| ${panes}= | Get Node Children By Class Name | ${some node} | BorderPane | \n"
-            + "Returns an empty list if none is found. \n")
-    @ArgumentNames({ "node", "className" })
-    public Set<Object> getNodeChildrenByClassName(Object locator, String className) {
-        Node node = objectToNode(locator);
-        RobotLog.info("Getting node: \"" + node + "\" children by class name: \"" + className + "\"");
-        try {
-            Set<Object> keys = new HashSet<>();
-            Set childNodes = node.lookupAll("*");
-
-            for (Object o : childNodes) {
-                Node childNode = (Node) o;
-                if (childNode.getClass().getSimpleName().equals(className)) {
-                    RobotLog.trace("Classname: \"" + className + "\" found: \"" + childNode + "\"");
-                    keys.add(mapObject(childNode));
-                }
-            }
-            return keys;
-        } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get node children for node: \"" + node.toString() +
-                    "\" with class name: " + className, e);
-        }
-    }
-
     @RobotKeyword("Returns text value of the Node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getText method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
@@ -438,35 +270,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node + ": Node has no getText method");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Get node text failed for node: " + node, e);
-        }
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Find` instead.\n\n"
-            + "Returns height value of the node. \n\n"
-            + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
-            + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
-    public String getNodeHeight(Object locator) {
-        Node node = objectToNode(locator);
-        try {
-            Method[] methods = node.getClass().getMethods();
-            for (Method m : methods) {
-                if (m.getName().equals("getHeight")) {
-                    try {
-                        Object result = m.invoke(node, (Object) null);
-                        return result.toString();
-                    } catch (Exception e) {
-                        throw new JavaFXLibraryNonFatalException("Problem calling method: .getHeight(): " + e.getMessage(), e);
-                    }
-                }
-            }
-            throw new JavaFXLibraryNonFatalException(
-                    "Get node height failed for node: \"" + node.toString() + "\". Element has no method getHeight()");
-        } catch (Exception e) {
-            if (e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get node height for node: " + node.toString(), e);
         }
     }
 
@@ -532,31 +335,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
             return node.getClass().getSimpleName();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get class name for object: " + node.toString(), e);
-        }
-    }
-
-    @Deprecated
-    @RobotKeyword("*DEPRECATED in version 0.6.0!* Use keyword `Get Scene` instead.\n\n"
-            +"Returns given locators Scene object. \n\n"
-            + "``locator`` is either a _query_ or a _Node_, see `3.2 Using locators as keyword arguments`\n\n")
-    @ArgumentNames({ "locator" })
-    public Object getNodesScene(Object locator) {
-        try {
-            if (locator instanceof Node){
-                RobotLog.info("Getting a Scene object for a Node: \"" + locator + "\"");
-                return mapObject(((Node) locator).getScene());
-            } else if (locator instanceof String) {
-                RobotLog.info("Getting a Scene object for a query: \"" + locator + "\"");
-                Node node = objectToNode(locator);
-                return mapObject(node.getScene());
-            }
-
-            throw new JavaFXLibraryNonFatalException("Locator type is not a Node or a query string!");
-
-        } catch (Exception e) {
-            if (e instanceof JavaFXLibraryNonFatalException)
-                throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get Scene object for locator: \"" + locator + "\"", e);
         }
     }
 
@@ -776,11 +554,24 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Sets the screenshot directory for current application\n\n"
-            + "``directory`` is a path to a folder which is to be set as current screenshot directory")
-    @ArgumentNames({ "directory" })
-    public void setScreenshotDirectory(String dir){
-        RobotLog.info("Setting new screenshot directory: " + dir);
-        setCurrentSessionScreenshotDirectory(dir);
+            + "Notice that relative paths are from current work dir of JavaFXLibrary:\n"
+            + "- In case of Java Agent it comes from Application Under Test (AUT).\n"
+            + "- In case of JavaFXLibrary is started with \"java -jar *\" command it uses the current working directory as source.\n"
+            + "``directory`` is a path to a folder which is to be set as current screenshot directory in host where "
+            + "JavaFXLibrary is run.\n\n"
+            + "``logDirectory`` is a path that is put to log.html files that can be used after screenshots are moved "
+            + "from target system to e.g. CI workspace. Typically this is relative path.\n\n\n"
+            + "Example:\n"
+            + "| Set Screenshot Directory | /Users/robotuser/output/AUT-screenshots/ | ./output/AUT-screenshots/ | \n"
+            + "or\n"
+            + "| Set Screenshot Directory | ./output/AUT-screenshots/ | \n")
+    @ArgumentNames({ "directory", "logDirectory=" })
+    public void setScreenshotDirectory(String dir, String logDir){
+        RobotLog.info("Setting screenshot directory to \"" + dir + "\".");
+        if (logDir != null && !logDir.isEmpty()) {
+            RobotLog.info("Log directory is set to \"" + logDir + "\"");
+        }
+        setCurrentSessionScreenshotDirectory(dir, logDir);
     }
 
     @RobotKeyword("Gets the screenshot directory for current application")
