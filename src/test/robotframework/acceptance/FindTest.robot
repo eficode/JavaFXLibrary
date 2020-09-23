@@ -207,6 +207,18 @@ Previous Query Returns Nothing In Chained Selector With Find All When failIfNotF
     ${msg}                      Run Keyword And Expect Error    *    Find All    css=VBox css=ZBox Pane id=lime    true
     Should Be Equal             Find operation failed for query: "css=VBox css=ZBox Pane id=lime"    ${msg}
 
+Find With Nonvalid Root
+    [Tags]                      smoke    negative
+    Set Test Application        ${BOUNDS_APP}
+    ${msg}                      Run Keyword And Expect Error    *    Find            xpath=//Rectangle[@width="75.0"]    false    not-a-valid-root
+    Should Start With           ${msg}                          Illegal arguments for keyword 'find'
+
+Find All With Nonvalid Root
+    [Tags]                      smoke    negative
+    Set Test Application        ${BOUNDS_APP}
+    ${msg}                      Run Keyword And Expect Error    *    Find All        xpath=//Rectangle[@width="75.0"]    false    not-a-valid-root
+    Should Start With           ${msg}                          Illegal arguments for keyword 'findAll'
+
 Find Labeled Node With Text
     [Tags]                      smoke
     Set Test Application        javafxlibrary.testapps.TestWindowManagement
