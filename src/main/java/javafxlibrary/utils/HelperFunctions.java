@@ -902,7 +902,7 @@ public class HelperFunctions {
                 if (objectMap.containsKey(o)) {
                     replaced[i] = objectMap.get(o);
                 } else {
-                    replaced[i] = arr[i];
+                    replaced[i] = checkForNullArgument(arr[i]);
                 }
             }
         }
@@ -924,7 +924,7 @@ public class HelperFunctions {
                 if (objectMap.containsKey(o)) {
                     replaced.set(i, objectMap.get(o));
                 } else {
-                    replaced.set(i, o);
+                    replaced.set(i, checkForNullArgument(o));
                 }
             }
         }
@@ -944,12 +944,20 @@ public class HelperFunctions {
                 if (objectMap.containsKey(o)) {
                     replaced.put(key, objectMap.get(o));
                 } else {
-                    replaced.put(key, o);
+                    replaced.put(key, checkForNullArgument(o));
                 }
             }
         }
         return replaced;
     }
+
+    public static Object checkForNullArgument(Object o) {
+        if (o.getClass() == String.class && o.equals("")) {
+            return null;
+        }
+        return o;
+    }
+
 
     public static Object[] checkMethodArguments(Object[] arguments) {
         Object[] replaced = new Object[arguments.length];
