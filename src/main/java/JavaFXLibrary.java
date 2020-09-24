@@ -125,7 +125,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
                     // timeout already expired, catch exception and jump out
                     retExcep.set(jfxte);
                     throw jfxte;
-
                 } catch (RuntimeException e) {
                     // catch exception and continue trying
                     retExcep.set(e);
@@ -143,6 +142,11 @@ public class JavaFXLibrary extends AnnotationLibrary {
             } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
+            } else if (e.getCause() instanceof IllegalArgumentException) {
+                RobotLog.trace("JavaFXLibrary: Caught IllegalArgumentException: \n" + Throwables.getStackTraceAsString(e));
+                throw new JavaFXLibraryNonFatalException("Illegal arguments for keyword '" + keywordName + "':\n" +
+                        "    ARGS: " + Arrays.toString(args.toArray()) + "\n" +
+                        "    KWARGS: " + Arrays.toString(kwargs.entrySet().toArray()));
             } else {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
