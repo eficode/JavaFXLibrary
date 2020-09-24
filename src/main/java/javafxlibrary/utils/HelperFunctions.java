@@ -68,8 +68,6 @@ import static javafxlibrary.utils.TestFxAdapter.objectMap;
 import static javafxlibrary.utils.TestFxAdapter.robot;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
-import static org.testfx.util.WaitForAsyncUtils.asyncFx;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 public class HelperFunctions {
 
@@ -85,10 +83,10 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) != null).get());
-            Node node = asyncFx(() -> createFinder().find(target)).get();
+            waitFor(timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) != null);
+            Node node = createFinder().find(target);
             // TODO: Add null checks for node.getScene()
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
+            waitFor(timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
             return node;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -106,7 +104,7 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
+            waitFor(timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) == null);
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
@@ -129,7 +127,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -151,7 +149,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -172,7 +170,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))== true).get());
+            waitFor(timeout, TimeUnit.SECONDS, () -> (Matchers.is(isEnabled()).matches(finalTarget))== true);
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -193,7 +191,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget) == true).get());
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget) == true);
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -207,7 +205,7 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb)).get());
+            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
@@ -494,20 +492,21 @@ public class HelperFunctions {
     }
 
     public static void checkClickLocation(Object object) {
-
-        RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
-
-        if (safeClicking) {
-
-            Point2D point = getCenterPoint(objectToBounds(object));
-
-            if (!visibleWindowsContain(robot.listWindows(), point)) {
-                throw new JavaFXLibraryNonFatalException("Can't click " + object.getClass().getSimpleName() + " at [" + point.getX() +
-                        ", " + point.getY() + "]: out of window bounds. " +
-                        "To enable clicking outside of visible window bounds use keyword SET SAFE CLICKING | OFF");
+        try {
+            RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
+            if (safeClicking) {
+                RobotLog.trace("object type is: " + object.getClass());
+                Point2D point = getCenterPoint(objectToBounds(object));
+                if (!visibleWindowsContain(robot.listWindows(), point)) {
+                    throw new JavaFXLibraryNonFatalException("Can't click " + object.getClass().getSimpleName() + " at [" + point.getX() +
+                            ", " + point.getY() + "]: out of window bounds. " +
+                            "To enable clicking outside of visible window bounds use keyword SET SAFE CLICKING | OFF");
+                }
             }
+            RobotLog.trace("Target location checks out OK, it is within active window");
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("Click target location check failed: " + e.getMessage(), e);
         }
-        RobotLog.trace("Target location checks out OK, it is within active window");
     }
     
     public static void verifyClickLocationOnFront(Object object) {

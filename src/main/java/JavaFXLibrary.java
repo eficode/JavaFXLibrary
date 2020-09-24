@@ -42,6 +42,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
 import java.util.ResourceBundle;
 
@@ -179,7 +180,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
             waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
 
                 try {
-                    retval.set(super.runKeyword(keywordName, finalArgs));
+                    retval.set(asyncFx(() -> super.runKeyword(keywordName, finalArgs)).get());
                     return true;
 
                 } catch (JavaFXLibraryTimeoutException jfxte) {

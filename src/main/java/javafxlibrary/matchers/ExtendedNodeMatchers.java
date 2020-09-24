@@ -31,8 +31,6 @@ import java.util.concurrent.TimeoutException;
 
 import static javafxlibrary.utils.HelperFunctions.getHoveredNode;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
-import static org.testfx.util.WaitForAsyncUtils.asyncFx;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 public class ExtendedNodeMatchers {
 
@@ -58,7 +56,7 @@ public class ExtendedNodeMatchers {
     private static boolean hoverable(Node node) {
         try {
             waitFor(HelperFunctions.getWaitUntilTimeout(), HelperFunctions.getTimeUnit("SECONDS"), () -> {
-                return asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT") != null).get();
+                return new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT") != null;
             });
             return node.isHover();
         } catch (JavaFXLibraryNonFatalException nfe) {

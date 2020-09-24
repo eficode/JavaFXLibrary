@@ -223,12 +223,12 @@ Click On Unreachable Point
     [Tags]                  smoke    negative
     ${POINT}                Create Point    ${0}    ${-20}
     ${MSG}                  Run Keyword And Expect Error    *    Click On    ${POINT}
-    Should Start With       ${MSG}    Can't click Point2D at [0.0, -20.0]: out of window bounds.
+    Should Start With       ${MSG}    Click target location check failed: Can't click Point2D at [0.0, -20.0]: out of window bounds.
 
 Click On Unreachable Coordinates
     [Tags]                  smoke    negative
     ${MSG}                  Run Keyword And Expect Error    *    Click On Coordinates    ${0}    ${-20}
-    Should Start With       ${MSG}    Can't click Point2D at [0.0, -20.0]: out of window bounds.
+    Should Start With       ${MSG}    Click target location check failed: Can't click Point2D at [0.0, -20.0]: out of window bounds.
 
 Click On Mouse Button That Does Not Exist
     [Tags]                  smoke    negative
@@ -253,7 +253,7 @@ Click On Unsupported Type
     ${IMAGE}                Capture Image         ${NODE}
     ${PIXELREADER}          Call Object Method    ${IMAGE}    getPixelReader
     ${MSG}                  Run Keyword And Expect Error    *    Click On       ${PIXELREADER}
-    Should Start With       ${MSG}    Unsupported parameter type:
+    Should Start With       ${MSG}    Click target location check failed: Unsupported parameter type:
 
 *** Keywords ***
 Setup all tests
