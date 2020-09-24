@@ -89,7 +89,6 @@ public class HelperFunctions {
             Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
-            waitForFxEvents();
             return node;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -97,8 +96,8 @@ public class HelperFunctions {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
-            RobotLog.trace("Exception in waitUntilExists: " + e + "\n" + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found.", e);
+            RobotLog.trace("Exception in waitUntilExists: " + e.getCause().toString());
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + e.getCause().toString() + ").");
         }
     }
 
@@ -108,7 +107,6 @@ public class HelperFunctions {
 
         try {
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
-            waitForFxEvents();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
@@ -131,7 +129,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -153,7 +151,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -174,7 +172,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isEnabled()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))== true).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -195,7 +193,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget) == true).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -209,7 +207,7 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb)).get());
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
@@ -648,73 +646,6 @@ public class HelperFunctions {
             return null;
         else
             return queries[1];
-    }
-
-
-    // Deprecated: Use javafxlibrary.utils.finder.finder instead
-    @Deprecated
-    public static Node findNode(Node node, String query) {
-
-        RobotLog.info("Finding from node: " + node.toString() + " with query: " + query);
-
-        if (query != null) {
-            List<Node> nodelist = new ArrayList<>();
-
-            String currentQuery = query.split(" ", 2)[0];
-            String nextQuery = remainingQueries(query);
-            RobotLog.info("CurrentQuery: " + currentQuery + ", nextQuery: " + nextQuery);
-
-            if (currentQuery.startsWith("class=")) {
-                nodelist.addAll(node.lookupAll((getQueryString(currentQuery)).replaceFirst("^class=", "")));
-            } else {
-                nodelist.addAll(robot.from(node).lookup(getQueryString(currentQuery)).queryAll());
-            }
-
-            if (nodelist.isEmpty()) {
-                return null;
-            } else {
-                if (getQueryIndex(currentQuery) != -1) {
-                    // if index [..] was given, continue search with only one match
-                    return findNode(nodelist.get(getQueryIndex(currentQuery)), nextQuery);
-                } else {
-                    // no index given, continue search with all matches
-                    Node newNode;
-
-                    for (Node n : nodelist) {
-                        newNode = findNode(n, nextQuery);
-                        if (newNode != null)
-                            return newNode;
-                    }
-                    return null;
-                }
-            }
-        } else {
-            return node;
-        }
-    }
-
-    // Deprecated: Use javafxlibrary.utils.finder.finder instead
-    @Deprecated
-    public static Node findNode(String query) {
-        return findNode(robot.listTargetWindows().get(0).getScene().getRoot(), query);
-    }
-
-    // Deprecated: Used only in deprecated method findNode
-    @Deprecated
-    public static String getQueryString(String query) {
-        return query.replaceAll("\\[\\d]$", "");
-    }
-
-    // Deprecated: Used only in deprecated method findNode
-    @Deprecated
-    public static int getQueryIndex(String query) {
-        Pattern pattern = Pattern.compile(".*\\[\\d]$");
-        Matcher matcher = pattern.matcher(query);
-        if (matcher.matches()) {
-            String index = StringUtils.substringBetween(query, "[", "]");
-            return Integer.parseInt(index);
-        }
-        return -1;
     }
 
     public static Node getHoveredNode() {

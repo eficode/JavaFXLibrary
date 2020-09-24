@@ -136,7 +136,6 @@ public class Finder {
         } else {
             results.addAll(nodes);
         }
-
         return results;
     }
 
