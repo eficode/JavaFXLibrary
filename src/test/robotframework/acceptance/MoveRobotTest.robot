@@ -87,7 +87,8 @@ Move To Window
 
 Move To Nonexistent Location
     [Tags]                           smoke
-    Run Keyword And Expect Error     Unable to move as locator "css=\#rectangleNOTfound" not found!          Move To                 css=\#rectangleNOTfound
+    Run Keyword And Expect Error     Given element "css=\#rectangleNOTfound" was not found within given timeout of 0 SECONDS
+    ...                              Move To                 css=\#rectangleNOTfound
 
 *** Keywords ***
 Setup all tests

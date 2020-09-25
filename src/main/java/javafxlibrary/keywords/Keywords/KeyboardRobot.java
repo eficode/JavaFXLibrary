@@ -150,7 +150,7 @@ public class KeyboardRobot extends TestFxAdapter {
                 return robot.push(KeyCode.META, KeyCode.W).sleep(100);
             } else if (robot instanceof FxRobot) {
                 RobotLog.info("Closing window via: ALT + F4");
-                return ((FxRobot) robot).closeCurrentWindow();
+                return robot.push(KeyCode.ALT, KeyCode.F4).sleep(100);
             }
 
             throw new JavaFXLibraryNonFatalException("No instance available for closing.");

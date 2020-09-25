@@ -32,7 +32,6 @@ import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.matchers.ProgressBarMatchers;
 import javafxlibrary.utils.finder.Finder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -60,14 +59,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static javafxlibrary.matchers.ExtendedNodeMatchers.hasValidCoordinates;
 import static javafxlibrary.utils.TestFxAdapter.objectMap;
 import static javafxlibrary.utils.TestFxAdapter.robot;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 
 public class HelperFunctions {
 
@@ -83,10 +81,10 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) != null);
-            Node node = createFinder().find(target);
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) != null).get());
+            Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
-            waitFor(timeout, getTimeUnit(timeUnit), () -> hasValidCoordinates(node));
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
             return node;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -104,7 +102,7 @@ public class HelperFunctions {
                 + timeout + ", timeUnit=" + timeUnit);
 
         try {
-            waitFor(timeout, getTimeUnit(timeUnit), () -> createFinder().find(target) == null);
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
@@ -127,7 +125,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isVisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -149,7 +147,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isInvisible()).matches(finalTarget));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -170,7 +168,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> (Matchers.is(isEnabled()).matches(finalTarget))== true);
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -191,7 +189,7 @@ public class HelperFunctions {
         RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
 
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(isDisabled()).matches(finalTarget) == true);
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -205,7 +203,7 @@ public class HelperFunctions {
 
     public static void waitForProgressBarToFinish(ProgressBar pb, int timeout) {
         try {
-            waitFor(timeout, TimeUnit.SECONDS, () -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb));
+            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(ProgressBarMatchers.isComplete()).matches(pb)).get());
         } catch (TimeoutException te) {
             throw new JavaFXLibraryNonFatalException("Given ProgressBar did not complete in " + timeout + " seconds!");
         }
@@ -488,32 +486,32 @@ public class HelperFunctions {
     }
 
     public static void checkClickLocation(int x, int y) {
-        checkClickLocation(new Point2D(x, y));
+        checkClickLocation(threadSafePoint2D(x,y));
     }
+
 
     public static void checkClickLocation(Object object) {
         try {
-            RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
             if (safeClicking) {
-                RobotLog.trace("object type is: " + object.getClass());
+                RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
+
                 Point2D point = getCenterPoint(objectToBounds(object));
                 if (!visibleWindowsContain(robot.listWindows(), point)) {
-                    throw new JavaFXLibraryNonFatalException("Can't click " + object.getClass().getSimpleName() + " at [" + point.getX() +
-                            ", " + point.getY() + "]: out of window bounds. " +
-                            "To enable clicking outside of visible window bounds use keyword SET SAFE CLICKING | OFF");
+                    throw new JavaFXLibraryNonFatalException("Can't click " + object.getClass().getSimpleName() + " at [" + point.getX() + ", " + point.getY() + "]: out of window bounds. " +
+                            "To enable clicking outside of visible window bounds use keyword `Set Safe Clicking` with argument `off`");
                 }
+                RobotLog.trace("Target location checks out OK, it is within active window");
             }
-            RobotLog.trace("Target location checks out OK, it is within active window");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Click target location check failed: " + e.getMessage(), e);
         }
     }
     
-    public static void verifyClickLocationOnFront(Object object) {
+    public static void bringClickLocationToFront(Object object) {
     	try {
     		new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
     	} catch (Exception e) {
-			RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: "+object);
+			RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: " + object);
 		}
     }
 
@@ -522,7 +520,7 @@ public class HelperFunctions {
 
             if (target instanceof String || target instanceof Node) {
                 target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
-                verifyClickLocationOnFront(target);
+                bringClickLocationToFront(target);
             }
             checkClickLocation(target);
             return target;
@@ -539,7 +537,7 @@ public class HelperFunctions {
         boolean contains = false;
         for (Window window : windows) {
             if (window.isShowing()) {
-                Bounds windowBounds = new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+                Bounds windowBounds = threadSafeBoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
                 if (windowBounds.contains(point))
                     contains = true;
             }
@@ -548,8 +546,7 @@ public class HelperFunctions {
     }
 
     public static Point2D getCenterPoint(Bounds bounds) {
-        RobotLog.trace("Getting center point for " + bounds);
-        return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
+        return threadSafePoint2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
     }
 
     public static boolean isCompatible(Object o) {
@@ -610,32 +607,56 @@ public class HelperFunctions {
             throw new JavaFXLibraryNonFatalException("Given target \"" + target.getClass().getName() +
                     "\" is not an instance of Node or a query string for node!");
     }
-
+    //TODO: check robot.* usage in relation to threading
     public static Bounds objectToBounds(Object object) {
+        RobotLog.trace("object type is: " + object.getClass());
         if (object instanceof Window) {
             Window window = (Window) object;
-            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+            return threadSafeBoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
         } else if (object instanceof Scene) {
             Scene scene = (Scene) object;
             double x = scene.getX() + scene.getWindow().getX();
             double y = scene.getY() + scene.getWindow().getY();
-            return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
+            return threadSafeBoundingBox(x, y, scene.getWidth(), scene.getHeight());
         } else if (object instanceof Point2D) {
             return robot.bounds((Point2D) object).query();
         } else if (object instanceof Node) {
             return robot.bounds((Node) object).query();
         } else if (object instanceof String) {
-            Node node = waitUntilExists((String) object, waitUntilTimeout, "SECONDS");
-            return robot.bounds(node).query();
+            return robot.bounds(objectToNode(object)).query();
         } else if (object instanceof Bounds) {
             return (Bounds) object;
         } else if (object instanceof PointQuery) {
             return robot.bounds(((PointQuery) object).query()).query();
         } else if (object instanceof Rectangle2D) {
             Rectangle2D r2 = (Rectangle2D) object;
-            return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
+            return threadSafeBoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
         } else
             throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
+    }
+
+    public static Bounds threadSafeBoundingBox(double x, double y, double width, double height) {
+        try {
+            return waitFor(1, TimeUnit.SECONDS, asyncFx(()->new BoundingBox(x, y, width, height)));
+        } catch (TimeoutException te) {
+            throw new JavaFXLibraryNonFatalException("threadSafeBoundingBox: Timeout in BoundingBox object creation!");
+        }
+    }
+
+    public static Point2D threadSafePoint2D(double x, double y) {
+        try {
+            return waitFor(1, TimeUnit.SECONDS, asyncFx(() -> new Point2D(x,y)));
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("threadSafePoint2D: Timeout in Point2D object creation!");
+        }
+    }
+
+    public static Rectangle2D threadSafeRectangle2D(double x, double y, double width, double height) {
+        try {
+            return waitFor(1, TimeUnit.SECONDS, asyncFx(() -> new Rectangle2D(x,y,width,height)));
+        } catch (Exception e) {
+            throw new JavaFXLibraryNonFatalException("threadSafeRectangle2D: Timeout in Rectangle2D object creation!");
+        }
     }
 
     private static String remainingQueries(String query) {

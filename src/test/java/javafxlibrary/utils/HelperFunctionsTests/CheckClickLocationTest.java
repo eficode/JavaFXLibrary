@@ -66,7 +66,7 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
     public void checkClickLocation_IsOutsideVisibleWindow() throws Exception {
         setBoundsQueryExpectations(30, 800);
         String target = "Can't click Point2D at [30.0, 800.0]: out of window bounds. To enable clicking outside " +
-                "of visible window bounds use keyword SET SAFE CLICKING | OFF";
+                "of visible window bounds use keyword `Set Safe Clicking` with argument `off`";
 
         thrown.expect(JavaFXLibraryNonFatalException.class);
         thrown.expectMessage(target);

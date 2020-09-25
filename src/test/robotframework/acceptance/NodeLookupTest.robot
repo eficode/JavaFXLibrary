@@ -47,7 +47,7 @@ Root Node Of XPath Query
 Root Node Of Node That Does Not Exist
     [Tags]              smoke    negative
     ${MSG}              Run Keyword And Expect Error    *    Get Root Node Of    id=non-existent-node-id
-    Should Contain      ${MSG}    Unable to find any node with query: "id=non-existent-node-id"
+    Should Contain      ${MSG}    Given element "id=non-existent-node-id" was not found within given timeout of 1 SECONDS
 
 *** Keywords ***
 Setup all tests

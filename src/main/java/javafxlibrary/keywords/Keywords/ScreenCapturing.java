@@ -68,7 +68,7 @@ public class ScreenCapturing extends TestFxAdapter {
     @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.")
     public Object capturePrimaryScreen()  {
     	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        return this.captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
+        return this.captureImage(threadSafeRectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
     }
 
     @RobotKeyword("Returns a screenshot of the given locator, or if not given from whole active window.\n\n"

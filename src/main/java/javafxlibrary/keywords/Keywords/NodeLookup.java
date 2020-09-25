@@ -31,6 +31,9 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static javafxlibrary.utils.HelperFunctions.getWaitUntilTimeout;
+import static javafxlibrary.utils.HelperFunctions.waitUntilExists;
+
 @RobotKeywords
 public class NodeLookup extends TestFxAdapter {
 
@@ -52,7 +55,7 @@ public class NodeLookup extends TestFxAdapter {
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
         if (locator instanceof String) {
-            Node node = new Finder().find((String) locator);
+            Node node = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
             if( node != null )
                 return getRootNodeOf(node);
             throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");

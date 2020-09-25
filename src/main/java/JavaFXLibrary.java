@@ -120,11 +120,11 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 try {
                     retval.set(super.runKeyword(keywordName, finalArgs, finalKwargs));
                     return true;
-
                 } catch (JavaFXLibraryTimeoutException jfxte) {
                     // timeout already expired, catch exception and jump out
                     retExcep.set(jfxte);
                     throw jfxte;
+
                 } catch (RuntimeException e) {
                     // catch exception and continue trying
                     retExcep.set(e);
@@ -147,68 +147,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 throw new JavaFXLibraryNonFatalException("Illegal arguments for keyword '" + keywordName + "':\n" +
                         "    ARGS: " + Arrays.toString(args.toArray()) + "\n" +
                         "    KWARGS: " + Arrays.toString(kwargs.entrySet().toArray()));
-            } else {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
-            }
-        } catch (JavaFXLibraryTimeoutException jfxte) {
-            RobotLog.reset();
-            RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
-            throw jfxte;
-        }
-        RobotLog.reset();
-        return retval.get();
-    }
-
-    // overriding the run method to catch the control in case of failure, so that desired runOnFailureKeyword
-    // can be executed in controlled manner.
-    @Override
-    public Object runKeyword(String keywordName, List args) {
-        // TODO: Check if this is ever called anymore
-        RobotLog.info("runKeyword called with args ONLY");
-
-        List finalArgs;
-        // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
-        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread"))) {
-            finalArgs = HelperFunctions.useMappedObjects(args);
-        } else {
-            finalArgs = args;
-        }
-
-        AtomicReference<Object> retval = new AtomicReference<>();
-        AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
-
-        try {
-            RobotLog.ignoreDuplicates();
-            // timeout + 500 ms so that underlying timeout has a chance to expire first
-            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
-
-                try {
-                    retval.set(asyncFx(() -> super.runKeyword(keywordName, finalArgs)).get());
-                    return true;
-
-                } catch (JavaFXLibraryTimeoutException jfxte) {
-                    // timeout already expired, catch exception and jump out
-                    retExcep.set(jfxte);
-                    throw jfxte;
-
-                } catch (RuntimeException e) {
-                    // catch exception and continue trying
-                    retExcep.set(e);
-                    return false;
-                }
-            });
-        } catch (TimeoutException te) {
-            RobotLog.reset();
-            RuntimeException e = retExcep.get();
-            runOnFailure.runOnFailure();
-
-            if (e.getCause() instanceof JavaFXLibraryFatalException) {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
-            } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
             } else {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;

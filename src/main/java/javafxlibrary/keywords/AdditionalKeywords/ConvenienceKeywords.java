@@ -22,7 +22,6 @@ import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -35,7 +34,6 @@ import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.Keywords.ClickRobot;
 import javafxlibrary.keywords.Keywords.KeyboardRobot;
-import javafxlibrary.matchers.InstanceOfMatcher;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -48,7 +46,7 @@ import org.testfx.robot.Motion;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
+
 import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
@@ -181,32 +179,36 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Enables/Disables clicking outside of visible JavaFX application windows. Safe clicking is on by" +
             " default, preventing clicks outside of the tested application.\n\n" +
-            "``value`` can be any of the following: ON, on, OFF, off.\n\n"
+            "``value`` can be any of the following: on, off.\n\n"
             + "Parameter _value_ specifies whether safety should be toggled on or off")
     @ArgumentNames({ "value" })
     public void setSafeClicking(String value) {
-        switch (value) {
-            case "OFF":
+        switch (value.toLowerCase()) {
             case "off":
                 RobotLog.info("Setting safe clicking mode to OFF");
                 HelperFunctions.setSafeClicking(false);
                 break;
-            case "ON":
             case "on":
                 RobotLog.info("Setting safe clicking mode to ON");
                 HelperFunctions.setSafeClicking(true);
                 break;
             default:
-                throw new JavaFXLibraryNonFatalException("Unknown value: \"" + value + "\". Expected values are: on, ON, off and OFF.");
+                throw new JavaFXLibraryNonFatalException("Unknown value: \"" + value + "\". Expected values are `on` or `off`");
         }
     }
 
-    @RobotKeyword("Sets the time waited for nodes to become available. Default value is 5 seconds."
-            + "``timeout`` is an Integer value for timeout.")
-    @ArgumentNames({ "timeout" })
-    public void setTimeout(int timeout) {
+    @RobotKeyword("Sets the time waited for nodes to become available. Keyword returns old timeout value as return "
+            + "value. Default value is 5 seconds.\n\n"
+            + "``timeout`` is an Integer value for timeout in seconds.\n\n"
+            + "\nExample:\n"
+            + "| ${old_timeout}= | Set Timeout | 20 | \n"
+            + "| Click On | id=myidthatshallcomeavailable | | \n"
+            + "| [Teardown] | Set Timeout | ${old_timeout} | \n")
+    public Integer setTimeout(int timeout) {
         RobotLog.info("Setting timeout to " + timeout + "s");
+        Integer oldTimeoutValue = getWaitUntilTimeout();
         setWaitUntilTimeout(timeout);
+        return oldTimeoutValue;
     }
 
     /*
@@ -385,7 +387,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         try {
             RobotLog.info("Getting the primary screen bounds");
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-            return mapObject(new BoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
+            return mapObject(threadSafeBoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get primary screen bounds.", e);
         }

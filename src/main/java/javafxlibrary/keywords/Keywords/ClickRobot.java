@@ -49,13 +49,11 @@ public class ClickRobot extends TestFxAdapter {
             + "| Click On | .css-name | Motion=VERTICAL_FIRST | \n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface clickOn(Object locator, String motion) {
-        try {
         Object target = checkClickTarget(locator);
         RobotLog.info("Clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
         Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "clickOn",
                 target.getClass(), Motion.class, MouseButton.class);
-
-
+        try {
             return (FxRobotInterface) method.invoke(robot, target, getMotion(motion), new MouseButton[]{MouseButton.PRIMARY});
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute click on using locator \"" + locator + "\" " +

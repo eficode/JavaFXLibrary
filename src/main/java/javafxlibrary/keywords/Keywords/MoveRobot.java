@@ -18,7 +18,6 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -32,7 +31,7 @@ import org.testfx.robot.Motion;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static javafxlibrary.utils.HelperFunctions.getMotion;
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class MoveRobot extends TestFxAdapter {
@@ -51,13 +50,7 @@ public class MoveRobot extends TestFxAdapter {
         try {
             RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
             if (locator instanceof String) {
-                String originalLocator = (String) locator;
-                locator = new Finder().find((String) locator);
-                if(locator==null) {
-                    throw new JavaFXLibraryNonFatalException("Unable to move as locator \"" + originalLocator + "\" not found!");
-                } else {
-                    RobotLog.info("Locator at this point: " + locator);
-                }
+                locator = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
             }
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
             return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));

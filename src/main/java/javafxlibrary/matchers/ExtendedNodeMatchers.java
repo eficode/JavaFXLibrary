@@ -55,15 +55,10 @@ public class ExtendedNodeMatchers {
 
     private static boolean hoverable(Node node) {
         try {
-            waitFor(HelperFunctions.getWaitUntilTimeout(), HelperFunctions.getTimeUnit("SECONDS"), () -> {
-                return new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT") != null;
-            });
+            new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT");
             return node.isHover();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
-        } catch (TimeoutException te) {
-            throw new JavaFXLibraryTimeoutException("Given element \"" + node + "\" was not found within given timeout of "
-                    + HelperFunctions.getWaitUntilTimeout() + " " + "SECONDS");
         } catch (Exception e) {
             RobotLog.trace("Exception in hoverable matcher: " + e + "\n" + e.getCause().toString());
             throw new JavaFXLibraryNonFatalException("hoverable matcher failed: ", e);
