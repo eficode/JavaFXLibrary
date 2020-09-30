@@ -61,7 +61,7 @@ public class ObjectToNodeTest extends TestFxAdapterTest {
     @Test
     public void objectToNode_NullObject() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Target object was null");
+        thrown.expectMessage("Target object was empty (null)");
         HelperFunctions.objectToNode(null);
     }
 }

@@ -49,6 +49,7 @@ public class GetMouseButtonsTest {
     @Test
     public void getMouseButtons_InvalidValue() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
+       // thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: [NONE, PRIMARY, MIDDLE, SECONDARY]");
         HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
     }

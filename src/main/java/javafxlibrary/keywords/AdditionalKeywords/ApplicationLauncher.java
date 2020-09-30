@@ -68,8 +68,8 @@ public class ApplicationLauncher extends TestFxAdapter {
     @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
-        Class c = getMainClass(appName);
-        Application app = createWrapperApplication(c, appArgs);
+        Class mainClass = getMainClass(appName);
+        Application app = createWrapperApplication(mainClass, appArgs);
         createNewSession(app);
         RobotLog.info("Application: " + appName + " started.");
     }

@@ -329,7 +329,8 @@ public class HelperFunctions {
             try {
                 array[i] = MouseButton.valueOf(slist[i]);
             } catch (IllegalArgumentException e) {
-                throw new JavaFXLibraryNonFatalException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
+               throw new JavaFXLibraryNonFatalException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
+//                throw new IllegalArgumentException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
                         + Arrays.asList(MouseButton.values()));
             }
         }
@@ -486,7 +487,7 @@ public class HelperFunctions {
     }
 
     public static void checkClickLocation(int x, int y) {
-        checkClickLocation(threadSafePoint2D(x,y));
+        checkClickLocation(new Point2D(x,y));
     }
 
 
@@ -537,7 +538,7 @@ public class HelperFunctions {
         boolean contains = false;
         for (Window window : windows) {
             if (window.isShowing()) {
-                Bounds windowBounds = threadSafeBoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+                Bounds windowBounds = new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
                 if (windowBounds.contains(point))
                     contains = true;
             }
@@ -546,7 +547,7 @@ public class HelperFunctions {
     }
 
     public static Point2D getCenterPoint(Bounds bounds) {
-        return threadSafePoint2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
+        return new Point2D(bounds.getMinX() + (bounds.getWidth() / 2), bounds.getMinY() + (bounds.getHeight() / 2));
     }
 
     public static boolean isCompatible(Object o) {
@@ -597,12 +598,15 @@ public class HelperFunctions {
 
     public static Node objectToNode(Object target) {
 
-        if (target instanceof String)
-            return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
+        if (target instanceof String) {
+            Node node = createFinder().find((String) target);
+            return node;
+            //return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
+        }
         else if (target instanceof Node) {
             return (Node) target;
         } else if (target == null) {
-            throw new JavaFXLibraryNonFatalException("Target object was null");
+            throw new JavaFXLibraryNonFatalException("Target object was empty (null)");
         } else
             throw new JavaFXLibraryNonFatalException("Given target \"" + target.getClass().getName() +
                     "\" is not an instance of Node or a query string for node!");
@@ -612,12 +616,12 @@ public class HelperFunctions {
         RobotLog.trace("object type is: " + object.getClass());
         if (object instanceof Window) {
             Window window = (Window) object;
-            return threadSafeBoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
         } else if (object instanceof Scene) {
             Scene scene = (Scene) object;
             double x = scene.getX() + scene.getWindow().getX();
             double y = scene.getY() + scene.getWindow().getY();
-            return threadSafeBoundingBox(x, y, scene.getWidth(), scene.getHeight());
+            return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
         } else if (object instanceof Point2D) {
             return robot.bounds((Point2D) object).query();
         } else if (object instanceof Node) {
@@ -630,33 +634,9 @@ public class HelperFunctions {
             return robot.bounds(((PointQuery) object).query()).query();
         } else if (object instanceof Rectangle2D) {
             Rectangle2D r2 = (Rectangle2D) object;
-            return threadSafeBoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
+            return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
         } else
             throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
-    }
-
-    public static Bounds threadSafeBoundingBox(double x, double y, double width, double height) {
-        try {
-            return waitFor(1, TimeUnit.SECONDS, asyncFx(()->new BoundingBox(x, y, width, height)));
-        } catch (TimeoutException te) {
-            throw new JavaFXLibraryNonFatalException("threadSafeBoundingBox: Timeout in BoundingBox object creation!");
-        }
-    }
-
-    public static Point2D threadSafePoint2D(double x, double y) {
-        try {
-            return waitFor(1, TimeUnit.SECONDS, asyncFx(() -> new Point2D(x,y)));
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("threadSafePoint2D: Timeout in Point2D object creation!");
-        }
-    }
-
-    public static Rectangle2D threadSafeRectangle2D(double x, double y, double width, double height) {
-        try {
-            return waitFor(1, TimeUnit.SECONDS, asyncFx(() -> new Rectangle2D(x,y,width,height)));
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("threadSafeRectangle2D: Timeout in Rectangle2D object creation!");
-        }
     }
 
     private static String remainingQueries(String query) {

@@ -22,6 +22,7 @@ import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -387,7 +388,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         try {
             RobotLog.info("Getting the primary screen bounds");
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-            return mapObject(threadSafeBoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
+            return mapObject(new BoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to get primary screen bounds.", e);
         }

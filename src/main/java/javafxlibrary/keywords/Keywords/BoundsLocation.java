@@ -17,6 +17,9 @@
 
 package javafxlibrary.keywords.Keywords;
 
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
@@ -48,7 +51,7 @@ public class BoundsLocation extends TestFxAdapter {
         try {
             RobotLog.info("Creating bounds object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" + width +
                     "\" and height=\"" + height + "\"");
-            return mapObject(threadSafeBoundingBox(minX, minY, width, height));
+            return mapObject(new BoundingBox(minX, minY, width, height));
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
@@ -66,7 +69,7 @@ public class BoundsLocation extends TestFxAdapter {
     public Object createPoint(double x, double y) {
         try {
             RobotLog.info("Creating point object with x=\"" + x + "\"" + " and y=\"" + y + "\"");
-            return mapObject(threadSafePoint2D(x, y));
+            return mapObject(new Point2D(x, y));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -85,7 +88,7 @@ public class BoundsLocation extends TestFxAdapter {
         try {
             RobotLog.info("Creating rectangle object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" +
                     width + "\" and height=\"" + height + "\"");
-            return mapObject(threadSafeRectangle2D(minX, minY, width, height));
+            return mapObject(new Rectangle2D(minX, minY, width, height));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -107,10 +110,10 @@ public class BoundsLocation extends TestFxAdapter {
         try {
             if (locator instanceof Window) {
                 Window window = (Window) locator;
-                return mapObject(threadSafeBoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
+                return mapObject(new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
             } else if (locator instanceof Scene) {
                 Scene scene = (Scene) locator;
-                return mapObject(threadSafeBoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
+                return mapObject(new BoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
             }
 

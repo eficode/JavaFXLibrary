@@ -269,12 +269,19 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
+<!--                            <debugFile>debugfile.txt</debugFile>-->
 							<includes>
 								<include>smoke</include>
+<!--								<include>set-embedded</include>-->
 							</includes>
 							<excludes>
 								<exclude>not-ready</exclude>
 							</excludes>
+                            <tests>
+                                <test>Click On TextFX Query</test>
+<!--                                <test>Swing Embedded JavaFX Type Test</test>-->
+<!--                                <test>Swing Embedded JavaFX Click Test</test>-->
+                            </tests>
 							<nonCriticalTags>
 								<nonCriticalTag>monocle-issue</nonCriticalTag>
 							</nonCriticalTags>
@@ -285,84 +292,84 @@
 							</variables>
 						</configuration>
 					</execution>
-					<execution>
-						<id>documentation</id>
-						<phase>package</phase>
-						<goals>
-							<goal>libdoc</goal>
-						</goals>
-						<configuration>
-							<libdoc>
-								<outputDirectory>${project.build.directory}</outputDirectory>
-								<outputFile>${project.artifactId}.html</outputFile>
-								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
-								<version>${project.version}</version>
-							</libdoc>
-						</configuration>
-					</execution>
-					<execution>
-						<id>xml</id>
-						<phase>package</phase>
-						<goals>
-							<goal>libdoc</goal>
-						</goals>
-						<configuration>
-							<libdoc>
-								<outputDirectory>${project.build.directory}</outputDirectory>
-								<outputFile>${project.artifactId}.xml</outputFile>
-								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
-								<version>${project.version}</version>
-							</libdoc>
-						</configuration>
-					</execution>
+<!--					<execution>-->
+<!--						<id>documentation</id>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>libdoc</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<libdoc>-->
+<!--								<outputDirectory>${project.build.directory}</outputDirectory>-->
+<!--								<outputFile>${project.artifactId}.html</outputFile>-->
+<!--								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>-->
+<!--								<version>${project.version}</version>-->
+<!--							</libdoc>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>xml</id>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>libdoc</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<libdoc>-->
+<!--								<outputDirectory>${project.build.directory}</outputDirectory>-->
+<!--								<outputFile>${project.artifactId}.xml</outputFile>-->
+<!--								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>-->
+<!--								<version>${project.version}</version>-->
+<!--							</libdoc>-->
+<!--						</configuration>-->
+<!--					</execution>-->
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>JavaFXLibrary</mainClass>
-								</transformer>
-							</transformers>
-							<relocations>
-								<relocation>
-									<pattern>com.google.common</pattern>
-									<shadedPattern>shaded.com.google.common</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>org.apache.commons</pattern>
-									<shadedPattern>shaded.org.apache.commons</shadedPattern>
-								</relocation>
-							</relocations>
-							<artifactSet>
-								<includes>
-									<include>*:*</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-shade-plugin</artifactId>-->
+<!--				<version>3.2.4</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>shade</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<transformers>-->
+<!--								<transformer-->
+<!--									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--									<mainClass>JavaFXLibrary</mainClass>-->
+<!--								</transformer>-->
+<!--							</transformers>-->
+<!--							<relocations>-->
+<!--								<relocation>-->
+<!--									<pattern>com.google.common</pattern>-->
+<!--									<shadedPattern>shaded.com.google.common</shadedPattern>-->
+<!--								</relocation>-->
+<!--								<relocation>-->
+<!--									<pattern>org.apache.commons</pattern>-->
+<!--									<shadedPattern>shaded.org.apache.commons</shadedPattern>-->
+<!--								</relocation>-->
+<!--							</relocations>-->
+<!--							<artifactSet>-->
+<!--								<includes>-->
+<!--									<include>*:*</include>-->
+<!--								</includes>-->
+<!--							</artifactSet>-->
+<!--							<filters>-->
+<!--								<filter>-->
+<!--									<artifact>*:*</artifact>-->
+<!--									<excludes>-->
+<!--										<exclude>META-INF/*.SF</exclude>-->
+<!--										<exclude>META-INF/*.DSA</exclude>-->
+<!--										<exclude>META-INF/*.RSA</exclude>-->
+<!--									</excludes>-->
+<!--								</filter>-->
+<!--							</filters>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

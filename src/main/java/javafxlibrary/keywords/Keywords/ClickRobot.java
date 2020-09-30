@@ -106,10 +106,11 @@ public class ClickRobot extends TestFxAdapter {
             RobotLog.info("Clicking mouse buttons \"" + Arrays.toString(buttons) + "\"");
             return robot.clickOn(getMouseButtons(buttons));
         } catch (Exception e) {
+            RobotLog.trace("exception at this point: " + e.getCause());
             if (e instanceof JavaFXLibraryNonFatalException) {
                 throw e;
             }
-            throw new JavaFXLibraryNonFatalException("Unable to click mouse button.", e);
+            throw new JavaFXLibraryNonFatalException("Unable to click mouse button.", e.getCause());
         }
     }
 
