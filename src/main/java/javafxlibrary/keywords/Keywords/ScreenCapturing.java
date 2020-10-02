@@ -26,7 +26,6 @@ import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
@@ -85,15 +84,15 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Image | \\#id | logImage=False |\n" )
     @ArgumentNames({"locator=target window", "logImage=True"})
     public Object captureImage(Object locator, boolean logImage){
-        if (locator == null)
-            throw new JavaFXLibraryNonFatalException("Unable to capture image, given locator was null!");
-
-        RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
-        Image image;
-        Bounds targetBounds = objectToBounds(locator);
-        String logPath;
-
         try {
+            if (locator == null)
+                throw new JavaFXLibraryNonFatalException("Unable to capture image, given locator was null!");
+
+            RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
+            Image image;
+            Bounds targetBounds = objectToBounds(locator);
+            String logPath;
+
             image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
             robotContext().getCaptureSupport().saveImage(image, path);
@@ -132,7 +131,6 @@ public class ScreenCapturing extends TestFxAdapter {
                 }
             }
             return mapObject(image);
-
         } catch (IOException e) {
             throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator + "\"", e);
         } catch (Exception e) {

@@ -77,10 +77,9 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
-                + timeout + ", timeUnit=" + timeUnit);
-
         try {
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
+                + timeout + ", timeUnit=" + timeUnit);
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) != null).get());
             Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
@@ -98,10 +97,9 @@ public class HelperFunctions {
     }
 
     public static void waitUntilDoesNotExists(String target, int timeout, String timeUnit) {
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
-                + timeout + ", timeUnit=" + timeUnit);
-
         try {
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
+                    + timeout + ", timeUnit=" + timeUnit);
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -116,15 +114,12 @@ public class HelperFunctions {
 
     // TODO: Take same parameters as waitUntilExists in all waitUntil methods
     public static Node waitUntilVisible(Object target, int timeout) {
-
-        // if target is a query string, let's try to find the relevant node
-        if (target instanceof String)
-            target = waitUntilExists((String) target, timeout, "SECONDS");
-
-        final Object finalTarget = target;
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
-
         try {
+            // if target is a query string, let's try to find the relevant node
+            if (target instanceof String)
+                target = waitUntilExists((String) target, timeout, "SECONDS");
+            final Object finalTarget = target;
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
             waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
@@ -138,15 +133,12 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilInvisible(Object target, int timeout) {
-
-        // if target is a query string, let's try to find the relevant node
-        if (target instanceof String)
-            target = waitUntilExists((String) target, timeout, "SECONDS");
-
-        final Object finalTarget = target;
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
-
         try {
+            // if target is a query string, let's try to find the relevant node
+            if (target instanceof String)
+                target = waitUntilExists((String) target, timeout, "SECONDS");
+            final Object finalTarget = target;
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
             waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
@@ -160,14 +152,12 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilEnabled(Object target, int timeout) {
-
-        if (target instanceof String)
-            target = waitUntilExists((String) target, timeout, "SECONDS");
-
-        final Object finalTarget = target;
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
-
         try {
+            // if target is a query string, let's try to find the relevant node
+            if (target instanceof String)
+                target = waitUntilExists((String) target, timeout, "SECONDS");
+            final Object finalTarget = target;
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
             waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
@@ -181,14 +171,12 @@ public class HelperFunctions {
     }
 
     public static Node waitUntilDisabled(Object target, int timeout) {
-
-        if (target instanceof String)
-            target = waitUntilExists((String) target, timeout, "SECONDS");
-
-        final Object finalTarget = target;
-        RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
-
         try {
+            // if target is a query string, let's try to find the relevant node
+            if (target instanceof String)
+                target = waitUntilExists((String) target, timeout, "SECONDS");
+            final Object finalTarget = target;
+            RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
             waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget)).get());
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
@@ -520,7 +508,8 @@ public class HelperFunctions {
         try {
 
             if (target instanceof String || target instanceof Node) {
-                target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
+                target = objectToBounds(target);
+                //target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
                 bringClickLocationToFront(target);
             }
             checkClickLocation(target);
@@ -599,9 +588,12 @@ public class HelperFunctions {
     public static Node objectToNode(Object target) {
 
         if (target instanceof String) {
-            Node node = createFinder().find((String) target);
-            return node;
-            //return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
+                Node node = createFinder().find((String) target);
+                if (node == null) {
+                    throw new JavaFXLibraryNonFatalException("Unable to find node for query \"" + target + "\"");
+                }
+                return node;
+                //return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
         }
         else if (target instanceof Node) {
             return (Node) target;
@@ -611,32 +603,33 @@ public class HelperFunctions {
             throw new JavaFXLibraryNonFatalException("Given target \"" + target.getClass().getName() +
                     "\" is not an instance of Node or a query string for node!");
     }
+
     //TODO: check robot.* usage in relation to threading
     public static Bounds objectToBounds(Object object) {
-        RobotLog.trace("object type is: " + object.getClass());
-        if (object instanceof Window) {
-            Window window = (Window) object;
-            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
-        } else if (object instanceof Scene) {
-            Scene scene = (Scene) object;
-            double x = scene.getX() + scene.getWindow().getX();
-            double y = scene.getY() + scene.getWindow().getY();
-            return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
-        } else if (object instanceof Point2D) {
-            return robot.bounds((Point2D) object).query();
-        } else if (object instanceof Node) {
-            return robot.bounds((Node) object).query();
-        } else if (object instanceof String) {
-            return robot.bounds(objectToNode(object)).query();
-        } else if (object instanceof Bounds) {
-            return (Bounds) object;
-        } else if (object instanceof PointQuery) {
-            return robot.bounds(((PointQuery) object).query()).query();
-        } else if (object instanceof Rectangle2D) {
-            Rectangle2D r2 = (Rectangle2D) object;
-            return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
-        } else
-            throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
+            RobotLog.trace("object type is: " + object.getClass());
+            if (object instanceof Window) {
+                Window window = (Window) object;
+                return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+            } else if (object instanceof Scene) {
+                Scene scene = (Scene) object;
+                double x = scene.getX() + scene.getWindow().getX();
+                double y = scene.getY() + scene.getWindow().getY();
+                return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
+            } else if (object instanceof Point2D) {
+                return robot.bounds((Point2D) object).query();
+            } else if (object instanceof Node) {
+                return robot.bounds((Node) object).query();
+            } else if (object instanceof String) {
+                return robot.bounds(objectToNode(object)).query();
+            } else if (object instanceof Bounds) {
+                return (Bounds) object;
+            } else if (object instanceof PointQuery) {
+                return robot.bounds(((PointQuery) object).query()).query();
+            } else if (object instanceof Rectangle2D) {
+                Rectangle2D r2 = (Rectangle2D) object;
+                return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
+            } else
+                throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
     }
 
     private static String remainingQueries(String query) {

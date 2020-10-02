@@ -18,7 +18,6 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -30,8 +29,7 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static javafxlibrary.utils.HelperFunctions.getWaitUntilTimeout;
-import static javafxlibrary.utils.HelperFunctions.waitUntilExists;
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class PointOffset extends TestFxAdapter {
@@ -45,12 +43,12 @@ public class PointOffset extends TestFxAdapter {
             + "| ${point query offset}= | Call Method | ${point query} | getOffset | \n")
     @ArgumentNames({"locator", "offsetX", "offsetY"})
     public Object pointToWithOffset(Object locator, double offsetX, double offsetY) {
-        RobotLog.info("Creating a point query for target: \"" + locator + "\" with offset: [" + offsetX + ", " + offsetY + "]");
-        if (locator instanceof String)
-            locator = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "offset",
-                locator.getClass(), double.class, double.class);
         try {
+            RobotLog.info("Creating a point query for target: \"" + locator + "\" with offset: [" + offsetX + ", " + offsetY + "]");
+            if (locator instanceof String)
+                locator = objectToNode(locator);
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "offset",
+                    locator.getClass(), double.class, double.class);
             return HelperFunctions.mapObject(method.invoke(robot, locator, offsetX, offsetY));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute 'point to with offset' using locator \"" + locator

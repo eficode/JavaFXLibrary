@@ -60,7 +60,6 @@ public class ScrollRobot extends TestFxAdapter {
             + "| Scroll Horizontally | RIGHT | \n")
     @ArgumentNames({ "direction", "amount=1" })
     public void scrollHorizontally(String direction, int amount) {
-
         try {
             RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
             robot.press(KeyCode.SHIFT);

@@ -218,9 +218,9 @@ public class Verifiers extends TestFxAdapter {
         try {
             RobotLog.info("Checking that locator node is not hoverable: \"" + locator + "\".");
             verifyThat(objectToNode(locator), ExtendedNodeMatchers.isHoverable());
-            throw new JavaFXLibraryNonFatalException("Expected \"" + locator + "\" to be not hoverable - failed!");
+            throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
         } catch (AssertionError ae){
-            // Was not hoverable, keyword should pass
+            RobotLog.info("Was not hoverable.");
         }
     }
 

@@ -24,7 +24,10 @@ Swing Embedded JavaFX Type Test
     Run Keyword If    ${headless}   Set Tags        monocle-issue
     Launch Swing Application        javafxlibrary.testapps.SwingApplication
     Wait Until Keyword Succeeds     15 sec          250ms           Find    id=textField     	${True}
+    #Click On                        id=textField
     Write To                        id=textField    JavaFXLibrary
+    #Click On                        id=textField
+    #Write                           JavaFXLibrary
     Wait Until Keyword Succeeds     3 sec           250ms       Text Value Should Be    JavaFXLibrary
 
 Launch Swing Application Using External Wrapper Class

@@ -20,17 +20,12 @@ package javafxlibrary.matchers;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-
-import java.util.concurrent.TimeoutException;
-
 import static javafxlibrary.utils.HelperFunctions.getHoveredNode;
-import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 public class ExtendedNodeMatchers {
 
@@ -48,7 +43,6 @@ public class ExtendedNodeMatchers {
             public void describeMismatch(Object object, Description description) {
                 description.appendText("Given target node is not hoverable, it seems to be hidden under this node: \"").
                         appendValue(getHoveredNode()).appendText("\"");
-
             }
         };
     }

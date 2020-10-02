@@ -31,7 +31,11 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @RobotKeywords
 public class KeyboardRobot extends TestFxAdapter {
@@ -162,8 +166,6 @@ public class KeyboardRobot extends TestFxAdapter {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Write uses JavaFX events
     @RobotKeyword("Writes a given text characters one after the other.\n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
@@ -213,11 +215,15 @@ public class KeyboardRobot extends TestFxAdapter {
             + "\nExample: \n"
             + "| Write To | .css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
-    public FxRobotInterface writeTo(Object locator, String text) {
-        RobotLog.info("Writing \"" + text + "\" to " + locator);
+    public void writeTo(Object locator, String text) {
         try {
-            clickRobot.clickOn(locator,"DIRECT");
-            return robot.write(text, sleepMillis);
+            RobotLog.info("Writing \"" + text + "\" to " + locator);
+            asyncFx(() -> clickRobot.clickOn(locator,"DIRECT")).get();
+            asyncFx(() -> write(text)).get();
+            waitForFxEvents(3);
+        } catch (InterruptedException | ExecutionException iee) {
+            RobotLog.trace("failed");
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator, iee);
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;

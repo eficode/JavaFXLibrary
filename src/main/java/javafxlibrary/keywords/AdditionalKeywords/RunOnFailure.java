@@ -24,14 +24,7 @@ import javafxlibrary.utils.TestFxAdapter;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.lang.reflect.Method;
-
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import org.testfx.api.FxRobotInterface;
-import org.testfx.robot.Motion;
-
-import static javafxlibrary.utils.HelperFunctions.getMotion;
 
 @RobotKeywords
 public class RunOnFailure extends TestFxAdapter{

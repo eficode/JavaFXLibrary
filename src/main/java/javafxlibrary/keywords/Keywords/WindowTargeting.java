@@ -66,9 +66,8 @@ public class WindowTargeting extends TestFxAdapter {
             )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
-        RobotLog.info("Setting target window according to locator \"" + locator + "\"");
-
         try {
+            RobotLog.info("Setting target window according to locator \"" + locator + "\"");
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")){
                     locator = ((String) locator).replace("pattern=","");
@@ -86,9 +85,7 @@ public class WindowTargeting extends TestFxAdapter {
                 Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "targetWindow", locator.getClass());
                 method.invoke(robot, locator);
             }
-
             Platform.runLater((robot.targetWindow())::requestFocus);
-
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute set target window using locator \"" + locator + "\"");
         } catch (Exception e) {

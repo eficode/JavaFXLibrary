@@ -87,7 +87,7 @@ Move To Window
 
 Move To Nonexistent Location
     [Tags]                           smoke
-    Run Keyword And Expect Error     Given element "css=\#rectangleNOTfound" was not found within given timeout of 0 SECONDS
+    Run Keyword And Expect Error     Unable to find node for query "css=\#rectangleNOTfound"
     ...                              Move To                 css=\#rectangleNOTfound
 
 *** Keywords ***

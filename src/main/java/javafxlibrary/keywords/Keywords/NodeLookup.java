@@ -19,7 +19,6 @@ package javafxlibrary.keywords.Keywords;
 
 import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -31,8 +30,7 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static javafxlibrary.utils.HelperFunctions.getWaitUntilTimeout;
-import static javafxlibrary.utils.HelperFunctions.waitUntilExists;
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class NodeLookup extends TestFxAdapter {
@@ -54,16 +52,13 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${root} | Get Root Node Of | \\#some-node-id | \n" )
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
-        if (locator instanceof String) {
-            Node node = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
-            if( node != null )
-                return getRootNodeOf(node);
-            throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");
-        }
-
-        RobotLog.info("Getting root node of target \"" + locator + "\"");
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
         try {
+            if (locator instanceof String) {
+                Node node = objectToNode(locator);
+                return getRootNodeOf(node);
+            }
+            RobotLog.info("Getting root node of target \"" + locator + "\"");
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
             return HelperFunctions.mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute get root node of using locator \"" + locator

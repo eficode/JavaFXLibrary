@@ -78,9 +78,8 @@ public class WindowLookup extends TestFxAdapter {
     )
     @ArgumentNames({"locator"})
     public Object getWindow(Object locator) {
-        RobotLog.info("Getting window using locator \"" + locator + "\"");
-
         try {
+            RobotLog.info("Getting window using locator \"" + locator + "\"");
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")) {
                     locator = ((String) locator).replace("pattern=","");
@@ -93,7 +92,6 @@ public class WindowLookup extends TestFxAdapter {
                     return HelperFunctions.mapObject(robot.window((String) locator));
                 }
             }
-
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "window", locator.getClass());
             return HelperFunctions.mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {

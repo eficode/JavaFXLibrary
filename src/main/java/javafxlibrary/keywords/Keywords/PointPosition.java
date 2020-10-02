@@ -36,7 +36,6 @@ public class PointPosition extends TestFxAdapter {
             + "| Set Target Position | TOP_LEFT | \n")
     @ArgumentNames({ "pointPosition" })
     public FxRobotInterface setTargetPosition(String pointPosition) {
-
         try {
             RobotLog.info("Setting new target position as: \"" + pointPosition + "\"");
             return robot.targetPos(HelperFunctions.getPosition(pointPosition));

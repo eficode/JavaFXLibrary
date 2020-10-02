@@ -50,7 +50,7 @@ public class MoveRobot extends TestFxAdapter {
         try {
             RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
             if (locator instanceof String) {
-                locator = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
+                locator = objectToNode(locator);
             }
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
             return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));

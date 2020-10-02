@@ -17,9 +17,7 @@
 
 package javafxlibrary.keywords.Keywords;
 
-import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -31,8 +29,7 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static javafxlibrary.utils.HelperFunctions.getWaitUntilTimeout;
-import static javafxlibrary.utils.HelperFunctions.waitUntilExists;
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class PointLocation extends TestFxAdapter {
@@ -49,14 +46,11 @@ public class PointLocation extends TestFxAdapter {
             + "| Move To | ${point query} | | | # moves to bottom right corner of a node that was stored in PointQuery object. |\n")
     @ArgumentNames({"locator"})
     public Object pointTo(Object locator) {
-        RobotLog.info("Creating a point query for target \"" + locator + "\"");
-
-        if (locator instanceof String)
-            locator = waitUntilExists((String) locator, getWaitUntilTimeout(), "SECONDS");
-
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
-
         try {
+            RobotLog.info("Creating a point query for target \"" + locator + "\"");
+            if (locator instanceof String)
+                locator = objectToNode(locator);
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
             return HelperFunctions.mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute point to using locator \"" + locator

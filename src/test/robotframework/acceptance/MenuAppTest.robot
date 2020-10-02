@@ -55,26 +55,30 @@ Menus - Change Theme
     Should Contain          ${STYLESHEET}[0]        Javastyle.css
 
 Menus - Change Font Size
-    [Tags]                  smoke                   demo-set
-    Click On                text="Settings"
-    Move To                 text="Font size"
-    Click On                text="26px"             HORIZONTAL_FIRST
-    ${LABEL}                Find                    css=.textLabel
-    ${STYLE}                Call Object Method      ${LABEL}            getStyle
-    Should Contain          ${STYLE}                -fx-font-size: 26px
+    [Tags]                        smoke                   demo-set
+    Click On                      text="Settings"
+    Wait Until Node Is Visible    text="Font size"
+    Move To                       text="Font size"
+    Wait Until Node Is Visible    text="26px"
+    Click On                      text="26px"             HORIZONTAL_FIRST
+    ${LABEL}                      Find                    css=.textLabel
+    ${STYLE}                      Call Object Method      ${LABEL}            getStyle
+    Should Contain                ${STYLE}                -fx-font-size: 26px
 
 Combined
-    [Tags]                  smoke                   demo-set
-    Click On                text="Settings"
-    Move To                 text="Theme"
+    [Tags]                        smoke                   demo-set
+    Click On                      text="Settings"
+    Wait Until Node Is Visible    text="Theme"
+    Move To                       text="Theme"
     # Horizontal first is required because submenu closes if the cursor moves outside of menu bounds
-    Click On                text="Gradient"         HORIZONTAL_FIRST
-    ${SCENE}                Get Scene               css=.textLabel
-    @{STYLESHEET}           Call Object Method      ${SCENE}            getStylesheets
-    Should Contain          ${STYLESHEET}[0]        Gradientstyle.css
-    Click On                text="Services"
-    Click On                text="Analyze"
-    Verify String           css=.textLabel          Analyze
+    Wait Until Node is Visible    text="Gradient"
+    Click On                      text="Gradient"         HORIZONTAL_FIRST
+    ${SCENE}                      Get Scene               css=.textLabel
+    @{STYLESHEET}                 Call Object Method      ${SCENE}            getStylesheets
+    Should Contain                ${STYLESHEET}[0]        Gradientstyle.css
+    Click On                      text="Services"
+    Click On                      text="Analyze"
+    Verify String                 css=.textLabel          Analyze
 
     # Using Find All instead of text-value based css-selector here to avoid dependencies with the second test case
     @{COMBOBOXES}           Find All                css=.combo-box
