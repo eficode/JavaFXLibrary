@@ -41,9 +41,9 @@ public class Find {
             + "using the found HBox as a root node, while looking for a node matching the XPath.\n\n")
     @ArgumentNames({"query", "failIfNotFound=False", "root="})
     public Object find(String query, boolean failIfNotFound, Parent root) {
-        RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound=\"" +
-                failIfNotFound + "\", root=\"" + root + "\"");
         try {
+            RobotLog.info("Trying to find the first node matching the query: \"" + query + "\", failIfNotFound=\"" +
+                    failIfNotFound + "\", root=\"" + root + "\"");
             if (root != null) {
                 return mapObject(new Finder().find(query, root));
             } else {

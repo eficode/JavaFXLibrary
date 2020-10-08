@@ -89,10 +89,11 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
             @ArgumentNames({"locator", "timeout=5"})
-    public void waitUntilNodeIsVisible(Object locator, int timeout) {
+    public Object waitUntilNodeIsVisible(Object locator, int timeout) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Waiting for node \"" + locator + "\" to be visible, timeout=\"" + timeout + "\".");
-            waitUntilVisible(locator, timeout);
+            return mapObject(waitUntilVisible(locator, timeout));
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("");
         }
@@ -103,10 +104,11 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
     @ArgumentNames({"locator", "timeout=5"})
-    public void waitUntilNodeIsNotVisible(Object locator, int timeout) {
+    public Object waitUntilNodeIsNotVisible(Object locator, int timeout) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Waiting for node \"" + locator + "\" to be invisible, timeout=\"" + timeout + "\".");
-            waitUntilInvisible(locator, timeout);
+            return mapObject(waitUntilInvisible(locator, timeout));
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("");
         }
@@ -117,10 +119,11 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
     @ArgumentNames({"locator", "timeout=5"})
-    public void waitUntilNodeIsEnabled(Object locator, int timeout) {
+    public Object waitUntilNodeIsEnabled(Object locator, int timeout) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Waiting for node \"" + locator + "\" to be enabled, timeout=\"" + timeout + "\".");
-            waitUntilEnabled(locator, timeout);
+            return mapObject(waitUntilEnabled(locator, timeout));
         } catch (IllegalArgumentException | NullPointerException e){
             throw new JavaFXLibraryNonFatalException("");
         }
@@ -131,10 +134,11 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
     @ArgumentNames({"locator", "timeout=5"})
-    public void waitUntilNodeIsNotEnabled(Object locator, int timeout) {
+    public Object waitUntilNodeIsNotEnabled(Object locator, int timeout) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Waiting for node \"" + locator + "\" to be disabled, timeout=\"" + timeout + "\".");
-            waitUntilDisabled(locator, timeout);
+            return mapObject(waitUntilDisabled(locator, timeout));
         } catch (IllegalArgumentException | NullPointerException e){
             throw new JavaFXLibraryNonFatalException("");
         }
@@ -145,6 +149,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldBeVisible(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is visible: \"" + locator + "\".");
         verifyThat(objectToNode(locator), isVisible() );
     }
@@ -154,6 +159,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldNotBeVisible(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is not visible: \"" + locator + "\".");
         verifyThat(objectToNode(locator), isInvisible() );
     }
@@ -163,6 +169,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldBeFocused(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is focused: \"" + locator + "\".");
         verifyThat(objectToNode(locator), isFocused() );
     }
@@ -172,6 +179,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldNotBeFocused(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is not focused: \"" + locator + "\".");
         verifyThat(objectToNode(locator), isNotFocused() );
     }
@@ -181,6 +189,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldBeEnabled(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is enabled: \"" + locator + "\".");
         verifyThat(objectToNode(locator), isEnabled() );
     }
@@ -190,6 +199,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldNotBeEnabled(Object locator) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node is not enabled: \"" + locator + "\".");
         verifyThat(objectToNode(locator), NodeMatchers.isDisabled() );
     }
@@ -199,6 +209,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldBeHoverable(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
             verifyThat(objectToNode(locator), ExtendedNodeMatchers.isHoverable());
@@ -215,6 +226,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void nodeShouldNotBeHoverable(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that locator node is not hoverable: \"" + locator + "\".");
             verifyThat(objectToNode(locator), ExtendedNodeMatchers.isHoverable());
@@ -230,6 +242,7 @@ public class Verifiers extends TestFxAdapter {
             + "``text`` is the String to be searched for")
     @ArgumentNames({ "locator", "text" })
     public static void nodeShouldHaveText(Object locator, String text) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node \"" + locator + "\" has text \"" + text + "\".");
         Object node = objectToNode(locator);
 
@@ -249,6 +262,7 @@ public class Verifiers extends TestFxAdapter {
             + "``text`` is the String to be searched for")
     @ArgumentNames({ "locator", "text" })
     public static void nodeShouldNotHaveText(Object locator, String text) {
+        checkObjectArgumentNotNull(locator);
         RobotLog.info("Checking that locator node \"" + locator + "\" does not have text \"" + text + "\".");
         Object node = objectToNode(locator);
 
@@ -266,6 +280,7 @@ public class Verifiers extends TestFxAdapter {
             + "``window`` is the _Object:Window_ that specifies which window should be visible, see `3.2 Using locators as keyword arguments`.")
     @ArgumentNames({ "window" })
     public static void windowShouldBeVisible(Object window) {
+        checkObjectArgumentNotNull(window);
         RobotLog.info("Checking if window \"" + window + "\" is visible.");
         verifyThat((Window) window, WindowMatchers.isShowing());
     }
@@ -274,6 +289,7 @@ public class Verifiers extends TestFxAdapter {
             + "``window`` is the _Object:Window_ that specifies which window should be not visible, see `3.2 Using locators as keyword arguments`.")
     @ArgumentNames({ "window" })
     public static void windowShouldNotBeVisible(Object window) {
+        checkObjectArgumentNotNull(window);
         RobotLog.info("Checking if window \"" + window + "\" is not visible.");
         verifyThat((Window) window, WindowMatchers.isNotShowing());
     }
@@ -282,6 +298,7 @@ public class Verifiers extends TestFxAdapter {
             + "``window`` is the _Object:Window_ that specifies which window should be focused, see `3.2 Using locators as keyword arguments`.")
     @ArgumentNames({ "window" })
     public static void windowShouldBeFocused(Object window) {
+        checkObjectArgumentNotNull(window);
         RobotLog.info("Checking if window \"" + window + "\" is focused.");
         verifyThat((Window) window, WindowMatchers.isFocused());
     }
@@ -290,6 +307,7 @@ public class Verifiers extends TestFxAdapter {
             + "``window`` is the _Object:Window_ that specifies which window should be focused, see `3.2 Using locators as keyword arguments`.")
     @ArgumentNames({ "window" })
     public static void windowShouldNotBeFocused(Object window) {
+        checkObjectArgumentNotNull(window);
         RobotLog.info("Checking if window \"" + window + "\" is not focused.");
         verifyThat((Window) window, WindowMatchers.isNotFocused());
     }
@@ -369,6 +387,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void radioButtonShouldBeSelected(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that radio button is selected: \"" + locator + "\".");
             verifyThat((RadioButton) objectToNode(locator), ToggleMatchers.isSelected());
@@ -382,6 +401,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void radioButtonShouldNotBeSelected(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that radio button is not selected: \"" + locator + "\".");
             verifyThat((RadioButton) objectToNode(locator), ToggleMatchers.isNotSelected());
@@ -395,6 +415,7 @@ public class Verifiers extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void toggleButtonShouldBeSelected(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that toggle button is selected: \"" + locator + "\".");
             verifyThat((ToggleButton) objectToNode(locator), ToggleMatchers.isSelected());
@@ -408,6 +429,7 @@ public class Verifiers extends TestFxAdapter {
             + " `3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({ "locator" })
     public static void toggleButtonShouldNotBeSelected(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try{
             RobotLog.info("Checking that toggle button is not selected: \"" + locator + "\".");
             verifyThat((ToggleButton) objectToNode(locator), ToggleMatchers.isNotSelected());
@@ -422,6 +444,7 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is an integer value for timeout in seconds, defaults to 20 seconds.")
     @ArgumentNames({ "locator", "timeout=20" })
     public static void waitUntilProgressBarIsFinished(Object locator, int timeout) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Waiting until progressbar is finished: \"" + locator + "\", timeout=\"" + timeout + "\".");
             ProgressBar pb = (ProgressBar) objectToNode(locator);

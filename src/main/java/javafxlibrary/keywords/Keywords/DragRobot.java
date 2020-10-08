@@ -48,6 +48,7 @@ public class DragRobot extends TestFxAdapter {
             + "| Drag From | ${node} | SECONDARY | \n")
     @ArgumentNames({ "locator", "button=PRIMARY" })
     public FxRobotInterface dragFrom(Object locator, String button) {
+        checkObjectArgumentNotNull(locator);
         try {
             Object target = checkClickTarget(locator);
             RobotLog.info("Dragging from \"" + target + "\"" + " with button=\"" + button + "\"");
@@ -66,6 +67,7 @@ public class DragRobot extends TestFxAdapter {
             + "| Drop To | \\#some-node-id | \n")
     @ArgumentNames({ "locator" })
     public FxRobotInterface dropTo(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             Object target = asyncFx(() -> checkClickTarget(locator)).get();
             RobotLog.info("Dropping to \"" + target + "\"");

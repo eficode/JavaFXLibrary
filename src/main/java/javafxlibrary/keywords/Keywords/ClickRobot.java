@@ -49,6 +49,7 @@ public class ClickRobot extends TestFxAdapter {
             + "| Click On | .css-name | Motion=VERTICAL_FIRST | \n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface clickOn(Object locator, String motion) {
+        checkObjectArgumentNotNull(locator);
         try {
             Object target = checkClickTarget(locator);
             RobotLog.info("Clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
@@ -56,6 +57,8 @@ public class ClickRobot extends TestFxAdapter {
                     target.getClass(), Motion.class, MouseButton.class);
             return (FxRobotInterface) method.invoke(robot, target, getMotion(motion), new MouseButton[]{MouseButton.PRIMARY});
         } catch (IllegalAccessException | InvocationTargetException | JavaFXLibraryNonFatalException e) {
+            throw new JavaFXLibraryNonFatalException("Click On failed: " + e.getMessage(), e);
+        } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Click On failed: " + e.getMessage(), e);
         }
     }
@@ -67,6 +70,7 @@ public class ClickRobot extends TestFxAdapter {
             + "is usually HORIZONTAL_FIRST.\n\n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface rightClickOn(Object locator, String motion) {
+        checkObjectArgumentNotNull(locator);
         try {
             Object target = checkClickTarget(locator);
             RobotLog.info("Right clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
@@ -83,6 +87,7 @@ public class ClickRobot extends TestFxAdapter {
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_.")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface doubleClickOn(Object locator, String motion) {
+        checkObjectArgumentNotNull(locator);
         try {
             Object target = checkClickTarget(locator);
             RobotLog.info("Double clicking on target \"" + target + "\", motion=\"" + getMotion(motion) + "\"");
@@ -144,7 +149,7 @@ public class ClickRobot extends TestFxAdapter {
     public FxRobotInterface clickOnCoordinates(int x, int y, String motion) {
         try {
             RobotLog.info("Clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
-            checkClickLocation(x, y);
+            checkObjectInsideActiveWindow(x, y);
             return robot.clickOn(x, y, getMotion(motion), MouseButton.PRIMARY);
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {
@@ -160,7 +165,7 @@ public class ClickRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y", "motion=DIRECT" })
     public FxRobotInterface doubleClickOnCoordinates(int x, int y, String motion) {
         try {
-            checkClickLocation(x, y);
+            checkObjectInsideActiveWindow(x, y);
             RobotLog.info("Double clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
             return robot.doubleClickOn(x, y, getMotion(motion), MouseButton.PRIMARY);
         } catch (Exception e) {
@@ -177,7 +182,7 @@ public class ClickRobot extends TestFxAdapter {
     @ArgumentNames({ "x", "y", "motion=DIRECT" })
     public FxRobotInterface rightClickOnCoordinates(int x, int y, String motion) {
         try {
-            checkClickLocation(x, y);
+            checkObjectInsideActiveWindow(x, y);
             RobotLog.info("Right clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
             return robot.rightClickOn(x, y, getMotion(motion));
         } catch (Exception e) {

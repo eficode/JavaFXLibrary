@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
+import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -38,7 +38,7 @@ public class WindowTargeting extends TestFxAdapter {
             + "| ${window}= | Get Target Window | \n")
     public Object getTargetWindow() {
         try {
-            return HelperFunctions.mapObject(robot.targetWindow());
+            return mapObject(robot.targetWindow());
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -66,6 +66,7 @@ public class WindowTargeting extends TestFxAdapter {
             )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Setting target window according to locator \"" + locator + "\"");
             if (locator instanceof String) {

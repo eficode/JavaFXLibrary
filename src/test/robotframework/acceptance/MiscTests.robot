@@ -114,23 +114,19 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
 Check That Element Is Hoverable
     [Tags]                                          smoke    demo-set
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
-    Set Timeout                                     3
     ${target_node}=                                 Find    id=resetButton
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
     Run Keyword And Expect Error                    *          Node Should Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)true
     Node Should Be Hoverable                        id=resetButton
-    [Teardown]                                      Set Timeout     0
 
 Check That Element Is Not Hoverable
     [Tags]                      smoke   demo-set    negative
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
-    Set Timeout                                     3
     ${target_node}=                                 Find    id=resetButton
     Run Keyword And Expect Error                    *          Node Should Not Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
     Node Should Not Be Hoverable                        id=resetButton
-    [Teardown]                                      Set Timeout     0
 
 Find From Node
     [Tags]                  smoke
@@ -375,10 +371,27 @@ Is not Java agent
     ${IS_JAVA_AGENT} =      Is Java Agent
     Should Be Equal         ${False}            ${IS_JAVA_AGENT}
 
+Library Keyword Timeout Should Not Happen
+    [Tags]    smoke
+    ${old_timeout}=   Set Timeout      2
+    Set Test Application    javafxlibrary.testapps.TestKeyboardRobot
+    Run Keyword And Expect Error    Given element "id=doesNotExist" was not found within given timeout of 3 SECONDS
+    ...                             Wait Until Element Exists          id=doesNotExist     timeout=3
+    [Teardown]   Set Timeout           ${old_timeout}
+
+Library Keyword Timeout Should Happen
+    [Tags]    smoke
+    ${old_timeout}=        Set Timeout       2
+    ${old_write_speed}=    Set Write Speed   1000
+    Set Test Application   javafxlibrary.testapps.TestKeyboardRobot
+    Clear Textarea
+    Run Keyword And Expect Error    Library keyword timeout (2s) for keyword: write
+    ...                             Write                   Robot Framework
+    [Teardown]   Run Keywords       Set Timeout           ${old_timeout}     AND     Set Write Speed     ${old_write_speed}
+
 *** Keywords ***
 Setup All Tests
     Import JavaFXLibrary
-    Set Timeout    0
 
 Get First Player
     ${TABLE}        Find                    id=table
@@ -396,3 +409,7 @@ Reset Node Id To Yellow
     Call Object Method      ${node}             setId       yellow
     ${after_reset}          Find                id=yellow
     Should Be Equal         ${after_reset}      ${original}
+
+Clear Textarea
+    Click On    id=resetButton
+    Click On    id=textArea

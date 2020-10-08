@@ -103,6 +103,12 @@ Point To Class
     Move To                 ${POINTQUERY}
     Verify String           id=locationLabel    25 | 475
 
+Point To Empty String
+    [Tags]                  smoke
+    Move To Top Left Corner
+    ${MSG}=                 Run Keyword And Expect Error    *          Point To            ${EMPTY}
+    Should Start With       ${MSG}                          Illegal arguments for keyword 'pointTo'
+
 # PointOffset test cases
 Point To Point With Offset
     [Tags]                  smoke
@@ -173,7 +179,6 @@ Set New Target Position
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
-    Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Decoration Values

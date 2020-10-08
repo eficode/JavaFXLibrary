@@ -54,14 +54,14 @@ public class ObjectToNodeTest extends TestFxAdapterTest {
     @Test
     public void objectToNode_InvalidType() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Given target \"java.lang.Integer\" is not an instance of Node or a query string for node!");
+        thrown.expectMessage("given target \"java.lang.Integer\" is not an instance of Node or a query string for node!");
         HelperFunctions.objectToNode(new Integer("2009"));
     }
 
     @Test
     public void objectToNode_NullObject() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Target object was empty (null)");
+        thrown.expectMessage("target object was empty (null)");
         HelperFunctions.objectToNode(null);
     }
 }

@@ -36,7 +36,7 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
         windows = new ArrayList<>();
         windows.add(stage);
         button = new Button();
-        HelperFunctions.setWaitUntilTimeout(0);
+        HelperFunctions.setLibraryKeywordTimeout(0);
     }
 
     private  void setupStageTests(int x, int y, int width, int height) {
@@ -80,7 +80,7 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
                 return button;
             }
         };
-        HelperFunctions.setWaitUntilTimeout(1);
+        HelperFunctions.setLibraryKeywordTimeout(1);
         setupStageTests(300, 300, 50, 50);
         Button result = (Button) HelperFunctions.checkClickTarget(".button");
         Assert.assertEquals(button, result);

@@ -53,7 +53,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         try {
             RobotLog.info("Starting application:" + appName);
             createNewSession(appName, appArgs);
-            waitForEventsInFxApplicationThread(getWaitUntilTimeout());
+            waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
             RobotLog.info("Application: " + appName + " started.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
@@ -75,7 +75,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         Class mainClass = getMainClass(appName);
         Application app = createWrapperApplication(mainClass, appArgs);
         createNewSession(app);
-        waitForEventsInFxApplicationThread(getWaitUntilTimeout());
+        waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
         RobotLog.info("Application: " + appName + " started.");
     }
 
@@ -95,7 +95,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         Class c = getMainClass(appName);
         Application app = createThreadedWrapperApplication(c, appArgs);
         createNewSession(app);
-        waitForEventsInFxApplicationThread(getWaitUntilTimeout());
+        waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
         RobotLog.info("Application: " + appName + " started.");
     }
 

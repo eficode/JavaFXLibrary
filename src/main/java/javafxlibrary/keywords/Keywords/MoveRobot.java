@@ -47,6 +47,7 @@ public class MoveRobot extends TestFxAdapter {
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface moveTo(Object locator, String motion) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
             if (locator instanceof String) {

@@ -55,6 +55,7 @@ import javafx.scene.input.KeyCode;
 import org.testfx.service.query.PointQuery;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.jar.JarEntry;
@@ -70,11 +71,7 @@ import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 public class HelperFunctions {
 
     private static boolean safeClicking = true;
-    private static int waitUntilTimeout = 5;
-
-    public static Node waitUntilExists(String target) {
-        return waitUntilExists(target, waitUntilTimeout, "SECONDS");
-    }
+    private static int libraryKeywordTimeout = 10;
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
         try {
@@ -85,6 +82,8 @@ public class HelperFunctions {
             // TODO: Add null checks for node.getScene()
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
             return node;
+        } catch (InterruptedException |ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + iee.getCause().toString() + ").");
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
@@ -462,41 +461,39 @@ public class HelperFunctions {
         safeClicking = value;
     }
 
-    public static void setWaitUntilTimeout(int value) {
-        waitUntilTimeout = value;
+    public static void setLibraryKeywordTimeout(int value) {
+         libraryKeywordTimeout = value;
     }
 
-    public static int getWaitUntilTimeout() {
-        return waitUntilTimeout;
+    public static int getLibraryKeywordTimeout() {
+        return libraryKeywordTimeout;
     }
 
-    public static long getWaitUntilTimeout(TimeUnit timeUnit) {
-        return timeUnit.convert(waitUntilTimeout, TimeUnit.SECONDS);
+    public static long getLibraryKeywordTimeout(TimeUnit timeUnit) {
+        return timeUnit.convert(libraryKeywordTimeout, TimeUnit.SECONDS);
     }
 
-    public static void checkClickLocation(int x, int y) {
-        checkClickLocation(new Point2D(x,y));
+    public static void checkObjectInsideActiveWindow(int x, int y) {
+        checkObjectInsideActiveWindow(new Point2D(x,y));
     }
 
-
-    public static void checkClickLocation(Object object) {
+    public static void checkObjectInsideActiveWindow(Object object) {
         try {
             if (safeClicking) {
                 RobotLog.trace("Checking if target \"" + object.toString() + "\" is within active window");
-
                 Point2D point = getCenterPoint(objectToBounds(object));
                 if (!visibleWindowsContain(robot.listWindows(), point)) {
-                    throw new JavaFXLibraryNonFatalException("Can't click " + object.getClass().getSimpleName() + " at [" + point.getX() + ", " + point.getY() + "]: out of window bounds. " +
+                    throw new JavaFXLibraryNonFatalException("can't click " + object.getClass().getSimpleName() + " at [" + point.getX() + ", " + point.getY() + "]: out of window bounds. " +
                             "To enable clicking outside of visible window bounds use keyword `Set Safe Clicking` with argument `off`");
                 }
-                RobotLog.trace("Target location checks out OK, it is within active window");
+                RobotLog.trace("Object is within active window");
             }
         } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Click target location check failed: " + e.getMessage(), e);
+            throw new JavaFXLibraryNonFatalException("object inside active window check failed: " + e.getMessage(), e);
         }
     }
     
-    public static void bringClickLocationToFront(Object object) {
+    public static void bringObjectsWindowToFront(Object object) {
     	try {
     		new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
     	} catch (Exception e) {
@@ -506,19 +503,19 @@ public class HelperFunctions {
 
     public static Object checkClickTarget(Object target) {
         try {
-
             if (target instanceof String || target instanceof Node) {
-                target = objectToBounds(target);
-                //target = waitUntilEnabled(waitUntilVisible(target, waitUntilTimeout), waitUntilTimeout);
-                bringClickLocationToFront(target);
+                target = objectToNode(target);
+                if (!Matchers.is(isVisible()).matches(target) || !Matchers.is(isEnabled()).matches(target)) {
+                    throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not visible or enabled!");
+                }
             }
-            checkClickLocation(target);
+            bringObjectsWindowToFront(target);
+            checkObjectInsideActiveWindow(target);
             return target;
-
         } catch (JavaFXLibraryNonFatalException jfxe) {
             throw jfxe;
         } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Click target check failed: " + e.getMessage(), e);
+            throw new JavaFXLibraryNonFatalException("click target check failed: " + e.getMessage(), e);
         }
     }
 
@@ -586,21 +583,19 @@ public class HelperFunctions {
     }
 
     public static Node objectToNode(Object target) {
-
         if (target instanceof String) {
                 Node node = createFinder().find((String) target);
                 if (node == null) {
-                    throw new JavaFXLibraryNonFatalException("Unable to find node for query \"" + target + "\"");
+                    throw new JavaFXLibraryNonFatalException("unable to find node for query \"" + target + "\"");
                 }
                 return node;
-                //return waitUntilExists((String) target, waitUntilTimeout, "SECONDS");
         }
         else if (target instanceof Node) {
             return (Node) target;
         } else if (target == null) {
-            throw new JavaFXLibraryNonFatalException("Target object was empty (null)");
+            throw new JavaFXLibraryNonFatalException("target object was empty (null)");
         } else
-            throw new JavaFXLibraryNonFatalException("Given target \"" + target.getClass().getName() +
+            throw new JavaFXLibraryNonFatalException("given target \"" + target.getClass().getName() +
                     "\" is not an instance of Node or a query string for node!");
     }
 
@@ -629,7 +624,7 @@ public class HelperFunctions {
                 Rectangle2D r2 = (Rectangle2D) object;
                 return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
             } else
-                throw new JavaFXLibraryNonFatalException("Unsupported parameter type: " + object.getClass().getName());
+                throw new JavaFXLibraryNonFatalException("unsupported parameter type: " + object.getClass().getName());
     }
 
     private static String remainingQueries(String query) {
@@ -999,6 +994,11 @@ public class HelperFunctions {
             default:
                 return argument;
         }
+    }
+
+    public static void checkObjectArgumentNotNull(Object object) {
+        if (object == null)
+            throw new IllegalArgumentException("Object is null!");
     }
 }
 

@@ -84,10 +84,8 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Image | \\#id | logImage=False |\n" )
     @ArgumentNames({"locator=target window", "logImage=True"})
     public Object captureImage(Object locator, boolean logImage){
+        checkObjectArgumentNotNull(locator);
         try {
-            if (locator == null)
-                throw new JavaFXLibraryNonFatalException("Unable to capture image, given locator was null!");
-
             RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
             Image image;
             Bounds targetBounds = objectToBounds(locator);
@@ -146,7 +144,7 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Scene Containing Node | ${node} | \n" )
     @ArgumentNames({"locator", "logImage=True"})
     public Object captureSceneContainingNode(Object locator) {
-    	Scene scene = (Scene) useMappedObject(new ConvenienceKeywords().getScene(locator));
+    	Scene scene = (Scene) useMappedObject(new ConvenienceKeywords().getScene(mapObject(locator)));
     	return this.captureImage(scene,true);
     }
 

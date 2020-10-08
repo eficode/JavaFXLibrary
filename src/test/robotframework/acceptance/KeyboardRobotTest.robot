@@ -83,7 +83,6 @@ Write special characters
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
-    Set Timeout                 0
     Launch Javafx Application   ${TEST_APPLICATION}
     Set Screenshot Directory    ${OUTPUT_DIR}${/}report-images
 

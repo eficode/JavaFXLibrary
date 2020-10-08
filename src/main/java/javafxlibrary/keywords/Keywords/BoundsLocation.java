@@ -105,9 +105,9 @@ public class BoundsLocation extends TestFxAdapter {
             + "| Should Be Equal | ${bounds} | ${target} | \n")
     @ArgumentNames({ "locator" })
     public Object getBounds(Object locator) {
-        RobotLog.info("Getting bounds using locator \"" + locator + "\"");
-        // TODO: Test if Window and Scene objects get correct Bound locations on scaled displays
+        checkObjectArgumentNotNull(locator);
         try {
+            RobotLog.info("Getting bounds using locator \"" + locator + "\"");
             if (locator instanceof Window) {
                 Window window = (Window) locator;
                 return mapObject(new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
@@ -116,10 +116,8 @@ public class BoundsLocation extends TestFxAdapter {
                 return mapObject(new BoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
             }
-
             if (locator instanceof String)
-                return getBounds(waitUntilExists((String) locator));
-
+                return getBounds(objectToNode((String) locator));
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "bounds", locator.getClass());
             BoundsQuery bounds = (BoundsQuery) method.invoke(robot, locator);
             return HelperFunctions.mapObject(bounds.query());
@@ -127,10 +125,8 @@ public class BoundsLocation extends TestFxAdapter {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("getBounds: Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
-
         } catch (JavaFXLibraryNonFatalException e){
             throw e;
-
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"", e);
         }

@@ -58,7 +58,7 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
     @Test
     public void checkClickLocation_IsWithinVisibleWindow() {
         setBoundsQueryExpectations(30, 30);
-        HelperFunctions.checkClickLocation(30, 30);
+        HelperFunctions.checkObjectInsideActiveWindow(30, 30);
         Assert.assertThat(outContent.toString(), endsWith("*TRACE* Target location checks out OK, it is within active window\n"));
     }
 
@@ -70,7 +70,7 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
 
         thrown.expect(JavaFXLibraryNonFatalException.class);
         thrown.expectMessage(target);
-        HelperFunctions.checkClickLocation(30, 800);
+        HelperFunctions.checkObjectInsideActiveWindow(30, 800);
     }
 
     private void setBoundsQueryExpectations(double minX, double minY) {

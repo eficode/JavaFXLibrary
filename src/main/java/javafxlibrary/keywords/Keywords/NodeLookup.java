@@ -52,12 +52,13 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${root} | Get Root Node Of | \\#some-node-id | \n" )
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
+            RobotLog.info("Getting root node of target \"" + locator + "\"");
             if (locator instanceof String) {
                 Node node = objectToNode(locator);
                 return getRootNodeOf(node);
             }
-            RobotLog.info("Getting root node of target \"" + locator + "\"");
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
             return HelperFunctions.mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {

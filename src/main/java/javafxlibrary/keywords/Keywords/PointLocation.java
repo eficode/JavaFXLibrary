@@ -46,6 +46,7 @@ public class PointLocation extends TestFxAdapter {
             + "| Move To | ${point query} | | | # moves to bottom right corner of a node that was stored in PointQuery object. |\n")
     @ArgumentNames({"locator"})
     public Object pointTo(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Creating a point query for target \"" + locator + "\"");
             if (locator instanceof String)

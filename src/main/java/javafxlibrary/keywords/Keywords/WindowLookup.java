@@ -18,7 +18,7 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
+import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -39,7 +39,7 @@ public class WindowLookup extends TestFxAdapter {
         + "| Log List | ${windows} | \n")
     public List<Object> listWindows() {
         try {
-            return HelperFunctions.mapObjects(robot.listWindows());
+            return mapObjects(robot.listWindows());
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -50,7 +50,7 @@ public class WindowLookup extends TestFxAdapter {
     @RobotKeyword("Returns a list of windows that are ordered by proximity to the last target window.\n\n")
     public List<Object> listTargetWindows() {
         try {
-            return HelperFunctions.mapObjects(robot.listTargetWindows());
+            return mapObjects(robot.listTargetWindows());
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -78,22 +78,23 @@ public class WindowLookup extends TestFxAdapter {
     )
     @ArgumentNames({"locator"})
     public Object getWindow(Object locator) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting window using locator \"" + locator + "\"");
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")) {
                     locator = ((String) locator).replace("pattern=","");
-                    return HelperFunctions.mapObject(robot.window((String) locator));
+                    return mapObject(robot.window((String) locator));
                 } else if ( ((String) locator).matches("[0-9]+")) {
                     return getWindow(Integer.parseInt(locator.toString()));
                 } else {
                     if (((String) locator).startsWith("title="))
                         locator = ((String) locator).replace("title=", "");
-                    return HelperFunctions.mapObject(robot.window((String) locator));
+                    return mapObject(robot.window((String) locator));
                 }
             }
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "window", locator.getClass());
-            return HelperFunctions.mapObject(method.invoke(robot, locator));
+            return mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute get window using locator \"" + locator + "\"");
         } catch (Exception e) {

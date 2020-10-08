@@ -216,6 +216,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "| Write To | .css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
     public void writeTo(Object locator, String text) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Writing \"" + text + "\" to " + locator);
             asyncFx(() -> clickRobot.clickOn(locator,"DIRECT")).get();
@@ -239,11 +240,13 @@ public class KeyboardRobot extends TestFxAdapter {
             robot.push(KeyCode.CONTROL, KeyCode.A);
     }
 
-    @RobotKeyword("Sets the time waited between every character when typing\n\n" +
-            "``milliseconds`` is the time waited between each character in milliseconds.")
+    @RobotKeyword("Sets the time waited between every character when typing. Returns previous value.\n\n"
+            + "``milliseconds`` is the time waited between each character in milliseconds.")
     @ArgumentNames({ "milliseconds" })
-    public void setWriteSpeed(int milliseconds) {
+    public int setWriteSpeed(int milliseconds) {
+        int oldSleepMillis = this.sleepMillis;
         this.sleepMillis = milliseconds;
+        return oldSleepMillis;
     }
 
 }

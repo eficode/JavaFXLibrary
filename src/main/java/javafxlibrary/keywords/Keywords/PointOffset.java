@@ -43,6 +43,7 @@ public class PointOffset extends TestFxAdapter {
             + "| ${point query offset}= | Call Method | ${point query} | getOffset | \n")
     @ArgumentNames({"locator", "offsetX", "offsetY"})
     public Object pointToWithOffset(Object locator, double offsetX, double offsetY) {
+        checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Creating a point query for target: \"" + locator + "\" with offset: [" + offsetX + ", " + offsetY + "]");
             if (locator instanceof String)

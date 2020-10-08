@@ -345,7 +345,6 @@ Open Dialog In Window Management App
 
 Setup All Tests
     Import JavaFXLibrary
-    Set Timeout    0
 
 Teardown all tests
     Close Javafx Application
