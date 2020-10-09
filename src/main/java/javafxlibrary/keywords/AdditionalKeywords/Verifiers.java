@@ -29,6 +29,7 @@ import javafxlibrary.matchers.ExtendedNodeMatchers;
 import javafxlibrary.matchers.ToggleMatchers;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
+import jnr.ffi.annotations.In;
 import org.robotframework.javalib.annotation.*;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
@@ -40,10 +41,15 @@ import org.testfx.service.support.PixelMatcherResult;
 import org.testfx.service.support.impl.PixelMatcherRgb;
 import org.hamcrest.core.IsNot;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import static org.junit.Assert.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @RobotKeywords
 public class Verifiers extends TestFxAdapter {
@@ -212,12 +218,25 @@ public class Verifiers extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
-            verifyThat(objectToNode(locator), ExtendedNodeMatchers.isHoverable());
-        } catch (AssertionError ae){
-            Node node = getHoveredNode();
-            RobotLog.info("Given locator node: \"" + locator + "\" was not hoverable! Instead, following " +
-                    "node was found: \"" + node + "\".");
-            throw ae;
+            Node node = asyncFx(() -> objectToNode(locator)).get();
+            asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
+            waitForFxEvents(5);
+            String status;
+            status = asyncFx(() -> {
+                try {
+                    verifyThat(node, ExtendedNodeMatchers.isHoverable());
+                    return "success";
+                } catch (AssertionError ae) {
+                    Node hoveredNode = getHoveredNode();
+                    RobotLog.info("Given locator node: \"" + locator + "\" was not hoverable! Instead, following " +
+                            "node was found: \"" + hoveredNode + "\".");
+                    return ae.getMessage();
+                }
+            }).get();
+            if (status!="success") throw new JavaFXLibraryNonFatalException(status);
+        } catch (InterruptedException | ExecutionException iee) {
+            RobotLog.trace("not hoverable");
+            throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());
         }
     }
 
@@ -228,11 +247,26 @@ public class Verifiers extends TestFxAdapter {
     public static void nodeShouldNotBeHoverable(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Checking that locator node is not hoverable: \"" + locator + "\".");
-            verifyThat(objectToNode(locator), ExtendedNodeMatchers.isHoverable());
-            throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
-        } catch (AssertionError ae){
-            RobotLog.info("Was not hoverable.");
+            RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
+            Node node = asyncFx(() -> objectToNode(locator)).get();
+            asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
+            waitForFxEvents(5);
+            String status;
+            status = asyncFx(() -> {
+                try {
+                    verifyThat(node, ExtendedNodeMatchers.isHoverable());
+                    return "success";
+                } catch (AssertionError ae) {
+                    Node hoveredNode = getHoveredNode();
+                    RobotLog.info("Given locator node: \"" + locator + "\" was not hoverable! Instead, following " +
+                            "node was found: \"" + hoveredNode + "\".");
+                    return ae.getMessage();
+                }
+            }).get();
+            if (status=="success") throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
+        } catch (InterruptedException | ExecutionException iee) {
+            RobotLog.trace("not hoverable");
+            throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());
         }
     }
 

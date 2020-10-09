@@ -112,21 +112,25 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
     Node Should Be Visible                          ${node}
 
 Check That Element Is Hoverable
-    [Tags]                                          smoke    demo-set
+    [Tags]                                          smoke    demo-set      hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
     ${target_node}=                                 Find    id=resetButton
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
+    Move To Coordinates                             x=0    y=0
     Run Keyword And Expect Error                    *          Node Should Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)true
+    Move To Coordinates                             x=0    y=0
     Node Should Be Hoverable                        id=resetButton
 
 Check That Element Is Not Hoverable
-    [Tags]                      smoke   demo-set    negative
+    [Tags]                      smoke   demo-set    negative             hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
     ${target_node}=                                 Find    id=resetButton
+    Move To Coordinates                             x=0    y=0
     Run Keyword And Expect Error                    *          Node Should Not Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
-    Node Should Not Be Hoverable                        id=resetButton
+    Move To Coordinates                             x=0    y=0
+    Node Should Not Be Hoverable                    id=resetButton
 
 Find From Node
     [Tags]                  smoke

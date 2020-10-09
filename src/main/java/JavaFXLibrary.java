@@ -85,6 +85,8 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("launchSwingApplicationInSeparateThread");
         add("logApplicationClasspath");
         add("logSystemProperties");
+        add("nodeShouldBeHoverable");
+        add("nodeShouldNotBeHoverable");
         add("setImageLogging");
         add("setSafeClicking");
         add("setScreenshotDirectory");

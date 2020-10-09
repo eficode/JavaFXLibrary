@@ -21,7 +21,7 @@
     <groupId>org.robotframework</groupId>
     <artifactId>javafxlibrary</artifactId>
     <packaging>jar</packaging>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.44</jmockit.version>
@@ -271,7 +271,11 @@
 						<configuration>
 							<includes>
 								<include>smoke</include>
+<!--																<include>hoverable</include>-->
+								<!--								<include>set-pointlocation</include>-->
+<!--								<include>set-clickrobot</include>-->
 							</includes>
+<!--							<tests><test>Click On TextFX Query</test></tests>-->
 							<excludes>
 								<exclude>not-ready</exclude>
 							</excludes>

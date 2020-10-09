@@ -220,15 +220,16 @@ public class KeyboardRobot extends TestFxAdapter {
         try {
             RobotLog.info("Writing \"" + text + "\" to " + locator);
             asyncFx(() -> clickRobot.clickOn(locator,"DIRECT")).get();
+            waitForFxEvents(5);
             asyncFx(() -> write(text)).get();
             waitForFxEvents(3);
         } catch (InterruptedException | ExecutionException iee) {
-            RobotLog.trace("failed");
-            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator, iee);
+            RobotLog.trace("exception details: " + iee.getCause());
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator, e);
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         }
     }
 

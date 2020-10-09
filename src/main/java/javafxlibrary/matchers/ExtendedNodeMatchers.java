@@ -49,7 +49,6 @@ public class ExtendedNodeMatchers {
 
     private static boolean hoverable(Node node) {
         try {
-            new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT");
             return node.isHover();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
