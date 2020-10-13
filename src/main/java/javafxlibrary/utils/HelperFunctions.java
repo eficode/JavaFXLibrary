@@ -77,21 +77,37 @@ public class HelperFunctions {
         try {
             RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
                 + timeout + ", timeUnit=" + timeUnit);
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) != null).get());
-            Node node = asyncFx(() -> createFinder().find(target)).get();
             // TODO: Add null checks for node.getScene()
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> hasValidCoordinates(node)).get());
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> {
+                try {
+                    Node toBeCheckedNode = createFinder().find(target);
+                    if (toBeCheckedNode == null) throw new JavaFXLibraryNonFatalException("target not found!");
+                    hasValidCoordinates(toBeCheckedNode);
+                    return true;
+                } catch (Exception e) {
+                    RobotLog.trace("waitFor loop: Given element \"" + target + "\" was not found (" + e.getCause() + ").");
+                    return false;
+                }
+            }).get());
+            Node node = asyncFx(() -> {
+                try {
+                    Node finalNode = createFinder().find(target);
+                    return finalNode;
+                } catch (Exception e) {
+                    return null;
+                }
+            }).get();
+            if (node == null) throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was first found but not anymore.");
             return node;
         } catch (InterruptedException |ExecutionException iee) {
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + iee.getCause().toString() + ").");
+            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + iee.getCause() + ").");
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was not found within given timeout of "
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
-            RobotLog.trace("Exception in waitUntilExists: " + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + e.getCause().toString() + ").");
+            throw new JavaFXLibraryNonFatalException("Exception in waitUntilExists: " + e.getCause() + "\n" + e);
         }
     }
 
@@ -99,15 +115,24 @@ public class HelperFunctions {
         try {
             RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
                     + timeout + ", timeUnit=" + timeUnit);
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> createFinder().find(target) == null).get());
+            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> {
+                try {
+                    Node foundNode = createFinder().find(target);
+                    if (foundNode == null) return true;
+                    return false;
+                } catch (Exception e) {
+                    RobotLog.trace("Exception in waitUntilDoesNotExists: " + e.getCause() + "\n" + e);
+                    return false;
+                }
+            }).get());
+            RobotLog.info("Target does not exist.");
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
         } catch (TimeoutException te) {
             throw new JavaFXLibraryTimeoutException("Given element \"" + target + "\" was still found within given timeout of "
                     + timeout + " " + timeUnit);
         } catch (Exception e) {
-            RobotLog.trace("Exception in waitUntilDoesNotExists: " + e + "\n" + e.getCause().toString());
-            throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was still found.", e);
+            throw new JavaFXLibraryNonFatalException("Exception in waitUntilDoesNotExists: " + e.getCause() + "\n" + e);
         }
     }
 
