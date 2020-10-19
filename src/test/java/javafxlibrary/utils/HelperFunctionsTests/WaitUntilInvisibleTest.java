@@ -34,7 +34,7 @@ public class WaitUntilInvisibleTest extends TestFxAdapterTest {
     @Test
     public void waitUntilInvisible_IsInvisible() {
         button.setVisible(false);
-        Node node = HelperFunctions.waitUntilInvisible(".button", 1);
+        Node node = HelperFunctions.waitUntilNotVisible(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -45,7 +45,7 @@ public class WaitUntilInvisibleTest extends TestFxAdapterTest {
 
         Thread t = setInvisibleAfterTimeout();
         t.start();
-        Node node = HelperFunctions.waitUntilInvisible(".button", 1);
+        Node node = HelperFunctions.waitUntilNotVisible(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -54,7 +54,7 @@ public class WaitUntilInvisibleTest extends TestFxAdapterTest {
         button.setVisible(true);
         thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given target \"" + button + "\" did not become invisible within given timeout of 1 SECONDS");
-        HelperFunctions.waitUntilInvisible(".button", 1);
+        HelperFunctions.waitUntilNotVisible(".button", 1, "SECONDS");
     }
 
     private Thread setInvisibleAfterTimeout() {

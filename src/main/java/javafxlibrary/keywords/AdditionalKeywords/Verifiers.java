@@ -29,7 +29,6 @@ import javafxlibrary.matchers.ExtendedNodeMatchers;
 import javafxlibrary.matchers.ToggleMatchers;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
-import jnr.ffi.annotations.In;
 import org.robotframework.javalib.annotation.*;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
@@ -42,7 +41,6 @@ import org.testfx.service.support.impl.PixelMatcherRgb;
 import org.hamcrest.core.IsNot;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -54,7 +52,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 @RobotKeywords
 public class Verifiers extends TestFxAdapter {
 
-    @RobotKeyword("Waits until given element can be found.\n\n"
+    @RobotKeyword("Waits until given element can be found. Returns found node.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``timeout`` is the maximum waiting time value, defaults to 10 \n\n"
@@ -65,7 +63,7 @@ public class Verifiers extends TestFxAdapter {
     @ArgumentNames({"locator", "timeout=10", "timeUnit=SECONDS"})
     public Object waitUntilElementExists(String locator, int timeout, String timeUnit) {
         try {
-            RobotLog.info("Waiting until page contains element: \"" + locator + "\", timeout=\"" + timeout + "\", timeUnit=\"" + timeUnit + "\".");
+            RobotLog.info("Waiting until element exists: \"" + locator + "\", timeout=\"" + timeout + "\", timeUnit=\"" + timeUnit + "\".");
             return mapObject(waitUntilExists(locator, timeout, timeUnit));
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting element \"" + locator + "\" to appear.", e );
@@ -83,68 +81,84 @@ public class Verifiers extends TestFxAdapter {
     @ArgumentNames({"locator", "timeout=10", "timeUnit=SECONDS"})
     public void waitUntilElementDoesNotExists(String locator, int timeout, String timeUnit) {
         try {
-            RobotLog.info("Waiting until page does not contains element: \"" + locator + "\", timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
+            RobotLog.info("Waiting until element does not exists: \"" + locator + "\", timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
             waitUntilDoesNotExists(locator, timeout, timeUnit);
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("Something went wrong while waiting element \"" + locator + "\" to disappear.", e );
         }
     }
 
-    @RobotKeyword("Waits until a node located by given locator becomes visible. \n\n"
+    @RobotKeyword("Waits until a node located by given locator becomes visible. Returns found node.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
-            @ArgumentNames({"locator", "timeout=5"})
-    public Object waitUntilNodeIsVisible(Object locator, int timeout) {
+            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
+            + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
+            + "\nExample:\n"
+            + "| Wait Until Node Is Visible | \\#some-node-id | \n"
+            + "| Wait Until Node Is Visible | \\#some-node-id | 200 | MILLISECONDS | \n")
+            @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
+    public Object waitUntilNodeIsVisible(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Waiting for node \"" + locator + "\" to be visible, timeout=\"" + timeout + "\".");
-            return mapObject(waitUntilVisible(locator, timeout));
+            RobotLog.info("Waiting for node \"" + locator + "\" to be visible, timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
+            return mapObject(waitUntilVisible(locator, timeout, timeUnit));
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("");
         }
     }
 
-    @RobotKeyword("Waits until a node located by given locator becomes invisible. \n\n"
+    @RobotKeyword("Waits until a node located by given locator becomes invisible. Returns found node.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
-    @ArgumentNames({"locator", "timeout=5"})
-    public Object waitUntilNodeIsNotVisible(Object locator, int timeout) {
+            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
+            + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
+            + "\nExample:\n"
+            + "| Wait Until Node Is Not Visible | \\#some-node-id | \n"
+            + "| Wait Until Node Is Not Visible | \\#some-node-id | 200 | MILLISECONDS | \n")
+    @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
+    public Object waitUntilNodeIsNotVisible(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Waiting for node \"" + locator + "\" to be invisible, timeout=\"" + timeout + "\".");
-            return mapObject(waitUntilInvisible(locator, timeout));
+            RobotLog.info("Waiting for node \"" + locator + "\" to be invisible, timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
+            return mapObject(waitUntilNotVisible(locator, timeout, timeUnit));
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new JavaFXLibraryNonFatalException("");
         }
     }
 
-    @RobotKeyword("Waits until a node located using given locator becomes enabled. \n\n"
+    @RobotKeyword("Waits until a node located using given locator becomes enabled. Returns found node.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
-    @ArgumentNames({"locator", "timeout=5"})
-    public Object waitUntilNodeIsEnabled(Object locator, int timeout) {
+            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
+            + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
+            + "\nExample:\n"
+            + "| Wait Until Node Is Enabled | \\#some-node-id | \n"
+            + "| Wait Until Node Is Enabled | \\#some-node-id | 200 | MILLISECONDS | \n")
+    @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
+    public Object waitUntilNodeIsEnabled(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Waiting for node \"" + locator + "\" to be enabled, timeout=\"" + timeout + "\".");
-            return mapObject(waitUntilEnabled(locator, timeout));
+            RobotLog.info("Waiting for node \"" + locator + "\" to be enabled, timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
+            return mapObject(waitUntilEnabled(locator, timeout, timeUnit));
         } catch (IllegalArgumentException | NullPointerException e){
             throw new JavaFXLibraryNonFatalException("");
         }
     }
 
-    @RobotKeyword("Waits until a node located using given locator becomes disabled. \n\n"
+    @RobotKeyword("Waits until a node located using given locator becomes disabled. Returns found node.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n\n")
-    @ArgumentNames({"locator", "timeout=5"})
-    public Object waitUntilNodeIsNotEnabled(Object locator, int timeout) {
+            + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
+            + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
+            + "\nExample:\n"
+            + "| Wait Until Node Is Not Enabled | \\#some-node-id | \n"
+            + "| Wait Until Node Is Not Enabled | \\#some-node-id | 200 | MILLISECONDS | \n")
+    @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
+    public Object waitUntilNodeIsNotEnabled(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Waiting for node \"" + locator + "\" to be disabled, timeout=\"" + timeout + "\".");
-            return mapObject(waitUntilDisabled(locator, timeout));
+            RobotLog.info("Waiting for node \"" + locator + "\" to be disabled, timeout=\"" + timeout + "\", timeUnit= \"" + timeUnit + "\".");
+            return mapObject(waitUntilDisabled(locator, timeout, timeUnit));
         } catch (IllegalArgumentException | NullPointerException e){
             throw new JavaFXLibraryNonFatalException("");
         }

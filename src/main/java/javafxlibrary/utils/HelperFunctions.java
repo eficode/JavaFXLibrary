@@ -48,16 +48,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.lang.*;
 
 import javafx.scene.input.KeyCode;
 import org.testfx.service.query.PointQuery;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -65,8 +67,8 @@ import static javafxlibrary.matchers.ExtendedNodeMatchers.hasValidCoordinates;
 import static javafxlibrary.utils.TestFxAdapter.objectMap;
 import static javafxlibrary.utils.TestFxAdapter.robot;
 import static org.testfx.matcher.base.NodeMatchers.*;
-import static org.testfx.util.WaitForAsyncUtils.waitFor;
 import static org.testfx.util.WaitForAsyncUtils.asyncFx;
+import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 public class HelperFunctions {
 
@@ -75,29 +77,42 @@ public class HelperFunctions {
 
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
         try {
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes existent, timeout="
+            RobotLog.trace("waitUntilExists: Waiting until target \"" + target + "\" becomes existent, timeout="
                 + timeout + ", timeUnit=" + timeUnit);
+            Node node;
+            Instant start = Instant.now();
+            Integer originalTimeout = timeout;
             // TODO: Add null checks for node.getScene()
-            waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> {
-                try {
-                    Node toBeCheckedNode = createFinder().find(target);
-                    if (toBeCheckedNode == null) throw new JavaFXLibraryNonFatalException("target not found!");
-                    hasValidCoordinates(toBeCheckedNode);
-                    return true;
-                } catch (Exception e) {
-                    RobotLog.trace("waitFor loop: Given element \"" + target + "\" was not found (" + e.getCause() + ").");
-                    return false;
+            while(true) {
+                originalTimeout = (int) (TimeUnit.MILLISECONDS.convert((int) originalTimeout,TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start,Instant.now()));
+                if (originalTimeout <= 0) throw new TimeoutException("waitUntilExists: time out!");
+                waitFor(originalTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> {
+                    try {
+                        Node toBeCheckedNode = createFinder().find(target);
+                        if (toBeCheckedNode == null) throw new JavaFXLibraryNonFatalException("target not found!");
+                        hasValidCoordinates(toBeCheckedNode);
+                        return true;
+                    } catch (Exception e) {
+                        RobotLog.trace("waitForExists loop: Given element \"" + target + "\" was not found (" + e.getCause() + ").");
+                        return false;
+                    }
+                }).get());
+                node = asyncFx(() -> {
+                    try {
+                        Node finalNode = createFinder().find(target);
+                        RobotLog.info("node \"" + finalNode + "\" was found.");
+                        return finalNode;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }).get();
+                if (node == null) {
+                    sleepFor(50);
+                    RobotLog.trace("waitForExists loop: node was null, retry...");
+                    continue;
                 }
-            }).get());
-            Node node = asyncFx(() -> {
-                try {
-                    Node finalNode = createFinder().find(target);
-                    return finalNode;
-                } catch (Exception e) {
-                    return null;
-                }
-            }).get();
-            if (node == null) throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was first found but not anymore.");
+                else break;
+            }
             return node;
         } catch (InterruptedException |ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + iee.getCause() + ").");
@@ -113,7 +128,7 @@ public class HelperFunctions {
 
     public static void waitUntilDoesNotExists(String target, int timeout, String timeUnit) {
         try {
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes non existent, timeout="
+            RobotLog.trace("waitUntilDoesNotExists: Waiting until target \"" + target + "\" becomes non existent, timeout="
                     + timeout + ", timeUnit=" + timeUnit);
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> {
                 try {
@@ -136,15 +151,20 @@ public class HelperFunctions {
         }
     }
 
-    // TODO: Take same parameters as waitUntilExists in all waitUntil methods
-    public static Node waitUntilVisible(Object target, int timeout) {
+    public static Node waitUntilVisible(Object target, int timeout, String timeUnit) {
         try {
+            Instant start = Instant.now();
             // if target is a query string, let's try to find the relevant node
-            if (target instanceof String)
-                target = waitUntilExists((String) target, timeout, "SECONDS");
+            if (target instanceof String) {
+                target = waitUntilExists((String) target, timeout, timeUnit);
+            }
             final Object finalTarget = target;
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes visible, timeout=" + timeout);
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
+            // decrease already used time from timeout
+            long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
+            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilVisible: time out!");
+            RobotLog.trace("waitUntilVisible: Waiting until target \"" + finalTarget + "\" becomes visible, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
+            waitFor((int) keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
+            RobotLog.info("node \"" + finalTarget + "\" was visible.");
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -156,14 +176,20 @@ public class HelperFunctions {
         }
     }
 
-    public static Node waitUntilInvisible(Object target, int timeout) {
+    public static Node waitUntilNotVisible(Object target, int timeout, String timeUnit) {
         try {
+            Instant start = Instant.now();
             // if target is a query string, let's try to find the relevant node
-            if (target instanceof String)
-                target = waitUntilExists((String) target, timeout, "SECONDS");
+            if (target instanceof String) {
+                target = waitUntilExists((String) target, timeout, timeUnit);
+            }
             final Object finalTarget = target;
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes invisible, timeout=" + timeout);
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
+            // decrease already used time from timeout
+            long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
+            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilNotVisible: time out!");
+            RobotLog.trace("waitUntilNotVisible: Waiting until target \"" + target + "\" becomes invisible, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
+            waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
+            RobotLog.info("node \"" + finalTarget + "\" is not visible.");
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -175,14 +201,20 @@ public class HelperFunctions {
         }
     }
 
-    public static Node waitUntilEnabled(Object target, int timeout) {
+    // TODO: Take same parameters as waitUntilExists in all waitUntil methods
+    public static Node waitUntilEnabled(Object target, int timeout, String timeUnit) {
         try {
+            Instant start = Instant.now();
             // if target is a query string, let's try to find the relevant node
             if (target instanceof String)
-                target = waitUntilExists((String) target, timeout, "SECONDS");
+                target = waitUntilExists((String) target, timeout, timeUnit);
             final Object finalTarget = target;
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes enabled, timeout=" + timeout);
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))).get());
+            // decrease already used time from timeout
+            long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
+            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilEnabled: time out!");
+            RobotLog.trace("waitUntilEnabled: Waiting until target \"" + target + "\" becomes enabled, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
+            waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))).get());
+            RobotLog.info("node \"" + finalTarget + "\" is enabled.");
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -194,14 +226,19 @@ public class HelperFunctions {
         }
     }
 
-    public static Node waitUntilDisabled(Object target, int timeout) {
+    public static Node waitUntilDisabled(Object target, int timeout, String timeUnit) {
         try {
+            Instant start = Instant.now();
             // if target is a query string, let's try to find the relevant node
             if (target instanceof String)
-                target = waitUntilExists((String) target, timeout, "SECONDS");
+                target = waitUntilExists((String) target, timeout, timeUnit);
             final Object finalTarget = target;
-            RobotLog.trace("Waiting until target \"" + target + "\" becomes disabled, timeout=" + timeout);
-            waitFor(timeout, TimeUnit.SECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget)).get());
+            // decrease already used time from timeout
+            long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
+            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilDisabled: time out!");
+            RobotLog.trace("waitUntilDisabled: Waiting until target \"" + target + "\" becomes disabled, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
+            waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget)).get());
+            RobotLog.info("node \"" + finalTarget + "\" is disabled.");
             return (Node) target;
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -530,9 +567,8 @@ public class HelperFunctions {
         try {
             if (target instanceof String || target instanceof Node) {
                 target = objectToNode(target);
-                if (!Matchers.is(isVisible()).matches(target) || !Matchers.is(isEnabled()).matches(target)) {
-                    throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not visible or enabled!");
-                }
+                if (!Matchers.is(isVisible()).matches(target)) throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not visible!");
+                if (!Matchers.is(isEnabled()).matches(target)) throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not enabled!");
             }
             bringObjectsWindowToFront(target);
             checkObjectInsideActiveWindow(target);
