@@ -40,6 +40,13 @@ public class QueryParserTest {
     }
 
     @Test
+    public void getIndividualQueries_TextWithoutQuotes() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("\"text\" query prefix is missing quotation marks.");
+        String query = QueryParser.removePrefix("text=this is not allowed", FindPrefix.TEXT);
+    }
+
+    @Test
     public void getPrefix_AcceptedValues() {
         Assert.assertEquals(FindPrefix.ID, QueryParser.getPrefix("id=nodeId"));
         Assert.assertEquals(FindPrefix.CLASS, QueryParser.getPrefix("class=java.lang.String"));
