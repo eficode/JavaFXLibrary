@@ -145,11 +145,9 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
     @Override
     public Object runKeyword(String keywordName, List args, Map kwargs) {
-
         if (kwargs == null) {
             kwargs = new HashMap();
         }
-
         List finalArgs;
         Map finalKwargs;
 
@@ -162,22 +160,21 @@ public class JavaFXLibrary extends AnnotationLibrary {
             finalKwargs = kwargs;
         }
 
+        // Run keyword either in async or asyncFx thread with or without timeout
+        // Execution collects retval and retExcep from keyword
         AtomicReference<Object> retval = new AtomicReference<>();
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
-
         RobotLog.ignoreDuplicates();
-//        try {
-//            RobotLog.ignoreDuplicates();
-//            // timeout + 500 ms so that underlying timeout has a chance to expire first
-//            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
         try {
             if (noWrappedAsyncFxKeywords.contains(keywordName)) {
+                // no asyncFx thread
                 if (noLibraryKeywordTimeoutKeywords.contains(keywordName)) {
+                    // without timeout
                     retval.set(super.runKeyword(keywordName, finalArgs, finalKwargs));
                 } else {
-                    retval.set(waitForAsync(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS) + 500, () -> {
+                    // in async thread
+                    retval.set(waitForAsync(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS), () -> {
                         try {
-                            //super.runKeyword(keywordName, finalArgs, finalKwargs);
                             return super.runKeyword(keywordName, finalArgs, finalKwargs);
                         } catch (RuntimeException rte) {
                             retExcep.set(rte);
@@ -186,32 +183,31 @@ public class JavaFXLibrary extends AnnotationLibrary {
                     }));
                 }
             } else {
-                        retval.set(waitForAsyncFx(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS) + 500, () -> {
-                            try {
-                                return super.runKeyword(keywordName, finalArgs, finalKwargs);
-                            } catch (RuntimeException rte) {
-                                retExcep.set(rte);
-                                return null;
-                            }
-                        }));
-                        waitForFxEvents( 3);
+                // in asyncFx thread
+                retval.set(waitForAsyncFx(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS), () -> {
+                    try {
+                        return super.runKeyword(keywordName, finalArgs, finalKwargs);
+                    } catch (RuntimeException rte) {
+                        retExcep.set(rte);
+                        return null;
+                    }
+                }));
+                waitForFxEvents( 5);
             }
-            //return true;
         } catch (JavaFXLibraryTimeoutException jfxte) {
             // timeout already expired, catch exception and jump out
             retExcep.set(jfxte);
-            //throw jfxte;
         } catch (RuntimeException rte) {
             // catch exception and continue trying
             retExcep.set(rte);
-            //return false;
         }
+
+        // in failure take screenshot and handle exception
         if(retExcep.get()!=null) {
             RobotLog.reset();
             RuntimeException e = retExcep.get();
             // TODO: to asyncFx thread
             runOnFailure.runOnFailure();
-
             if (e.getCause() instanceof JavaFXLibraryFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
