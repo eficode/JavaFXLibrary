@@ -27,8 +27,8 @@ public class QueryParserTest {
 
     @Test
     public void getIndividualQueries_ContainsSpaces() {
-        String[] result = QueryParser.getIndividualQueries("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" id=sub");
-        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "id=sub" };
+        String[] result = QueryParser.getIndividualQueries("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" text='text with apostrophe' id=sub");
+        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "text='text with apostrophe'", "id=sub" };
         Assert.assertArrayEquals(target, result);
     }
 

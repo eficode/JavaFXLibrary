@@ -117,7 +117,7 @@ public class QueryParser {
             case XPATH:
                 return query.substring(6);
             case TEXT:
-                if (!query.matches("text=\".*\"")) throw new IllegalArgumentException("\"text\" query prefix is missing quotation marks.");
+                if (!query.matches("text=[\"|'].*[\"|']")) throw new IllegalArgumentException("\"text\" query prefix is missing quotation marks.");
                 return query.substring(6, query.length() - 1);
             case PSEUDO:
                 return query.substring(7);
