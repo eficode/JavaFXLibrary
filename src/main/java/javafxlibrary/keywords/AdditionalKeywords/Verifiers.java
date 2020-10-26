@@ -232,7 +232,15 @@ public class Verifiers extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
-            Node node = asyncFx(() -> objectToNode(locator)).get();
+            Node node = asyncFx(() -> {
+                try {
+                    return objectToNode(locator);
+                } catch (Exception e) {
+                    RobotLog.info("Locator not found: " + e.getCause());
+                    return null;
+                }
+            }).get();
+            if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
             asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
             waitForFxEvents(5);
             String status;
@@ -262,7 +270,15 @@ public class Verifiers extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
-            Node node = asyncFx(() -> objectToNode(locator)).get();
+            Node node = asyncFx(() -> {
+                try {
+                    return objectToNode(locator);
+                } catch (Exception e) {
+                    RobotLog.info("Locator not found: " + e.getCause());
+                    return null;
+                }
+            }).get();
+            if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
             asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
             waitForFxEvents(5);
             String status;

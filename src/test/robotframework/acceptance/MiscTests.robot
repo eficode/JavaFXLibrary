@@ -122,6 +122,7 @@ Check That Element Is Hoverable
     Move To Coordinates                             x=0    y=0
     Node Should Be Hoverable                        id=resetButton
 
+
 Check That Element Is Not Hoverable
     [Tags]                      smoke   demo-set    negative             hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
@@ -131,6 +132,12 @@ Check That Element Is Not Hoverable
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
     Move To Coordinates                             x=0    y=0
     Node Should Not Be Hoverable                    id=resetButton
+
+Test Verify Keywords With Non-existing Locator
+    [Tags]                                          smoke    demo-set      negative    testitesti
+    Set Test Application                            javafxlibrary.testapps.TestClickRobot
+    Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Be Hoverable       id=doesNotExist
+    Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Not Be Hoverable   id=doesNotExist
 
 Find From Node
     [Tags]                  smoke
