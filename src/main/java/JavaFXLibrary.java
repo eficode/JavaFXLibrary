@@ -87,6 +87,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("logSystemProperties");
         add("nodeShouldBeHoverable");
         add("nodeShouldNotBeHoverable");
+        add("pushManyTimes");
         add("setImageLogging");
         add("setSafeClicking");
         add("setScreenshotDirectory");

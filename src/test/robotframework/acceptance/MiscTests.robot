@@ -134,7 +134,7 @@ Check That Element Is Not Hoverable
     Node Should Not Be Hoverable                    id=resetButton
 
 Test Verify Keywords With Non-existing Locator
-    [Tags]                                          smoke    demo-set      negative    testitesti
+    [Tags]                                          smoke    demo-set      negative
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
     Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Be Hoverable       id=doesNotExist
     Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Not Be Hoverable   id=doesNotExist

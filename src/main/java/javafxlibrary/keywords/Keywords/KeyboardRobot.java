@@ -107,9 +107,11 @@ public class KeyboardRobot extends TestFxAdapter {
         RobotLog.info("Pushing combination: \"" + Arrays.asList(keys) + "\" for \"" + times + "\" times.");
         try {
             for (int i = 0; i < times; i++) {
-                robot.push(getKeyCode(keys));
+                asyncFx(() -> robot.push(getKeyCode(keys))).get();
                 sleepFor(50);
             }
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to push: " + Arrays.asList(keys), iee.getCause());
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
