@@ -36,6 +36,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.matcher.control.TextFlowMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.robot.Motion;
 import org.testfx.service.support.PixelMatcherResult;
 import org.testfx.service.support.impl.PixelMatcherRgb;
 import org.hamcrest.core.IsNot;
@@ -241,10 +242,9 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
-            asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
+            robot.moveTo(node, Motion.DIRECT);
             waitForFxEvents(5);
-            String status;
-            status = asyncFx(() -> {
+            String status = asyncFx(() -> {
                 try {
                     verifyThat(node, ExtendedNodeMatchers.isHoverable());
                     return "success";
@@ -255,7 +255,7 @@ public class Verifiers extends TestFxAdapter {
                     return ae.getMessage();
                 }
             }).get();
-            if (status!="success") throw new JavaFXLibraryNonFatalException(status);
+            if (!status.equals("success")) throw new JavaFXLibraryNonFatalException(status);
         } catch (InterruptedException | ExecutionException iee) {
             RobotLog.trace("not hoverable");
             throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());
@@ -279,7 +279,7 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
-            asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT")).get();
+            robot.moveTo(node, Motion.DIRECT);
             waitForFxEvents(5);
             String status;
             status = asyncFx(() -> {
@@ -293,7 +293,7 @@ public class Verifiers extends TestFxAdapter {
                     return ae.getMessage();
                 }
             }).get();
-            if (status=="success") throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
+            if (status.equals("success")) throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
         } catch (InterruptedException | ExecutionException iee) {
             RobotLog.trace("not hoverable");
             throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());

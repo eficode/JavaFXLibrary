@@ -50,13 +50,25 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dragFrom(Object locator, String button) {
         checkObjectArgumentNotNull(locator);
         try {
-            Object target = checkClickTarget(locator);
+            Object target = asyncFx(() -> {
+                try {
+                    return checkClickTarget(locator);
+                } catch (Exception e) {
+                    RobotLog.info("Locator not found: " + e.getCause());
+                    return null;
+                }
+            }).get();
+            if (target==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
             RobotLog.info("Dragging from \"" + target + "\"" + " with button=\"" + button + "\"");
+            // TODO: Below needs to be put to asyncFx thread instead of below
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "drag", target.getClass(), MouseButton.class);
             return (FxRobotInterface) method.invoke(robot, target, new MouseButton[]{MouseButton.valueOf(button)});
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Could not execute drag from using locator \"" + locator + "\" " +
+                    "as it is not clickable: " + iee.getCause());
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute drag from using locator \"" + locator + "\" " +
-                    "and button " + button + ": " + e.getCause().getMessage(), e);
+                    "and button " + button + ": " + e.getCause());
         }
     }
 
@@ -69,17 +81,25 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dropTo(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
-            Object target = asyncFx(() -> checkClickTarget(locator)).get();
+            Object target = asyncFx(() -> {
+                try {
+                    return checkClickTarget(locator);
+                } catch (Exception e) {
+                    RobotLog.info("Locator not found: " + e.getCause());
+                    return null;
+                }
+            }).get();
+            if (target==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
             RobotLog.info("Dropping to \"" + target + "\"");
             // TODO: Below needs to be put to asyncFx thread instead of below
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "dropTo", target.getClass());
             return (FxRobotInterface) method.invoke(robot, target);
             } catch (InterruptedException | ExecutionException iee) {
                 throw new JavaFXLibraryNonFatalException("Drop To target check failed for locator \"" + locator + "\" " +
-                    ": " + iee.getCause().getMessage(), iee);
+                    ": " + iee.getCause());
             } catch (Exception e) {
                 throw new JavaFXLibraryNonFatalException("Could not execute drop to using locator \"" + locator + "\" " +
-                    ": " + e.getCause().getMessage(), e);
+                    ": " + e.getCause());
         }
     }
 
@@ -120,6 +140,7 @@ public class DragRobot extends TestFxAdapter {
     public FxRobotInterface dropBy(int x, int y) {
         try {
             RobotLog.info("Dropping by x=\"" + x + "\" and y=\"" + y + "\"");
+            // TODO: Below needs to be put to asyncFx thread instead of below
             return robot.dropBy(x, y);
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException) {

@@ -122,7 +122,6 @@ Check That Element Is Hoverable
     Move To Coordinates                             x=0    y=0
     Node Should Be Hoverable                        id=resetButton
 
-
 Check That Element Is Not Hoverable
     [Tags]                      smoke   demo-set    negative             hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot

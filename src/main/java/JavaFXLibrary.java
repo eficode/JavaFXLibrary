@@ -73,6 +73,8 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("clearObjectMap");
         add("closeJavafxApplication");
         add("closeSwingApplication");
+        add("dragFrom");
+        add("dropBy");
         add("dropTo");
         add("getCurrentApplication");
         add("getLibraryVersion");
@@ -85,6 +87,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("launchSwingApplicationInSeparateThread");
         add("logApplicationClasspath");
         add("logSystemProperties");
+        add("moveTo");
         add("nodeShouldBeHoverable");
         add("nodeShouldNotBeHoverable");
         add("pushManyTimes");
