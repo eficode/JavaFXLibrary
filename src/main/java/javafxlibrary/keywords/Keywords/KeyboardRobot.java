@@ -215,7 +215,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
-            + "| Write To | .css-name | Robot Framework | \n")
+            + "| Write To | css=.css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
     public void writeTo(Object locator, String text) {
         checkObjectArgumentNotNull(locator);

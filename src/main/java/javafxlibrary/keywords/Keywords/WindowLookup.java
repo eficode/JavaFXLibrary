@@ -70,7 +70,7 @@ public class WindowLookup extends TestFxAdapter {
             + "| ${window}= | Get Window | 0 | \n"
             + "| ${window}= | Get Window | ${2} | \n\n"
             + "Node:\n"
-            + "| ${some_node}= | Find | \\#some_id | \n"
+            + "| ${some_node}= | Find | id=some_id | \n"
             + "| ${window}= | Get Window | ${some_node} | \n\n"
             + "Scene: \n"
             + "| ${some_scene}= | Get Nodes Scene | ${some_node} | \n"

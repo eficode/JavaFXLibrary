@@ -78,6 +78,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("closeSwingApplication");
         add("dragFrom");
         add("dropTo");
+        add("dropToCoordinates");
         add("getCurrentApplication");
         add("getLibraryVersion");
         add("getScreenshot Directory");

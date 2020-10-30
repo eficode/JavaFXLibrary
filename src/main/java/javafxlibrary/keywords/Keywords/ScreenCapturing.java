@@ -93,7 +93,7 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Image | ${node} | \n"
             + "| ${capture}= | Capture Image | ${window} | \n"
             + "| ${capture}= | Capture Image | | \n"
-            + "| ${capture}= | Capture Image | \\#id | logImage=False |\n" )
+            + "| ${capture}= | Capture Image | id=id | logImage=False |\n" )
     @ArgumentNames({"locator=target window", "logImage=True"})
     public Object captureImage(Object locator, boolean logImage){
         checkObjectArgumentNotNull(locator);
