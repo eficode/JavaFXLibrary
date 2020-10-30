@@ -72,7 +72,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "If argument type is boolean, byte, char, double, float, int, long or short, it must have \"casting instructions\" "
             + "in front of it, e.g. _\"(boolean)false\"_.\n\n"
             + "\nExample:\n"
-            + "| ${node}= | Find | \\#node-id | \n"
+            + "| ${node}= | Find | id=node-id | \n"
             + "| ${max height}= | Call Object Method | ${node} | maxHeight | (double)10 | \n"
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
     @ArgumentNames({ "object", "method", "*arguments=" })
@@ -91,7 +91,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Calls given method in FX Application Thread using Platform.runLater(). See `Call Object Method` "
             + "for further documentation.\n\n"
             + "\nExample:\n"
-            + "| ${node}= | Find | \\#node-id | \n"
+            + "| ${node}= | Find | id=node-id | \n"
             + "| Call Object Method In Fx Application Thread | ${node} | maxHeight | (boolean)false | \n")
     @ArgumentNames({ "object", "method", "*arguments=" })
     public void callObjectMethodInFxApplicationThread(Object object, String method, Object... arguments) {
@@ -106,9 +106,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Lists methods available for given node.\n"
             + "``node`` is the Object:Node which methods to list, see `3.2 Using locators as keyword arguments`. \n\n"
             + "When working with custom components you may use this keyword to discover methods you can call "
-            + "with `Call Method` keyword.\n\n"
+            + "with `Call Object Method` or `Call Object Method In Fx Application Thread` keyword.\n\n"
             + "Example:\n"
-            + "| List Component Methods | ${my node} |\n")
+            + "| List Node Methods | ${my node} |\n")
     @ArgumentNames({ "node" })
     public String[] listNodeMethods(Node node) {
         try {
@@ -150,7 +150,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
             + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
             + "\nExample:\n"
-            + "| ${my node}= | Find | \\#node-id | \n"
+            + "| ${my node}= | Find | id=node-id | \n"
             + "| Print Child Nodes | ${my node} | \n")
     @ArgumentNames({ "root=" })
     public void printChildNodes(Object root) {
@@ -167,7 +167,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "Optional argument ``root`` is the starting point from where to start listing child nodes, "
             + "see `3.2 Using locators as keyword arguments`. Defaults to root node of current window. \n\n"
             + "\nExample:\n"
-            + "| ${my node}= | Find | \\#node-id | \n"
+            + "| ${my node}= | Find | id=node-id | \n"
             + "| Log FXML | ${my node} | \n")
     @ArgumentNames({"root="})
     public void logFXML(Object root) {
@@ -204,6 +204,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${old_timeout}= | Set Timeout | 20 | \n"
             + "| Click On | id=myidthatshallcomeavailable | | \n"
             + "| [Teardown] | Set Timeout | ${old_timeout} | \n")
+    @ArgumentNames({ "timeout" })
     public Integer setTimeout(int timeout) {
         RobotLog.info("Setting timeout to " + timeout + "s");
         Integer oldTimeoutValue = getLibraryKeywordTimeout();
@@ -312,7 +313,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the parent node of node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getParent method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "node" })
+    @ArgumentNames({ "locator" })
     public Object getNodeParent(Object locator) {
         checkObjectArgumentNotNull(locator);
         Node node = objectToNode(locator);
@@ -498,7 +499,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the column"
             + "\nExample:\n"
-            + "| ${row cells}= | Get Table Row Cells | \\#table-id | ${2} | \n"
+            + "| ${row cells}= | Get Table Row Cells | id=table-id | ${2} | \n"
             + "| Dictionary Should Contain Key | ${row cells} | column name | \n"
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
     @ArgumentNames({ "table", "row" })
@@ -523,7 +524,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the column"
             + "\nExample:\n"
-            + "| ${row cells}= | Get Table Row Cells | \\#table-id | ${2} | \n"
+            + "| ${row cells}= | Get Table Row Cells | id=table-id | ${2} | \n"
             + "| Dictionary Should Contain Key | ${row cells} | column name | \n"
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
     @ArgumentNames({ "table", "row" })
@@ -694,7 +695,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TabPane element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
-            + "| ${tabs}= | Get Tab pane Tabs | \\#tab-pane-id | \n"
+            + "| ${tabs}= | Get Tab pane Tabs | id=tab-pane-id | \n"
             + "| Dictionary Should Contain Key | ${tabs} | tab name | \n")
     @ArgumentNames({ "locator" })
     public Map<String, Object> getTabPaneTabs(Object locator) {
@@ -720,7 +721,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TabPane element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
-            + "| ${tab}= | Get Tab Pane Selected Tab | \\#pane-id | \n"
+            + "| ${tab}= | Get Tab Pane Selected Tab | id=pane-id | \n"
             + "| Dictionary Should contain Key | ${tab} | tab name | \n")
     @ArgumentNames({ "locator" })
     public Map<String, Object> getSelectedTabPaneTab(Object locator) {
@@ -742,7 +743,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``tabName`` is the name of the tab to be selected\n"
             + "\nExamples:\n"
             + "| Select Tab Pane Tab | ${Tab Pane} | tab name | \n"
-            + "| Select Tab Pane Tab | \\#tab-id | tab name | \n")
+            + "| Select Tab Pane Tab | id=tab-id | tab name | \n")
     @ArgumentNames({"locator", "tabName"})
     public void selectTabPaneTab (Object locator, String tabName) {
         checkObjectArgumentNotNull(locator);
@@ -837,7 +838,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "Optional parameter ``locator`` is an _Object:Window_ for specifying which contextMenu(window) items should be collected. "
             + "Default value is the last window returned by `Get Target Windows` -keyword. \n"
             + "\nExamples:\n"
-            + "| Click On | \\#menu-button-id | \n"
+            + "| Click On | id=menu-button-id | \n"
             + "| ${menu items}= | Get Context Menu Items | \n"
             + "| Dictionary Should Contain Key | ${menu items} | menu item name"
             + "| Click On | &{menu items}[menu item name] | \n\n")
@@ -857,7 +858,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``item`` is the name for the Context Menu item to be clicked. This keyword clicks the first menu item that matches the given "
             + "item name. Search of an item is started from the last target window.\n\n"
             + "Example:\n"
-            + "| Click On | \\#menu-button-id | \n"
+            + "| Click On | id=menu-button-id | \n"
             + "| Select Context Menu Item | menu item name |")
     @ArgumentNames({"item"})
     public void selectContextMenuItem(String item){

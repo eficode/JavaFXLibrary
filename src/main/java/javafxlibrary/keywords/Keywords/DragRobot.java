@@ -44,7 +44,7 @@ public class DragRobot extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "Optional parameter ``button`` is the mouse button to be used, defaults to PRIMARY. See `5. Used ENUMs` for different MouseButtons\n\n"
             + "\nExample:\n"
-            + "| ${node}= | Find | \\#some-node-id | \n"
+            + "| ${node}= | Find | id=some-node-id | \n"
             + "| Drag From | ${node} | SECONDARY | \n")
     @ArgumentNames({ "locator", "button=PRIMARY" })
     public FxRobotInterface dragFrom(Object locator, String button) {
@@ -76,7 +76,7 @@ public class DragRobot extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
-            + "| Drop To | \\#some-node-id | \n")
+            + "| Drop To | id=some-node-id | \n")
     @ArgumentNames({ "locator" })
     public FxRobotInterface dropTo(Object locator) {
         checkObjectArgumentNotNull(locator);
@@ -134,7 +134,7 @@ public class DragRobot extends TestFxAdapter {
             + "Integer argument ``x`` is the amount how much to move the mouse horizontally\n"
             + "Integer argument ``y`` is the amount how much to move the mouse vertically.\n"
             + "\nExample:\n"
-            + "| Drag From | \\#node-id .css-name | \n"
+            + "| Drag From | id=node-id css=.css-name | \n"
             + "| Drop By | -300 | 0 | \n")
     @ArgumentNames({ "x", "y" })
     public FxRobotInterface dropBy(int x, int y) {
@@ -175,7 +175,7 @@ public class DragRobot extends TestFxAdapter {
             + "Integer argument ``x`` sets the target point for x -coordinate\n\n"
             + "Integer argument ``y`` sets the target point for y -coordinate\n\n"
             + "\nExample:\n"
-            + "| Drag From | \\#node-id | \n"
+            + "| Drag From | id=node-id | \n"
             + "| Drop To | 100 | 100 | \n")
     @ArgumentNames({ "x", "y" })
     public FxRobotInterface dropToCoordinates(int x, int y) {

@@ -45,8 +45,8 @@ public class ClickRobot extends TestFxAdapter {
             + "\nExample:\n"
             + "| Click On | ${node} | \n"
             + "| Click On | ${point} | \n"
-            + "| Click On | \\#node-id | \n"
-            + "| Click On | .css-name | Motion=VERTICAL_FIRST | \n")
+            + "| Click On | id=node-id | \n"
+            + "| Click On | css=.css-name | Motion=VERTICAL_FIRST | \n")
     @ArgumentNames({ "locator", "motion=DIRECT" })
     public FxRobotInterface clickOn(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);

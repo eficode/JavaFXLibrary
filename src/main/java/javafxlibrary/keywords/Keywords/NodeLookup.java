@@ -46,10 +46,10 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${some scene}= | Get Nodes Scene | ${some node} | \n"
             + "| ${root} | Get Root Node Of | ${some scene} | \n"
             + "Node:\n"
-            + "| ${some node}= | find | \\#some-node-id | \n"
+            + "| ${some node}= | find | id=some-node-id | \n"
             + "| ${root} | Get Root Node Of | ${some node} | \n"
             + "Query:\n"
-            + "| ${root} | Get Root Node Of | \\#some-node-id | \n" )
+            + "| ${root} | Get Root Node Of | id=some-node-id | \n" )
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
         checkObjectArgumentNotNull(locator);

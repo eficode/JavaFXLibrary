@@ -67,7 +67,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``appName`` is the name of the application to launch. \n\n"
             + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
             + "Example:\n"
-            + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application | _TestApplication.jar_ |\n")
     @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplication(String appName, String... appArgs) {
@@ -87,7 +87,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``appName`` is the name of the application to launch. \n\n"
             + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
             + "Example:\n"
-            + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application In Separate Thread | _TestApplication.jar_ |\n")
     @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {

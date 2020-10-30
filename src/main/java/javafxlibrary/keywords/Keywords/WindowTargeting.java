@@ -58,7 +58,7 @@ public class WindowTargeting extends TestFxAdapter {
             + "| Set Target Window | 0 | \n"
             + "| Set Target Window | ${2} | \n\n"
             + "Node:\n"
-            + "| ${some_node}= | Find | \\#some_id | \n"
+            + "| ${some_node}= | Find | id=some_id | \n"
             + "| Set Target Window | ${some_node} | \n\n"
             + "Scene: \n"
             + "| ${some_scene}= | Get Nodes Scene | ${some_node} | \n"

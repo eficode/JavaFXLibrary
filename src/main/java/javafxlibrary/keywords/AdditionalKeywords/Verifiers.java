@@ -59,8 +59,10 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time value, defaults to 10 \n\n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Element Exists | \\#some-node-id | \n"
-            + "| Wait Until Element Exists | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Element Exists | id=some-node-id | \n"
+            + "| Wait Until Element Exists | id=some-node-id | 200 | MILLISECONDS | \n"
+            + "| ${node}= | Wait Until Element Exists | css=VBox | \n"
+            + "| Click On | ${node} | \n")
     @ArgumentNames({"locator", "timeout=10", "timeUnit=SECONDS"})
     public Object waitUntilElementExists(String locator, int timeout, String timeUnit) {
         try {
@@ -77,8 +79,8 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time value, defaults to 10 \n\n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Element Does Not Exists | \\#some-node-id | \n"
-            + "| Wait Until Element Does Not Exists | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Element Does Not Exists | id=some-node-id | \n"
+            + "| Wait Until Element Does Not Exists | id=some-node-id | 200 | MILLISECONDS | \n")
     @ArgumentNames({"locator", "timeout=10", "timeUnit=SECONDS"})
     public void waitUntilElementDoesNotExists(String locator, int timeout, String timeUnit) {
         try {
@@ -95,8 +97,10 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Node Is Visible | \\#some-node-id | \n"
-            + "| Wait Until Node Is Visible | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Node Is Visible | id=some-node-id | \n"
+            + "| Wait Until Node Is Visible | id=some-node-id | 200 | MILLISECONDS | \n"
+            + "| ${node}= | Wait Until Node Is Visible | css=VBox | \n"
+            + "| Click On | ${node} | \n")
             @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
     public Object waitUntilNodeIsVisible(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
@@ -114,8 +118,8 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Node Is Not Visible | \\#some-node-id | \n"
-            + "| Wait Until Node Is Not Visible | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Node Is Not Visible | id=some-node-id | \n"
+            + "| Wait Until Node Is Not Visible | id=some-node-id | 200 | MILLISECONDS | \n")
     @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
     public Object waitUntilNodeIsNotVisible(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
@@ -133,8 +137,10 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Node Is Enabled | \\#some-node-id | \n"
-            + "| Wait Until Node Is Enabled | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Node Is Enabled | id=some-node-id | \n"
+            + "| Wait Until Node Is Enabled | id=some-node-id | 200 | MILLISECONDS | \n"
+            + "| ${node}= | Wait Until Node Is Enabled | css=VBox | \n"
+            + "| Click On | ${node} | \n")
     @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
     public Object waitUntilNodeIsEnabled(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
@@ -152,8 +158,8 @@ public class Verifiers extends TestFxAdapter {
             + "``timeout`` is the maximum waiting time in seconds, defaults to 5. \n"
             + "``timeUnit`` is the time unit to be used, defaults to SECONDS, see `5. Used ENUMs` for more options for _timeUnit_. \n\n"
             + "\nExample:\n"
-            + "| Wait Until Node Is Not Enabled | \\#some-node-id | \n"
-            + "| Wait Until Node Is Not Enabled | \\#some-node-id | 200 | MILLISECONDS | \n")
+            + "| Wait Until Node Is Not Enabled | id=some-node-id | \n"
+            + "| Wait Until Node Is Not Enabled | id=some-node-id | 200 | MILLISECONDS | \n")
     @ArgumentNames({"locator", "timeout=5", "timeUnit=SECONDS"})
     public Object waitUntilNodeIsNotEnabled(Object locator, int timeout, String timeUnit) {
         checkObjectArgumentNotNull(locator);
