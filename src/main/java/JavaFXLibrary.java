@@ -70,11 +70,13 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
     static List<String> noWrappedAsyncFxKeywords = new ArrayList<String>() {{
         add("callObjectMethodInFxApplicationThread");
+        add("captureImage");
+        add("capturePrimaryScreen");
+        add("captureSceneContainingNode");
         add("clearObjectMap");
         add("closeJavafxApplication");
         add("closeSwingApplication");
         add("dragFrom");
-        add("dropBy");
         add("dropTo");
         add("getCurrentApplication");
         add("getLibraryVersion");
@@ -210,7 +212,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
         if(retExcep.get()!=null) {
             RobotLog.reset();
             RuntimeException e = retExcep.get();
-            // TODO: to asyncFx thread
             runOnFailure.runOnFailure();
             if (e.getCause() instanceof JavaFXLibraryFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));

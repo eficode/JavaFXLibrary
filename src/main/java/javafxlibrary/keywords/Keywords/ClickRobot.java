@@ -58,8 +58,6 @@ public class ClickRobot extends TestFxAdapter {
             return (FxRobotInterface) method.invoke(robot, target, getMotion(motion), new MouseButton[]{MouseButton.PRIMARY});
         } catch (IllegalAccessException | InvocationTargetException | JavaFXLibraryNonFatalException e) {
             throw new JavaFXLibraryNonFatalException("Click On failed: " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new JavaFXLibraryNonFatalException("Click On failed: " + e.getMessage(), e);
         }
     }
 

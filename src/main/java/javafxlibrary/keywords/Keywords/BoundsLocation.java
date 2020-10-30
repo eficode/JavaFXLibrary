@@ -117,7 +117,7 @@ public class BoundsLocation extends TestFxAdapter {
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
             }
             if (locator instanceof String)
-                return getBounds(objectToNode((String) locator));
+                return getBounds(objectToNode(locator));
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "bounds", locator.getClass());
             BoundsQuery bounds = (BoundsQuery) method.invoke(robot, locator);
             return HelperFunctions.mapObject(bounds.query());

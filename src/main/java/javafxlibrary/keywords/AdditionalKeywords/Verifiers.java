@@ -242,8 +242,13 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
-            robot.moveTo(node, Motion.DIRECT);
-            waitForFxEvents(5);
+            if (isMac()) {
+                // TODO: why asyncFx thread does not work in mac?
+                robot.moveTo(node, Motion.DIRECT);
+            } else {
+                asyncFx(() -> robot.moveTo(node, Motion.DIRECT)).get();
+                waitForFxEvents(5);
+            }
             String status = asyncFx(() -> {
                 try {
                     verifyThat(node, ExtendedNodeMatchers.isHoverable());
@@ -256,9 +261,10 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (!status.equals("success")) throw new JavaFXLibraryNonFatalException(status);
+            RobotLog.info("Locator node is hoverable.");
         } catch (InterruptedException | ExecutionException iee) {
-            RobotLog.trace("not hoverable");
-            throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());
+            RobotLog.trace("nodeShouldBeHoverable: failed in asyncFx thread");
+            throw new JavaFXLibraryNonFatalException("Node Should Be Hoverable keyword failed: ", iee.getCause());
         }
     }
 
@@ -269,7 +275,7 @@ public class Verifiers extends TestFxAdapter {
     public static void nodeShouldNotBeHoverable(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Checking that locator node is hoverable: \"" + locator + "\".");
+            RobotLog.info("Checking that locator node is not hoverable: \"" + locator + "\".");
             Node node = asyncFx(() -> {
                 try {
                     return objectToNode(locator);
@@ -279,8 +285,13 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (node==null) throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
-            robot.moveTo(node, Motion.DIRECT);
-            waitForFxEvents(5);
+            if (isMac()) {
+                // TODO: why asyncFx thread does not work in mac?
+                robot.moveTo(node, Motion.DIRECT);
+            } else {
+                asyncFx(() -> robot.moveTo(node, Motion.DIRECT)).get();
+                waitForFxEvents(5);
+            }
             String status;
             status = asyncFx(() -> {
                 try {
@@ -294,9 +305,10 @@ public class Verifiers extends TestFxAdapter {
                 }
             }).get();
             if (status.equals("success")) throw new JavaFXLibraryNonFatalException("Expected that \"" + locator + "\" is not hoverable - failed!");
+            RobotLog.info("Locator node is not hoverable.");
         } catch (InterruptedException | ExecutionException iee) {
-            RobotLog.trace("not hoverable");
-            throw new JavaFXLibraryNonFatalException("Node not hoverable: ", iee.getCause());
+            RobotLog.trace("nodeShouldNotBeHoverable: failed in asyncFx thread");
+            throw new JavaFXLibraryNonFatalException("Node Should Not Be Hoverable keyword failed: ", iee.getCause());
         }
     }
 

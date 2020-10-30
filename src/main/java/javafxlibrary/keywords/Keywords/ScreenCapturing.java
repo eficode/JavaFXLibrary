@@ -25,6 +25,7 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
+import jnr.ffi.annotations.In;
 import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -43,7 +44,9 @@ import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.concurrent.ExecutionException;
 
+import static org.testfx.util.WaitForAsyncUtils.*;
 import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
@@ -66,8 +69,17 @@ public class ScreenCapturing extends TestFxAdapter {
     
     @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.")
     public Object capturePrimaryScreen()  {
+        try {
     	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        return this.captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
+    	Rectangle2D target = asyncFx(() -> new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight())).get();
+        return this.captureImage(target,true);
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to get Rectangle2D: " + iee.getCause());
+        } catch (Exception e) {
+            if (e instanceof JavaFXLibraryNonFatalException)
+                throw e;
+            throw new JavaFXLibraryNonFatalException("Unable to take capture: ", e.getCause());
+        }
     }
 
     @RobotKeyword("Returns a screenshot of the given locator, or if not given from whole active window.\n\n"
@@ -88,12 +100,12 @@ public class ScreenCapturing extends TestFxAdapter {
         try {
             RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
             Image image;
-            Bounds targetBounds = objectToBounds(locator);
             String logPath;
-
-            image = robot.capture(targetBounds).getImage();
             Path path = createNewImageFileNameWithPath();
-            robotContext().getCaptureSupport().saveImage(image, path);
+
+            Bounds targetBounds = asyncFx(() -> objectToBounds(locator)).get();
+            image = asyncFx(() -> robot.capture(targetBounds).getImage()).get();
+            asyncFx(() -> robotContext().getCaptureSupport().saveImage(image, path)).get();
 
             if (getCurrentSessionScreenshotDirectoryInLogs() != null) {
                 logPath = getCurrentSessionScreenshotDirectoryInLogs()+"/"+path.getFileName();
@@ -129,12 +141,14 @@ public class ScreenCapturing extends TestFxAdapter {
                 }
             }
             return mapObject(image);
-        } catch (IOException e) {
-            throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator + "\"", e);
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to take capture (asyncFx thread failed): ", iee.getCause());
+        } catch (IOException ioe) {
+            throw new JavaFXLibraryNonFatalException("Unable to take capture (IOException): \"" + locator + "\"", ioe.getCause());
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to take capture : \"" + locator + "\"", e);
+            throw new JavaFXLibraryNonFatalException("Unable to take capture: \"" + locator + "\"", e.getCause());
         }
     }
     
@@ -144,8 +158,16 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Scene Containing Node | ${node} | \n" )
     @ArgumentNames({"locator", "logImage=True"})
     public Object captureSceneContainingNode(Object locator) {
-    	Scene scene = (Scene) useMappedObject(new ConvenienceKeywords().getScene(mapObject(locator)));
-    	return this.captureImage(scene,true);
+        try {
+            Scene scene = asyncFx(() -> (Scene) useMappedObject(new ConvenienceKeywords().getScene(mapObject(locator)))).get();
+            return this.captureImage(scene, true);
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to get scene: " + iee.getCause());
+        } catch (Exception e) {
+            if (e instanceof JavaFXLibraryNonFatalException)
+                throw e;
+            throw new JavaFXLibraryNonFatalException("Unable to take capture: \"" + locator + "\"", e.getCause());
+        }
     }
 
     @RobotKeyword("Loads an image from the given _path_ in hard drive \n\n"
