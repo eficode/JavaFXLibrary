@@ -19,7 +19,6 @@ package javafxlibrary.keywords.Keywords;
 
 import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -30,6 +29,8 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class NodeLookup extends TestFxAdapter {
@@ -45,23 +46,21 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${some scene}= | Get Nodes Scene | ${some node} | \n"
             + "| ${root} | Get Root Node Of | ${some scene} | \n"
             + "Node:\n"
-            + "| ${some node}= | find | \\#some-node-id | \n"
+            + "| ${some node}= | find | id=some-node-id | \n"
             + "| ${root} | Get Root Node Of | ${some node} | \n"
             + "Query:\n"
-            + "| ${root} | Get Root Node Of | \\#some-node-id | \n" )
+            + "| ${root} | Get Root Node Of | id=some-node-id | \n" )
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
-        if (locator instanceof String) {
-            Node node = new Finder().find((String) locator);
-            if( node != null )
-                return getRootNodeOf(node);
-            throw new JavaFXLibraryNonFatalException("Unable to find any node with query: \"" + locator.toString() + "\"");
-        }
-
-        RobotLog.info("Getting root node of target \"" + locator + "\"");
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
+        checkObjectArgumentNotNull(locator);
         try {
-            return HelperFunctions.mapObject(method.invoke(robot, locator));
+            RobotLog.info("Getting root node of target \"" + locator + "\"");
+            if (locator instanceof String) {
+                Node node = objectToNode(locator);
+                return getRootNodeOf(node);
+            }
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
+            return mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute get root node of using locator \"" + locator
                     + "\": " + e.getCause().getMessage());

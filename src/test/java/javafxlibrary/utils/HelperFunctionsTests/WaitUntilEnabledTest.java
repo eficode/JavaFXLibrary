@@ -31,7 +31,7 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
 
     @Test
     public void waitUntilEnabled_IsEnabled() {
-        Node node = HelperFunctions.waitUntilEnabled(".button", 1);
+        Node node = HelperFunctions.waitUntilEnabled(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -40,7 +40,7 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
         button.setDisable(true);
         Thread t = enableButtonAfterTimeout();
         t.start();
-        Node node = HelperFunctions.waitUntilEnabled(".button", 1);
+        Node node = HelperFunctions.waitUntilEnabled(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -49,7 +49,7 @@ public class WaitUntilEnabledTest extends TestFxAdapterTest {
         button.setDisable(true);
         thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.");
-        HelperFunctions.waitUntilEnabled(".button", 1);
+        HelperFunctions.waitUntilEnabled(".button", 1, "SECONDS");
     }
 
     private Thread enableButtonAfterTimeout() {

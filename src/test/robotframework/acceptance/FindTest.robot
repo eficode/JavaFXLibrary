@@ -133,6 +133,7 @@ Find With Pseudo Class
     ${root}                Find            css=VBox HBox VBox HBox StackPane
     ${target}              Find            xpath=//Text[@text="150x150"]
     Move To                ${target}
+    Wait Until Element Exists     pseudo=hover
     ${result}              Find            pseudo=hover    false    ${root}
     Should Be Equal        ${result}       ${target}
 
@@ -141,6 +142,7 @@ Find All With Pseudo Class
     Set Test Application   ${BOUNDS_APP}
     ${node}                Find            xpath=//Text[@text="300x300"]
     Move To                ${node}
+    Wait Until Element Exists     pseudo=hover
     @{hovered}             Find All        pseudo=hover
     # Nodes behind have the hover pseudostate too, Find All returns all of these except the one used as a root in lookup
     Length Should Be       ${hovered}      3
@@ -206,6 +208,18 @@ Previous Query Returns Nothing In Chained Selector With Find All When failIfNotF
     Set Test Application        ${BOUNDS_APP}
     ${msg}                      Run Keyword And Expect Error    *    Find All    css=VBox css=ZBox Pane id=lime    true
     Should Be Equal             Find operation failed for query: "css=VBox css=ZBox Pane id=lime"    ${msg}
+
+Find With Nonvalid Root
+    [Tags]                      smoke    negative
+    Set Test Application        ${BOUNDS_APP}
+    ${msg}                      Run Keyword And Expect Error    *    Find            xpath=//Rectangle[@width="75.0"]    false    not-a-valid-root
+    Should Start With           ${msg}                          Illegal arguments for keyword 'find'
+
+Find All With Nonvalid Root
+    [Tags]                      smoke    negative
+    Set Test Application        ${BOUNDS_APP}
+    ${msg}                      Run Keyword And Expect Error    *    Find All        xpath=//Rectangle[@width="75.0"]    false    not-a-valid-root
+    Should Start With           ${msg}                          Illegal arguments for keyword 'findAll'
 
 Find Labeled Node With Text
     [Tags]                      smoke
@@ -333,7 +347,6 @@ Open Dialog In Window Management App
 
 Setup All Tests
     Import JavaFXLibrary
-    Set Timeout    0
 
 Teardown all tests
     Close Javafx Application

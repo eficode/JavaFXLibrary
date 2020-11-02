@@ -125,7 +125,7 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     @Test
     public void objectToBounds_UnsupportedType() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Unsupported parameter type: java.lang.Integer");
+        thrown.expectMessage("unsupported parameter type: java.lang.Integer");
         HelperFunctions.objectToBounds(22);
     }
 }

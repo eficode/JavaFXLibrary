@@ -87,12 +87,12 @@ Move To Window
 
 Move To Nonexistent Location
     [Tags]                           smoke
-    Run Keyword And Expect Error     Unable to move as locator "css=\#rectangleNOTfound" not found!          Move To                 css=\#rectangleNOTfound
+    Run Keyword And Expect Error     unable to find node for query "id=rectangleNOTfound"
+    ...                              Move To                 id=rectangleNOTfound
 
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
-    Set Timeout                     0
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Bounds Values

@@ -37,7 +37,6 @@ public class MouseRobot extends TestFxAdapter {
             + "| Press Mouse Button | PRIMARY | \n")
     @ArgumentNames({ "*buttons" })
     public FxRobotInterface pressMouseButton(String... buttons) {
-
         try {
             RobotLog.info("Pressing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
             return robot.press(HelperFunctions.getMouseButtons(buttons));

@@ -21,7 +21,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
+import javafxlibrary.keywords.AdditionalKeywords.ApplicationLauncher;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -33,11 +33,11 @@ public class WaitForEventsInFxApplicationThreadTest extends TestFxAdapterTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private static ConvenienceKeywords keywords;
+    private static ApplicationLauncher keywords;
 
     @BeforeClass
     public static void setupKeywords() {
-        keywords = new ConvenienceKeywords();
+        keywords = new ApplicationLauncher();
     }
 
     @Test

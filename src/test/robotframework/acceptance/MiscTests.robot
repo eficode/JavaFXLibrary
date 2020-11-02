@@ -112,25 +112,31 @@ Set Node Visibility (Call Method With Argument Types That Require Casting)
     Node Should Be Visible                          ${node}
 
 Check That Element Is Hoverable
-    [Tags]                                          smoke    demo-set
+    [Tags]                                          smoke    demo-set      hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
-    Set Timeout                                     3
     ${target_node}=                                 Find    id=resetButton
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
+    Move To Coordinates                             x=0    y=0
     Run Keyword And Expect Error                    *          Node Should Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)true
+    Move To Coordinates                             x=0    y=0
     Node Should Be Hoverable                        id=resetButton
-    [Teardown]                                      Set Timeout     0
 
 Check That Element Is Not Hoverable
-    [Tags]                      smoke   demo-set    negative
+    [Tags]                      smoke   demo-set    negative             hoverable
     Set Test Application                            javafxlibrary.testapps.TestClickRobot
-    Set Timeout                                     3
     ${target_node}=                                 Find    id=resetButton
+    Move To Coordinates                             x=0    y=0
     Run Keyword And Expect Error                    *          Node Should Not Be Hoverable      ${target_node}
     Call Object Method In Fx Application Thread     ${target_node}    setVisible     (boolean)false
-    Node Should Not Be Hoverable                        id=resetButton
-    [Teardown]                                      Set Timeout     0
+    Move To Coordinates                             x=0    y=0
+    Node Should Not Be Hoverable                    id=resetButton
+
+Test Verify Keywords With Non-existing Locator
+    [Tags]                                          smoke    demo-set      negative
+    Set Test Application                            javafxlibrary.testapps.TestClickRobot
+    Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Be Hoverable       id=doesNotExist
+    Run Keyword And Expect Error                    Given locator "id=doesNotExist" was not found.    Node Should Not Be Hoverable   id=doesNotExist
 
 Find From Node
     [Tags]                  smoke
@@ -375,10 +381,27 @@ Is not Java agent
     ${IS_JAVA_AGENT} =      Is Java Agent
     Should Be Equal         ${False}            ${IS_JAVA_AGENT}
 
+Library Keyword Timeout Should Not Happen
+    [Tags]    smoke
+    ${old_timeout}=   Set Timeout      2
+    Set Test Application    javafxlibrary.testapps.TestKeyboardRobot
+    Run Keyword And Expect Error    Given element "id=doesNotExist" was not found within given timeout of 3 SECONDS
+    ...                             Wait Until Element Exists          id=doesNotExist     timeout=3
+    [Teardown]   Set Timeout           ${old_timeout}
+
+Library Keyword Timeout Should Happen
+    [Tags]    smoke
+    ${old_timeout}=        Set Timeout       2
+    ${old_write_speed}=    Set Write Speed   1000
+    Set Test Application   javafxlibrary.testapps.TestKeyboardRobot
+    Clear Textarea
+    Run Keyword And Expect Error    Library keyword timeout (2s) for keyword: write
+    ...                             Write                   Robot Framework
+    [Teardown]   Run Keywords       Set Timeout           ${old_timeout}     AND     Set Write Speed     ${old_write_speed}
+
 *** Keywords ***
 Setup All Tests
     Import JavaFXLibrary
-    Set Timeout    0
 
 Get First Player
     ${TABLE}        Find                    id=table
@@ -396,3 +419,7 @@ Reset Node Id To Yellow
     Call Object Method      ${node}             setId       yellow
     ${after_reset}          Find                id=yellow
     Should Be Equal         ${after_reset}      ${original}
+
+Clear Textarea
+    Click On    id=resetButton
+    Click On    id=textArea

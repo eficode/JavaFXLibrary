@@ -27,8 +27,8 @@ public class QueryParserTest {
 
     @Test
     public void getIndividualQueries_ContainsSpaces() {
-        String[] result = QueryParser.getIndividualQueries("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" id=sub");
-        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "id=sub" };
+        String[] result = QueryParser.getIndividualQueries("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" text='text with apostrophe' id=sub");
+        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "text='text with apostrophe'", "id=sub" };
         Assert.assertArrayEquals(target, result);
     }
 
@@ -37,6 +37,13 @@ public class QueryParserTest {
         String[] result = QueryParser.getIndividualQueries("text=\"Teemu \\\"The Finnish Flash\\\" Selanne\"");
         String[] target = { "text=\"Teemu \"The Finnish Flash\" Selanne\"" };
         Assert.assertArrayEquals(target, result);
+    }
+
+    @Test
+    public void getIndividualQueries_TextWithoutQuotes() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("\"text\" query prefix is missing quotation marks.");
+        String query = QueryParser.removePrefix("text=this is not allowed", FindPrefix.TEXT);
     }
 
     @Test

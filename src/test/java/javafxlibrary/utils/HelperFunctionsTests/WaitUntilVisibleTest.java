@@ -30,7 +30,7 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
 
     @Test
     public void waitUntilVisible_IsVisible() {
-        Node node = HelperFunctions.waitUntilVisible(".button", 1);
+        Node node = HelperFunctions.waitUntilVisible(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -41,7 +41,7 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
 
         Thread t = setVisibleAfterTimeout();
         t.start();
-        Node node = HelperFunctions.waitUntilVisible(".button", 1);
+        Node node = HelperFunctions.waitUntilVisible(".button", 1, "SECONDS");
         Assert.assertEquals(button, node);
     }
 
@@ -50,7 +50,7 @@ public class WaitUntilVisibleTest extends TestFxAdapterTest {
         button.setVisible(false);
         thrown.expect(JavaFXLibraryTimeoutException.class);
         thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 1 SECONDS");
-        HelperFunctions.waitUntilVisible(".button", 1);
+        HelperFunctions.waitUntilVisible(".button", 1, "SECONDS");
     }
 
     private Thread setVisibleAfterTimeout() {

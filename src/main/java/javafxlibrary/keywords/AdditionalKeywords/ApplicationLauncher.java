@@ -18,6 +18,7 @@
 package javafxlibrary.keywords.AdditionalKeywords;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.RobotLog;
@@ -25,16 +26,18 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.concurrent.Semaphore;
 
-import static javafxlibrary.utils.HelperFunctions.createThreadedWrapperApplication;
-import static javafxlibrary.utils.HelperFunctions.createWrapperApplication;
-import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class ApplicationLauncher extends TestFxAdapter {
@@ -50,6 +53,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         try {
             RobotLog.info("Starting application:" + appName);
             createNewSession(appName, appArgs);
+            waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
             RobotLog.info("Application: " + appName + " started.");
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to launch application: " + appName, e);
@@ -63,14 +67,15 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``appName`` is the name of the application to launch. \n\n"
             + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
             + "Example:\n"
-            + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application | _TestApplication.jar_ |\n")
     @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
-        Class c = getMainClass(appName);
-        Application app = createWrapperApplication(c, appArgs);
+        Class mainClass = getMainClass(appName);
+        Application app = createWrapperApplication(mainClass, appArgs);
         createNewSession(app);
+        waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
         RobotLog.info("Application: " + appName + " started.");
     }
 
@@ -82,7 +87,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``appName`` is the name of the application to launch. \n\n"
             + "``appArgs`` is a list of arguments to be passed for the application. \n\n"
             + "Example:\n"
-            + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication |\n"
+            + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application In Separate Thread | _TestApplication.jar_ |\n")
     @ArgumentNames({ "appName", "*args" })
     public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {
@@ -90,6 +95,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         Class c = getMainClass(appName);
         Application app = createThreadedWrapperApplication(c, appArgs);
         createNewSession(app);
+        waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
         RobotLog.info("Application: " + appName + " started.");
     }
 
@@ -105,7 +111,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         }
     }
 
-    private void _addPathToClassPath(String path) {
+    private void addPathToClassPath(String path) {
         URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
         RobotLog.info("Setting following path to classpath: " + path);
@@ -143,7 +149,7 @@ public class ApplicationLauncher extends TestFxAdapter {
                 for (File file : Objects.requireNonNull(fileList)) {
                     if (file.getName().endsWith(".jar")) {
                         jarsFound = true;
-                        _addPathToClassPath(file.getAbsolutePath());
+                        addPathToClassPath(file.getAbsolutePath());
                     }
                 }
                 if (!jarsFound) {
@@ -163,7 +169,7 @@ public class ApplicationLauncher extends TestFxAdapter {
                 }
             }
         } else {
-            _addPathToClassPath(path);
+            addPathToClassPath(path);
         }
     }
 
@@ -260,6 +266,45 @@ public class ApplicationLauncher extends TestFxAdapter {
             return getCurrentSessionApplicationName();
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Problem getting current application name.", e);
+        }
+    }
+
+    @RobotKeyword("Waits for current events in Fx Application Thread event queue to finish before continuing.\n\n"
+            + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
+            + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
+    @ArgumentNames({ "timeout=5" })
+    public void waitForEventsInFxApplicationThread(int timeout) {
+
+        final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];
+        try {
+            Semaphore semaphore = new Semaphore(0);
+            Platform.runLater(semaphore::release);
+            Thread t = new Thread(() -> {
+                int passed = 0;
+                try {
+                    while (passed <= timeout) {
+                        Thread.sleep(1000);
+                        passed++;
+                    }
+
+                    if (semaphore.hasQueuedThreads())
+                        throw new JavaFXLibraryNonFatalException("Events did not finish within the given timeout of "
+                                + timeout + " seconds.");
+                } catch (InterruptedException e) {
+                    throw new JavaFXLibraryNonFatalException("Timeout was interrupted in Wait For Wait For Events in " +
+                            "Fx Application Thread: " + e.getMessage());
+                }
+            });
+            t.setUncaughtExceptionHandler((thread, e) -> threadException[0] = e);
+            t.start();
+            semaphore.acquire();
+
+            if (threadException[0] != null)
+                throw new JavaFXLibraryNonFatalException(threadException[0].getMessage());
+
+        } catch (InterruptedException e) {
+            throw new JavaFXLibraryNonFatalException("Wait For Events in Fx Application Thread was interrupted: "
+                    + e.getMessage());
         }
     }
 

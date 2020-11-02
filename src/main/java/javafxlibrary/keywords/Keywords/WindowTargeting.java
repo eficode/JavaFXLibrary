@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
+import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -38,7 +38,7 @@ public class WindowTargeting extends TestFxAdapter {
             + "| ${window}= | Get Target Window | \n")
     public Object getTargetWindow() {
         try {
-            return HelperFunctions.mapObject(robot.targetWindow());
+            return mapObject(robot.targetWindow());
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -58,7 +58,7 @@ public class WindowTargeting extends TestFxAdapter {
             + "| Set Target Window | 0 | \n"
             + "| Set Target Window | ${2} | \n\n"
             + "Node:\n"
-            + "| ${some_node}= | Find | \\#some_id | \n"
+            + "| ${some_node}= | Find | id=some_id | \n"
             + "| Set Target Window | ${some_node} | \n\n"
             + "Scene: \n"
             + "| ${some_scene}= | Get Nodes Scene | ${some_node} | \n"
@@ -66,9 +66,9 @@ public class WindowTargeting extends TestFxAdapter {
             )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
-        RobotLog.info("Setting target window according to locator \"" + locator + "\"");
-
+        checkObjectArgumentNotNull(locator);
         try {
+            RobotLog.info("Setting target window according to locator \"" + locator + "\"");
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")){
                     locator = ((String) locator).replace("pattern=","");
@@ -86,9 +86,7 @@ public class WindowTargeting extends TestFxAdapter {
                 Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "targetWindow", locator.getClass());
                 method.invoke(robot, locator);
             }
-
             Platform.runLater((robot.targetWindow())::requestFocus);
-
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute set target window using locator \"" + locator + "\"");
         } catch (Exception e) {

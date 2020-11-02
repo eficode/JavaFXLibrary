@@ -18,6 +18,7 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafx.geometry.BoundingBox;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
@@ -27,7 +28,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.stage.Window;
 import org.testfx.service.query.BoundsQuery;
@@ -51,7 +51,7 @@ public class BoundsLocation extends TestFxAdapter {
         try {
             RobotLog.info("Creating bounds object with minX=\"" + minX + "\", minY=\"" + minY + "\", width=\"" + width +
                     "\" and height=\"" + height + "\"");
-            return mapObject(robot.bounds(minX, minY, width, height).query());
+            return mapObject(new BoundingBox(minX, minY, width, height));
         } catch (Exception e) {
             if ( e instanceof JavaFXLibraryNonFatalException )
                 throw e;
@@ -105,9 +105,9 @@ public class BoundsLocation extends TestFxAdapter {
             + "| Should Be Equal | ${bounds} | ${target} | \n")
     @ArgumentNames({ "locator" })
     public Object getBounds(Object locator) {
-        RobotLog.info("Getting bounds using locator \"" + locator + "\"");
-        // TODO: Test if Window and Scene objects get correct Bound locations on scaled displays
+        checkObjectArgumentNotNull(locator);
         try {
+            RobotLog.info("Getting bounds using locator \"" + locator + "\"");
             if (locator instanceof Window) {
                 Window window = (Window) locator;
                 return mapObject(new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
@@ -116,10 +116,8 @@ public class BoundsLocation extends TestFxAdapter {
                 return mapObject(new BoundingBox(scene.getX() + scene.getWindow().getX(), scene.getY() +
                         scene.getWindow().getY(), scene.getWidth(), scene.getHeight()));
             }
-
             if (locator instanceof String)
-                return getBounds(waitUntilExists((String) locator));
-
+                return getBounds(objectToNode(locator));
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "bounds", locator.getClass());
             BoundsQuery bounds = (BoundsQuery) method.invoke(robot, locator);
             return HelperFunctions.mapObject(bounds.query());
@@ -127,10 +125,8 @@ public class BoundsLocation extends TestFxAdapter {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("getBounds: Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
-
         } catch (JavaFXLibraryNonFatalException e){
             throw e;
-
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"", e);
         }

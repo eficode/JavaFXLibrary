@@ -31,7 +31,11 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @RobotKeywords
 public class KeyboardRobot extends TestFxAdapter {
@@ -103,9 +107,11 @@ public class KeyboardRobot extends TestFxAdapter {
         RobotLog.info("Pushing combination: \"" + Arrays.asList(keys) + "\" for \"" + times + "\" times.");
         try {
             for (int i = 0; i < times; i++) {
-                robot.push(getKeyCode(keys));
+                asyncFx(() -> robot.push(getKeyCode(keys))).get();
                 sleepFor(50);
             }
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to push: " + Arrays.asList(keys), iee.getCause());
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -150,7 +156,7 @@ public class KeyboardRobot extends TestFxAdapter {
                 return robot.push(KeyCode.META, KeyCode.W).sleep(100);
             } else if (robot instanceof FxRobot) {
                 RobotLog.info("Closing window via: ALT + F4");
-                return ((FxRobot) robot).closeCurrentWindow();
+                return robot.push(KeyCode.ALT, KeyCode.F4).sleep(100);
             }
 
             throw new JavaFXLibraryNonFatalException("No instance available for closing.");
@@ -162,8 +168,6 @@ public class KeyboardRobot extends TestFxAdapter {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Write uses JavaFX events
     @RobotKeyword("Writes a given text characters one after the other.\n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
@@ -211,17 +215,23 @@ public class KeyboardRobot extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
-            + "| Write To | .css-name | Robot Framework | \n")
+            + "| Write To | css=.css-name | Robot Framework | \n")
     @ArgumentNames({ "locator", "text" })
-    public FxRobotInterface writeTo(Object locator, String text) {
-        RobotLog.info("Writing \"" + text + "\" to " + locator);
+    public void writeTo(Object locator, String text) {
+        checkObjectArgumentNotNull(locator);
         try {
-            clickRobot.clickOn(locator,"DIRECT");
-            return robot.write(text, sleepMillis);
+            RobotLog.info("Writing \"" + text + "\" to " + locator);
+            asyncFx(() -> clickRobot.clickOn(locator,"DIRECT")).get();
+            waitForFxEvents(5);
+            asyncFx(() -> write(text)).get();
+            waitForFxEvents(3);
+        } catch (InterruptedException | ExecutionException iee) {
+            RobotLog.trace("exception details: " + iee.getCause());
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator, e);
+            throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         }
     }
 
@@ -233,11 +243,13 @@ public class KeyboardRobot extends TestFxAdapter {
             robot.push(KeyCode.CONTROL, KeyCode.A);
     }
 
-    @RobotKeyword("Sets the time waited between every character when typing\n\n" +
-            "``milliseconds`` is the time waited between each character in milliseconds.")
+    @RobotKeyword("Sets the time waited between every character when typing. Returns previous value.\n\n"
+            + "``milliseconds`` is the time waited between each character in milliseconds.")
     @ArgumentNames({ "milliseconds" })
-    public void setWriteSpeed(int milliseconds) {
+    public int setWriteSpeed(int milliseconds) {
+        int oldSleepMillis = this.sleepMillis;
         this.sleepMillis = milliseconds;
+        return oldSleepMillis;
     }
 
 }
