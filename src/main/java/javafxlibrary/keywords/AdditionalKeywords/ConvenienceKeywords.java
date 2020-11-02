@@ -486,9 +486,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                 RobotLog.info("Index number: " + i);
                 columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
             }
-
             return mapObjects(columnCells);
-
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
         }
@@ -887,7 +885,6 @@ public class ConvenienceKeywords extends TestFxAdapter {
             RobotLog.info("Getting progress bar value from locator \"" + locator + "\".");
             ProgressBar pb = (ProgressBar) objectToNode(locator);
             return mapObject(pb.getProgress());
-
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as ProgressBar!");
         }

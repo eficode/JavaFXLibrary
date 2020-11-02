@@ -50,7 +50,7 @@ public class PointOffset extends TestFxAdapter {
                 locator = objectToNode(locator);
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "offset",
                     locator.getClass(), double.class, double.class);
-            return HelperFunctions.mapObject(method.invoke(robot, locator, offsetX, offsetY));
+            return mapObject(method.invoke(robot, locator, offsetX, offsetY));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute 'point to with offset' using locator \"" + locator
                     + "\": " + e.getCause().getMessage());

@@ -67,12 +67,21 @@ public class ScreenCapturing extends TestFxAdapter {
                     "\"EMBEDDED\" or \"DISKONLY\"");
     }
     
-    @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.")
-    public Object capturePrimaryScreen()  {
+    @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.\n\n"
+            + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
+            + "``mapObject`` is a boolean value that specifies whether a captured image is saved as mapobject and returned from keyword. "
+            + "This uses Java heap memory which can result problems if large amount of image capture is done. If set False keyword returns null and image "
+            + "is not stored in library bookkeeping. \n\n "
+            + "\nExample:\n"
+            + "| ${capture}= | Capture Primary Screen | \n"
+            + "| ${capture}= | Capture Primary Screen | logImage=False |\n"
+            + "| | Capture Primary Screen | logImage=true | mapObject=false |\n")
+    @ArgumentNames({"logImage=True", "mapObject=True"})
+    public Object capturePrimaryScreen(boolean logImage, boolean mapObject)  {
         try {
     	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     	Rectangle2D target = asyncFx(() -> new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight())).get();
-        return this.captureImage(target,true);
+        return this.captureImage(target,logImage, mapObject);
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to get Rectangle2D: " + iee.getCause());
         } catch (Exception e) {
@@ -86,16 +95,20 @@ public class ScreenCapturing extends TestFxAdapter {
     		+ "Note that active window might only be part of the visible window, it e.g. dialog is active.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, Rectangle, PointQuery, Scene, Window_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "Argument ``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
+            + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
+            + "``mapObject`` is a boolean value that specifies whether a captured image is saved as mapobject and returned from keyword. "
+            + "This uses Java heap memory which can result problems if large amount of image capture is done. If set False keyword returns null and image "
+            + "is not stored in library bookkeeping. \n\n "
             + "\nExample:\n"
             + "| ${region}= | Create Rectangle | 11 | 22 | 33 | 44 | \n"
             + "| ${capture}= | Capture Image | ${region} | \n"
             + "| ${capture}= | Capture Image | ${node} | \n"
             + "| ${capture}= | Capture Image | ${window} | \n"
             + "| ${capture}= | Capture Image | | \n"
-            + "| ${capture}= | Capture Image | id=id | logImage=False |\n" )
-    @ArgumentNames({"locator=target window", "logImage=True"})
-    public Object captureImage(Object locator, boolean logImage){
+            + "| ${capture}= | Capture Image | id=id | logImage=False |\n"
+            + "| | Capture Image | id=id | logImage=true | mapObject=false |\n" )
+    @ArgumentNames({"locator=target window", "logImage=True", "mapObject=True"})
+    public Object captureImage(Object locator, boolean logImage, boolean mapObject){
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
@@ -140,7 +153,11 @@ public class ScreenCapturing extends TestFxAdapter {
                             + "</a>");
                 }
             }
-            return mapObject(image);
+            if(mapObject) {
+                return mapObject(image);
+            } else {
+                return null;
+            }
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to take capture (asyncFx thread failed): ", iee.getCause());
         } catch (IOException ioe) {
@@ -154,13 +171,19 @@ public class ScreenCapturing extends TestFxAdapter {
     
     @RobotKeyword("Returns a screenshot of the scene containing given locator.\n\n"
             + "``locator`` is a query locator, see `3.1 Locator syntax`.\n\n "
+            + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
+            + "``mapObject`` is a boolean value that specifies whether a captured image is saved as mapobject and returned from keyword. "
+            + "This uses Java heap memory which can result problems if large amount of image capture is done. If set False keyword returns null and image "
+            + "is not stored in library bookkeeping. \n\n "
             + "\nExample:\n"
-            + "| ${capture}= | Capture Scene Containing Node | ${node} | \n" )
-    @ArgumentNames({"locator", "logImage=True"})
-    public Object captureSceneContainingNode(Object locator) {
+            + "| ${capture}= | Capture Scene Containing Node | ${node} | \n"
+            + "| ${capture}= | Capture Scene Containing Node | id=id | logImage=False |\n"
+            + "| | Capture Scene Containing Node | id=id | logImage=true | mapObject=false |\n" )
+    @ArgumentNames({"locator", "logImage=True", "mapObject=True"})
+    public Object captureSceneContainingNode(Object locator, boolean logImage, boolean mapObject) {
         try {
             Scene scene = asyncFx(() -> (Scene) useMappedObject(new ConvenienceKeywords().getScene(mapObject(locator)))).get();
-            return this.captureImage(scene, true);
+            return this.captureImage(scene, logImage, mapObject);
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to get scene: " + iee.getCause());
         } catch (Exception e) {

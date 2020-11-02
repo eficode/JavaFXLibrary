@@ -62,9 +62,7 @@ public class RunOnFailure extends TestFxAdapter{
 	        if (robot == null) {
 	            RobotLog.error("FxRobot not initialized, launch test application with the library");
 	        } else {
-	        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-	        	RobotLog.debug("Capturing screenshot from primary screen with resolution "+gd.getDisplayMode().getWidth()+"x"+gd.getDisplayMode().getHeight()+".");
-	            new ScreenCapturing().captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
+                new ScreenCapturing().capturePrimaryScreen(true, false);
 	        }
         } catch (Exception e) {
 			RobotLog.error("Error when capturing screenshot. Actual error: "+e.getMessage());

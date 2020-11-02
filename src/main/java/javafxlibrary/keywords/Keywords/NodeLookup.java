@@ -60,7 +60,7 @@ public class NodeLookup extends TestFxAdapter {
                 return getRootNodeOf(node);
             }
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "rootNode", locator.getClass());
-            return HelperFunctions.mapObject(method.invoke(robot, locator));
+            return mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute get root node of using locator \"" + locator
                     + "\": " + e.getCause().getMessage());

@@ -52,7 +52,7 @@ public class PointLocation extends TestFxAdapter {
             if (locator instanceof String)
                 locator = objectToNode(locator);
             Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
-            return HelperFunctions.mapObject(method.invoke(robot, locator));
+            return mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute point to using locator \"" + locator
                     + "\": " + e.getCause().getMessage());
@@ -67,7 +67,7 @@ public class PointLocation extends TestFxAdapter {
     public Object pointToCoordinates(int x, int y) {
         try {
             RobotLog.info("Returning a pointquery to coordinates: [" + x + ", " + y + "]");
-            return HelperFunctions.mapObject(robot.point(x, y));
+            return mapObject(robot.point(x, y));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
