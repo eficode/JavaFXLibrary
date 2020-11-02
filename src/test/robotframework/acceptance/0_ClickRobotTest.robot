@@ -5,7 +5,7 @@ Suite Setup         Setup all tests
 Suite Teardown      Teardown all tests
 Test Setup          Setup test case
 Test Teardown       Enable Image Logging
-Force tags          set-clickrobot
+Force Tags          set-clickrobot
 
 *** Variables ***
 ${TEST_APPLICATION}         javafxlibrary.testapps.TestClickRobot
@@ -217,18 +217,18 @@ Right Click On Coordinates
 Click On ID That Does Not Exist
     [Tags]                  smoke    negative
     ${MSG}                  Run Keyword And Expect Error    *    Click On    id=idThatDoesNotExist
-    Should Be Equal         ${MSG}    Given element "id=idThatDoesNotExist" was not found within given timeout of 1 SECONDS
+    Should Be Equal         ${MSG}    Click On failed: unable to find node for query "id=idThatDoesNotExist"
 
 Click On Unreachable Point
     [Tags]                  smoke    negative
     ${POINT}                Create Point    ${0}    ${-20}
     ${MSG}                  Run Keyword And Expect Error    *    Click On    ${POINT}
-    Should Start With       ${MSG}    Can't click Point2D at [0.0, -20.0]: out of window bounds.
+    Should Start With       ${MSG}    Click On failed: object inside active window check failed: can't click Point2D at [0.0, -20.0]: out of window bounds.
 
 Click On Unreachable Coordinates
     [Tags]                  smoke    negative
     ${MSG}                  Run Keyword And Expect Error    *    Click On Coordinates    ${0}    ${-20}
-    Should Start With       ${MSG}    Can't click Point2D at [0.0, -20.0]: out of window bounds.
+    Should Start With       ${MSG}    object inside active window check failed: can't click Point2D at [0.0, -20.0]: out of window bounds.
 
 Click On Mouse Button That Does Not Exist
     [Tags]                  smoke    negative
@@ -238,14 +238,14 @@ Click On Mouse Button That Does Not Exist
 Click On Using Motion That Does Not Exist
     [Tags]                  smoke    negative
     ${MSG}                  Run Keyword And Expect Error    *    Click On    id=button    ZIGZAG
-    Should Start With       ${MSG}    "ZIGZAG" is not a valid Motion. Accepted values are:
+    Should Start With       ${MSG}    Click On failed: "ZIGZAG" is not a valid Motion. Accepted values are:
 
 Click On ID That Does Not Exist With Safe Clicking Off
     [Tags]                  smoke    negative
     Set Safe Clicking       OFF
     ${MSG}                  Run Keyword And Expect Error    *    Click On    id=idThatDoesNotExist
     Set Safe Clicking       ON
-    Should Be Equal         ${MSG}    Given element "id=idThatDoesNotExist" was not found within given timeout of 1 SECONDS
+    Should Be Equal         ${MSG}    Click On failed: unable to find node for query "id=idThatDoesNotExist"
 
 Click On Unsupported Type
     [Tags]                  smoke    negative
@@ -253,7 +253,7 @@ Click On Unsupported Type
     ${IMAGE}                Capture Image         ${NODE}
     ${PIXELREADER}          Call Object Method    ${IMAGE}    getPixelReader
     ${MSG}                  Run Keyword And Expect Error    *    Click On       ${PIXELREADER}
-    Should Start With       ${MSG}    Unsupported parameter type:
+    Should Start With       ${MSG}    Click On failed: object inside active window check failed: unsupported parameter type:
 
 *** Keywords ***
 Setup all tests
@@ -262,7 +262,6 @@ Setup all tests
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Scene Values
     Set Window Values
-    Set Timeout                     1
 
 Setup test case
     Reset Counters

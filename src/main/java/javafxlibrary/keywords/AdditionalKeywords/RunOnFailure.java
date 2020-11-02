@@ -24,7 +24,6 @@ import javafxlibrary.utils.TestFxAdapter;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 @RobotKeywords
@@ -47,7 +46,7 @@ public class RunOnFailure extends TestFxAdapter{
     public void runOnFailure() {
 
         // The keyword to run an failure
-        String runOnFailureKeyword = "Take Screenshot";
+        String runOnFailureKeyword = "Capture Primary Screen";
         RobotLog.debug("Executing cleanup functions by running: " + runOnFailureKeyword);
         RobotLog.debug("runningOnFailureRoutine: " + runningOnFailureRoutine);
 
@@ -63,9 +62,7 @@ public class RunOnFailure extends TestFxAdapter{
 	        if (robot == null) {
 	            RobotLog.error("FxRobot not initialized, launch test application with the library");
 	        } else {
-	        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-	        	RobotLog.debug("Capturing screenshot from primary screen with resolution "+gd.getDisplayMode().getWidth()+"x"+gd.getDisplayMode().getHeight()+".");
-	            new ScreenCapturing().captureImage(new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight()),true);
+                new ScreenCapturing().capturePrimaryScreen(true, false);
 	        }
         } catch (Exception e) {
 			RobotLog.error("Error when capturing screenshot. Actual error: "+e.getMessage());

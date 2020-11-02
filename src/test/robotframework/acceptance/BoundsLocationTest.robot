@@ -87,12 +87,11 @@ Compare Different Size Bounds
 Get Bounds Of Id That Does Not Exist
     [Tags]              smoke    negative
     ${MSG}              Run Keyword And Expect Error    *    Get Bounds    id=idThatDoesNotExist
-    Should Be Equal     ${MSG}    Given element "id=idThatDoesNotExist" was not found within given timeout of 1 SECONDS
+    Should Be Equal     ${MSG}    unable to find node for query "id=idThatDoesNotExist"
 
 *** Keywords ***
 Setup all tests
     Import JavaFXLibrary
-    Set Timeout                     1
     Launch Javafx Application       ${TEST_APPLICATION}
     Set Screenshot Directory        ${OUTPUT_DIR}${/}report-images
     Set Offsets

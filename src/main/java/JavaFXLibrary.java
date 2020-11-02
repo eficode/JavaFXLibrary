@@ -41,8 +41,9 @@ import org.robotframework.javalib.library.AnnotationLibrary;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import static org.testfx.util.WaitForAsyncUtils.*;
 import static javafxlibrary.utils.HelperFunctions.*;
-import static org.testfx.util.WaitForAsyncUtils.waitFor;
+
 import java.util.ResourceBundle;
 
 public class JavaFXLibrary extends AnnotationLibrary {
@@ -50,6 +51,66 @@ public class JavaFXLibrary extends AnnotationLibrary {
     public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL";
     public static final String ROBOT_LIBRARY_VERSION = loadRobotLibraryVersion();
     public static final TestListener ROBOT_LIBRARY_LISTENER = new TestListener();
+
+    static List<String> noLibraryKeywordTimeoutKeywords = new ArrayList<String>() {{
+        add("launchJavafxApplication");
+        add("launchSwingApplication");
+        add("launchSwingApplicationInSeparateThread");
+        add("closeJavafxApplication");
+        add("closeSwingApplication");
+        add("waitForEventsInFxApplicationThread");
+        add("waitUntilElementDoesNotExists");
+        add("waitUntilElementExists");
+        add("waitUntilNodeIsEnabled");
+        add("waitUntilNodeIsNotEnabled");
+        add("waitUntilNodeIsNotVisible");
+        add("waitUntilNodeIsVisible");
+        add("waitUntilProgressBarIsFinished");
+    }};
+
+    static List<String> noWrappedAsyncFxKeywords = new ArrayList<String>() {{
+        add("callObjectMethodInFxApplicationThread");
+        add("captureImage");
+        add("capturePrimaryScreen");
+        add("captureSceneContainingNode");
+        add("clearObjectMap");
+        add("closeJavafxApplication");
+        add("closeSwingApplication");
+        add("dragFrom");
+        add("dropTo");
+        add("dropToCoordinates");
+        add("getCurrentApplication");
+        add("getLibraryVersion");
+        add("getScreenshot Directory");
+        add("getScreenshotDirectory");
+        add("getSystemProperty");
+        add("isJavaAgent");
+        add("launchJavafxApplication");
+        add("launchSwingApplication");
+        add("launchSwingApplicationInSeparateThread");
+        add("logApplicationClasspath");
+        add("logSystemProperties");
+        add("moveTo");
+        add("nodeShouldBeHoverable");
+        add("nodeShouldNotBeHoverable");
+        add("pushManyTimes");
+        add("setImageLogging");
+        add("setSafeClicking");
+        add("setScreenshotDirectory");
+        add("setSystemProperty");
+        add("setTimeout");
+        add("setToClasspath");
+        add("setWriteSpeed");
+        add("waitForEventsInFxApplicationThread");
+        add("waitUntilElementDoesNotExists");
+        add("waitUntilElementExists");
+        add("waitUntilNodeIsEnabled");
+        add("waitUntilNodeIsNotEnabled");
+        add("waitUntilNodeIsNotVisible");
+        add("waitUntilNodeIsVisible");
+        add("waitUntilProgressBarIsFinished");
+        add("writeTo");
+    }};
 
     static List<String> includePatterns = new ArrayList<String>() {{
         add("javafxlibrary/keywords/AdditionalKeywords/*.class");
@@ -91,11 +152,9 @@ public class JavaFXLibrary extends AnnotationLibrary {
 
     @Override
     public Object runKeyword(String keywordName, List args, Map kwargs) {
-
         if (kwargs == null) {
             kwargs = new HashMap();
         }
-
         List finalArgs;
         Map finalKwargs;
 
@@ -108,39 +167,61 @@ public class JavaFXLibrary extends AnnotationLibrary {
             finalKwargs = kwargs;
         }
 
+        // Run keyword either in async or asyncFx thread with or without timeout
+        // Execution collects retval and retExcep from keyword
         AtomicReference<Object> retval = new AtomicReference<>();
         AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
-
+        RobotLog.ignoreDuplicates();
         try {
-            RobotLog.ignoreDuplicates();
-            // timeout + 500 ms so that underlying timeout has a chance to expire first
-            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
-
-                try {
+            if (noWrappedAsyncFxKeywords.contains(keywordName)) {
+                // no asyncFx thread
+                if (noLibraryKeywordTimeoutKeywords.contains(keywordName)) {
+                    // without timeout
                     retval.set(super.runKeyword(keywordName, finalArgs, finalKwargs));
-                    return true;
-
-                } catch (JavaFXLibraryTimeoutException jfxte) {
-                    // timeout already expired, catch exception and jump out
-                    retExcep.set(jfxte);
-                    throw jfxte;
-                } catch (RuntimeException e) {
-                    // catch exception and continue trying
-                    retExcep.set(e);
-                    return false;
+                } else {
+                    // in async thread
+                    retval.set(waitForAsync(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS), () -> {
+                        try {
+                            return super.runKeyword(keywordName, finalArgs, finalKwargs);
+                        } catch (RuntimeException rte) {
+                            retExcep.set(rte);
+                            return null;
+                        }
+                    }));
                 }
-            });
-        } catch (TimeoutException te) {
+            } else {
+                // in asyncFx thread
+                retval.set(waitForAsyncFx(getLibraryKeywordTimeout(TimeUnit.MILLISECONDS), () -> {
+                    try {
+                        return super.runKeyword(keywordName, finalArgs, finalKwargs);
+                    } catch (RuntimeException rte) {
+                        retExcep.set(rte);
+                        return null;
+                    }
+                }));
+                waitForFxEvents( 5);
+            }
+        } catch (JavaFXLibraryTimeoutException jfxte) {
+            // timeout already expired, catch exception and jump out
+            retExcep.set(jfxte);
+        } catch (RuntimeException rte) {
+            // catch exception and continue trying
+            retExcep.set(rte);
+        }
+
+        // in failure take screenshot and handle exception
+        if(retExcep.get()!=null) {
             RobotLog.reset();
             RuntimeException e = retExcep.get();
             runOnFailure.runOnFailure();
-
             if (e.getCause() instanceof JavaFXLibraryFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
             } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
+            } else if (e.getCause() instanceof TimeoutException) {
+                throw new JavaFXLibraryNonFatalException("Library keyword timeout (" + getLibraryKeywordTimeout() + "s) for keyword: " + keywordName);
             } else if (e.getCause() instanceof IllegalArgumentException) {
                 RobotLog.trace("JavaFXLibrary: Caught IllegalArgumentException: \n" + Throwables.getStackTraceAsString(e));
                 throw new JavaFXLibraryNonFatalException("Illegal arguments for keyword '" + keywordName + "':\n" +
@@ -150,72 +231,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
                 RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
                 throw e;
             }
-        } catch (JavaFXLibraryTimeoutException jfxte) {
-            RobotLog.reset();
-            RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
-            throw jfxte;
-        }
-        RobotLog.reset();
-        return retval.get();
-    }
-
-    // overriding the run method to catch the control in case of failure, so that desired runOnFailureKeyword
-    // can be executed in controlled manner.
-    @Override
-    public Object runKeyword(String keywordName, List args) {
-        // TODO: Check if this is ever called anymore
-        RobotLog.info("runKeyword called with args ONLY");
-
-        List finalArgs;
-        // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
-        if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread"))) {
-            finalArgs = HelperFunctions.useMappedObjects(args);
-        } else {
-            finalArgs = args;
-        }
-
-        AtomicReference<Object> retval = new AtomicReference<>();
-        AtomicReference<RuntimeException> retExcep = new AtomicReference<>();
-
-        try {
-            RobotLog.ignoreDuplicates();
-            // timeout + 500 ms so that underlying timeout has a chance to expire first
-            waitFor(getWaitUntilTimeout(TimeUnit.MILLISECONDS) + 500, TimeUnit.MILLISECONDS, () -> {
-
-                try {
-                    retval.set(super.runKeyword(keywordName, finalArgs));
-                    return true;
-
-                } catch (JavaFXLibraryTimeoutException jfxte) {
-                    // timeout already expired, catch exception and jump out
-                    retExcep.set(jfxte);
-                    throw jfxte;
-
-                } catch (RuntimeException e) {
-                    // catch exception and continue trying
-                    retExcep.set(e);
-                    return false;
-                }
-            });
-        } catch (TimeoutException te) {
-            RobotLog.reset();
-            RuntimeException e = retExcep.get();
-            runOnFailure.runOnFailure();
-
-            if (e.getCause() instanceof JavaFXLibraryFatalException) {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary FATAL exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
-            } else if (e.getCause() instanceof JavaFXLibraryNonFatalException) {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary NON-FATAL exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
-            } else {
-                RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary RUNTIME exception: \n" + Throwables.getStackTraceAsString(e));
-                throw e;
-            }
-        } catch (JavaFXLibraryTimeoutException jfxte) {
-            RobotLog.reset();
-            RobotLog.trace("JavaFXLibrary: Caught JavaFXLibrary TIMEOUT exception: \n" + Throwables.getStackTraceAsString(jfxte));
-            throw jfxte;
         }
         RobotLog.reset();
         return retval.get();

@@ -22,8 +22,8 @@ public class HelperFunctionsTest {
 
     @Test
     public void helperFunctions_setWaitUntilTimeout() {
-        HelperFunctions.setWaitUntilTimeout(2);
-        Integer result = (Integer) HelperFunctions.getFieldsValue(null, HelperFunctions.class, "waitUntilTimeout");
+        HelperFunctions.setLibraryKeywordTimeout(2);
+        Integer result = (Integer) HelperFunctions.getFieldsValue(null, HelperFunctions.class, "libraryKeywordTimeout");
         Assert.assertEquals(2, (int) result);
     }
 }

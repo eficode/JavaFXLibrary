@@ -20,19 +20,12 @@ package javafxlibrary.matchers;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-
-import java.util.concurrent.TimeoutException;
-
 import static javafxlibrary.utils.HelperFunctions.getHoveredNode;
-import static org.testfx.util.WaitForAsyncUtils.waitFor;
-import static org.testfx.util.WaitForAsyncUtils.asyncFx;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 public class ExtendedNodeMatchers {
 
@@ -50,22 +43,15 @@ public class ExtendedNodeMatchers {
             public void describeMismatch(Object object, Description description) {
                 description.appendText("Given target node is not hoverable, it seems to be hidden under this node: \"").
                         appendValue(getHoveredNode()).appendText("\"");
-
             }
         };
     }
 
     private static boolean hoverable(Node node) {
         try {
-            waitFor(HelperFunctions.getWaitUntilTimeout(), HelperFunctions.getTimeUnit("SECONDS"), () -> {
-                return asyncFx(() -> new javafxlibrary.keywords.Keywords.MoveRobot().moveTo(node, "DIRECT") != null).get();
-            });
             return node.isHover();
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
-        } catch (TimeoutException te) {
-            throw new JavaFXLibraryTimeoutException("Given element \"" + node + "\" was not found within given timeout of "
-                    + HelperFunctions.getWaitUntilTimeout() + " " + "SECONDS");
         } catch (Exception e) {
             RobotLog.trace("Exception in hoverable matcher: " + e + "\n" + e.getCause().toString());
             throw new JavaFXLibraryNonFatalException("hoverable matcher failed: ", e);

@@ -3,20 +3,13 @@ JavaFXLibrary can be run with both Jython and Python version of Robot Framework 
 
 In short, this library is a wrapper for [https://github.com/TestFX/TestFX|TestFX], which is a Java library for testing JavaFX UI applications.
 
-
-
 == 1. Preparations before running the tests ==
 - JavaFXLibrary needs to be compiled and packaged. [https://github.com/eficode/JavaFXLibrary/releases/latest|Download JAR release] or clone the [https://github.com/eficode/JavaFXLibrary.git|repository] and run _mvn package_ from the root folder.
 - The tested application and the JavaFXLibrary jars need to be added to CLASSPATH.
+- Once the library jar -file is available, the library can be taken into use in two ways: *Local mode* with _Jython_ and *Remote mode* with both _Jython_ and _Python_ version of Robot Framework.
 
+== 2.1 Usage in local mode(Jython only) ==
 
-
-== 2. Using the library ==
-Once the library jar -file is available, the library can be taken into use in two ways: *Local mode* with _Jython_ and
-*Remote mode* with both _Jython_ and _Python_ version of Robot Framework.
-
-
-=== 2.1 Usage in local mode(Jython only) ===
 First, the JavaFXLibrary needs to be taken into use in the settings table.
 | *Settings* | *Value* |
 | Library | JavaFXLibrary |
@@ -25,7 +18,18 @@ Experimental headless mode can be activated at the import time by setting first 
 | *Settings* | *Value* |
 | Library | JavaFXLibrary | ${True} |
 
-=== 2.2 Usage in remote mode(Jython & Python) ===
+== 2.2 Launch application ==
+
+In test data start application like this (setting of classpath is optional if Java Agent is used)
+
+| *Keyword* | *Argument* |
+| Set To Classpath | your_application.jar |
+| Launch Javafx Application | org.yourmodule.mainClass |
+
+== 2.3 Usage in remote mode(Jython & Python) ==
+
+=== 2.3.1 Start remote library manually ===
+
 When using the test library in remote mode, the library needs to be started at the remote end first. This can be done as follows:
 - _java -jar javafxlibrary-<version>.jar_
 This will start the remote server listening at default port number 8270.
@@ -47,30 +51,27 @@ Experimental headless mode can be activated in remote mode at the import time by
 | *Settings* | *Value* |
 | Library | Remote | http://localhost:8270 | ${True} | WITH NAME | JavaFXLibrary |
 
-Experimental Java agent support
+Launch application like in `2.2 Launch application`.
+
+=== 2.3.2 Start remote library as Java Agent ===
 
 Library can be used as java agent. Launch application with `-javaagent:/path/to/javafxlibrary-<version>.jar`.
 Default port is 8270 and can be changed with adding `=<port>` to java agent command. Only remote library is supported.
-Using `Launch JavaFX Application` is still required but instead of starting new application keyword initializes Stage for library.
+Using `Launch JavaFX Application` is still required but instead of starting new application keyword initializes Stage
+for library (see `2.2 Launch application`).
 
 == 3. Locating JavaFX Nodes ==
 === 3.1 Locator syntax ===
-JavaFXLibrary uses TestFX lookup queries as the default way of locating JavaFX Nodes in the UI. These queries are very
-similar to normal CSS-selectors used in JavaFX, but come with some modifications. Note that the '#'-character must be escaped as it begins a comment in Robot Framework.
-| *Example Query* | *Description* |
-| Submit | [https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Labeled.html|Labeled] nodes like Buttons and Labels can be located with plain text |
-| VBox HBox Button | *Using class names as selectors does not work.* TestFX tries to find a node containing text "_VBox HBox Button_" instead |
-| .vBox .hBox \#submitButton | Style classes and IDs can be used just like in CSS |
+JavaFXLibrary offers different query types for locating objects: *id*, *css*, *class*, *text*, *xpath* and *pseudo*.
+Query type is defined by using a prefix. Note that in css type id's '#'-character must be escaped as it begins a
+comment in Robot Framework.
 
-Smaller applications with a clear, well-defined structure and more or less static content can easily be tested using
-only the default locator queries. However, as the application grows in size and its UI is starting to have a lot of
-dynamic content, things tend to become a bit more difficult. To tackle this, JavaFXLibrary offers additional query types
-for locating objects: *id*, *css*, *class*, *text*, *xpath* and *pseudo*. Query type is defined by using a prefix.
 | *Example Query* | *Description* |
 | id=submitButton | Returns a node with id submitButton. Basically same as default query "_\#submitButton_". |
 | css=VBox > .customStyle | Returns a node matching the CSS selector. |
+| css=.customStyle \#button-id | Combined CSS selector with id. |
 | class=javafx.scene.shape.Rectangle | Returns a node that is an instance of the given class. |
-| text="Submit" | Returns a node with text value _Submit_. The value must be inside quotation marks. Works only with Labeled nodes, and is basically the same as the default locator with plain text. |
+| text="Submit" | Returns a node with text value _Submit_. The value must be inside quotation marks. Works only with [https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Labeled.html|Labeled] nodes. |
 | text="Text with \"quotation\" marks" | Text value can contain spaces and quotation marks, but inner quotation marks must be escaped using _'\'_ backslash character. |
 | xpath=//Rectangle[@fill="0xff1493ff"] | Returns a Rectangle that has fill value _0xff1493ff_. See `3.3 About XPath queries` for more details about using xpath queries. |
 | pseudo=hover;focused | Returns a node that contains pseudo class states _hover_ and _focused_. See `3.4 About Pseudo queries` for more details about using pseudo queries. |
@@ -80,8 +81,8 @@ is used as the root of the next query. Only queries with prefixes can be chained
 | *Example Query* | *Description* |
 | xpath=/VBox/HBox[4] css=Label | Finds 4th HBox child of VBox and returns the Label it contains. |
 | css=VBox HBox xpath=//Rectangle[@width="600.0"] | Finds the HBox using CSS query and proceeds to find a Rectangle that is 600px wide and is located in the HBox. |
+| id=main-view css=.save-button | Finds css .button under id main-view. |
 | class=com.eficode.WrapperNode css=.styleClass text="toggle fullscreen" | Returns a node containing text _toggle fullscreen_ that has a parent which contains style class _styleClass_ and has a parent that is an instance of the WrapperNode class. |
-
 
 === 3.2 Using locators as keyword arguments ===
 Locators can be given as arguments for every JavaFXLibrary keyword that accepts a node as an argument. This is useful as it
@@ -91,12 +92,12 @@ a reference to the node saved in a variable. `Find` and `Find All` -keywords can
 | | Click On | submit | # Clicks on node containing text _submit_ |
 | | Click On | xpath=//Button[@text="submit"] | # Clicks on button containing text _submit_ |
 | | |
-| ${node}= | Find | submit | # Finds node containing text _submit_ and returns it |
+| ${node}= | Find | text="submit" | # Finds node containing text _submit_ and returns it |
 | | Click On | ${node} | # Click on the node that was found earlier |
 
 If we want to click every Button of the application, we could use Find All and call the click on keyword in a for loop:
 | *Return value* | *Keyword* | *Argument* | | *Description* |
-| ${buttons}= | Find All | .button | | # Get all button nodes to @{buttons} list variable |
+| ${buttons}= | Find All | css=.button | | # Get all button nodes to @{buttons} list variable |
 | FOR | ${button} | IN | @{buttons} |
 | | Click On | ${button} | | # Click each button in for loop |
 | END | | |
@@ -116,7 +117,6 @@ used to differentiate nodes. To see the generated FXML used for the lookup, use 
 is large, it might be easier to first get a parent node closer to the actual point of interest and use it as a root for
 the Log FXML keyword. This way the output will be easier to read and the log.html wont be millions of lines long.
 
-
 === 3.4 About Pseudo queries ===
 All lookup queries return the first matching node, unless used with `Find All` keyword in which case all of the matches
 will be returned. Usually this is not a problem, but pseudo classes require a some additional thought and care. For example
@@ -129,6 +129,9 @@ root for the lookup. Root can be given as an argument for both Find keywords, or
 before using pseudo-query. Multiple pseudo-classes can be given in a single query to further narrow the amount of matching
 nodes by using ';' separator, e.g. _pseudo=hover;focused_.
 
+=== 3.5 Getting node parent ===
+Sometimes you can find row according to value under it but want to get the row node. Use `Get Node Parent` keyword to
+get parent node of wanted node (can be repeated if higher in node tree).
 
 == 4. Argument types and return value types ==
 JavaFXLibrary has built in support for [https://github.com/robotframework/jrobotremoteserver|jrobotremoteserver], which provides
@@ -145,16 +148,15 @@ object methods available for Nodes.
 
 Let's take an example of a table that can contain complex objects, not just simple string values:
 | *Return value* | *Keyword* | *Argument* | *Argument* | *Description* |
-| ${table cells}= | Get Table Row Cells | \#table-id | 2 | # table cell Nodes are stored in map and string representations are returned |
+| ${table cells}= | Get Table Row Cells | id=table-id | 2 | # table cell Nodes are stored in map and string representations are returned |
 | | Node Should Be Enabled | ${table cells}[column 0] | | # Library takes the string value as an argument and converts it back to Node |
 | | Node Should Have Text | ${table cells}[column 1] | some text | | |
 | | Click On | ${table cells}[column 2] | | # in case this cell is clickable |
-| ${cell buttons}= | Find All From Node | ${table cells}[column 3] | .button  | # Finds all buttons from table cell Node |
+| ${cell buttons}= | Find All |  css=.button | root=${table cells}[column 3] | # Finds all buttons from table cell Node |
 | | Click On | ${cell buttons}[0] |  |  |
 Most of the JavaFXLibrary keywords can use locators directly e.g. `Click On` keyword can take just css selector as an
 argument, but in some cases it can be convenient to be able to pass in a 'Node' as an argument, especially when dealing
 with complex data structures.
-
 
 == 5. Used ENUMs ==
 | *Definition* | *Values* |

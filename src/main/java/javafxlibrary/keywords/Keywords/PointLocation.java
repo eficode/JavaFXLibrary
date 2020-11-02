@@ -18,7 +18,6 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -29,6 +28,8 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class PointLocation extends TestFxAdapter {
@@ -45,15 +46,13 @@ public class PointLocation extends TestFxAdapter {
             + "| Move To | ${point query} | | | # moves to bottom right corner of a node that was stored in PointQuery object. |\n")
     @ArgumentNames({"locator"})
     public Object pointTo(Object locator) {
-        RobotLog.info("Creating a point query for target \"" + locator + "\"");
-
-        if (locator instanceof String)
-            locator = new Finder().find((String) locator);
-
-        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
-
+        checkObjectArgumentNotNull(locator);
         try {
-            return HelperFunctions.mapObject(method.invoke(robot, locator));
+            RobotLog.info("Creating a point query for target \"" + locator + "\"");
+            if (locator instanceof String)
+                locator = objectToNode(locator);
+            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "point", locator.getClass());
+            return mapObject(method.invoke(robot, locator));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("Could not execute point to using locator \"" + locator
                     + "\": " + e.getCause().getMessage());
@@ -68,7 +67,7 @@ public class PointLocation extends TestFxAdapter {
     public Object pointToCoordinates(int x, int y) {
         try {
             RobotLog.info("Returning a pointquery to coordinates: [" + x + ", " + y + "]");
-            return HelperFunctions.mapObject(robot.point(x, y));
+            return mapObject(robot.point(x, y));
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
