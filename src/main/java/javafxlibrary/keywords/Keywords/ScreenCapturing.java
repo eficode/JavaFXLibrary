@@ -25,7 +25,6 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
-import jnr.ffi.annotations.In;
 import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
