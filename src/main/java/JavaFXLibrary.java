@@ -90,7 +90,6 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("launchSwingApplicationInSeparateThread");
         add("logApplicationClasspath");
         add("logSystemProperties");
-        add("moveTo");
         add("nodeShouldBeHoverable");
         add("nodeShouldNotBeHoverable");
         add("pushManyTimes");
