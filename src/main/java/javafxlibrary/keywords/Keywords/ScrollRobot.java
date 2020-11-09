@@ -25,6 +25,9 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+import java.util.concurrent.ExecutionException;
+import static javafxlibrary.utils.HelperFunctions.sleepFor;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 
 @RobotKeywords
 public class ScrollRobot extends TestFxAdapter {
@@ -39,7 +42,13 @@ public class ScrollRobot extends TestFxAdapter {
     public void scrollVertically(String direction, int amount) {
         try {
             RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
-            robot.scroll(amount, HelperFunctions.getVerticalDirection(direction));
+            //Scrolling is done one tick at time from main thread as in asyncFx thread it would result only one visible scroll
+            for (int i = 0; i < amount; i++) {
+                asyncFx(() -> robot.scroll(1, HelperFunctions.getVerticalDirection(direction))).get();
+                sleepFor(10);
+            }
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to scroll vertically!");
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;
@@ -62,9 +71,17 @@ public class ScrollRobot extends TestFxAdapter {
     public void scrollHorizontally(String direction, int amount) {
         try {
             RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
-            robot.press(KeyCode.SHIFT);
-            robot.scroll(amount, HelperFunctions.getHorizontalDirection(direction));
-            robot.release(KeyCode.SHIFT);
+            //Scrolling is done one tick at time from main thread as in asyncFx thread it would result only one visible scroll
+            for (int i = 0; i < amount; i++) {
+                asyncFx(() -> {
+                    robot.press(KeyCode.SHIFT);
+                    robot.scroll(1, HelperFunctions.getHorizontalDirection(direction));
+                    robot.release(KeyCode.SHIFT);
+                }).get();
+                sleepFor(10);
+            }
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("Unable to scroll horizontally!");
         } catch (Exception e) {
             if(e instanceof JavaFXLibraryNonFatalException)
                 throw e;

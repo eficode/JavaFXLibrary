@@ -24,7 +24,7 @@ Scroll down
     Scroll Vertically       DOWN                    25
     Verify String           ${VERTICAL_TOTAL}       ${TARGET_DISTANCE}
     Verify String           ${VERTICAL_ACTUAL}      -${TARGET_DISTANCE}
-    Verify String           ${VERTICAL_EVENTS}      1
+    Verify String           ${VERTICAL_EVENTS}      25
 
 Scroll up
     [Tags]                  smoke
@@ -34,7 +34,7 @@ Scroll up
     Scroll Vertically       UP                      25
     Verify String           ${VERTICAL_TOTAL}       ${TARGET_DISTANCE}
     Verify String           ${VERTICAL_ACTUAL}      ${TARGET_DISTANCE}
-    Verify String           ${VERTICAL_EVENTS}      1
+    Verify String           ${VERTICAL_EVENTS}      25
 
 Scroll Once Vertically
     [Tags]    smoke
@@ -54,7 +54,7 @@ Scroll Left
     Scroll Horizontally     LEFT                    25
     Verify String           ${HORIZONTAL_TOTAL}     ${TARGET_DISTANCE}
     Verify String           ${HORIZONTAL_ACTUAL}    ${TARGET_DISTANCE}
-    Verify String           ${HORIZONTAL_EVENTS}    1
+    Verify String           ${HORIZONTAL_EVENTS}    25
 
 Scroll Right
     [Tags]                  smoke
@@ -65,7 +65,7 @@ Scroll Right
     Scroll Horizontally     RIGHT                   10
     Verify String           ${HORIZONTAL_TOTAL}     ${TARGET_DISTANCE}
     Verify String           ${HORIZONTAL_ACTUAL}    -${TARGET_DISTANCE}
-    Verify String           ${HORIZONTAL_EVENTS}    1
+    Verify String           ${HORIZONTAL_EVENTS}    10
 
 *** Keywords ***
 Setup all tests
