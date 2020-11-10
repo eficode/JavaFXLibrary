@@ -87,7 +87,7 @@ Move To Window
 
 Move To Nonexistent Location
     [Tags]                           smoke
-    Run Keyword And Expect Error     unable to find node for query "id=rectangleNOTfound"
+    Run Keyword And Expect Error     Given locator "id=rectangleNOTfound" was not found.
     ...                              Move To                 id=rectangleNOTfound
 
 *** Keywords ***
