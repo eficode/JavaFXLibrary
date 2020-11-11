@@ -30,8 +30,10 @@ import org.testfx.robot.Motion;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.ExecutionException;
 
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 
 @RobotKeywords
 public class MoveRobot extends TestFxAdapter {
@@ -46,18 +48,49 @@ public class MoveRobot extends TestFxAdapter {
             + "| ${point} | Create Point | ${x} | ${y} | \n"
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
     @ArgumentNames({ "locator", "motion=DIRECT" })
-    public FxRobotInterface moveTo(Object locator, String motion) {
+    public void moveTo(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Moving to target \"" + locator + "\" using motion: \"" + getMotion(motion) + "\"");
+            Object node;
             if (locator instanceof String) {
-                locator = objectToNode(locator);
+                node = asyncFx(() -> {
+                    try {
+                        return objectToNode(locator);
+                    } catch (Exception e) {
+                        RobotLog.info("Locator not found: " + e.getCause());
+                        return null;
+                    }
+                }).get();
+                if (node == null)
+                    throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
+            } else node = locator;
+            if (isMac()) {
+                // TODO: why asyncFx thread does not work in mac?
+                Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", node.getClass(), Motion.class);
+                method.invoke(robot, node, getMotion(motion));
+            } else {
+                boolean success = asyncFx(() -> {
+                    try {
+                        Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", node.getClass(), Motion.class);
+                        method.invoke(robot, node, getMotion(motion));
+                        return true;
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        RobotLog.trace("failed in asyncFx thread moveTo");
+                        return false;
+                    }
+                }).get();
+                if (!success) throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
+                        "and motion " + motion);
             }
-            Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", locator.getClass(), Motion.class);
-            return (FxRobotInterface) method.invoke(robot, locator, getMotion(motion));
+        } catch (InterruptedException | ExecutionException iee) {
+            throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
+                    "and motion " + motion + " (asyncFx thread): " + iee.getCause());
+        } catch (JavaFXLibraryNonFatalException e) {
+            throw e;
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
-                    "and motion " + motion + ": " + e.getCause().getMessage(), e);
+                    "and motion " + motion + ": " + e.getCause());
         }
     }
 

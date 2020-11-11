@@ -94,6 +94,8 @@ public class JavaFXLibrary extends AnnotationLibrary {
         add("nodeShouldBeHoverable");
         add("nodeShouldNotBeHoverable");
         add("pushManyTimes");
+        add("scrollHorizontally");
+        add("scrollVertically");
         add("setImageLogging");
         add("setSafeClicking");
         add("setScreenshotDirectory");

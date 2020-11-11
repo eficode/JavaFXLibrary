@@ -133,7 +133,7 @@ Find With Pseudo Class
     ${root}                Find            css=VBox HBox VBox HBox StackPane
     ${target}              Find            xpath=//Text[@text="150x150"]
     Move To                ${target}
-    Wait Until Element Exists     pseudo=hover
+    Wait Until Element Exists              pseudo=hover
     ${result}              Find            pseudo=hover    false    ${root}
     Should Be Equal        ${result}       ${target}
 
