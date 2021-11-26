@@ -399,6 +399,12 @@ Library Keyword Timeout Should Happen
     ...                             Write                   Robot Framework
     [Teardown]   Run Keywords       Set Timeout           ${old_timeout}     AND     Set Write Speed     ${old_write_speed}
 
+Clipboard Contents
+    [Tags]    smoke
+    Set Clipboard Content           text=JavaFXLibrary is a great tool!
+    ${READ_CONTENT}=                Get Clipboard Content
+    Should Be Equal                 ${READ_CONTENT}         JavaFXLibrary is a great tool!
+
 *** Keywords ***
 Setup All Tests
     Import JavaFXLibrary

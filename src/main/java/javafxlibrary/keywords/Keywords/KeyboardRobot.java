@@ -29,7 +29,9 @@ import org.testfx.api.FxRobot;
 import org.testfx.api.FxRobotInterface;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
@@ -252,4 +254,47 @@ public class KeyboardRobot extends TestFxAdapter {
         return oldSleepMillis;
     }
 
+    
+    @RobotKeyword("Reads clipboard content as text.")
+    public String getClipboardContent() {
+        if (TestFxAdapter.isHeadless) {
+            RobotLog.warn("Headless mode does not support clipboard.");
+            return "";
+        } else {
+             try {
+	            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+	            String contents = (String) c.getData(DataFlavor.stringFlavor);
+                return contents;
+	        } catch (UnsupportedFlavorException e) {
+                throw new JavaFXLibraryNonFatalException("Unable to get clipboard contents. Getting current content as string is not supported", e);
+            } catch (Exception e) {
+	            if(e instanceof JavaFXLibraryNonFatalException) {
+	                throw (JavaFXLibraryNonFatalException) e;
+                }
+	            throw new JavaFXLibraryNonFatalException("Unable to get clipboard contents.", e);
+	        }
+        }
+    }
+
+    @RobotKeyword("Writes a given text characters to clipboard.\n\n"
+            + "``text`` is the text characters to write\n"
+            + "\nExample: \n"
+            + "| Set Clipboard Content | Clipboard value as string | \n")
+    @ArgumentNames({"text" })
+    public void setClipboardContent(String text) {
+        if (TestFxAdapter.isHeadless) {
+            RobotLog.warn("Headless mode does not support clipboard.");
+        } else {
+             try {
+	            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+	            StringSelection testData = new StringSelection(text);
+	            c.setContents(testData, testData);
+	        } catch (Exception e) {
+	            if(e instanceof JavaFXLibraryNonFatalException) {
+	                throw e;
+                }
+	            throw new JavaFXLibraryNonFatalException("Unable to set clipboard contents.", e);
+	        }
+        }
+    }
 }
