@@ -411,7 +411,7 @@
 		<dependency>
 			<groupId>org.robotframework</groupId>
 			<artifactId>jrobotremoteserver</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.1</version>
 		</dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
