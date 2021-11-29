@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.shape.Rectangle?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -21,22 +17,25 @@
   -->
 
 <?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.TestScreenCapturingController">
     <Pane fx:id="topContainer">
         <Pane fx:id="rectangleContainer">
-            <Rectangle x="0" y="0" width="500" height="300" fill="grey" />
+            <Rectangle x="0" y="0" width="500" height="300" fill="grey"/>
             <Group fx:id="subRectangles">
-            <Rectangle x="80" y="80" width="80" height="80" fill="#01FFFF" />
-            <Rectangle x="80" y="160" width="40" height="40" fill="#6AFF00" />
-            <Rectangle x="120" y="160" width="40" height="40" fill="#7600DF" />
-            <Rectangle x="80" y="200" width="40" height="40" fill="#FFFF02" />
-            <Rectangle x="120" y="200" width="20" height="20" fill="#A0B6D7" />
-            <Rectangle x="140" y="200" width="20" height="20" fill="#0AFF85" />
-            <Rectangle x="120" y="220" width="20" height="20" fill="#FF4A31" />
-            <Rectangle x="140" y="220" width="20" height="20" fill="#0000FF" />
-            <Rectangle x="160" y="160" width="80" height="80" fill="#FF2B00" />
+                <Rectangle x="80" y="80" width="80" height="80" fill="#01FFFF"/>
+                <Rectangle x="80" y="160" width="40" height="40" fill="#6AFF00"/>
+                <Rectangle x="120" y="160" width="40" height="40" fill="#7600DF"/>
+                <Rectangle x="80" y="200" width="40" height="40" fill="#FFFF02"/>
+                <Rectangle x="120" y="200" width="20" height="20" fill="#A0B6D7"/>
+                <Rectangle x="140" y="200" width="20" height="20" fill="#0AFF85"/>
+                <Rectangle x="120" y="220" width="20" height="20" fill="#FF4A31"/>
+                <Rectangle x="140" y="220" width="20" height="20" fill="#0000FF"/>
+                <Rectangle x="160" y="160" width="80" height="80" fill="#FF2B00"/>
             </Group>
         </Pane>
     </Pane>

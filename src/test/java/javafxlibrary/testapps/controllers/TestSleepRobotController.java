@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -30,15 +31,20 @@ import java.util.concurrent.TimeUnit;
 public class TestSleepRobotController implements Initializable {
 
     /*
-        * Use totalMillis, totalSeconds and totalMinutes to get the elapsed time in same units that the test case is using
-        * Button can be used by pressing Enter too, but mouseButtons seem to have more consistent results
+     * Use totalMillis, totalSeconds and totalMinutes to get the elapsed time in same units that the test case is using
+     * Button can be used by pressing Enter too, but mouseButtons seem to have more consistent results
      */
 
-    @FXML private Label timeLabel;
-    @FXML private Button toggleButton;
-    @FXML private Label totalMillis;
-    @FXML private Label totalSeconds;
-    @FXML private Label totalMinutes;
+    @FXML
+    private Label timeLabel;
+    @FXML
+    private Button toggleButton;
+    @FXML
+    private Label totalMillis;
+    @FXML
+    private Label totalSeconds;
+    @FXML
+    private Label totalMinutes;
 
     private long startTime;
     private volatile boolean isRunning;
@@ -66,15 +72,15 @@ public class TestSleepRobotController implements Initializable {
 
     private void initializeGUIupdateThread() {
         t = new Thread(() -> {
-            while(isRunning) {
+            while (isRunning) {
                 try {
                     // Update GUI in main JavaFX Thread
                     Platform.runLater(() -> {
-                        if(isRunning)
-                            updateTimeStats((System.nanoTime() - startTime) /1000000);
+                        if (isRunning)
+                            updateTimeStats((System.nanoTime() - startTime) / 1000000);
                     });
                     Thread.sleep(1);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -101,7 +107,7 @@ public class TestSleepRobotController implements Initializable {
 
     // Buttons can be pressed with enter
     public void buttonKeyboardListener(javafx.scene.input.KeyEvent event) {
-        if(event.getCode() == KeyCode.ENTER) {
+        if (event.getCode() == KeyCode.ENTER) {
             toggleTimer();
         }
     }

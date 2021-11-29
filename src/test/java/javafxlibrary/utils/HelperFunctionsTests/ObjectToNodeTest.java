@@ -4,8 +4,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.finder.Finder;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -36,7 +36,8 @@ public class ObjectToNodeTest extends TestFxAdapterTest {
 
         new Expectations() {
             {
-                finder.find("#testNode"); result = button;
+                finder.find("#testNode");
+                result = button;
             }
         };
 

@@ -17,12 +17,13 @@
 
 package javafxlibrary.utils;
 
-import java.io.File;
-import java.util.HashMap;
 import javafx.application.Application;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import org.testfx.api.FxRobotContext;
 import org.testfx.api.FxRobotInterface;
+
+import java.io.File;
+import java.util.HashMap;
 
 import static javafxlibrary.utils.HelperFunctions.getMainClassFromJarFile;
 
@@ -113,6 +114,7 @@ public class TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to get screenshot directory in logs, no application is currently open!");
         }
     }
+
     public void setCurrentSessionScreenshotDirectory(String dir, String logDir) {
         if (activeSession != null) {
             File errDir = new File(dir);

@@ -34,7 +34,6 @@ import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.Keywords.ClickRobot;
 import javafxlibrary.keywords.Keywords.KeyboardRobot;
-import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
@@ -47,6 +46,7 @@ import org.testfx.robot.Motion;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static javafxlibrary.utils.HelperFunctions.*;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @RobotKeywords
@@ -54,7 +54,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Brings the given stage to front\n\n"
             + "``stage`` is an Object:Stage to be set in front of others, see `3.2 Using locators as keyword arguments`. \n\n")
-    @ArgumentNames({ "stage" })
+    @ArgumentNames({"stage"})
     public void bringStageToFront(Stage stage) {
         RobotLog.info("Bringing following Stage to front: \"" + stage + "\"");
         try {
@@ -75,7 +75,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${node}= | Find | id=node-id | \n"
             + "| ${max height}= | Call Object Method | ${node} | maxHeight | (double)10 | \n"
             + "| ${node text}= | Call Object Method | ${node} | getText | \n")
-    @ArgumentNames({ "object", "method", "*arguments=" })
+    @ArgumentNames({"object", "method", "*arguments="})
     public Object callObjectMethod(Object object, String method, Object... arguments) {
         /* Javalib Core changes all parameters to Strings after runKeywords automatic argument replacement, so arguments
            are replaced with objects from objectMap here instead. */
@@ -93,7 +93,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${node}= | Find | id=node-id | \n"
             + "| Call Object Method In Fx Application Thread | ${node} | maxHeight | (boolean)false | \n")
-    @ArgumentNames({ "object", "method", "*arguments=" })
+    @ArgumentNames({"object", "method", "*arguments="})
     public void callObjectMethodInFxApplicationThread(Object object, String method, Object... arguments) {
         // Check callObjectMethod for info about argument replacing.
         object = useMappedObject(object);
@@ -109,7 +109,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "with `Call Object Method` or `Call Object Method In Fx Application Thread` keyword.\n\n"
             + "Example:\n"
             + "| List Node Methods | ${my node} |\n")
-    @ArgumentNames({ "node" })
+    @ArgumentNames({"node"})
     public String[] listNodeMethods(Node node) {
         try {
             RobotLog.info("Listing all available methods for node: \"" + node + "\"");
@@ -152,7 +152,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${my node}= | Find | id=node-id | \n"
             + "| Print Child Nodes | ${my node} | \n")
-    @ArgumentNames({ "root=" })
+    @ArgumentNames({"root="})
     public void printChildNodes(Object root) {
         try {
             RobotLog.info("Printing tree structure for node: \"" + root + "\"");
@@ -181,7 +181,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             " default, preventing clicks outside of the tested application.\n\n" +
             "``value`` can be any of the following: on, off.\n\n"
             + "Parameter _value_ specifies whether safety should be toggled on or off")
-    @ArgumentNames({ "value" })
+    @ArgumentNames({"value"})
     public void setSafeClicking(String value) {
         switch (value.toLowerCase()) {
             case "off":
@@ -204,7 +204,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${old_timeout}= | Set Timeout | 20 | \n"
             + "| Click On | id=myidthatshallcomeavailable | | \n"
             + "| [Teardown] | Set Timeout | ${old_timeout} | \n")
-    @ArgumentNames({ "timeout" })
+    @ArgumentNames({"timeout"})
     public Integer setTimeout(int timeout) {
         RobotLog.info("Setting timeout to " + timeout + "s");
         Integer oldTimeoutValue = getLibraryKeywordTimeout();
@@ -219,7 +219,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
      */
     @RobotKeyword("Presses ALT/CMD + TAB for the given amount of times. \n\n"
             + "``switchAmount`` is an Integer value and specifies how many switches will be made in total")
-    @ArgumentNames({ "switchAmount" })
+    @ArgumentNames({"switchAmount"})
     public void switchWindow(int switchAmount) {
         try {
             RobotLog.info("Switching window for: \"" + switchAmount + "\" times.");
@@ -246,7 +246,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${states}= | Get Pseudo Class States | ${node} | \n"
             + "| Log List | ${states} | \n")
-    @ArgumentNames({ "node" })
+    @ArgumentNames({"node"})
     public Set<PseudoClass> getPseudoClassStates(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -261,7 +261,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns text value of the Node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getText method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public String getNodeText(Object locator) {
         checkObjectArgumentNotNull(locator);
         Node node = objectToNode(locator);
@@ -281,7 +281,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "Returns full image path by subsequently calling impl_getUrl -method. \n\n"
             + "Note, impl_getUrl -method is deprecated! Support for this method will be removed from Java in the future.")
-    @ArgumentNames({ "node" })
+    @ArgumentNames({"node"})
     public String getNodeImageUrl(Object locator) {
         checkObjectArgumentNotNull(locator);
         Node node = objectToNode(locator);
@@ -304,16 +304,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException(
                     "Get node image url failed for node: \"" + node.toString() + "\". Element has no method impl_getUrl()");
         } catch (Exception e) {
-            if( e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to get node image url for node: \"" + node.toString() + "\"", e );
+            throw new JavaFXLibraryNonFatalException("Unable to get node image url for node: \"" + node.toString() + "\"", e);
         }
     }
 
     @RobotKeyword("Returns the parent node of node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getParent method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getNodeParent(Object locator) {
         checkObjectArgumentNotNull(locator);
         Node node = objectToNode(locator);
@@ -321,7 +321,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             RobotLog.info("Getting node parent object for: \"" + node + "\"");
             return mapObject(node.getParent());
         } catch (Exception e) {
-            if( e instanceof JavaFXLibraryNonFatalException )
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to get node parent for node: " + node.toString(), e);
         }
@@ -330,7 +330,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the class name of a given node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getSimpleName method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public String getObjectClassName(Object locator) {
         checkObjectArgumentNotNull(locator);
         Node node = objectToNode(locator);
@@ -344,12 +344,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Returns Scene of the given object. \n\n"
             + "``locator`` is either a _query_, a _Node_ or a _Window_, see `3.2 Using locators as keyword arguments`\n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getScene(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting a Scene object for: \"" + locator + "\"");
-            if (locator instanceof Node){
+            if (locator instanceof Node) {
                 return mapObject(((Node) locator).getScene());
             } else if (locator instanceof String) {
                 Node node = objectToNode(locator);
@@ -368,7 +368,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the title of the given window. \n\n"
             + "``locator`` is an _Object:Window_ whose getTitle method will be called, see "
             + "`3.2 Using locators as keyword arguments`. This keyword can be coupled with e.g. `List Windows` -keyword.\n\n")
-    @ArgumentNames({ "window" })
+    @ArgumentNames({"window"})
     public String getWindowTitle(Object object) {
         checkObjectArgumentNotNull(object);
         try {
@@ -404,7 +404,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the row\n\n"
             + "``column`` Integer value for the column")
-    @ArgumentNames({ "table", "row", "column" })
+    @ArgumentNames({"table", "row", "column"})
     public Object getTableCellValue(Object locator, int row, int column) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -428,7 +428,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``row`` Integer value for the row\n\n"
             + "``column`` Integer value for the column")
-    @ArgumentNames({ "table", "row", "column" })
+    @ArgumentNames({"table", "row", "column"})
     public Object getTableCell(Object locator, int row, int column) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -444,7 +444,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``column`` Integer value for the column")
-    @ArgumentNames({ "table", "column" })
+    @ArgumentNames({"table", "column"})
     public List<Object> getTableColumnValues(Object locator, int column) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -457,7 +457,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                 RobotLog.info("Getting values from column " + tableColumn.getText());
             else
                 RobotLog.info("Getting values from column using index " + column);
-            for(Object item : items) {
+            for (Object item : items) {
                 Object value = tableColumn.getCellObservableValue(item).getValue();
                 values.add(mapObject(value));
             }
@@ -473,16 +473,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``column`` Integer value for the column")
-    @ArgumentNames({ "table", "column" })
+    @ArgumentNames({"table", "column"})
     public List<Object> getTableColumnCells(Object locator, int column) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" cells from column \"" + column + "\".");
             TableView table = (TableView) objectToNode(locator);
             List<Object> columnCells = new ArrayList<>();
-            VirtualFlow<?> vf = (VirtualFlow<?>) ( (TableViewSkin<?>) table.getSkin() ).getChildren().get( 1 );
+            VirtualFlow<?> vf = (VirtualFlow<?>) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1);
 
-            for(int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
+            for (int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
                 RobotLog.info("Index number: " + i);
                 columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
             }
@@ -500,7 +500,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${row cells}= | Get Table Row Cells | id=table-id | ${2} | \n"
             + "| Dictionary Should Contain Key | ${row cells} | column name | \n"
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
-    @ArgumentNames({ "table", "row" })
+    @ArgumentNames({"table", "row"})
     public List<Object> getTableRowValues(Object locator, int rowNumber) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -508,11 +508,11 @@ public class ConvenienceKeywords extends TestFxAdapter {
             TableView table = (TableView) objectToNode(locator);
             Object row = table.getItems().get(rowNumber);
             List<Object> values = new ArrayList<>();
-            for(Object tableColumn : table.getColumns()){
-                values.add( ((TableColumn)tableColumn).getCellObservableValue(row).getValue());
+            for (Object tableColumn : table.getColumns()) {
+                values.add(((TableColumn) tableColumn).getCellObservableValue(row).getValue());
             }
             return values;
-        } catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
         }
     }
@@ -525,18 +525,18 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${row cells}= | Get Table Row Cells | id=table-id | ${2} | \n"
             + "| Dictionary Should Contain Key | ${row cells} | column name | \n"
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
-    @ArgumentNames({ "table", "row" })
+    @ArgumentNames({"table", "row"})
     public Map<String, Object> getTableRowCells(Object locator, int row) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" cells from row \"" + row + "\".");
             TableView table = (TableView) objectToNode(locator);
             Map<String, Object> cells = new HashMap<>();
-            for (int i = 0; i < table.getColumns().size(); i++){
+            for (int i = 0; i < table.getColumns().size(); i++) {
                 cells.put(getTableColumnName(table, i), mapObject(getTableRowCell(table, row, i)));
             }
             return cells;
-        } catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
         }
     }
@@ -544,14 +544,14 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the column count of the given table\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "table" })
-    public int getTableColumnCount(Object locator){
+    @ArgumentNames({"table"})
+    public int getTableColumnCount(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" column count.");
             TableView table = (TableView) objectToNode(locator);
             return table.getColumns().size();
-        } catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
         }
     }
@@ -568,8 +568,8 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Set Screenshot Directory | /Users/robotuser/output/AUT-screenshots/ | ./output/AUT-screenshots/ | \n"
             + "or\n"
             + "| Set Screenshot Directory | ./output/AUT-screenshots/ | \n")
-    @ArgumentNames({ "directory", "logDirectory=" })
-    public void setScreenshotDirectory(String dir, String logDir){
+    @ArgumentNames({"directory", "logDirectory="})
+    public void setScreenshotDirectory(String dir, String logDir) {
         RobotLog.info("Setting screenshot directory to \"" + dir + "\".");
         if (logDir != null && !logDir.isEmpty()) {
             RobotLog.info("Log directory is set to \"" + logDir + "\"");
@@ -578,14 +578,14 @@ public class ConvenienceKeywords extends TestFxAdapter {
     }
 
     @RobotKeyword("Gets the screenshot directory for current application")
-    public String getScreenshotDirectory(){
+    public String getScreenshotDirectory() {
         return getCurrentSessionScreenshotDirectory();
     }
 
     @RobotKeyword("Returns the value of the given field\n\n"
             + "``object`` is a _Object:Node_ whose property values are to be checked, see `3.2 Using locators as keyword arguments`. \n\n"
             + "``fieldName`` is a String specifying which field value should be read")
-    @ArgumentNames({ "object", "fieldName" })
+    @ArgumentNames({"object", "fieldName"})
     public Object getObjectProperty(Object object, String fieldName) {
         checkObjectArgumentNotNull(object);
         RobotLog.info("Getting object \"" + object + "\" property from field \"" + fieldName + "\".");
@@ -594,7 +594,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
 
     @RobotKeyword("Prints a list of all fields and their values of the given Java object\n\n"
             + "``object`` is a _Object:Node_ whose property field values will be printed, see `3.2 Using locators as keyword arguments`. \n\n")
-    @ArgumentNames({ "object" })
+    @ArgumentNames({"object"})
     public void printObjectProperties(Object object) {
         printFields(object, object.getClass());
     }
@@ -603,7 +603,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
-    public Double getScrollBarMaxValue(Object locator){
+    public Double getScrollBarMaxValue(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting scroll bar max value from locator \"" + locator + "\".");
@@ -618,9 +618,9 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
-    public Double getScrollBarMinValue(Object locator){
+    public Double getScrollBarMinValue(Object locator) {
         checkObjectArgumentNotNull(locator);
-        try{
+        try {
             RobotLog.info("Getting scroll bar min value from locator \"" + locator + "\".");
             ScrollBar scrollBar = (ScrollBar) objectToNode(locator);
             return scrollBar.getMin();
@@ -633,7 +633,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollBar element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
-    public Double getScrollBarValue(Object locator){
+    public Double getScrollBarValue(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting scroll bar value from locator \"" + locator + "\".");
@@ -647,7 +647,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the 'Selected' value(true/false) for given checkbox. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the CheckBox element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Boolean getCheckBoxSelection(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -662,12 +662,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the selected RadioButton Node from the same group as given locator points to.\n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the RadioButton element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getSelectedRadioButton(Object locator) {
         checkObjectArgumentNotNull(locator);
-        try{
+        try {
             RobotLog.info("Getting selected radio button from locator \"" + locator + "\".");
-            RadioButton rb = (RadioButton)objectToNode(locator);
+            RadioButton rb = (RadioButton) objectToNode(locator);
             return rb.getToggleGroup().getSelectedToggle();
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle given locator as RadioButton!");
@@ -677,14 +677,14 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the current value of given spinner element. \n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the Spinner element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getSpinnerValue(Object locator) {
         checkObjectArgumentNotNull(locator);
-        try{
+        try {
             RobotLog.info("Getting spinner value from locator \"" + locator + "\".");
             Spinner spinner = (Spinner) objectToNode(locator);
             return spinner.getValueFactory().getValue();
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Given locator could not be handled as Spinner!", cce);
         }
     }
@@ -695,7 +695,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${tabs}= | Get Tab pane Tabs | id=tab-pane-id | \n"
             + "| Dictionary Should Contain Key | ${tabs} | tab name | \n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Map<String, Object> getTabPaneTabs(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -704,7 +704,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             Map<String, Object> tabs = new HashMap<>();
             int i = tabPane.getTabs().size() - 1;
             for (Node node : tabPane.getChildrenUnmodifiable()) {
-                if(node.getStyleClass().contains("tab-content-area")) {
+                if (node.getStyleClass().contains("tab-content-area")) {
                     tabs.put(getTabHeaderText(tabPane, i), mapObject(node));
                     i--;
                 }
@@ -721,7 +721,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${tab}= | Get Tab Pane Selected Tab | id=pane-id | \n"
             + "| Dictionary Should contain Key | ${tab} | tab name | \n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Map<String, Object> getSelectedTabPaneTab(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -743,15 +743,15 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Select Tab Pane Tab | ${Tab Pane} | tab name | \n"
             + "| Select Tab Pane Tab | id=tab-id | tab name | \n")
     @ArgumentNames({"locator", "tabName"})
-    public void selectTabPaneTab (Object locator, String tabName) {
+    public void selectTabPaneTab(Object locator, String tabName) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Selecting tab: \"" + tabName + "\" from TabPane: \"" + locator + "\"");
             Node headerArea = getTabPaneHeaderArea((TabPane) objectToNode(locator));
             for (Node node : headerArea.lookupAll(".tab .tab-label")) {
-                if( node instanceof Labeled){
-                    String tabLabel = ((Labeled)node).getText();
-                    if ( tabLabel != null ) {
+                if (node instanceof Labeled) {
+                    String tabLabel = ((Labeled) node).getText();
+                    if (tabLabel != null) {
                         if (tabLabel.equals(tabName)) {
                             RobotLog.trace("Clicking on node: " + node);
                             robot.clickOn(node);
@@ -770,7 +770,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollPane element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
-    public Double getScrollPaneVerticalValue(Object locator){
+    public Double getScrollPaneVerticalValue(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting scroll pane vertical value from locator \"" + locator + "\".");
@@ -785,7 +785,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ScrollPane element, see "
             + "`3. Locating JavaFX Nodes`. \n\n")
     @ArgumentNames({"locator"})
-    public Double getScrollPaneHorizontalValue(Object locator){
+    public Double getScrollPaneHorizontalValue(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting scroll pane horizontal value from locator \"" + locator + "\".");
@@ -818,7 +818,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "\nExample:\n"
             + "| Clear Text Input | .text-field | \n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public void clearTextInput(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -841,7 +841,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Dictionary Should Contain Key | ${menu items} | menu item name"
             + "| Click On | &{menu items}[menu item name] | \n\n")
     @ArgumentNames({"locator="})
-    public Map<String, Object> getContextMenuItems(Window window){
+    public Map<String, Object> getContextMenuItems(Window window) {
         RobotLog.info("Getting context menu items from window \"" + window + "\".");
         if (!(window instanceof ContextMenu))
             throw new JavaFXLibraryNonFatalException("Unable to handle target as ContextMenu!");
@@ -859,12 +859,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| Click On | id=menu-button-id | \n"
             + "| Select Context Menu Item | menu item name |")
     @ArgumentNames({"item"})
-    public void selectContextMenuItem(String item){
+    public void selectContextMenuItem(String item) {
         RobotLog.info("Selecting context menu item \"" + item + "\".");
         List<Window> windows = robot.listTargetWindows();
         ListIterator li = windows.listIterator(windows.size());
         while (li.hasPrevious()) {
-            Set<Node> nodes = robot.rootNode((Window)li.previous()).lookupAll(".menu-item");
+            Set<Node> nodes = robot.rootNode((Window) li.previous()).lookupAll(".menu-item");
             for (Node node : nodes) {
                 if (getMenuItemText(node).equals(item)) {
                     robot.clickOn(node, Motion.HORIZONTAL_FIRST);
@@ -878,10 +878,10 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns the current value for given ProgressBar element. \n\n"
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the ToggleButton element, see "
             + " `3. Locating JavaFX Nodes`. \n\n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getProgressBarValue(Object locator) {
         checkObjectArgumentNotNull(locator);
-        try{
+        try {
             RobotLog.info("Getting progress bar value from locator \"" + locator + "\".");
             ProgressBar pb = (ProgressBar) objectToNode(locator);
             return mapObject(pb.getProgress());

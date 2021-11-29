@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Rectangle?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -20,6 +16,10 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       prefHeight="400.0" prefWidth="500.0"
@@ -46,8 +46,8 @@
             <HBox prefWidth="400" alignment="CENTER">
                 <HBox prefWidth="400" alignment="BASELINE_LEFT">
                     <Pane>
-                        <Rectangle width="404" height="40" fill="lightsteelblue" />
-                        <Rectangle fx:id="loadingBar" width="4" height="40" fill="lawngreen" />
+                        <Rectangle width="404" height="40" fill="lightsteelblue"/>
+                        <Rectangle fx:id="loadingBar" width="4" height="40" fill="lawngreen"/>
                     </Pane>
                 </HBox>
             </HBox>
@@ -91,7 +91,7 @@
     </VBox>
 
     <stylesheets>
-        <URL value="@css/TestWindowManagementUI.css" />
+        <URL value="@css/TestWindowManagementUI.css"/>
     </stylesheets>
 
 </VBox>

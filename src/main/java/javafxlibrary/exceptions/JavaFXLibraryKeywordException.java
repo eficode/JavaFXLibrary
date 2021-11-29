@@ -22,7 +22,6 @@ public class JavaFXLibraryKeywordException extends RuntimeException {
 
     /**
      * Avoid adding the exception type as a prefix to failure messages
-     *
      */
     public static final boolean ROBOT_SUPPRESS_NAME = true;
 

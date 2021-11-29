@@ -23,15 +23,20 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafxlibrary.testapps.customcomponents.ImageDemo;
 import javafxlibrary.testapps.customcomponents.TextList;
+
 import java.net.URL;
-import java.util.*;
+import java.util.ResourceBundle;
 
 public class DemoAppController implements Initializable {
 
-    @FXML Label imageViewLabel;
-    @FXML Label textViewLabel;
-    @FXML ImageDemo imageDemo;
-    @FXML TextList textList;
+    @FXML
+    Label imageViewLabel;
+    @FXML
+    Label textViewLabel;
+    @FXML
+    ImageDemo imageDemo;
+    @FXML
+    TextList textList;
     boolean toggled;
 
     @Override
@@ -49,7 +54,7 @@ public class DemoAppController implements Initializable {
             imageViewLabel.getStyleClass().remove("activeNavigation");
             textViewLabel.getStyleClass().add("activeNavigation");
             toggled = true;
-        } else if (toggled && e.getSource() == imageViewLabel){
+        } else if (toggled && e.getSource() == imageViewLabel) {
             textList.setVisible(false);
             textList.setManaged(false);
             imageDemo.setVisible(true);

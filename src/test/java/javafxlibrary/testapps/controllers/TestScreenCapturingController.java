@@ -18,10 +18,11 @@
 package javafxlibrary.testapps.controllers;
 
 import javafx.fxml.Initializable;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class TestScreenCapturingController implements Initializable{
+public class TestScreenCapturingController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

@@ -47,7 +47,7 @@ public class MoveRobot extends TestFxAdapter {
             + "| ${y} | Evaluate | ${150} + ${SCENE_MINY} | \n"
             + "| ${point} | Create Point | ${x} | ${y} | \n"
             + "| Move To | ${POINT} | VERTICAL_FIRST | | # moves mouse on top of given Point object by moving first vertically and then horizontally |")
-    @ArgumentNames({ "locator", "motion=DIRECT" })
+    @ArgumentNames({"locator", "motion=DIRECT"})
     public void moveTo(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -64,7 +64,8 @@ public class MoveRobot extends TestFxAdapter {
                 }).get();
                 if (node == null)
                     throw new JavaFXLibraryNonFatalException("Given locator \"" + locator + "\" was not found.");
-            } else node = locator;
+            } else
+                node = locator;
             if (isMac()) {
                 // TODO: why asyncFx thread does not work in mac?
                 Method method = MethodUtils.getMatchingAccessibleMethod(robot.getClass(), "moveTo", node.getClass(), Motion.class);
@@ -80,8 +81,9 @@ public class MoveRobot extends TestFxAdapter {
                         return false;
                     }
                 }).get();
-                if (!success) throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
-                        "and motion " + motion);
+                if (!success)
+                    throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
+                            "and motion " + motion);
             }
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("moveTo: Could not execute move to using locator \"" + locator + "\" " +
@@ -100,10 +102,10 @@ public class MoveRobot extends TestFxAdapter {
             + "Optional argument ``motion`` defines the path for mouse to move to given coordinates. Default value is _DIRECT_. \n\n"
             + "\nExample: \n"
             + "| Move By | 75 | 75 | \n")
-    @ArgumentNames({ "x", "y", "motion=DIRECT" })
+    @ArgumentNames({"x", "y", "motion=DIRECT"})
     public FxRobotInterface moveBy(int x, int y, String motion) {
         try {
-            RobotLog.info("Moving by [" + x + ", " + y + "] using motion: \"" + motion  + "\"");
+            RobotLog.info("Moving by [" + x + ", " + y + "] using motion: \"" + motion + "\"");
             return robot.moveBy(x, y, HelperFunctions.getMotion(motion));
         } catch (Exception e) {
             if (e instanceof JavaFXLibraryNonFatalException)
@@ -121,7 +123,7 @@ public class MoveRobot extends TestFxAdapter {
             + "| ${y} | Evaluate | ${SCENE_MINY} + ${200} | \n "
             + "| Move To Coordinates | ${x} | ${y} | HORIZONTAL_FIRST | \n"
             + "| Label Text Should Be | \\#locationLabel | 200 | 200 | \n")
-    @ArgumentNames({ "x", "y", "motion=DIRECT" })
+    @ArgumentNames({"x", "y", "motion=DIRECT"})
     public FxRobotInterface moveToCoordinates(int x, int y, String motion) {
         try {
             RobotLog.info("Moving to coordinates: [" + x + ", " + y + "] using motion: \"" + motion + "\"");

@@ -21,7 +21,7 @@ import java.awt.event.WindowEvent;
 public class SwingApplication {
 
     private static int clicks;
-    private static Color[] colors = { Color.AQUA, Color.CRIMSON, Color.MEDIUMSPRINGGREEN, Color.VIOLET, Color.YELLOW };
+    private static Color[] colors = {Color.AQUA, Color.CRIMSON, Color.MEDIUMSPRINGGREEN, Color.VIOLET, Color.YELLOW};
     private static JFrame frame;
 
     private static void initAndShowGUI() {

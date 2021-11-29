@@ -18,7 +18,7 @@
 package javafxlibrary.exceptions;
 
 @SuppressWarnings("serial")
-public class JavaFXLibraryTimeoutException  extends JavaFXLibraryNonFatalException {
+public class JavaFXLibraryTimeoutException extends JavaFXLibraryNonFatalException {
 
     public JavaFXLibraryTimeoutException() {
         super();

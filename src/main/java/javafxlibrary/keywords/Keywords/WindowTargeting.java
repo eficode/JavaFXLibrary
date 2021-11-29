@@ -17,18 +17,21 @@
 
 package javafxlibrary.keywords.Keywords;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
+
+import static javafxlibrary.utils.HelperFunctions.checkObjectArgumentNotNull;
+import static javafxlibrary.utils.HelperFunctions.mapObject;
 
 @RobotKeywords
 public class WindowTargeting extends TestFxAdapter {
@@ -40,7 +43,7 @@ public class WindowTargeting extends TestFxAdapter {
         try {
             return mapObject(robot.targetWindow());
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to find target window.", e);
         }
@@ -63,20 +66,20 @@ public class WindowTargeting extends TestFxAdapter {
             + "Scene: \n"
             + "| ${some_scene}= | Get Nodes Scene | ${some_node} | \n"
             + "| Set Target Window | ${some_scene} | \n"
-            )
+    )
     @ArgumentNames("locator")
     public void setTargetWindow(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Setting target window according to locator \"" + locator + "\"");
             if (locator instanceof String) {
-                if (((String) locator).startsWith("pattern=")){
-                    locator = ((String) locator).replace("pattern=","");
+                if (((String) locator).startsWith("pattern=")) {
+                    locator = ((String) locator).replace("pattern=", "");
                     RobotLog.debug("String which is pattern, converting...");
-                    setTargetWindow(Pattern.compile((String)locator));
+                    setTargetWindow(Pattern.compile((String) locator));
                 } else if (((String) locator).matches("[0-9]+")) {
                     RobotLog.debug("String which is integer, converting...");
-                    setTargetWindow(Integer.parseInt((String)locator));
+                    setTargetWindow(Integer.parseInt((String) locator));
                 } else {
                     if (((String) locator).startsWith("title="))
                         locator = ((String) locator).replace("title=", "");

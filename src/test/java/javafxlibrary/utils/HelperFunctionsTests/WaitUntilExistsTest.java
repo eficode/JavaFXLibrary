@@ -4,8 +4,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafxlibrary.TestFxAdapterTest;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
-import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
+import javafxlibrary.utils.finder.Finder;
 import mockit.*;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -13,7 +13,8 @@ import testutils.DelayedObject;
 
 public class WaitUntilExistsTest extends TestFxAdapterTest {
 
-    @Mocked private Finder finder;
+    @Mocked
+    private Finder finder;
     private Button button;
 
     @Rule
@@ -34,7 +35,8 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
     public void waitUntilExists_Exist() {
         new Expectations() {
             {
-                finder.find(".button"); result = button;
+                finder.find(".button");
+                result = button;
             }
         };
 
@@ -66,7 +68,8 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
     public void waitUntilExists_DoesNotExist() {
         new Expectations() {
             {
-                finder.find(".button"); result = null;
+                finder.find(".button");
+                result = null;
             }
         };
 

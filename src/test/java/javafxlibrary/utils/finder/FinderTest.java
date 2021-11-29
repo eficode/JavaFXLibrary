@@ -21,8 +21,10 @@ import java.util.List;
 public class FinderTest extends TestFxAdapterTest {
 
     private Finder finder;
-    @Mocked Stage stage;
-    @Mocked VBox root;
+    @Mocked
+    Stage stage;
+    @Mocked
+    VBox root;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -50,9 +52,12 @@ public class FinderTest extends TestFxAdapterTest {
         windows.add(stage);
         new Expectations() {
             {
-                getRobot().listTargetWindows(); result = windows;
-                stage.getScene().getRoot(); result = root;
-                root.lookupAll((String) any); result = hBox;
+                getRobot().listTargetWindows();
+                result = windows;
+                stage.getScene().getRoot();
+                result = root;
+                root.lookupAll((String) any);
+                result = hBox;
             }
         };
         Node result = finder.find("id=testNode css=.test.orangeBG .sub=group css=.anotherClass");
@@ -74,7 +79,8 @@ public class FinderTest extends TestFxAdapterTest {
 
         new Expectations() {
             {
-                robot.from(group).query(); result = group;
+                robot.from(group).query();
+                result = group;
             }
         };
 

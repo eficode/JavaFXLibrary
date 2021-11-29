@@ -48,7 +48,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch JavaFX Application | _javafxlibrary.testapps.MenuApp_ |\n"
             + "| Launch JavaFX Application | _TestApplication.jar_ |\n")
-    @ArgumentNames({ "appName", "*args" })
+    @ArgumentNames({"appName", "*args"})
     public void launchJavafxApplication(String appName, String... appArgs) {
         try {
             RobotLog.info("Starting application:" + appName);
@@ -69,7 +69,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch Swing Application | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application | _TestApplication.jar_ |\n")
-    @ArgumentNames({ "appName", "*args" })
+    @ArgumentNames({"appName", "*args"})
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
         Class mainClass = getMainClass(appName);
@@ -89,7 +89,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "Example:\n"
             + "| Launch Swing Application In Separate Thread | _javafxlibrary.testapps.SwingApplication_ |\n"
             + "| Launch Swing Application In Separate Thread | _TestApplication.jar_ |\n")
-    @ArgumentNames({ "appName", "*args" })
+    @ArgumentNames({"appName", "*args"})
     public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
         Class c = getMainClass(appName);
@@ -134,7 +134,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder | \n"
             + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder${/}* | \n"
             + "| Set To Classpath | C:${/}users${/}my${/}test${/}folder2${/}* | failIfNotFound=${True} | \n")
-    @ArgumentNames({ "path", "failIfNotFound=False" })
+    @ArgumentNames({"path", "failIfNotFound=False"})
     public void setToClasspath(String path, boolean failIfNotFound) {
         RobotLog.info("Setting \"" + path + "\" to classpath, failIfNotFound=\"" + failIfNotFound + "\"");
         if (path.endsWith("*")) {
@@ -190,7 +190,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     @RobotKeyword("Sets system property ``name`` to ``value``. Equals command line usage `-Dname=value`.\n"
             + "\nExample:\n"
             + "| Set System Property | locale | en_US | \n")
-    @ArgumentNames({ "name", "value" })
+    @ArgumentNames({"name", "value"})
     public void setSystemProperty(String name, String value) {
         try {
             System.setProperty(name, value);
@@ -203,7 +203,7 @@ public class ApplicationLauncher extends TestFxAdapter {
             + "``name`` is the system property name to fetch. \n"
             + "\nExample:\n"
             + "| ${locale}= | Get System Property | locale | \n")
-    @ArgumentNames({ "name" })
+    @ArgumentNames({"name"})
     public String getSystemProperty(String name) {
         try {
             return System.getProperty(name);
@@ -272,7 +272,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     @RobotKeyword("Waits for current events in Fx Application Thread event queue to finish before continuing.\n\n"
             + "``timeout`` is the maximum time in seconds that the events will be waited for. If the timeout is "
             + "exceeded the keyword will fail. Default timeout is 5 seconds.\n\n")
-    @ArgumentNames({ "timeout=5" })
+    @ArgumentNames({"timeout=5"})
     public void waitForEventsInFxApplicationThread(int timeout) {
 
         final Throwable[] threadException = new JavaFXLibraryNonFatalException[1];

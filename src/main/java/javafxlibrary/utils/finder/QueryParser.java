@@ -47,7 +47,7 @@ public class QueryParser {
             if (replaceSpaces && current == ' ')
                 query = query.substring(0, i) + ";javafxlibraryfinderspace;" + query.substring(i + 1);
         }
-        String [] splitQuery = query.split(" ");
+        String[] splitQuery = query.split(" ");
 
         for (int i = 0; i < splitQuery.length; i++)
             splitQuery[i] = splitQuery[i].replace(";javafxlibraryfinderspace;", " ");
@@ -117,7 +117,8 @@ public class QueryParser {
             case XPATH:
                 return query.substring(6);
             case TEXT:
-                if (!query.matches("text=[\"|'].*[\"|']")) throw new IllegalArgumentException("\"text\" query prefix is missing quotation marks.");
+                if (!query.matches("text=[\"|'].*[\"|']"))
+                    throw new IllegalArgumentException("\"text\" query prefix is missing quotation marks.");
                 return query.substring(6, query.length() - 1);
             case PSEUDO:
                 return query.substring(7);

@@ -17,7 +17,9 @@
 
 package javafxlibrary.testapps.controllers;
 
-import javafx.animation.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -28,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +39,14 @@ import java.util.ResourceBundle;
 
 public class TestWindowManagementController implements Initializable {
 
-    private @FXML VBox root;
-    private @FXML VBox employeeDataContainer;
-    private @FXML Rectangle loadingBar;
-    private @FXML HBox navBar;
+    @FXML
+    private VBox root;
+    @FXML
+    private VBox employeeDataContainer;
+    @FXML
+    private Rectangle loadingBar;
+    @FXML
+    private HBox navBar;
     private List<Node> contents;
     private Node activeNode;
 
@@ -89,7 +96,7 @@ public class TestWindowManagementController implements Initializable {
         ButtonType buttonTypeOk = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
         dialog.setResultConverter((b) -> {
-            if (b==buttonTypeOk)
+            if (b == buttonTypeOk)
                 return new Employee(nameField.getText(), phoneField.getText());
             return null;
         });

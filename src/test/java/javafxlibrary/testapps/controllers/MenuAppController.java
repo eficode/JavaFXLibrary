@@ -30,18 +30,27 @@ import java.util.ResourceBundle;
 
 public class MenuAppController implements Initializable {
 
-    private @FXML Label textLabel;
-    private @FXML Label total;
-    private @FXML ComboBox amountComboBox;
-    private @FXML ComboBox priceComboBox;
-    private @FXML RadioMenuItem efiStyle;
-    private @FXML RadioMenuItem javaStyle;
-    private @FXML RadioMenuItem gradientStyle;
-    private @FXML Menu fontMenu;
-    private @FXML Rectangle bgRectangle;
-    private String bnyCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Bny.css").toExternalForm();
-    private String javaCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Javastyle.css").toExternalForm();
-    private String gradientCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Gradientstyle.css").toExternalForm();
+    @FXML
+    private Label textLabel;
+    @FXML
+    private Label total;
+    @FXML
+    private ComboBox<String> amountComboBox;
+    @FXML
+    private ComboBox<String> priceComboBox;
+    @FXML
+    private RadioMenuItem efiStyle;
+    @FXML
+    private RadioMenuItem javaStyle;
+    @FXML
+    private RadioMenuItem gradientStyle;
+    @FXML
+    private Menu fontMenu;
+    @FXML
+    private Rectangle bgRectangle;
+    private final String bnyCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Bny.css").toExternalForm();
+    private final String javaCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Javastyle.css").toExternalForm();
+    private final String gradientCss = getClass().getResource("/fxml/javafxlibrary/ui/css/MenuApp/Gradientstyle.css").toExternalForm();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,7 +72,7 @@ public class MenuAppController implements Initializable {
             r.setToggleGroup(fontSizeGroup);
             menuItem.setOnAction((ActionEvent event) -> {
                 RadioMenuItem radioMenuItem = (RadioMenuItem) event.getSource();
-                int size = Integer.parseInt(radioMenuItem.getText().substring(0,2));
+                int size = Integer.parseInt(radioMenuItem.getText().substring(0, 2));
                 textLabel.setStyle("-fx-font-size: " + size + "px");
             });
         }
@@ -89,7 +98,7 @@ public class MenuAppController implements Initializable {
         Scene scene = textLabel.getScene();
         RadioMenuItem r = (RadioMenuItem) event.getSource();
 
-        switch(r.getText()) {
+        switch (r.getText()) {
             case "JavaFX":
                 scene.getStylesheets().clear();
                 scene.getStylesheets().add(javaCss);
@@ -106,12 +115,12 @@ public class MenuAppController implements Initializable {
     }
 
     public void countTotal() {
-        String amountValue = (String) amountComboBox.getValue();
-        String priceValue = (String) priceComboBox.getValue();
+        String amountValue = amountComboBox.getValue();
+        String priceValue = priceComboBox.getValue();
         if (!amountValue.equals("Select amount") && !priceValue.equals("Select price")) {
             int a = Integer.parseInt(amountValue.substring(0, amountValue.length() - 3));
             int v = Integer.parseInt(priceValue.substring(0, priceValue.length() - 2));
-            total.setText(a*v + " €");
+            total.setText(a * v + " €");
         }
     }
 }

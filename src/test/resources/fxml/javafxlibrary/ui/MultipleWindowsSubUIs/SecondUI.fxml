@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -19,18 +16,21 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             id="secondWindowAnchorPane"
-            prefHeight="400.0" prefWidth="600.0" >
+            prefHeight="400.0" prefWidth="600.0">
 
     <VBox AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
         <HBox>
-            <Label text="Second window" fx:id="secondWindowLabel" />
+            <Label text="Second window" fx:id="secondWindowLabel"/>
         </HBox>
     </VBox>
 
     <stylesheets>
-        <URL value="@../css/TestMultipleWindowsUI.css" />
+        <URL value="@../css/TestMultipleWindowsUI.css"/>
     </stylesheets>
 </AnchorPane>

@@ -21,19 +21,28 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.ScrollEvent;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestScrollRobotController implements Initializable {
 
-    private @FXML Label greenLabel;
-    private @FXML Label redLabel;
-    private @FXML Label totalDistanceVertical;
-    private @FXML Label totalDistanceHorizontal;
-    private @FXML Label actualDistanceVertical;
-    private @FXML Label actualDistanceHorizontal;
-    private @FXML Label eventsVertical;
-    private @FXML Label eventsHorizontal;
+    @FXML
+    private Label greenLabel;
+    @FXML
+    private Label redLabel;
+    @FXML
+    private Label totalDistanceVertical;
+    @FXML
+    private Label totalDistanceHorizontal;
+    @FXML
+    private Label actualDistanceVertical;
+    @FXML
+    private Label actualDistanceHorizontal;
+    @FXML
+    private Label eventsVertical;
+    @FXML
+    private Label eventsHorizontal;
     private int yActualAmount;
     private int xActualAmount;
     private int yTotalAmount;
@@ -60,7 +69,7 @@ public class TestScrollRobotController implements Initializable {
     }
 
     public void verticalScrollListener(ScrollEvent evt) {
-        if(evt.getDeltaY() != 0) {
+        if (evt.getDeltaY() != 0) {
             yActualAmount += evt.getDeltaY();
             yTotalAmount += Math.abs(evt.getDeltaY());
             yEventCount++;

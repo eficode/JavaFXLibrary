@@ -15,7 +15,7 @@ public class ParseClassTest extends TestFxAdapterTest {
 
     @Test
     public void parseClass_PrimitiveTypes() {
-        String[] names = new String[]{ "boolean", "byte", "char", "double", "float", "int", "long", "short", "void" };
+        String[] names = new String[]{"boolean", "byte", "char", "double", "float", "int", "long", "short", "void"};
         Class[] target = new Class[]{boolean.class, byte.class, char.class, double.class, float.class, int.class,
                 long.class, short.class, void.class};
 

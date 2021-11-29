@@ -24,19 +24,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestClickRobotController implements Initializable {
-    @FXML private Button button;
-    @FXML private Button doubleClickButton;
-    @FXML private Button rightClickButton;
-    @FXML private Label buttonLabel;
-    @FXML private Label doubleClickButtonLabel;
-    @FXML private Label rightClickButtonLabel;
-    @FXML private Label coordinateLabel;
+    @FXML
+    private Button button;
+    @FXML
+    private Button doubleClickButton;
+    @FXML
+    private Button rightClickButton;
+    @FXML
+    private Label buttonLabel;
+    @FXML
+    private Label doubleClickButtonLabel;
+    @FXML
+    private Label rightClickButtonLabel;
+    @FXML
+    private Label coordinateLabel;
     private int clickCount;
-    private  int doubleClickCount;
+    private int doubleClickCount;
     private int rightClickCount;
 
     @Override
@@ -44,7 +52,7 @@ public class TestClickRobotController implements Initializable {
         button.setOnMouseClicked(event -> clickListener(event));
         doubleClickButton.setOnMouseClicked(event -> doubleClickListener(event));
         rightClickButton.setOnMouseClicked(event -> rightClickListener(event));
-        buttonLabel.setPadding(new Insets(25,25,25,25));
+        buttonLabel.setPadding(new Insets(25, 25, 25, 25));
     }
 
     public void clickListener(MouseEvent event) {
@@ -72,7 +80,7 @@ public class TestClickRobotController implements Initializable {
 
     public void showCoordinates(MouseEvent event) {
         String prefix = "click";
-        if(event.getButton() == MouseButton.SECONDARY) {
+        if (event.getButton() == MouseButton.SECONDARY) {
             prefix = "rightclick";
         } else if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() % 2 == 0) {
             prefix = "doubleclick";
