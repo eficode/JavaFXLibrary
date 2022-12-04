@@ -101,3 +101,18 @@ Library    Remote    http://127.0.0.1:8270    ${True}    WITH NAME    JavaFXLibr
 
 ## Experimental: Java agent support
 Library can be used as java agent. Launch application with `-javaagent:/path/to/javafxlibrary-<version>.jar`. Default port is 8270 and can be changed with adding `=<port>` to java agent command. Only remote library is supported. Using launch keyword is still required but instead of starting new application keyword initializes Stage for library.
+
+Command-Line Arguments
+======================
+
+The latest versions of Java treat JavaFX as a module.  You will need command-line arguments to load the 
+relevant modules.
+
+This was used in Eclipse:
+
+		--module-path '%JAVAFX_HOME%/lib --add-modules=javafx.controls,javafx.graphics,javafx.fxml,javafx.swing
+
+Notes
+=====
+https://stackoverflow.com/questions/52558103/what-has-happened-to-swingfxutils
+

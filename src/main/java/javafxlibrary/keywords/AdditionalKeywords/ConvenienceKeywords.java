@@ -17,8 +17,6 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import com.sun.javafx.scene.control.skin.TableViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.BoundingBox;
@@ -26,6 +24,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.TableViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Screen;
@@ -294,8 +294,10 @@ public class ConvenienceKeywords extends TestFxAdapter {
                     try {
                         Object result = m.invoke(node, (Object) null);
                         Image image = (Image) result;
-                        RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
-                        return image.impl_getUrl();
+                        // TODO: REVIEW TO MAKE SURE THIS CHANGE IS RIGHT
+                        //RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
+                        //return image.impl_getUrl();
+                        return image.getUrl();
                     } catch (Exception e) {
                         throw new JavaFXLibraryNonFatalException("Problem calling method: .getImage(): " + e.getMessage(), e);
                     }

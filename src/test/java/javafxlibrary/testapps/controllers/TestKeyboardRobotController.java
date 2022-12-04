@@ -17,13 +17,13 @@
 
 package javafxlibrary.testapps.controllers;
 
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.skin.TextAreaSkin;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -58,7 +58,8 @@ public class TestKeyboardRobotController implements Initializable {
                         event.consume();
                     } else {
                         TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
-                        skin.getBehavior().traverseNext();
+                        // TODO: NEED TO REPLACE WITH SOMETHING THAT IS SUPPORTED
+                        //skin.getBehavior().traverseNext();
                         event.consume();
                     }
                 }
