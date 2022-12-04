@@ -862,28 +862,28 @@ public class HelperFunctions {
 
     public static Class getMainClassFromJarFile(String appName) {
         try {
-            JarFile jarFile = new JarFile(appName);
-            String mainClassName = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
-            Enumeration<JarEntry> e = jarFile.entries();
-            URL[] urls = {new URL("jar:file:" + appName + "!/")};
-            URLClassLoader cl = URLClassLoader.newInstance(urls);
-
-            while (e.hasMoreElements()) {
-                JarEntry je = e.nextElement();
-
-                if (je.isDirectory() || !je.getName().endsWith(".class"))
-                    continue;
-
-                String className = je.getName().substring(0, je.getName().length() - 6);
-                className = className.replace('/', '.');
-
-                if (className.equals(mainClassName)) {
-                    return cl.loadClass(className);
-                }
+            try (JarFile jarFile = new JarFile(appName)) {
+	            String mainClassName = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
+	            Enumeration<JarEntry> e = jarFile.entries();
+	            URL[] urls = {new URL("jar:file:" + appName + "!/")};
+	            URLClassLoader cl = URLClassLoader.newInstance(urls);
+	
+	            while (e.hasMoreElements()) {
+	                JarEntry je = e.nextElement();
+	
+	                if (je.isDirectory() || !je.getName().endsWith(".class"))
+	                    continue;
+	
+	                String className = je.getName().substring(0, je.getName().length() - 6);
+	                className = className.replace('/', '.');
+	
+	                if (className.equals(mainClassName)) {
+	                    return cl.loadClass(className);
+	                }
+	            }
+	
+	            throw new ClassNotFoundException();
             }
-
-            throw new ClassNotFoundException();
-
         } catch (FileNotFoundException e) {
             throw new JavaFXLibraryNonFatalException("Couldn't find file: " + appName);
         } catch (ClassNotFoundException e) {

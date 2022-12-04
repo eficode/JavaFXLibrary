@@ -112,6 +112,10 @@ public class ApplicationLauncher extends TestFxAdapter {
     }
 
     private void addPathToClassPath(String path) {
+    	// NOTE: THIS NO LONGER WORKS >= JAVA11.  WE ARE NOW ASSUMING
+    	// THAT THE CLASSPATH HAS BEEN AUGMENTED AT STARTUP TIME.
+    	/*
+    	ClassLoader cl = ClassLoader.getSystemClassLoader();
         URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
         RobotLog.info("Setting following path to classpath: " + path);
@@ -124,6 +128,7 @@ public class ApplicationLauncher extends TestFxAdapter {
         } catch (Exception e) {
             throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path, e);
         }
+        */
     }
 
     @RobotKeyword("Loads given path to classpath.\n\n"
