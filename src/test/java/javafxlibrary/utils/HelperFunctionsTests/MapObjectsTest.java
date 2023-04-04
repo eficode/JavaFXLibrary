@@ -47,7 +47,7 @@ public class MapObjectsTest extends TestFxAdapterTest {
 
     @Test
     public void mapObjects_FromQueue() {
-        Queue<Button> queue = new PriorityQueue<>();
+        Queue<Button> queue = new LinkedList<>();
         queue.add(button);
         List<Object> keys = HelperFunctions.mapObjects(queue);
         Button b = (Button) TestFxAdapter.objectMap.get(keys.get(0));

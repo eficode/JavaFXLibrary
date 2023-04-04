@@ -3,6 +3,9 @@ package javafxlibrary.utils.HelperFunctionsTests;
 import javafx.scene.input.MouseButton;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
+
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +53,7 @@ public class GetMouseButtonsTest {
     public void getMouseButtons_InvalidValue() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
         // thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: [NONE, PRIMARY, MIDDLE, SECONDARY]");
+        thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: " + Arrays.asList(MouseButton.values()));
         HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
     }
 

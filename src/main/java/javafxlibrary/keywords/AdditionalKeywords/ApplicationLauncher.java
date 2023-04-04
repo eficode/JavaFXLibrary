@@ -112,14 +112,12 @@ public class ApplicationLauncher extends TestFxAdapter {
     }
 
     private void addPathToClassPath(String path) {
-        URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
         RobotLog.info("Setting following path to classpath: " + path);
 
         try {
-            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            method.setAccessible(true);
-            method.invoke(classLoader, (new File(path)).toURI().toURL());
+            URL[] urls = new URL[]{new File(path).toURI().toURL()};
+            URLClassLoader classLoader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
 
         } catch (Exception e) {
             throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path, e);
@@ -176,11 +174,11 @@ public class ApplicationLauncher extends TestFxAdapter {
     @RobotKeyword("Logs current classpath content")
     public void logApplicationClasspath() {
         try {
-            ClassLoader cl = ClassLoader.getSystemClassLoader();
-            URL[] urls = ((URLClassLoader) cl).getURLs();
             RobotLog.info("Printing out classpaths: \n");
-            for (URL url : urls) {
-                RobotLog.info(url.getFile());
+
+            String classpathStr = System.getProperty("java.class.path");
+            for (String classpathItem : classpathStr.split(System.getProperty("path.separator"))) {
+                RobotLog.info(classpathItem);
             }
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to log application classpaths", e);
