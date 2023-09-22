@@ -14,12 +14,12 @@ public class DelayedObject {
 
     public void start() {
         Thread t = new Thread(() -> {
-           try {
-               Thread.sleep(this.timeout);
-               this.finished = true;
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
+            try {
+                Thread.sleep(this.timeout);
+                this.finished = true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
         t.start();
     }

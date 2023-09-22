@@ -34,7 +34,7 @@ public class PointPosition extends TestFxAdapter {
             + "see more at `5. Used ENUMs` and _Pos_ enum. \n\n"
             + "\nExample: \n"
             + "| Set Target Position | TOP_LEFT | \n")
-    @ArgumentNames({ "pointPosition" })
+    @ArgumentNames({"pointPosition"})
     public FxRobotInterface setTargetPosition(String pointPosition) {
         try {
             RobotLog.info("Setting new target position as: \"" + pointPosition + "\"");

@@ -35,13 +35,13 @@ public class MouseRobot extends TestFxAdapter {
             + "``buttons`` is a list of mouse buttons to press. Defaults to _PRIMARY_, see `5. Used ENUMs` for different mouse buttons. "
             + "\nExample: \n"
             + "| Press Mouse Button | PRIMARY | \n")
-    @ArgumentNames({ "*buttons" })
+    @ArgumentNames({"*buttons"})
     public FxRobotInterface pressMouseButton(String... buttons) {
         try {
             RobotLog.info("Pressing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
             return robot.press(HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to press mouse buttons: \"" + Arrays.toString(buttons) + "\"", e);
         }
@@ -51,13 +51,13 @@ public class MouseRobot extends TestFxAdapter {
             + "``buttons`` is a list of mouse buttons to release. Defaults to _PRIMARY_, see `5. Used ENUMs` for different mouse buttons. "
             + "\nExample: \n"
             + "| Release Mouse Button | SECONDARY | \n")
-    @ArgumentNames({ "*buttons" })
+    @ArgumentNames({"*buttons"})
     public FxRobotInterface releaseMouseButton(String... buttons) {
         try {
             RobotLog.info("Releasing mouse buttons: \"" + Arrays.asList(buttons) + "\"");
             return robot.release(HelperFunctions.getMouseButtons(buttons));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to release mouse buttons: \"" + Arrays.toString(buttons) + "\"", e);
         }

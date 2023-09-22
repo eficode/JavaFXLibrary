@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.awt.Point;
+import java.awt.*;
 
 import static testutils.TestFunctions.setupStageInJavaFXThread;
 import static testutils.TestFunctions.waitForEventsInJavaFXThread;

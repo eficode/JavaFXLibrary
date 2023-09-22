@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -19,36 +16,39 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.TestSleepRobotController"
             prefHeight="400.0" prefWidth="600.0">
     <VBox AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
         <HBox>
-            <Label fx:id="timeLabel" text="00:00:00:000" />
+            <Label fx:id="timeLabel" text="00:00:00:000"/>
         </HBox>
         <HBox fx:id="buttonRow">
             <Button fx:id="toggleButton" text="Start" onMouseClicked="#toggleTimer"
-                    onKeyPressed="#buttonKeyboardListener" />
+                    onKeyPressed="#buttonKeyboardListener"/>
         </HBox>
         <VBox styleClass="statsContainer">
             <HBox styleClass="statsRow">
-                <Label text="Milliseconds: " />
+                <Label text="Milliseconds: "/>
                 <Label fx:id="totalMillis"/>
             </HBox>
             <HBox styleClass="statsRow">
-                <Label text="Seconds: " />
+                <Label text="Seconds: "/>
                 <Label fx:id="totalSeconds"/>
             </HBox>
             <HBox styleClass="statsRow">
-                <Label text="Minutes: " />
+                <Label text="Minutes: "/>
                 <Label fx:id="totalMinutes"/>
             </HBox>
         </VBox>
     </VBox>
 
     <stylesheets>
-        <URL value="@css/TestSleepRobotUI.css" />
+        <URL value="@css/TestSleepRobotUI.css"/>
     </stylesheets>
 
 </AnchorPane>

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import javafxlibrary.testapps.customcomponents.TextList ?>
-<?import javafxlibrary.testapps.customcomponents.ImageDemo?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -21,21 +16,27 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafxlibrary.testapps.customcomponents.ImageDemo?>
+<?import javafxlibrary.testapps.customcomponents.TextList?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.DemoAppController"
             prefHeight="655.0" prefWidth="800.0">
     <VBox AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" fx:id="root">
         <HBox>
-            <Label fx:id="imageViewLabel" styleClass="navigation" text="Image View" focusTraversable="true" onMouseClicked="#toggleContent"/>
+            <Label fx:id="imageViewLabel" styleClass="navigation" text="Image View" focusTraversable="true"
+                   onMouseClicked="#toggleContent"/>
             <Label fx:id="textViewLabel" styleClass="navigation" text="Text View" focusTraversable="true" onMouseClicked="#toggleContent"/>
         </HBox>
-        <ImageDemo fx:id="imageDemo" />
-        <TextList fx:id="textList" visible="false" managed="false" />
+        <ImageDemo fx:id="imageDemo"/>
+        <TextList fx:id="textList" visible="false" managed="false"/>
     </VBox>
 
     <stylesheets>
-        <URL value="@css/DemoAppUI.css" />
+        <URL value="@css/DemoAppUI.css"/>
     </stylesheets>
 
 </AnchorPane>

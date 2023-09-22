@@ -27,9 +27,12 @@ import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxRobotInterface;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
@@ -50,7 +53,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``keys`` is the list of keys to be pressed, see a list of different KeyCodes in `5. Used ENUMs`. \n\n"
             + "\nExample: \n"
             + "| Press | CONTROL | SHIFT | G | \n")
-    @ArgumentNames({ "*keys" })
+    @ArgumentNames({"*keys"})
     public FxRobotInterface press(String... keys) {
         try {
             RobotLog.info("Pressing keys: " + Arrays.asList(keys));
@@ -67,7 +70,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "\nExample: \n"
             + "| Release | CONTROL | SHIFT | G | \n"
             + "Note: passing in an empty list will release all pressed keys.\n\n")
-    @ArgumentNames({ "*keys" })
+    @ArgumentNames({"*keys"})
     public FxRobotInterface release(String... keys) {
         try {
             RobotLog.info("Releasing keys: " + Arrays.asList(keys));
@@ -84,7 +87,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``keys`` is the list of keys to be pushed, see a list of different KeyCodes in `5. Used ENUMs`. \n\n"
             + "\nExample:\n"
             + "| Push | CONTROL | SHIFT | G | \n")
-    @ArgumentNames({ "*keys" })
+    @ArgumentNames({"*keys"})
     public FxRobotInterface push(String... keys) {
         try {
             RobotLog.info("Pushing combination: " + Arrays.asList(keys));
@@ -102,7 +105,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "\nExample:\n"
             + "| Push Many Times | 2 | LEFT | \n"
             + "| Push Many Times | 5 | SHIFT | X |\n")
-    @ArgumentNames({ "times", "*keys" })
+    @ArgumentNames({"times", "*keys"})
     public void pushManyTimes(int times, String... keys) {
         RobotLog.info("Pushing combination: \"" + Arrays.asList(keys) + "\" for \"" + times + "\" times.");
         try {
@@ -124,7 +127,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "\nExample:\n"
             + "| Push In Order | H | e | l | l | o | \n"
             + "| Push In Order | BACK_SPACE | LEFT | BACK_SPACE | \n")
-    @ArgumentNames({ "*keys" })
+    @ArgumentNames({"*keys"})
     public void pushInOrder(String... keys) {
         RobotLog.info("Pushing following keys: " + Arrays.asList(keys));
         try {
@@ -142,7 +145,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``amount`` is the number of characters to erase\n"
             + "\nExample:\n"
             + "| Erase Text | 5 | \n")
-    @ArgumentNames({ "amount" })
+    @ArgumentNames({"amount"})
     public FxRobotInterface eraseText(int amount) {
         RobotLog.info("Erasing \"" + amount + "\" characters.");
         return robot.eraseText(amount);
@@ -162,7 +165,7 @@ public class KeyboardRobot extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("No instance available for closing.");
 
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to Close current window.", e);
         }
@@ -172,7 +175,7 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
             + "| Write | Robot Framework | \n")
-    @ArgumentNames({ "text" })
+    @ArgumentNames({"text"})
     public FxRobotInterface write(String text) {
         RobotLog.info("Writing \"" + text + "\" with keyboard.");
         try {
@@ -186,28 +189,28 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
             + "| Write Fast | Robot Framework | \n")
-    @ArgumentNames({ "text" })
+    @ArgumentNames({"text"})
     public void writeFast(String text) {
-    	if (TestFxAdapter.isHeadless) {
-    		RobotLog.info("Fast write not working in headless mode. Writing text normally");
-    		this.write(text);
-    	} else {
+        if (TestFxAdapter.isHeadless) {
+            RobotLog.info("Fast write not working in headless mode. Writing text normally");
+            this.write(text);
+        } else {
             RobotLog.info("Writing \"" + text + "\" via clipboard.");
             try {
-	            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-	            StringSelection testData = new StringSelection(text);
-	            c.setContents(testData, testData);
-	
-	            if(isMac())
-	                robot.push(KeyCode.META, KeyCode.V).sleep(100);
-	            else
-	                robot.push(KeyCode.CONTROL, KeyCode.V).sleep(100);
-	        } catch (Exception e) {
-	            if(e instanceof JavaFXLibraryNonFatalException)
-	                throw e;
-	            throw new JavaFXLibraryNonFatalException("Unable to write text using copy/paste method.", e);
-	        }
-    	}
+                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                StringSelection testData = new StringSelection(text);
+                c.setContents(testData, testData);
+
+                if (isMac())
+                    robot.push(KeyCode.META, KeyCode.V).sleep(100);
+                else
+                    robot.push(KeyCode.CONTROL, KeyCode.V).sleep(100);
+            } catch (Exception e) {
+                if (e instanceof JavaFXLibraryNonFatalException)
+                    throw e;
+                throw new JavaFXLibraryNonFatalException("Unable to write text using copy/paste method.", e);
+            }
+        }
     }
 
     @RobotKeyword("Writes a given text characters one after the other to given locator.\n\n"
@@ -216,12 +219,12 @@ public class KeyboardRobot extends TestFxAdapter {
             + "``text`` is the text characters to write\n"
             + "\nExample: \n"
             + "| Write To | css=.css-name | Robot Framework | \n")
-    @ArgumentNames({ "locator", "text" })
+    @ArgumentNames({"locator", "text"})
     public void writeTo(Object locator, String text) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Writing \"" + text + "\" to " + locator);
-            asyncFx(() -> clickRobot.clickOn(locator,"DIRECT")).get();
+            asyncFx(() -> clickRobot.clickOn(locator, "DIRECT")).get();
             waitForFxEvents(5);
             asyncFx(() -> write(text)).get();
             waitForFxEvents(3);
@@ -229,7 +232,7 @@ public class KeyboardRobot extends TestFxAdapter {
             RobotLog.trace("exception details: " + iee.getCause());
             throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to write to: " + locator);
         }
@@ -245,11 +248,54 @@ public class KeyboardRobot extends TestFxAdapter {
 
     @RobotKeyword("Sets the time waited between every character when typing. Returns previous value.\n\n"
             + "``milliseconds`` is the time waited between each character in milliseconds.")
-    @ArgumentNames({ "milliseconds" })
+    @ArgumentNames({"milliseconds"})
     public int setWriteSpeed(int milliseconds) {
         int oldSleepMillis = this.sleepMillis;
         this.sleepMillis = milliseconds;
         return oldSleepMillis;
     }
 
+
+    @RobotKeyword("Reads clipboard content as text.")
+    public String getClipboardContent() {
+        if (TestFxAdapter.isHeadless) {
+            RobotLog.warn("Headless mode does not support clipboard.");
+            return "";
+        } else {
+            try {
+                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                String contents = (String) c.getData(DataFlavor.stringFlavor);
+                return contents;
+            } catch (UnsupportedFlavorException e) {
+                throw new JavaFXLibraryNonFatalException("Unable to get clipboard contents. Getting current content as string is not supported", e);
+            } catch (Exception e) {
+                if (e instanceof JavaFXLibraryNonFatalException) {
+                    throw (JavaFXLibraryNonFatalException) e;
+                }
+                throw new JavaFXLibraryNonFatalException("Unable to get clipboard contents.", e);
+            }
+        }
+    }
+
+    @RobotKeyword("Writes a given text characters to clipboard.\n\n"
+            + "``text`` is the text characters to write\n"
+            + "\nExample: \n"
+            + "| Set Clipboard Content | Clipboard value as string | \n")
+    @ArgumentNames({"text"})
+    public void setClipboardContent(String text) {
+        if (TestFxAdapter.isHeadless) {
+            RobotLog.warn("Headless mode does not support clipboard.");
+        } else {
+            try {
+                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                StringSelection testData = new StringSelection(text);
+                c.setContents(testData, testData);
+            } catch (Exception e) {
+                if (e instanceof JavaFXLibraryNonFatalException) {
+                    throw e;
+                }
+                throw new JavaFXLibraryNonFatalException("Unable to set clipboard contents.", e);
+            }
+        }
+    }
 }

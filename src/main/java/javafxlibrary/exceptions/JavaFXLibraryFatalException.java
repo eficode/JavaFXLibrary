@@ -18,7 +18,7 @@
 package javafxlibrary.exceptions;
 
 @SuppressWarnings("serial")
-public class JavaFXLibraryFatalException  extends JavaFXLibraryKeywordException {
+public class JavaFXLibraryFatalException extends JavaFXLibraryKeywordException {
 
     /**
      * Avoid adding the exception type as a prefix to failure messages

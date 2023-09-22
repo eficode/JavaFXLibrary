@@ -21,18 +21,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class ImageDemoController implements Initializable {
 
-    private @FXML TextField search;
-    private @FXML VBox rowWrapper;
-    //private List<File> files;
+    @FXML
+    private TextField search;
+    @FXML
+    private VBox rowWrapper;
     private List<File> imageFiles;
     private List<ImageFile> images;
 
@@ -46,8 +52,8 @@ public class ImageDemoController implements Initializable {
         Collections.shuffle(imageFiles);
 
         imageFiles.forEach((File file) -> {
-            if(file.getName().endsWith(".png"))
-                images.add(new ImageFile(file.toURI().toString(),215.0, 215.0, false, false));
+            if (file.getName().endsWith(".png"))
+                images.add(new ImageFile(file.toURI().toString(), 215.0, 215.0, false, false));
         });
 
         drawImages();
@@ -59,11 +65,11 @@ public class ImageDemoController implements Initializable {
 
         imageFiles.forEach((File file) -> {
             boolean match = true;
-            for(String query : queries) {
+            for (String query : queries) {
                 if (!(file.getName().endsWith(".png") && file.getName().contains(query)))
                     match = false;
             }
-            if(match)
+            if (match)
                 images.add(new ImageFile(file.toURI().toString(), 215.0, 215.0, false, false));
         });
         drawImages();
@@ -73,7 +79,7 @@ public class ImageDemoController implements Initializable {
         int rowAmount = images.size() / 3;
         rowWrapper.getChildren().clear();
 
-        for(int i = 0; i < rowAmount; i++) {
+        for (int i = 0; i < rowAmount; i++) {
             rowWrapper.getChildren().add(new HBox(new ImageView(images.get(i * 3)),
                     new ImageView(images.get(i * 3 + 1)), new ImageView(images.get(i * 3 + 2))));
         }
@@ -81,14 +87,14 @@ public class ImageDemoController implements Initializable {
         int remainderImages = images.size() % 3;
         HBox lastRow = new HBox();
 
-        for(int i = 0; i < remainderImages; i++) {
-            lastRow.getChildren().add(new ImageView(images.get(images.size() - (remainderImages - i) )));
+        for (int i = 0; i < remainderImages; i++) {
+            lastRow.getChildren().add(new ImageView(images.get(images.size() - (remainderImages - i))));
         }
 
         rowWrapper.getChildren().add(lastRow);
         rowWrapper.getChildren().forEach((Node node) -> node.getStyleClass().add("imageRow"));
         // Remove bottom padding from the last row
-        rowWrapper.getChildren().get(rowWrapper.getChildren().size()-1).setStyle("-fx-padding: 15 44 0 41;");
+        rowWrapper.getChildren().get(rowWrapper.getChildren().size() - 1).setStyle("-fx-padding: 15 44 0 41;");
     }
 
     class ImageFile extends Image {

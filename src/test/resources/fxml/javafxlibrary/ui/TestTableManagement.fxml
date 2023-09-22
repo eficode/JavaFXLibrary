@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafxlibrary.testapps.customcomponents.Statistic?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -22,35 +16,41 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafxlibrary.testapps.customcomponents.*?>
+<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       prefHeight="732.0" prefWidth="504.0">
-    <Label fx:id="topLabel" text="Statistics" prefHeight="78" prefWidth="504" />
+    <Label fx:id="topLabel" text="Statistics" prefHeight="78" prefWidth="504"/>
     <TableView fx:id="table" prefHeight="654.0" focusTraversable="false">
         <columns>
             <TableColumn styleClass="alignLeft" text="Player" prefWidth="200">
                 <cellValueFactory>
-                    <PropertyValueFactory property="player" />
+                    <PropertyValueFactory property="player"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn text="Maps" prefWidth="100">
                 <cellValueFactory>
-                    <PropertyValueFactory property="maps" />
+                    <PropertyValueFactory property="maps"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn text="+/-" prefWidth="100">
                 <cellValueFactory>
-                    <PropertyValueFactory property="plusminus" />
+                    <PropertyValueFactory property="plusminus"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn text="KDR" prefWidth="50">
                 <cellValueFactory>
-                    <PropertyValueFactory property="kdr" />
+                    <PropertyValueFactory property="kdr"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn text="Rating" prefWidth="50">
                 <cellValueFactory>
-                    <PropertyValueFactory property="rating" />
+                    <PropertyValueFactory property="rating"/>
                 </cellValueFactory>
             </TableColumn>
         </columns>
@@ -87,7 +87,7 @@
     </TableView>
 
     <stylesheets>
-        <URL value="@css/TestTableManagement.css" />
+        <URL value="@css/TestTableManagement.css"/>
     </stylesheets>
 
 </VBox>

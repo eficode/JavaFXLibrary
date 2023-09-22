@@ -39,14 +39,21 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
         HelperFunctions.setLibraryKeywordTimeout(0);
     }
 
-    private  void setupStageTests(int x, int y, int width, int height) {
+    private void setupStageTests(int x, int y, int width, int height) {
         new Expectations() {
             {
-                getRobot().listWindows(); result = windows;stage.isShowing(); result = true;
-                stage.getX(); result = 250;
-                stage.getY(); result = 250;
-                stage.getWidth(); result = 250;
-                stage.getHeight(); result = 250;
+                getRobot().listWindows();
+                result = windows;
+                stage.isShowing();
+                result = true;
+                stage.getX();
+                result = 250;
+                stage.getY();
+                result = 250;
+                stage.getWidth();
+                result = 250;
+                stage.getHeight();
+                result = 250;
                 getRobot().bounds((Button) any);
                 BoundsQuery bq = () -> new BoundingBox(x, y, width, height);
                 result = bq;

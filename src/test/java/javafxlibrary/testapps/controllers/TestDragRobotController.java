@@ -35,19 +35,27 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestDragRobotController implements Initializable {
 
-    @FXML private Slider horizontalSlider;
-    @FXML private Slider verticalSlider;
-    @FXML private Circle circle;
-    @FXML private Label sliderLabel;
-    @FXML private Label verticalSliderLabel;
-    @FXML private Label circleLabel;
-    @FXML private Label circleScreenLocationLabel;
+    @FXML
+    private Slider horizontalSlider;
+    @FXML
+    private Slider verticalSlider;
+    @FXML
+    private Circle circle;
+    @FXML
+    private Label sliderLabel;
+    @FXML
+    private Label verticalSliderLabel;
+    @FXML
+    private Label circleLabel;
+    @FXML
+    private Label circleScreenLocationLabel;
     private Stage secondStage;
     private String horizontalSliderValue;
     private String verticalSliderValue;
@@ -93,7 +101,7 @@ public class TestDragRobotController implements Initializable {
         circleScreenLocationLabel.setText("X" + (int) circle.getCenterX() + " Y" + (int) circle.getCenterY());
     }
 
-    private void dragListener (MouseEvent event) {
+    private void dragListener(MouseEvent event) {
         Circle secondCircle = (Circle) secondStage.getScene().lookup("#secondCircle");
         Stage primaryStage = (Stage) circle.getScene().getWindow();
         double xOffset = primaryStage.getX() + primaryStage.getScene().getX() + (primaryStage.getScene().getWidth() / 2);
@@ -119,14 +127,14 @@ public class TestDragRobotController implements Initializable {
     }
 
     private void pressListener(MouseEvent event) {
-        if(event.getButton() == MouseButton.SECONDARY) {
+        if (event.getButton() == MouseButton.SECONDARY) {
             circle.setScaleX(2);
             circle.setScaleY(2);
         }
     }
 
     private void releaseListener(MouseEvent event) {
-        if(event.getButton() == MouseButton.SECONDARY) {
+        if (event.getButton() == MouseButton.SECONDARY) {
             circle.setScaleX(1);
             circle.setScaleY(1);
         }

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx">
     <Label>Scene type 3</Label>
@@ -12,6 +10,6 @@
     <Button>3</Button>
     <Button>4</Button>
     <stylesheets>
-        <URL value="@../css/FinderApp.css" />
+        <URL value="@../css/FinderApp.css"/>
     </stylesheets>
 </VBox>

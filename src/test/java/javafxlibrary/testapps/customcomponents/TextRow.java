@@ -24,14 +24,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @DefaultProperty("children")
 public class TextRow extends VBox implements Runnable, Callable {
 
-    @FXML Label headingLabel;
-    @FXML Label contentLabel;
+    @FXML
+    Label headingLabel;
+    @FXML
+    Label contentLabel;
 
     public TextRow(String heading, String textContent) {
         super();

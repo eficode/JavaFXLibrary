@@ -50,7 +50,7 @@ public class PrintTreeStructureTest extends ApplicationTest {
         Button button = new Button();
         Label label = new Label();
         HBox hBox = new HBox(label);
-        nodes = new String[] { button.toString(), hBox.toString(), label.toString() };
+        nodes = new String[]{button.toString(), hBox.toString(), label.toString()};
         return new VBox(button, hBox);
     }
 

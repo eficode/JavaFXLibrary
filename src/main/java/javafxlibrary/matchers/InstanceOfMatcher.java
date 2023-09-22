@@ -17,10 +17,10 @@
 
 package javafxlibrary.matchers;
 
-import org.hamcrest.core.IsInstanceOf;
 import javafx.scene.Node;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.core.IsInstanceOf;
 
 public class InstanceOfMatcher extends BaseMatcher<Node> {
 
@@ -41,7 +41,7 @@ public class InstanceOfMatcher extends BaseMatcher<Node> {
     @Override
     public void describeTo(Description description) {
         if (last != null) {
-        description.appendText("Expected type " + type + " but got " + last);
+            description.appendText("Expected type " + type + " but got " + last);
         }
     }
 

@@ -22,14 +22,15 @@ import javafx.scene.control.ProgressBar;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+
 import java.util.function.Predicate;
 
 public class ProgressBarMatchers {
 
     // can be used with Objects implementing Toggle interface: RadioButton, ToggleButton and RadioMenuItem
     public static Matcher<ProgressBar> progressMatcher(final String descriptionText,
-                                                final Predicate<ProgressBar> predicate,
-                                                final String misMatchText) {
+                                                       final Predicate<ProgressBar> predicate,
+                                                       final String misMatchText) {
         return new BaseMatcher<ProgressBar>() {
             @Override
             public void describeTo(Description description) {
@@ -49,7 +50,7 @@ public class ProgressBarMatchers {
     }
 
     public static Matcher<ProgressBar> isComplete() {
-        return progressMatcher("finished", ProgressBarMatchers::complete, "not finished!" );
+        return progressMatcher("finished", ProgressBarMatchers::complete, "not finished!");
     }
 
     public static Matcher<ProgressBar> isLessThan(Double value) {
@@ -68,6 +69,7 @@ public class ProgressBarMatchers {
     private static boolean lessThan(ProgressBar pb, Double value) {
         return pb.getProgress() <= value;
     }
+
     private static boolean moreThan(ProgressBar pb, Double value) {
         return pb.getProgress() >= value;
     }

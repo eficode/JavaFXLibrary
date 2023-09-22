@@ -31,10 +31,14 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     public void objectToBounds_Window(@Injectable Window window) {
         new Expectations() {
             {
-                window.getX(); result = 50;
-                window.getY(); result = 50;
-                window.getWidth(); result = 250;
-                window.getHeight(); result = 250;
+                window.getX();
+                result = 50;
+                window.getY();
+                result = 50;
+                window.getWidth();
+                result = 250;
+                window.getHeight();
+                result = 250;
             }
         };
         BoundingBox target = new BoundingBox(50, 50, 250, 250);
@@ -45,10 +49,14 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     public void objectToBounds_Scene(@Injectable Scene scene) {
         new Expectations() {
             {
-                scene.getX(); result = 250;
-                scene.getY(); result = 250;
-                scene.getWidth(); result = 250;
-                scene.getHeight(); result = 250;
+                scene.getX();
+                result = 250;
+                scene.getY();
+                result = 250;
+                scene.getWidth();
+                result = 250;
+                scene.getHeight();
+                result = 250;
             }
         };
         BoundingBox target = new BoundingBox(250, 250, 250, 250);
@@ -59,7 +67,8 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     public void objectToBounds_Point2D() {
         new Expectations() {
             {
-                getRobot().bounds((Point2D) any).query(); result = new BoundingBox(250, 250, 0, 0);
+                getRobot().bounds((Point2D) any).query();
+                result = new BoundingBox(250, 250, 0, 0);
             }
         };
         BoundingBox target = new BoundingBox(250, 250, 0, 0);
@@ -70,7 +79,8 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     public void objectToBounds_Node() {
         new Expectations() {
             {
-                getRobot().bounds((Node) any).query(); result = new BoundingBox(720, 720, 0, 0);
+                getRobot().bounds((Node) any).query();
+                result = new BoundingBox(720, 720, 0, 0);
             }
         };
 
@@ -88,7 +98,8 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
         };
         new Expectations() {
             {
-                getRobot().bounds((Node) any).query(); result = new BoundingBox(906, 609, 250, 50);
+                getRobot().bounds((Node) any).query();
+                result = new BoundingBox(906, 609, 250, 50);
             }
         };
 
@@ -107,7 +118,8 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
     public void objectToBounds_PointQuery() {
         new Expectations() {
             {
-                getRobot().bounds((Point2D) any).query(); result = new BoundingBox(10, 10, 200, 100);
+                getRobot().bounds((Point2D) any).query();
+                result = new BoundingBox(10, 10, 200, 100);
             }
         };
         BoundingBox target = new BoundingBox(10, 10, 200, 100);

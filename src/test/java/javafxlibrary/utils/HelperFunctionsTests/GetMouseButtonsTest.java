@@ -39,8 +39,8 @@ public class GetMouseButtonsTest {
 
     @Test
     public void getMouseButtons_MultipleValues() {
-        MouseButton[] target = new MouseButton[] { MouseButton.PRIMARY, MouseButton.SECONDARY,
-                MouseButton.MIDDLE, MouseButton.NONE };
+        MouseButton[] target = new MouseButton[]{MouseButton.PRIMARY, MouseButton.SECONDARY,
+                MouseButton.MIDDLE, MouseButton.NONE};
 
         MouseButton[] result = HelperFunctions.getMouseButtons(new String[]{"PRIMARY", "SECONDARY", "MIDDLE", "NONE"});
         Assert.assertArrayEquals(target, result);
@@ -49,7 +49,7 @@ public class GetMouseButtonsTest {
     @Test
     public void getMouseButtons_InvalidValue() {
         thrown.expect(JavaFXLibraryNonFatalException.class);
-       // thrown.expect(IllegalArgumentException.class);
+        // thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: [NONE, PRIMARY, MIDDLE, SECONDARY]");
         HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
     }

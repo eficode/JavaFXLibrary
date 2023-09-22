@@ -25,7 +25,9 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+
 import java.util.concurrent.ExecutionException;
+
 import static javafxlibrary.utils.HelperFunctions.sleepFor;
 import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 
@@ -38,7 +40,7 @@ public class ScrollRobot extends TestFxAdapter {
             + "\nExample:\n"
             + "| Move To | ${some node} | \n"
             + "| Scroll Vertically | DOWN | 25 | \n")
-    @ArgumentNames({ "direction", "amount=1" })
+    @ArgumentNames({"direction", "amount=1"})
     public void scrollVertically(String direction, int amount) {
         try {
             RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
@@ -50,7 +52,7 @@ public class ScrollRobot extends TestFxAdapter {
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to scroll vertically!");
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to scroll vertically to direction: \"" + direction + "\"", e);
         }
@@ -67,7 +69,7 @@ public class ScrollRobot extends TestFxAdapter {
             + "\nExample:\n"
             + "| Move To | ${some node} | \n"
             + "| Scroll Horizontally | RIGHT | \n")
-    @ArgumentNames({ "direction", "amount=1" })
+    @ArgumentNames({"direction", "amount=1"})
     public void scrollHorizontally(String direction, int amount) {
         try {
             RobotLog.info("Scrolling \"" + direction + "\" by \"" + amount + "\" ticks.");
@@ -83,7 +85,7 @@ public class ScrollRobot extends TestFxAdapter {
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to scroll horizontally!");
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to scroll horizontally to direction: \"" + direction + "\"", e);
         }

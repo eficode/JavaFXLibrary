@@ -28,7 +28,10 @@ import org.testfx.api.FxRobotInterface;
 import org.testfx.service.query.NodeQuery;
 import org.testfx.util.NodeQueryUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class FindOperation {
 
@@ -49,7 +52,7 @@ public class FindOperation {
         if (!findAll && query.containsIndex()) {
             return executeOverriddenLookup();
         } else if (query.containsIndex()) {
-            Set<Node> lookupResults = new LinkedHashSet<>((Set<Node>)executeLookup(query.getPrefix(), query.getQuery()));
+            Set<Node> lookupResults = new LinkedHashSet<>((Set<Node>) executeLookup(query.getPrefix(), query.getQuery()));
             lookupResults.remove(root);
             Node nodeAtIndex = getLookupResultByIndex(lookupResults, query.getIndex());
 
@@ -63,7 +66,7 @@ public class FindOperation {
 
     protected Object executeOverriddenLookup() {
         this.findAll = true;
-        Set<Node> result = new LinkedHashSet<>((Set<Node>)executeLookup(query.getPrefix(), query.getQuery()));
+        Set<Node> result = new LinkedHashSet<>((Set<Node>) executeLookup(query.getPrefix(), query.getQuery()));
         result.remove(root);
         return getLookupResultByIndex(result, query.getIndex());
     }

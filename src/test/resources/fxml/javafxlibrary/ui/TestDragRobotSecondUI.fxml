@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import javafx.scene.shape.Circle?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -20,6 +16,10 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="secondWindowRootPane"
@@ -28,7 +28,7 @@
     <Circle fx:id="secondCircle" radius="30" visible="false"/>
 
     <stylesheets>
-        <URL value="@css/TestDragRobotUI.css" />
+        <URL value="@css/TestDragRobotUI.css"/>
     </stylesheets>
 
 </AnchorPane>

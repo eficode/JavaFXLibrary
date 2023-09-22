@@ -18,7 +18,6 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -69,7 +68,7 @@ public class PointLocation extends TestFxAdapter {
             RobotLog.info("Returning a pointquery to coordinates: [" + x + ", " + y + "]");
             return mapObject(robot.point(x, y));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to point to coordinates: [" + x + ", " + y + "]", e);
         }
