@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.finder.Finder;
 import javafxlibrary.utils.HelperFunctions;
@@ -15,7 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class ObjectToNodeTest extends TestFxAdapterTest {
+public class ObjectToNodeTest extends ApplicationTest {
 
     @Mocked
     private Finder finder;

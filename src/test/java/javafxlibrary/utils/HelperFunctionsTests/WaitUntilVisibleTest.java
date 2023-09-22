@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
@@ -10,7 +10,7 @@ import mockit.*;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
-public class WaitUntilVisibleTest extends TestFxAdapterTest {
+public class WaitUntilVisibleTest extends ApplicationTest {
 
     private Button button;
 

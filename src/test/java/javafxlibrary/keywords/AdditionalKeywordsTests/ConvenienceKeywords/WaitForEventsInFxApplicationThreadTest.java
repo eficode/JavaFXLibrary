@@ -19,7 +19,7 @@ package javafxlibrary.keywords.AdditionalKeywordsTests.ConvenienceKeywords;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ApplicationLauncher;
 import org.junit.Assert;
@@ -28,7 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class WaitForEventsInFxApplicationThreadTest extends TestFxAdapterTest {
+public class WaitForEventsInFxApplicationThreadTest extends ApplicationTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

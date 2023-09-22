@@ -1,6 +1,6 @@
 package javafxlibrary.utils.HelperFunctionsTests;
 
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class ParseClassTest extends TestFxAdapterTest {
+public class ParseClassTest extends ApplicationTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

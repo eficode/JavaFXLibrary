@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
@@ -11,7 +11,7 @@ import mockit.MockUp;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
-public class WaitUntilEnabledTest extends TestFxAdapterTest {
+public class WaitUntilEnabledTest extends ApplicationTest {
 
     private Button button;
 

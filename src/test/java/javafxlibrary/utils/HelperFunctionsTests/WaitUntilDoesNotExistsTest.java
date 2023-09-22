@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.finder.Finder;
@@ -15,7 +15,7 @@ import org.junit.rules.ExpectedException;
 import testutils.DelayedObject;
 import testutils.DelayedObjectRemoval;
 
-public class WaitUntilDoesNotExistsTest extends TestFxAdapterTest {
+public class WaitUntilDoesNotExistsTest extends ApplicationTest {
 
     @Mocked private Finder finder;
     private Button button;

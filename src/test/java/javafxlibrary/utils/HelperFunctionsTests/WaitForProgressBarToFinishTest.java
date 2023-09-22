@@ -1,7 +1,7 @@
 package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.control.ProgressBar;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class WaitForProgressBarToFinishTest extends TestFxAdapterTest {
+public class WaitForProgressBarToFinishTest extends ApplicationTest {
 
     private ProgressBar progressBar;
 
