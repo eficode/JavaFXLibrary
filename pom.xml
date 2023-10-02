@@ -267,6 +267,25 @@
                 <groupId>org.robotframework</groupId>
                 <artifactId>robotframework-maven-plugin</artifactId>
                 <version>2.1.0</version>
+                <configuration>
+                    <includes>
+                        <include>smoke</include>
+                    </includes>
+                    <!-- <tests>
+                        <test>Capture Node</test>
+                    </tests> -->
+                    <excludes>
+                        <exclude>not-ready</exclude>
+                    </excludes>
+                    <nonCriticalTags>
+                        <nonCriticalTag>monocle-issue</nonCriticalTag>
+                    </nonCriticalTags>
+                    <logLevel>TRACE:INFO</logLevel>
+                    <dryrun>false</dryrun>
+                    <variables>
+                        <variable>appJar:${project.build.directory}/${project.artifactId}*tests.jar</variable>
+                    </variables>
+                </configuration>
                 <executions>
                     <execution>
                         <id>acceptance tests</id>
@@ -274,22 +293,6 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                        <configuration>
-                            <includes>
-                                <include>smoke</include>
-                            </includes>
-                            <excludes>
-                                <exclude>not-ready</exclude>
-                            </excludes>
-                            <nonCriticalTags>
-                                <nonCriticalTag>monocle-issue</nonCriticalTag>
-                            </nonCriticalTags>
-                            <logLevel>TRACE:INFO</logLevel>
-                            <dryrun>false</dryrun>
-                            <variables>
-                                <variable>appJar:${project.build.directory}/${project.artifactId}*tests.jar</variable>
-                            </variables>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>documentation</id>
