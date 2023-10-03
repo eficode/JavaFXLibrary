@@ -59,6 +59,12 @@
             <organization>Eficode</organization>
             <organizationUrl>http://www.eficode.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Jari Parviainen</name>
+            <email>jari.parviainen@eficode.com</email>
+            <organization>Eficode</organization>
+            <organizationUrl>http://www.eficode.com</organizationUrl>
+        </developer>
     </developers>
 
     <issueManagement>
@@ -80,7 +86,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -93,7 +99,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.2.0</version>
+                        <version>3.6.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -105,35 +111,35 @@
                     </plugin>
                     <!-- Upload also documentation -->
                     <plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>3.2.0</version>
-						<executions>
-							<execution>
-								<id>attach-artifacts</id>
-								<phase>package</phase>
-								<goals>
-									<goal>attach-artifact</goal>
-								</goals>
-								<configuration>
-									<artifacts>
-										<artifact>
-											<file>${project.build.directory}/${project.artifactId}.html</file>
-											<type>html</type>
-										</artifact>
-										<artifact>
-											<file>${project.build.directory}/${project.artifactId}.xml</file>
-											<type>xml</type>
-										</artifact>
-									</artifacts>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>${project.build.directory}/${project.artifactId}.html</file>
+                                            <type>html</type>
+                                        </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/${project.artifactId}.xml</file>
+                                            <type>xml</type>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -164,213 +170,216 @@
         </snapshotRepository>
     </distributionManagement>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/*.properties</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
-				<configuration>
-					<argLine>
-						-javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
-					</argLine>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>JavaFXLibrary</mainClass>
-						</manifest>
-						<manifestEntries>
-							<Premain-Class>JavaFXLibrary</Premain-Class>
-						</manifestEntries>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.3.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>JavaFXLibrary</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.robotframework</groupId>
-				<artifactId>robotframework-maven-plugin</artifactId>
-				<version>1.7.1</version>
-				<executions>
-					<execution>
-						<id>acceptance tests</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>smoke</include>
-							</includes>
-							<excludes>
-								<exclude>not-ready</exclude>
-							</excludes>
-							<nonCriticalTags>
-								<nonCriticalTag>monocle-issue</nonCriticalTag>
-							</nonCriticalTags>
-							<logLevel>TRACE:INFO</logLevel>
-							<dryrun>false</dryrun>
-							<variables>
-								<variable>appJar:${project.build.directory}/${project.artifactId}*tests.jar</variable>
-							</variables>
-						</configuration>
-					</execution>
-					<execution>
-						<id>documentation</id>
-						<phase>package</phase>
-						<goals>
-							<goal>libdoc</goal>
-						</goals>
-						<configuration>
-							<libdoc>
-								<outputDirectory>${project.build.directory}</outputDirectory>
-								<outputFile>${project.artifactId}.html</outputFile>
-								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
-								<version>${project.version}</version>
-							</libdoc>
-						</configuration>
-					</execution>
-					<execution>
-						<id>xml</id>
-						<phase>package</phase>
-						<goals>
-							<goal>libdoc</goal>
-						</goals>
-						<configuration>
-							<libdoc>
-								<outputDirectory>${project.build.directory}</outputDirectory>
-								<outputFile>${project.artifactId}.xml</outputFile>
-								<libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
-								<version>${project.version}</version>
-							</libdoc>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>JavaFXLibrary</mainClass>
-								</transformer>
-							</transformers>
-							<relocations>
-								<relocation>
-									<pattern>com.google.common</pattern>
-									<shadedPattern>shaded.com.google.common</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>org.apache.commons</pattern>
-									<shadedPattern>shaded.org.apache.commons</shadedPattern>
-								</relocation>
-							</relocations>
-							<artifactSet>
-								<includes>
-									<include>*:*</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                    </argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>JavaFXLibrary</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Premain-Class>JavaFXLibrary</Premain-Class>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>JavaFXLibrary</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.robotframework</groupId>
+                <artifactId>robotframework-maven-plugin</artifactId>
+                <version>2.1.0</version>
+                <configuration>
+                    <includes>
+                        <include>smoke</include>
+                    </includes>
+                    <!-- <tests>
+                        <test>Capture Node</test>
+                    </tests> -->
+                    <excludes>
+                        <exclude>not-ready</exclude>
+                    </excludes>
+                    <nonCriticalTags>
+                        <nonCriticalTag>monocle-issue</nonCriticalTag>
+                    </nonCriticalTags>
+                    <logLevel>TRACE:INFO</logLevel>
+                    <dryrun>false</dryrun>
+                    <variables>
+                        <variable>appJar:${project.build.directory}/${project.artifactId}*tests.jar</variable>
+                    </variables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>acceptance tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>documentation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>libdoc</goal>
+                        </goals>
+                        <configuration>
+                            <libdoc>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
+                                <outputFile>${project.artifactId}.html</outputFile>
+                                <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
+                                <version>${project.version}</version>
+                            </libdoc>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>xml</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>libdoc</goal>
+                        </goals>
+                        <configuration>
+                            <libdoc>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
+                                <outputFile>${project.artifactId}.xml</outputFile>
+                                <libraryOrResourceFile>JavaFXLibrary</libraryOrResourceFile>
+                                <version>${project.version}</version>
+                            </libdoc>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>JavaFXLibrary</mainClass>
+                                </transformer>
+                            </transformers>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>shaded.com.google.common</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons</pattern>
+                                    <shadedPattern>shaded.org.apache.commons</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <artifactSet>
+                                <includes>
+                                    <include>*:*</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.6.3</version>
+            <version>3.9.4</version>
         </dependency>
         <dependency>
             <groupId>org.jmockit</groupId>
@@ -381,12 +390,17 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.16-alpha</version>
+            <version>4.0.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>4.0.17</version>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
@@ -401,7 +415,7 @@
         <dependency>
             <groupId>org.robotframework</groupId>
             <artifactId>robotframework</artifactId>
-            <version>3.2.1</version>
+            <version>4.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -409,24 +423,19 @@
             <version>1.3</version>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
+            <groupId>org.robotframework</groupId>
+            <artifactId>jrobotremoteserver</artifactId>
+            <version>4.0.1</version>
         </dependency>
-		<dependency>
-			<groupId>org.robotframework</groupId>
-			<artifactId>jrobotremoteserver</artifactId>
-			<version>4.0.0</version>
-		</dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
+            <version>3.13.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.7</version>
+            <version>2.13.0</version>
         </dependency>
     </dependencies>
 </project>

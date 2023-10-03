@@ -17,18 +17,19 @@
 
 package javafxlibrary.matchers;
 
-import javafx.scene.control.*;
+import javafx.scene.control.Toggle;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+
 import java.util.function.Predicate;
 
 public class ToggleMatchers {
 
     // can be used with Objects implementing Toggle interface: RadioButton, ToggleButton and RadioMenuItem
     public static Matcher<Toggle> toggleMatcher(final String descriptionText,
-                                             final Predicate<Toggle> predicate,
-                                                     final String misMatchText) {
+                                                final Predicate<Toggle> predicate,
+                                                final String misMatchText) {
         return new BaseMatcher<Toggle>() {
             @Override
             public void describeTo(Description description) {
@@ -48,11 +49,11 @@ public class ToggleMatchers {
     }
 
     public static Matcher<Toggle> isSelected() {
-        return toggleMatcher("selected", Toggle::isSelected, "not selected!" );
+        return toggleMatcher("selected", Toggle::isSelected, "not selected!");
     }
 
     public static Matcher<Toggle> isNotSelected() {
-        return toggleMatcher("not selected", toggle -> !toggle.isSelected(), "selected!" );
+        return toggleMatcher("not selected", toggle -> !toggle.isSelected(), "selected!");
     }
 
 }

@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import mockit.Mock;
@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class WaitUntilInvisibleTest extends TestFxAdapterTest {
+public class WaitUntilInvisibleTest extends ApplicationTest {
 
     private Button button;
 

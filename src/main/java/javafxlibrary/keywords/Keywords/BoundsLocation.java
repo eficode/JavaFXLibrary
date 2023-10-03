@@ -20,6 +20,8 @@ package javafxlibrary.keywords.Keywords;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
@@ -28,8 +30,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.scene.Scene;
-import javafx.stage.Window;
 import org.testfx.service.query.BoundsQuery;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,11 +41,11 @@ import static javafxlibrary.utils.HelperFunctions.*;
 public class BoundsLocation extends TestFxAdapter {
 
     @RobotKeyword("Creates a new Bounds object with the given parameters\n\n"
-        + "``minX``, ``minY``, ``width``, ``height`` are Double type arguments.\n\n"
-        + "\nExample:\n"
-        + "| ${target bounds}= | Create Bounds | 150 | 150 | 0 | 0 | \n"
-        + "| ${capture}= | Capture Bounds | ${target bounds} |\n"
-        + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Bounds.html")
+            + "``minX``, ``minY``, ``width``, ``height`` are Double type arguments.\n\n"
+            + "\nExample:\n"
+            + "| ${target bounds}= | Create Bounds | 150 | 150 | 0 | 0 | \n"
+            + "| ${capture}= | Capture Bounds | ${target bounds} |\n"
+            + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Bounds.html")
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createBounds(double minX, double minY, double width, double height) {
         try {
@@ -53,18 +53,18 @@ public class BoundsLocation extends TestFxAdapter {
                     "\" and height=\"" + height + "\"");
             return mapObject(new BoundingBox(minX, minY, width, height));
         } catch (Exception e) {
-            if ( e instanceof JavaFXLibraryNonFatalException )
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to create Bounds object: ", e);
         }
     }
 
     @RobotKeyword("Creates a new Point2D object with the given parameters\n\n"
-        + "``x`` and ``y`` are both Double type arguments.\n\n"
-        + "\nExample:\n"
-        + "| ${point}= | Create Point | 150 | 150 | \n"
-        + "| Drop To | ${point} | \n"
-        + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Point2D.html")
+            + "``x`` and ``y`` are both Double type arguments.\n\n"
+            + "\nExample:\n"
+            + "| ${point}= | Create Point | 150 | 150 | \n"
+            + "| Drop To | ${point} | \n"
+            + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Point2D.html")
     @ArgumentNames({"x", "y"})
     public Object createPoint(double x, double y) {
         try {
@@ -78,11 +78,11 @@ public class BoundsLocation extends TestFxAdapter {
     }
 
     @RobotKeyword("Creates a new Rectangle2D object with the given parameters\n\n"
-        + "``minX``, ``minY``, ``width``, ``height`` are Double type arguments.\n\n"
-        + "\nExample:\n"
-        + "| ${rectangle} | Create Rectangle | ${minX} | ${minY} | 240 | 240 | \n"
-        + "| ${image1} | Capture Screen Region | ${rectangle} | \n\n"
-        + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Rectangle2D.html")
+            + "``minX``, ``minY``, ``width``, ``height`` are Double type arguments.\n\n"
+            + "\nExample:\n"
+            + "| ${rectangle} | Create Rectangle | ${minX} | ${minY} | 240 | 240 | \n"
+            + "| ${image1} | Capture Screen Region | ${rectangle} | \n\n"
+            + "See more at: https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Rectangle2D.html")
     @ArgumentNames({"minX", "minY", "width", "height"})
     public Object createRectangle(double minX, double minY, double width, double height) {
         try {
@@ -103,7 +103,7 @@ public class BoundsLocation extends TestFxAdapter {
             + "| ${bounds}= | Get Bounds | ${node} | \n"
             + "| ${target}= | Create Bounds | 150 | 150 | 200 | 200 | \n"
             + "| Should Be Equal | ${bounds} | ${target} | \n")
-    @ArgumentNames({ "locator" })
+    @ArgumentNames({"locator"})
     public Object getBounds(Object locator) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -125,7 +125,7 @@ public class BoundsLocation extends TestFxAdapter {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new JavaFXLibraryNonFatalException("getBounds: Could not execute move to using locator \"" + locator + "\": "
                     + e.getCause().getMessage());
-        } catch (JavaFXLibraryNonFatalException e){
+        } catch (JavaFXLibraryNonFatalException e) {
             throw e;
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Couldn't find \"" + locator + "\"", e);

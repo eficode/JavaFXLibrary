@@ -22,14 +22,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafxlibrary.testapps.customcomponents.TextRow;
+
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TextListController implements Initializable {
 
-    private @FXML VBox textRowWrapper;
-    private @FXML TextField search;
+    @FXML
+    private VBox textRowWrapper;
+    @FXML
+    private TextField search;
     private List<TextRow> textRows;
     private List<TextRow> activeRows;
 
@@ -79,12 +85,12 @@ public class TextListController implements Initializable {
         textRows.forEach((textRow) -> {
             boolean match = true;
 
-            for(String query : queries) {
+            for (String query : queries) {
                 if (!(textRow.getContent().toLowerCase().contains(query)))
                     match = false;
             }
 
-            if(match)
+            if (match)
                 activeRows.add(textRow);
         });
 
@@ -97,15 +103,15 @@ public class TextListController implements Initializable {
         boolean validHeading = false;
         String heading = "";
 
-        while(!validHeading) {
+        while (!validHeading) {
             String firstWord = words[ThreadLocalRandom.current().nextInt(0, words.length)];
             String secondWord = words[ThreadLocalRandom.current().nextInt(0, words.length)];
 
             if (firstWord.endsWith(",") || firstWord.endsWith("."))
-                firstWord = firstWord.substring(0, firstWord.length() -1);
+                firstWord = firstWord.substring(0, firstWord.length() - 1);
 
             if (secondWord.endsWith(",") || secondWord.endsWith("."))
-                secondWord = secondWord.substring(0, secondWord.length() -1);
+                secondWord = secondWord.substring(0, secondWord.length() - 1);
 
             if (firstWord.length() > 3 && secondWord.length() > 3 && !firstWord.equals(secondWord)) {
                 validHeading = true;

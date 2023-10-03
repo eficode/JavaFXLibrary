@@ -2,7 +2,7 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
@@ -10,12 +10,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.awt.Point;
+import java.awt.*;
 
 import static testutils.TestFunctions.setupStageInJavaFXThread;
 import static testutils.TestFunctions.waitForEventsInJavaFXThread;
 
-public class CallMethodTest extends TestFxAdapterTest {
+public class CallMethodTest extends ApplicationTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

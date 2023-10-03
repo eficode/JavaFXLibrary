@@ -21,20 +21,27 @@ import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestKeyboardRobotController implements Initializable {
 
-    @FXML TextArea textArea;
-    @FXML Label textAreaLabel;
-    @FXML Label keyCombinationLabel;
-    @FXML Button resetButton;
+    @FXML
+    TextArea textArea;
+    @FXML
+    Label textAreaLabel;
+    @FXML
+    Label keyCombinationLabel;
+    @FXML
+    Button resetButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -45,7 +52,7 @@ public class TestKeyboardRobotController implements Initializable {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.TAB)) {
-                    if(event.isShiftDown()) {
+                    if (event.isShiftDown()) {
                         textArea.setText(textArea.getText() + "    ");
                         textArea.positionCaret(textArea.getText().length());
                         event.consume();
@@ -66,7 +73,7 @@ public class TestKeyboardRobotController implements Initializable {
 
     // Changes keyCombinationLabels text to Passed if CTRL + SHIFT + G is pressed
     public void keyCombinationLabelListener(KeyEvent evt) {
-        if(evt.getCode() == KeyCode.G && evt.isShiftDown() && evt.isControlDown()) {
+        if (evt.getCode() == KeyCode.G && evt.isShiftDown() && evt.isControlDown()) {
             keyCombinationLabel.setText("Passed");
             keyCombinationLabel.setStyle("-fx-background-color: #00A000; -fx-text-fill: white");
         }

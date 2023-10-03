@@ -172,7 +172,7 @@ public class XPathFinder {
                         attributeBuilder.append(att.replace("=", "=\""));
                         attributeBuilder.append("\"");
                     } else {
-                        if(countMatches(att, "\"") > 2) {
+                        if (countMatches(att, "\"") > 2) {
                             att = att.replaceAll("\"", "&quot;");
                             att = att.replaceFirst("&quot;", "\"");
                             att = att.replaceAll("&quot;$", "\"");

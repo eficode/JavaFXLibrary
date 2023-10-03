@@ -18,9 +18,10 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Scene;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ConvenienceKeywords;
 import javafxlibrary.utils.RobotLog;
@@ -29,13 +30,12 @@ import org.apache.commons.io.FileUtils;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
-import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -45,8 +45,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.concurrent.ExecutionException;
 
-import static org.testfx.util.WaitForAsyncUtils.*;
 import static javafxlibrary.utils.HelperFunctions.*;
+import static org.testfx.util.WaitForAsyncUtils.asyncFx;
 
 @RobotKeywords
 public class ScreenCapturing extends TestFxAdapter {
@@ -55,7 +55,7 @@ public class ScreenCapturing extends TestFxAdapter {
             + "Argument ``value`` is a string. Accepted values are ``embedded`` (initial value) and ``diskonly``. They can be given in uppercase as well. \n\n"
             + "\nExample:\n"
             + "| Set Image Logging | DISKONLY |\n")
-    @ArgumentNames({ "value" })
+    @ArgumentNames({"value"})
     public void setImageLogging(String value) {
         if (value.toLowerCase().equals("embedded"))
             TestFxAdapter.logImages = "embedded";
@@ -65,7 +65,7 @@ public class ScreenCapturing extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Value \"" + value + "\" is not supported! Value must be either " +
                     "\"EMBEDDED\" or \"DISKONLY\"");
     }
-    
+
     @RobotKeyword("Returns a screenshot from whole primary screen. Note that this shows also other applications that are open.\n\n"
             + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
             + "``mapObject`` is a boolean value that specifies whether a captured image is saved as mapobject and returned from keyword. "
@@ -76,11 +76,11 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Primary Screen | logImage=False |\n"
             + "| | Capture Primary Screen | logImage=true | mapObject=false |\n")
     @ArgumentNames({"logImage=True", "mapObject=True"})
-    public Object capturePrimaryScreen(boolean logImage, boolean mapObject)  {
+    public Object capturePrimaryScreen(boolean logImage, boolean mapObject) {
         try {
-    	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    	Rectangle2D target = asyncFx(() -> new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight())).get();
-        return this.captureImage(target,logImage, mapObject);
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            Rectangle2D target = asyncFx(() -> new Rectangle2D(0, 0, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight())).get();
+            return this.captureImage(target, logImage, mapObject);
         } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Unable to get Rectangle2D: " + iee.getCause());
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class ScreenCapturing extends TestFxAdapter {
     }
 
     @RobotKeyword("Returns a screenshot of the given locator, or if not given from whole active window.\n\n"
-    		+ "Note that active window might only be part of the visible window, it e.g. dialog is active.\n\n"
+            + "Note that active window might only be part of the visible window, it e.g. dialog is active.\n\n"
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, Rectangle, PointQuery, Scene, Window_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
@@ -105,12 +105,12 @@ public class ScreenCapturing extends TestFxAdapter {
             + "| ${capture}= | Capture Image | ${window} | \n"
             + "| ${capture}= | Capture Image | | \n"
             + "| ${capture}= | Capture Image | id=id | logImage=False |\n"
-            + "| | Capture Image | id=id | logImage=true | mapObject=false |\n" )
+            + "| | Capture Image | id=id | logImage=true | mapObject=false |\n")
     @ArgumentNames({"locator=target window", "logImage=True", "mapObject=True"})
-    public Object captureImage(Object locator, boolean logImage, boolean mapObject){
+    public Object captureImage(Object locator, boolean logImage, boolean mapObject) {
         checkObjectArgumentNotNull(locator);
         try {
-            RobotLog.info("Capturing screenshot from locator: \"" + locator +  "\"");
+            RobotLog.info("Capturing screenshot from locator: \"" + locator + "\"");
             Image image;
             String logPath;
             Path path = createNewImageFileNameWithPath();
@@ -120,7 +120,7 @@ public class ScreenCapturing extends TestFxAdapter {
             asyncFx(() -> robotContext().getCaptureSupport().saveImage(image, path)).get();
 
             if (getCurrentSessionScreenshotDirectoryInLogs() != null) {
-                logPath = getCurrentSessionScreenshotDirectoryInLogs()+"/"+path.getFileName();
+                logPath = getCurrentSessionScreenshotDirectoryInLogs() + "/" + path.getFileName();
             } else {
                 logPath = path.toString();
             }
@@ -128,7 +128,7 @@ public class ScreenCapturing extends TestFxAdapter {
             if (logImage) {
                 double printSize = targetBounds.getWidth() > 800 ? 800 : targetBounds.getWidth();
 
-                if(TestFxAdapter.logImages.toLowerCase().equals("embedded")) {
+                if (TestFxAdapter.logImages.toLowerCase().equals("embedded")) {
                     Image resizedImage = resizeImage(image, path);
                     Path tempPath = Paths.get(getCurrentSessionScreenshotDirectory(), "temp.png");
                     robotContext().getCaptureSupport().saveImage(resizedImage, tempPath);
@@ -136,7 +136,7 @@ public class ScreenCapturing extends TestFxAdapter {
                     File imageFile = convertToJpeg(tempPath);
                     byte[] imageBytes = FileUtils.readFileToByteArray(imageFile);
                     String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-                    if(imageFile.exists()) {
+                    if (imageFile.exists()) {
                         if (!imageFile.delete()) {
                             RobotLog.warn("Capture temporary image \"" + imageFile.getAbsolutePath() + "\" deletion failed.");
                         }
@@ -152,7 +152,7 @@ public class ScreenCapturing extends TestFxAdapter {
                             + "</a>");
                 }
             }
-            if(mapObject) {
+            if (mapObject) {
                 return mapObject(image);
             } else {
                 return null;
@@ -167,7 +167,7 @@ public class ScreenCapturing extends TestFxAdapter {
             throw new JavaFXLibraryNonFatalException("Unable to take capture: \"" + locator + "\"", e.getCause());
         }
     }
-    
+
     @RobotKeyword("Returns a screenshot of the scene containing given locator.\n\n"
             + "``locator`` is a query locator, see `3.1 Locator syntax`.\n\n "
             + "``logImage`` is a boolean value that specifies whether a captured image is also printed to test execution log. \n\n "
@@ -177,7 +177,7 @@ public class ScreenCapturing extends TestFxAdapter {
             + "\nExample:\n"
             + "| ${capture}= | Capture Scene Containing Node | ${node} | \n"
             + "| ${capture}= | Capture Scene Containing Node | id=id | logImage=False |\n"
-            + "| | Capture Scene Containing Node | id=id | logImage=true | mapObject=false |\n" )
+            + "| | Capture Scene Containing Node | id=id | logImage=true | mapObject=false |\n")
     @ArgumentNames({"locator", "logImage=True", "mapObject=True"})
     public Object captureSceneContainingNode(Object locator, boolean logImage, boolean mapObject) {
         try {
@@ -202,7 +202,7 @@ public class ScreenCapturing extends TestFxAdapter {
             RobotLog.info("Loading image from: \"" + path + "\"");
             return mapObject(robot.capture(Paths.get(path)).getImage());
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to load image from path: \"" + path + "\"", e);
         }
@@ -218,7 +218,7 @@ public class ScreenCapturing extends TestFxAdapter {
         try {
             RobotLog.info("Loading image from URL: \"" + url + "\"");
             return mapObject(SwingFXUtils.toFXImage(ImageIO.read(new URL(url)), null));
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Unable to load image from URL: \"" + url + "\"", e);
         }
     }
@@ -226,25 +226,25 @@ public class ScreenCapturing extends TestFxAdapter {
     @RobotKeyword("Saves given image to given location\n\n"
             + "``image`` is the target _Object:Image_ to be saved\n"
             + "``path`` is the target location where image will be saved")
-    @ArgumentNames({ "image", "path" })
+    @ArgumentNames({"image", "path"})
     public void saveImageAs(Image image, String path) {
         try {
             RobotLog.info("Saving image \"" + image + "\" to path \"" + path + "\"");
             robotContext().getCaptureSupport().saveImage(image, Paths.get(path));
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to save image.", e);
         }
     }
 
-    private Path createNewImageFileNameWithPath(){
+    private Path createNewImageFileNameWithPath() {
         ZonedDateTime errorDateTime = ZonedDateTime.now();
         String errorTimestamp = formatErrorTimestamp(errorDateTime);
         String errorImageFilename = "JavaFXLib-" + errorTimestamp + ".png";
         String errorImageFilePath = getCurrentSessionScreenshotDirectory();
         File errDir = new File(errorImageFilePath);
-        if(!errDir.exists())
+        if (!errDir.exists())
             if (!errDir.mkdirs()) {
                 RobotLog.warn("Capture image directory \"" + errorImageFilePath + "\" creation failed.");
             }
@@ -278,7 +278,7 @@ public class ScreenCapturing extends TestFxAdapter {
         BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
                 bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
-        if(path.toFile().exists()) {
+        if (path.toFile().exists()) {
             if (!path.toFile().delete()) {
                 RobotLog.warn("Capture temporary image \"" + path + "\" deletion failed.");
             }

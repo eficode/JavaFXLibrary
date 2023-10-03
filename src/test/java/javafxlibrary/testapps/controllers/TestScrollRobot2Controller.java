@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -29,9 +30,12 @@ import java.util.ResourceBundle;
 
 public class TestScrollRobot2Controller implements Initializable {
 
-    @FXML private ScrollPane scrollPane;
-    @FXML private Label verticalScrollLocation;
-    @FXML private Label horizontalScrollLocation;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private Label verticalScrollLocation;
+    @FXML
+    private Label horizontalScrollLocation;
 
     private ScrollBar verticalBar;
     private ScrollBar horizontalBar;
@@ -50,9 +54,9 @@ public class TestScrollRobot2Controller implements Initializable {
 
         // Add listener for verticalBar
         verticalBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if((double) newValue == verticalBar.getMax()) {
+            if ((double) newValue == verticalBar.getMax()) {
                 verticalScrollLocation.setText("max");
-            } else if((double) newValue == verticalBar.getMin()) {
+            } else if ((double) newValue == verticalBar.getMin()) {
                 verticalScrollLocation.setText("min");
             } else {
                 verticalScrollLocation.setText(formatter.format(newValue));
@@ -61,9 +65,9 @@ public class TestScrollRobot2Controller implements Initializable {
 
         // Add listener for horizontalBar
         horizontalBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if((double) newValue == horizontalBar.getMax()) {
+            if ((double) newValue == horizontalBar.getMax()) {
                 horizontalScrollLocation.setText("max");
-            } else if((double) newValue == horizontalBar.getMin()) {
+            } else if ((double) newValue == horizontalBar.getMin()) {
                 horizontalScrollLocation.setText("min");
             } else {
                 horizontalScrollLocation.setText(formatter.format(newValue));

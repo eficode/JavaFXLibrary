@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -18,11 +16,16 @@
   ~ limitations under the License.
   -->
 
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml" fx:controller="javafxlibrary.testapps.controllers.TextListController">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         fx:controller="javafxlibrary.testapps.controllers.TextListController">
     <HBox fx:id="searchContainer">
-        <TextField fx:id="search"  promptText="Search" onKeyReleased="#searchListener" />
+        <TextField fx:id="search" promptText="Search" onKeyReleased="#searchListener"/>
     </HBox>
     <ScrollPane fx:id="textSearchResults">
-        <VBox fx:id="textRowWrapper" />
+        <VBox fx:id="textRowWrapper"/>
     </ScrollPane>
 </fx:root>

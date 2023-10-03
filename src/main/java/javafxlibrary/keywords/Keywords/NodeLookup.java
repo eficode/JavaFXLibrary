@@ -19,7 +19,6 @@ package javafxlibrary.keywords.Keywords;
 
 import javafx.scene.Node;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -49,7 +48,7 @@ public class NodeLookup extends TestFxAdapter {
             + "| ${some node}= | find | id=some-node-id | \n"
             + "| ${root} | Get Root Node Of | ${some node} | \n"
             + "Query:\n"
-            + "| ${root} | Get Root Node Of | id=some-node-id | \n" )
+            + "| ${root} | Get Root Node Of | id=some-node-id | \n")
     @ArgumentNames({"locator"})
     public Object getRootNodeOf(Object locator) {
         checkObjectArgumentNotNull(locator);

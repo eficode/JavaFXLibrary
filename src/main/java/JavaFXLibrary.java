@@ -15,16 +15,6 @@
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
-
 import javafxlibrary.exceptions.JavaFXLibraryFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
@@ -41,10 +31,18 @@ import org.robotframework.javalib.library.AnnotationLibrary;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import static org.testfx.util.WaitForAsyncUtils.*;
-import static javafxlibrary.utils.HelperFunctions.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
-import java.util.ResourceBundle;
+import static javafxlibrary.utils.HelperFunctions.getLibraryKeywordTimeout;
+import static org.testfx.util.WaitForAsyncUtils.*;
 
 public class JavaFXLibrary extends AnnotationLibrary {
 
@@ -201,7 +199,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
                         return null;
                     }
                 }));
-                waitForFxEvents( 5);
+                waitForFxEvents(5);
             }
         } catch (JavaFXLibraryTimeoutException jfxte) {
             // timeout already expired, catch exception and jump out
@@ -212,7 +210,7 @@ public class JavaFXLibrary extends AnnotationLibrary {
         }
 
         // in failure take screenshot and handle exception
-        if(retExcep.get()!=null) {
+        if (retExcep.get() != null) {
             RobotLog.reset();
             RuntimeException e = retExcep.get();
             runOnFailure.runOnFailure();

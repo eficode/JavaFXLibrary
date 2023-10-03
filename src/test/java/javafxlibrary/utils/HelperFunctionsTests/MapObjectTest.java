@@ -39,7 +39,7 @@ public class MapObjectTest extends TestFxAdapterTest {
     }
 
     @Test
-    public  void mapObject_NonJavaFXObject() {
+    public void mapObject_NonJavaFXObject() {
         MapObjectTest object = new MapObjectTest();
         String key = (String) HelperFunctions.mapObject(object);
         Object result = TestFxAdapter.objectMap.get(key);
@@ -47,7 +47,7 @@ public class MapObjectTest extends TestFxAdapterTest {
     }
 
     @Test
-    public  void mapObject_CompatibleType() {
+    public void mapObject_CompatibleType() {
         makeEverythingCompatible();
         Button button = new Button("JavaFXLibrary");
         Object result = HelperFunctions.mapObject(button);

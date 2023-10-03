@@ -1,14 +1,14 @@
 package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class IsCompatibleTest extends TestFxAdapterTest {
+public class IsCompatibleTest extends ApplicationTest {
 
     @Test
     public void isCompatible_TestAllValidTypes() {

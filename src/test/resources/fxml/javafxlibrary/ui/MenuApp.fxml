@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.RadioMenuItem?>
-<?import javafx.scene.control.ComboBox?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -25,6 +16,8 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -32,54 +25,54 @@
       prefHeight="350.0" prefWidth="800.0">
     <MenuBar>
         <Menu text="Services">
-            <MenuItem onAction="#navigate" text="Design" />
+            <MenuItem onAction="#navigate" text="Design"/>
             <MenuItem onAction="#navigate" text="Create"/>
             <MenuItem onAction="#navigate" text="Analyze"/>
             <MenuItem onAction="#navigate" text="Automate"/>
         </Menu>
         <Menu text="Products">
-            <MenuItem onAction="#navigate" text="Shift" />
+            <MenuItem onAction="#navigate" text="Shift"/>
             <MenuItem onAction="#navigate" text="Automate"/>
             <MenuItem onAction="#navigate" text="Cloud Partner"/>
             <MenuItem onAction="#navigate" text="Competence Upgrade/Transfer"/>
         </Menu>
         <Menu text="Learn">
-            <MenuItem onAction="#navigate" text="DevOps" />
+            <MenuItem onAction="#navigate" text="DevOps"/>
             <MenuItem onAction="#navigate" text="DevOps Platform"/>
             <MenuItem onAction="#navigate" text="SecOps"/>
             <MenuItem onAction="#navigate" text="Test Automation &amp; Robot Framework"/>
         </Menu>
         <Menu text="Settings">
             <Menu text="Theme">
-                <RadioMenuItem fx:id="efiStyle" onAction="#toggleStyle" selected="true" text="Black and Yellow" />
-                <RadioMenuItem fx:id="javaStyle" onAction="#toggleStyle" text ="JavaFX" />
-                <RadioMenuItem fx:id="gradientStyle" onAction="#toggleStyle" text ="Gradient" />
+                <RadioMenuItem fx:id="efiStyle" onAction="#toggleStyle" selected="true" text="Black and Yellow"/>
+                <RadioMenuItem fx:id="javaStyle" onAction="#toggleStyle" text="JavaFX"/>
+                <RadioMenuItem fx:id="gradientStyle" onAction="#toggleStyle" text="Gradient"/>
             </Menu>
             <Menu text="Font size" fx:id="fontMenu">
-                <RadioMenuItem text="18px" />
-                <RadioMenuItem selected="true" text ="22px" />
-                <RadioMenuItem text ="26px" />
+                <RadioMenuItem text="18px"/>
+                <RadioMenuItem selected="true" text="22px"/>
+                <RadioMenuItem text="26px"/>
             </Menu>
         </Menu>
     </MenuBar>
 
     <AnchorPane>
         <StackPane>
-            <Rectangle fx:id="bgRectangle" width="800" height="350" />
-            <Label fx:id="textLabel" styleClass="textLabel" text="Menu App" />
+            <Rectangle fx:id="bgRectangle" width="800" height="350"/>
+            <Label fx:id="textLabel" styleClass="textLabel" text="Menu App"/>
         </StackPane>
         <HBox styleClass="comboBoxContainer" AnchorPane.bottomAnchor="0">
             <HBox spacing="5">
-                <Label text="Amount:" />
+                <Label text="Amount:"/>
                 <ComboBox fx:id="amountComboBox" promptText="Select amount" onAction="#countTotal"/>
             </HBox>
             <HBox spacing="5">
-                <Label text="Price:" />
+                <Label text="Price:"/>
                 <ComboBox fx:id="priceComboBox" promptText="Select price" onAction="#countTotal"/>
             </HBox>
             <HBox spacing="5">
-                <Label text="Total:" />
-                <Label fx:id="total" text="0€" />
+                <Label text="Total:"/>
+                <Label fx:id="total" text="0€"/>
             </HBox>
         </HBox>
     </AnchorPane>

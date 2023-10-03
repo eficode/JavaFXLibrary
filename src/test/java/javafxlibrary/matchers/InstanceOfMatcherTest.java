@@ -19,11 +19,11 @@ package javafxlibrary.matchers;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class InstanceOfMatcherTest extends TestFxAdapterTest {
+public class InstanceOfMatcherTest extends ApplicationTest {
 
     @Test
     public void matchesWithClass() {

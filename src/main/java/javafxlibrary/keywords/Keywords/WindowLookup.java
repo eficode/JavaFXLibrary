@@ -18,7 +18,6 @@
 package javafxlibrary.keywords.Keywords;
 
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
-import static javafxlibrary.utils.HelperFunctions.*;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -28,20 +27,22 @@ import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+
+import static javafxlibrary.utils.HelperFunctions.*;
 
 @RobotKeywords
 public class WindowLookup extends TestFxAdapter {
 
     @RobotKeyword("Returns a list of all available windows currently open. \n\n "
-        + "\nExample:\n"
-        + "| ${windows}= | List Windows | \n"
-        + "| Log List | ${windows} | \n")
+            + "\nExample:\n"
+            + "| ${windows}= | List Windows | \n"
+            + "| Log List | ${windows} | \n")
     public List<Object> listWindows() {
         try {
             return mapObjects(robot.listWindows());
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
             throw new JavaFXLibraryNonFatalException("Unable to list windows", e);
         }
@@ -52,9 +53,9 @@ public class WindowLookup extends TestFxAdapter {
         try {
             return mapObjects(robot.listTargetWindows());
         } catch (Exception e) {
-            if(e instanceof JavaFXLibraryNonFatalException)
+            if (e instanceof JavaFXLibraryNonFatalException)
                 throw e;
-            throw new JavaFXLibraryNonFatalException("Unable to list target windows." , e);
+            throw new JavaFXLibraryNonFatalException("Unable to list target windows.", e);
         }
     }
 
@@ -83,9 +84,9 @@ public class WindowLookup extends TestFxAdapter {
             RobotLog.info("Getting window using locator \"" + locator + "\"");
             if (locator instanceof String) {
                 if (((String) locator).startsWith("pattern=")) {
-                    locator = ((String) locator).replace("pattern=","");
+                    locator = ((String) locator).replace("pattern=", "");
                     return mapObject(robot.window((String) locator));
-                } else if ( ((String) locator).matches("[0-9]+")) {
+                } else if (((String) locator).matches("[0-9]+")) {
                     return getWindow(Integer.parseInt(locator.toString()));
                 } else {
                     if (((String) locator).startsWith("title="))

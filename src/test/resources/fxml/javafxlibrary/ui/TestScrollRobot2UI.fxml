@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -21,6 +16,12 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.TestScrollRobot2Controller"
@@ -28,9 +29,9 @@
             onMouseEntered="#setupListeners">
 
     <VBox AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
-        <ScrollPane fx:id="scrollPane" >
+        <ScrollPane fx:id="scrollPane">
             <ImageView fx:id="imageView">
-                <Image url="@uiresources/ejlogo.png" />
+                <Image url="@uiresources/ejlogo.png"/>
             </ImageView>
         </ScrollPane>
     </VBox>
@@ -39,6 +40,6 @@
         <Label fx:id="horizontalScrollLocation" text="min" textFill="red"/>
     </VBox>
     <stylesheets>
-        <URL value="@css/TestScrollRobot2UI.css" />
+        <URL value="@css/TestScrollRobot2UI.css"/>
     </stylesheets>
 </AnchorPane>

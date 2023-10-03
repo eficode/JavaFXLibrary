@@ -24,7 +24,12 @@ import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
@@ -37,7 +42,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.hamcrest.Matchers;
 import org.testfx.robot.Motion;
-import javafx.scene.input.MouseButton;
+import org.testfx.service.query.PointQuery;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,18 +53,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.lang.*;
-
-import javafx.scene.input.KeyCode;
-import org.testfx.service.query.PointQuery;
-import org.testfx.util.WaitForAsyncUtils;
-
-import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -78,18 +77,20 @@ public class HelperFunctions {
     public static Node waitUntilExists(String target, int timeout, String timeUnit) {
         try {
             RobotLog.trace("waitUntilExists: Waiting until target \"" + target + "\" becomes existent, timeout="
-                + timeout + ", timeUnit=" + timeUnit);
+                    + timeout + ", timeUnit=" + timeUnit);
             Node node;
             Instant start = Instant.now();
             Integer originalTimeout = timeout;
             // TODO: Add null checks for node.getScene()
-            while(true) {
-                originalTimeout = (int) (TimeUnit.MILLISECONDS.convert((int) originalTimeout,TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start,Instant.now()));
-                if (originalTimeout <= 0) throw new TimeoutException("waitUntilExists: time out!");
+            while (true) {
+                originalTimeout = (int) (TimeUnit.MILLISECONDS.convert((int) originalTimeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now()));
+                if (originalTimeout <= 0)
+                    throw new TimeoutException("waitUntilExists: time out!");
                 waitFor(originalTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> {
                     try {
                         Node toBeCheckedNode = createFinder().find(target);
-                        if (toBeCheckedNode == null) throw new JavaFXLibraryNonFatalException("target not found!");
+                        if (toBeCheckedNode == null)
+                            throw new JavaFXLibraryNonFatalException("target not found!");
                         hasValidCoordinates(toBeCheckedNode);
                         return true;
                     } catch (Exception e) {
@@ -110,11 +111,11 @@ public class HelperFunctions {
                     sleepFor(50);
                     RobotLog.trace("waitForExists loop: node was null, retry...");
                     continue;
-                }
-                else break;
+                } else
+                    break;
             }
             return node;
-        } catch (InterruptedException |ExecutionException iee) {
+        } catch (InterruptedException | ExecutionException iee) {
             throw new JavaFXLibraryNonFatalException("Given element \"" + target + "\" was not found (" + iee.getCause() + ").");
         } catch (JavaFXLibraryNonFatalException nfe) {
             throw nfe;
@@ -133,7 +134,8 @@ public class HelperFunctions {
             waitFor(timeout, getTimeUnit(timeUnit), () -> asyncFx(() -> {
                 try {
                     Node foundNode = createFinder().find(target);
-                    if (foundNode == null) return true;
+                    if (foundNode == null)
+                        return true;
                     return false;
                 } catch (Exception e) {
                     RobotLog.trace("Exception in waitUntilDoesNotExists: " + e.getCause() + "\n" + e);
@@ -161,7 +163,8 @@ public class HelperFunctions {
             final Object finalTarget = target;
             // decrease already used time from timeout
             long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
-            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilVisible: time out!");
+            if (keywordTimeout <= 0)
+                throw new TimeoutException("waitUntilVisible: time out!");
             RobotLog.trace("waitUntilVisible: Waiting until target \"" + finalTarget + "\" becomes visible, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
             waitFor((int) keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isVisible()).matches(finalTarget)).get());
             RobotLog.info("node \"" + finalTarget + "\" was visible.");
@@ -186,7 +189,8 @@ public class HelperFunctions {
             final Object finalTarget = target;
             // decrease already used time from timeout
             long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
-            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilNotVisible: time out!");
+            if (keywordTimeout <= 0)
+                throw new TimeoutException("waitUntilNotVisible: time out!");
             RobotLog.trace("waitUntilNotVisible: Waiting until target \"" + target + "\" becomes invisible, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
             waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isInvisible()).matches(finalTarget)).get());
             RobotLog.info("node \"" + finalTarget + "\" is not visible.");
@@ -211,7 +215,8 @@ public class HelperFunctions {
             final Object finalTarget = target;
             // decrease already used time from timeout
             long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
-            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilEnabled: time out!");
+            if (keywordTimeout <= 0)
+                throw new TimeoutException("waitUntilEnabled: time out!");
             RobotLog.trace("waitUntilEnabled: Waiting until target \"" + target + "\" becomes enabled, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
             waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> (Matchers.is(isEnabled()).matches(finalTarget))).get());
             RobotLog.info("node \"" + finalTarget + "\" is enabled.");
@@ -235,7 +240,8 @@ public class HelperFunctions {
             final Object finalTarget = target;
             // decrease already used time from timeout
             long keywordTimeout = TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.valueOf(timeUnit)) - ChronoUnit.MILLIS.between(start, Instant.now());
-            if (keywordTimeout <= 0) throw new TimeoutException("waitUntilDisabled: time out!");
+            if (keywordTimeout <= 0)
+                throw new TimeoutException("waitUntilDisabled: time out!");
             RobotLog.trace("waitUntilDisabled: Waiting until target \"" + target + "\" becomes disabled, timeout=" + keywordTimeout + ", timeUnit=MILLISECONDS");
             waitFor(keywordTimeout, TimeUnit.MILLISECONDS, () -> asyncFx(() -> Matchers.is(isDisabled()).matches(finalTarget)).get());
             RobotLog.info("node \"" + finalTarget + "\" is disabled.");
@@ -378,8 +384,8 @@ public class HelperFunctions {
             try {
                 array[i] = MouseButton.valueOf(slist[i]);
             } catch (IllegalArgumentException e) {
-               throw new JavaFXLibraryNonFatalException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
-//                throw new IllegalArgumentException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
+                throw new JavaFXLibraryNonFatalException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
+                        //                throw new IllegalArgumentException("\"" + slist[i] + "\" is not a valid MouseButton. Accepted values are: "
                         + Arrays.asList(MouseButton.values()));
             }
         }
@@ -524,7 +530,7 @@ public class HelperFunctions {
     }
 
     public static void setLibraryKeywordTimeout(int value) {
-         libraryKeywordTimeout = value;
+        libraryKeywordTimeout = value;
     }
 
     public static int getLibraryKeywordTimeout() {
@@ -536,7 +542,7 @@ public class HelperFunctions {
     }
 
     public static void checkObjectInsideActiveWindow(int x, int y) {
-        checkObjectInsideActiveWindow(new Point2D(x,y));
+        checkObjectInsideActiveWindow(new Point2D(x, y));
     }
 
     public static void checkObjectInsideActiveWindow(Object object) {
@@ -554,21 +560,23 @@ public class HelperFunctions {
             throw new JavaFXLibraryNonFatalException("object inside active window check failed: " + e.getMessage(), e);
         }
     }
-    
+
     public static void bringObjectsWindowToFront(Object object) {
-    	try {
-    		new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
-    	} catch (Exception e) {
-			RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: " + object);
-		}
+        try {
+            new ConvenienceKeywords().bringStageToFront((Stage) objectToNode(object).getScene().getWindow());
+        } catch (Exception e) {
+            RobotLog.trace("Node's window wasn't castable to Stage. Tried with object: " + object);
+        }
     }
 
     public static Object checkClickTarget(Object target) {
         try {
             if (target instanceof String || target instanceof Node) {
                 target = objectToNode(target);
-                if (!Matchers.is(isVisible()).matches(target)) throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not visible!");
-                if (!Matchers.is(isEnabled()).matches(target)) throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not enabled!");
+                if (!Matchers.is(isVisible()).matches(target))
+                    throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not visible!");
+                if (!Matchers.is(isEnabled()).matches(target))
+                    throw new JavaFXLibraryNonFatalException("target \"" + target + "\" not enabled!");
             }
             bringObjectsWindowToFront(target);
             checkObjectInsideActiveWindow(target);
@@ -632,6 +640,7 @@ public class HelperFunctions {
                 }
         }
     }
+
     // TODO: Find way to use ROBOT_LIBRARY_VERSION directly from main class
     public static String getVersion() {
         try {
@@ -645,13 +654,12 @@ public class HelperFunctions {
 
     public static Node objectToNode(Object target) {
         if (target instanceof String) {
-                Node node = createFinder().find((String) target);
-                if (node == null) {
-                    throw new JavaFXLibraryNonFatalException("unable to find node for query \"" + target + "\"");
-                }
-                return node;
-        }
-        else if (target instanceof Node) {
+            Node node = createFinder().find((String) target);
+            if (node == null) {
+                throw new JavaFXLibraryNonFatalException("unable to find node for query \"" + target + "\"");
+            }
+            return node;
+        } else if (target instanceof Node) {
             return (Node) target;
         } else if (target == null) {
             throw new JavaFXLibraryNonFatalException("target object was empty (null)");
@@ -662,30 +670,30 @@ public class HelperFunctions {
 
     //TODO: check robot.* usage in relation to threading
     public static Bounds objectToBounds(Object object) {
-            RobotLog.trace("object type is: " + object.getClass());
-            if (object instanceof Window) {
-                Window window = (Window) object;
-                return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
-            } else if (object instanceof Scene) {
-                Scene scene = (Scene) object;
-                double x = scene.getX() + scene.getWindow().getX();
-                double y = scene.getY() + scene.getWindow().getY();
-                return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
-            } else if (object instanceof Point2D) {
-                return robot.bounds((Point2D) object).query();
-            } else if (object instanceof Node) {
-                return robot.bounds((Node) object).query();
-            } else if (object instanceof String) {
-                return robot.bounds(objectToNode(object)).query();
-            } else if (object instanceof Bounds) {
-                return (Bounds) object;
-            } else if (object instanceof PointQuery) {
-                return robot.bounds(((PointQuery) object).query()).query();
-            } else if (object instanceof Rectangle2D) {
-                Rectangle2D r2 = (Rectangle2D) object;
-                return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
-            } else
-                throw new JavaFXLibraryNonFatalException("unsupported parameter type: " + object.getClass().getName());
+        RobotLog.trace("object type is: " + object.getClass());
+        if (object instanceof Window) {
+            Window window = (Window) object;
+            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+        } else if (object instanceof Scene) {
+            Scene scene = (Scene) object;
+            double x = scene.getX() + scene.getWindow().getX();
+            double y = scene.getY() + scene.getWindow().getY();
+            return new BoundingBox(x, y, scene.getWidth(), scene.getHeight());
+        } else if (object instanceof Point2D) {
+            return robot.bounds((Point2D) object).query();
+        } else if (object instanceof Node) {
+            return robot.bounds((Node) object).query();
+        } else if (object instanceof String) {
+            return robot.bounds(objectToNode(object)).query();
+        } else if (object instanceof Bounds) {
+            return (Bounds) object;
+        } else if (object instanceof PointQuery) {
+            return robot.bounds(((PointQuery) object).query()).query();
+        } else if (object instanceof Rectangle2D) {
+            Rectangle2D r2 = (Rectangle2D) object;
+            return new BoundingBox(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
+        } else
+            throw new JavaFXLibraryNonFatalException("unsupported parameter type: " + object.getClass().getName());
     }
 
     private static String remainingQueries(String query) {
@@ -910,7 +918,7 @@ public class HelperFunctions {
             return new Application() {
                 @Override
                 public void start(Stage primaryStage) {
-                    Thread t = new Thread (() -> {
+                    Thread t = new Thread(() -> {
                         try {
                             main.invoke(null, (Object) appArgs);
 
@@ -1035,7 +1043,7 @@ public class HelperFunctions {
 
         argument = argument.substring(argument.indexOf(')') + 1);
 
-        switch(argumentType) {
+        switch (argumentType) {
             case "boolean":
                 return Boolean.parseBoolean(argument);
             case "byte":

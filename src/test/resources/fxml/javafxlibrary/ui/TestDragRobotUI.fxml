@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import javafx.scene.shape.Circle?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -20,6 +16,10 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.TestDragRobotController"
@@ -27,7 +27,7 @@
             fx:id="rootPane"
 >
     <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.leftAnchor="0.0" spacing="15" styleClass="container" >
+          AnchorPane.leftAnchor="0.0" spacing="15" styleClass="container">
         <VBox styleClass="wrapper">
             <HBox>
                 <Slider fx:id="horizontalSlider" value="50"/>
@@ -41,25 +41,25 @@
                 <Slider fx:id="verticalSlider" orientation="VERTICAL"/>
             </HBox>
             <HBox>
-                <Label fx:id="verticalSliderLabel" text="Vertical slider" />
+                <Label fx:id="verticalSliderLabel" text="Vertical slider"/>
             </HBox>
         </VBox>
         <HBox>
-            <Circle fx:id="circle" radius="30" />
+            <Circle fx:id="circle" radius="30"/>
         </HBox>
         <HBox>
-            <Label text="Circle location: " />
-            <Label fx:id="circleLabel" text="Circle has not moved" />
+            <Label text="Circle location: "/>
+            <Label fx:id="circleLabel" text="Circle has not moved"/>
         </HBox>
         <HBox>
-            <Label text="Circle location on screen: " />
-            <Label fx:id="circleScreenLocationLabel" text="Circle has not moved" />
+            <Label text="Circle location on screen: "/>
+            <Label fx:id="circleScreenLocationLabel" text="Circle has not moved"/>
         </HBox>
-        <Button text="Reset circle" onMouseClicked="#resetCircleLocation" />
+        <Button text="Reset circle" onMouseClicked="#resetCircleLocation"/>
     </VBox>
 
     <stylesheets>
-        <URL value="@css/TestDragRobotUI.css" />
+        <URL value="@css/TestDragRobotUI.css"/>
     </stylesheets>
 
 </AnchorPane>

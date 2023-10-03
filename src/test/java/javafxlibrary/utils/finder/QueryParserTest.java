@@ -28,14 +28,14 @@ public class QueryParserTest {
     @Test
     public void getIndividualQueries_ContainsSpaces() {
         String[] result = QueryParser.getIndividualQueries("xpath=SomeNode[@text=\"test text\"] text=\"text with spaces\" text='text with apostrophe' id=sub");
-        String[] target = { "xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "text='text with apostrophe'", "id=sub" };
+        String[] target = {"xpath=SomeNode[@text=\"test text\"]", "text=\"text with spaces\"", "text='text with apostrophe'", "id=sub"};
         Assert.assertArrayEquals(target, result);
     }
 
     @Test
     public void getIndividualQueries_ContainsQuotes() {
         String[] result = QueryParser.getIndividualQueries("text=\"Teemu \\\"The Finnish Flash\\\" Selanne\"");
-        String[] target = { "text=\"Teemu \"The Finnish Flash\" Selanne\"" };
+        String[] target = {"text=\"Teemu \"The Finnish Flash\" Selanne\""};
         Assert.assertArrayEquals(target, result);
     }
 

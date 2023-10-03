@@ -17,31 +17,16 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import javafx.geometry.Rectangle2D;
 import javafxlibrary.keywords.Keywords.ScreenCapturing;
 import javafxlibrary.utils.RobotLog;
 import javafxlibrary.utils.TestFxAdapter;
-
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 @RobotKeywords
-public class RunOnFailure extends TestFxAdapter{
+public class RunOnFailure extends TestFxAdapter {
 
     // Only run keyword on failure if false
     private static boolean runningOnFailureRoutine = false;
-
-
-    // ##############################
-    // Keywords
-    // ##############################
-
-    // No keywords yet
-
-    // ##############################
-    // Internal Methods
-    // ##############################
 
     public void runOnFailure() {
 
@@ -58,16 +43,16 @@ public class RunOnFailure extends TestFxAdapter{
         runningOnFailureRoutine = true;
 
         try {
-	        RobotLog.info("JavaFXLibrary keyword has failed!");
-	        if (robot == null) {
-	            RobotLog.error("FxRobot not initialized, launch test application with the library");
-	        } else {
+            RobotLog.info("JavaFXLibrary keyword has failed!");
+            if (robot == null) {
+                RobotLog.error("FxRobot not initialized, launch test application with the library");
+            } else {
                 new ScreenCapturing().capturePrimaryScreen(true, false);
-	        }
+            }
         } catch (Exception e) {
-			RobotLog.error("Error when capturing screenshot. Actual error: "+e.getMessage());
-		} finally {
-			runningOnFailureRoutine = false;
-		}
+            RobotLog.error("Error when capturing screenshot. Actual error: " + e.getMessage());
+        } finally {
+            runningOnFailureRoutine = false;
+        }
     }
 }

@@ -39,12 +39,18 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
         windows = new ArrayList<>();
         new Expectations() {
             {
-                getRobot().listWindows(); result = windows;
-                stage.isShowing(); result = true;
-                stage.getX(); result = 0;
-                stage.getY(); result = 0;
-                stage.getWidth(); result = 500;
-                stage.getHeight(); result = 500;
+                getRobot().listWindows();
+                result = windows;
+                stage.isShowing();
+                result = true;
+                stage.getX();
+                result = 0;
+                stage.getY();
+                result = 0;
+                stage.getWidth();
+                result = 500;
+                stage.getHeight();
+                result = 500;
             }
         };
         windows.add(stage);

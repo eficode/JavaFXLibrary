@@ -25,6 +25,7 @@ import javafxlibrary.utils.RobotLog;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+
 import static javafxlibrary.utils.HelperFunctions.getHoveredNode;
 
 public class ExtendedNodeMatchers {
@@ -33,12 +34,14 @@ public class ExtendedNodeMatchers {
         return new BaseMatcher<Node>() {
             @Override
             public boolean matches(Object item) {
-                return hoverable((Node)item);
+                return hoverable((Node) item);
             }
+
             @Override
             public void describeTo(Description description) {
-                    description.appendText("Node is hoverable");
+                description.appendText("Node is hoverable");
             }
+
             @Override
             public void describeMismatch(Object object, Description description) {
                 description.appendText("Given target node is not hoverable, it seems to be hidden under this node: \"").
@@ -61,6 +64,6 @@ public class ExtendedNodeMatchers {
     public static boolean hasValidCoordinates(Node node) {
         Bounds bounds = HelperFunctions.objectToBounds(node);
         return !(Double.isNaN(bounds.getMinX()) || Double.isNaN(bounds.getMinY()) ||
-                 Double.isNaN(bounds.getMaxX()) || Double.isNaN(bounds.getMaxY()));
+                Double.isNaN(bounds.getMaxX()) || Double.isNaN(bounds.getMaxY()));
     }
 }

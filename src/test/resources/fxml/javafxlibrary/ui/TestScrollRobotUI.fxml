@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -19,6 +16,9 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javafxlibrary.testapps.controllers.TestScrollRobotController"
@@ -26,48 +26,48 @@
     <VBox AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
         <HBox>
             <Label text=" Actual / Total / Clicks " styleClass="greenRow"/>
-            <Label fx:id="greenLabel" styleClass="greenRow" text=" Scroll vertically here!" />
+            <Label fx:id="greenLabel" styleClass="greenRow" text=" Scroll vertically here!"/>
         </HBox>
         <HBox>
-            <Label text=" Actual / Total / Clicks " styleClass="redRow" />
-            <Label fx:id="redLabel" styleClass="redRow" text=" Scroll horizontally here!" />
+            <Label text=" Actual / Total / Clicks " styleClass="redRow"/>
+            <Label fx:id="redLabel" styleClass="redRow" text=" Scroll horizontally here!"/>
         </HBox>
         <VBox>
             <VBox fx:id="verticalStats" styleClass="statsContainer">
                 <HBox styleClass="statsRow">
-                    <Label text="Total distance scrolled vertically: " />
-                    <Label fx:id="totalDistanceVertical" text="No scroll detected" />
+                    <Label text="Total distance scrolled vertically: "/>
+                    <Label fx:id="totalDistanceVertical" text="No scroll detected"/>
                 </HBox>
                 <HBox styleClass="statsRow">
-                    <Label text="Actual distance moved vertically: " />
-                    <Label fx:id="actualDistanceVertical" text="No scroll detected" />
+                    <Label text="Actual distance moved vertically: "/>
+                    <Label fx:id="actualDistanceVertical" text="No scroll detected"/>
                 </HBox>
                 <HBox styleClass="statsRow">
-                    <Label text="Vertical scroll clicks: " />
-                    <Label fx:id="eventsVertical" text="No scroll detected" />
+                    <Label text="Vertical scroll clicks: "/>
+                    <Label fx:id="eventsVertical" text="No scroll detected"/>
                 </HBox>
             </VBox>
             <VBox styleClass="statsContainer">
                 <HBox styleClass="statsRow">
-                    <Label text="Total distance scrolled horizontally: " />
-                    <Label fx:id="totalDistanceHorizontal" text="No scroll detected" />
+                    <Label text="Total distance scrolled horizontally: "/>
+                    <Label fx:id="totalDistanceHorizontal" text="No scroll detected"/>
                 </HBox>
                 <HBox styleClass="statsRow">
-                    <Label text="Actual distance moved horizontally: " />
-                    <Label fx:id="actualDistanceHorizontal" text="No scroll detected" />
+                    <Label text="Actual distance moved horizontally: "/>
+                    <Label fx:id="actualDistanceHorizontal" text="No scroll detected"/>
                 </HBox>
                 <HBox styleClass="statsRow">
-                    <Label text="Horizontal scroll clicks: " />
-                    <Label fx:id="eventsHorizontal" text="No scroll detected" />
+                    <Label text="Horizontal scroll clicks: "/>
+                    <Label fx:id="eventsHorizontal" text="No scroll detected"/>
                 </HBox>
             </VBox>
         </VBox>
         <HBox>
-            <Button fx:id="resetButton" text="Reset" onMouseClicked="#resetButtonListener" />
+            <Button fx:id="resetButton" text="Reset" onMouseClicked="#resetButtonListener"/>
         </HBox>
     </VBox>
 
     <stylesheets>
-        <URL value="@css/TestScrollRobotUI.css" />
+        <URL value="@css/TestScrollRobotUI.css"/>
     </stylesheets>
 </AnchorPane>

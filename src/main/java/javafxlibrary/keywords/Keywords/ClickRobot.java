@@ -47,7 +47,7 @@ public class ClickRobot extends TestFxAdapter {
             + "| Click On | ${point} | \n"
             + "| Click On | id=node-id | \n"
             + "| Click On | css=.css-name | Motion=VERTICAL_FIRST | \n")
-    @ArgumentNames({ "locator", "motion=DIRECT" })
+    @ArgumentNames({"locator", "motion=DIRECT"})
     public FxRobotInterface clickOn(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -66,7 +66,7 @@ public class ClickRobot extends TestFxAdapter {
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_. Especially with submenus, desired motion "
             + "is usually HORIZONTAL_FIRST.\n\n")
-    @ArgumentNames({ "locator", "motion=DIRECT" })
+    @ArgumentNames({"locator", "motion=DIRECT"})
     public FxRobotInterface rightClickOn(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -83,7 +83,7 @@ public class ClickRobot extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Bounds, Node, Point2D, PointQuery, Scene, Window_ for identifying the element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``motion`` defines the path for mouse to move to a target location. Default value is _DIRECT_.")
-    @ArgumentNames({ "locator", "motion=DIRECT" })
+    @ArgumentNames({"locator", "motion=DIRECT"})
     public FxRobotInterface doubleClickOn(Object locator, String motion) {
         checkObjectArgumentNotNull(locator);
         try {
@@ -99,7 +99,7 @@ public class ClickRobot extends TestFxAdapter {
 
     @RobotKeyword("Clicks whatever is under the mouse pointer. \n\n"
             + "``buttons`` is a list of mouse buttons to click. See `5. Used ENUMs` for different mouse buttons available. ")
-    @ArgumentNames({ "*buttons" })
+    @ArgumentNames({"*buttons"})
     public FxRobotInterface ClickOnMouseButton(String... buttons) {
         try {
             RobotLog.info("Clicking mouse buttons \"" + Arrays.toString(buttons) + "\"");
@@ -115,7 +115,7 @@ public class ClickRobot extends TestFxAdapter {
 
     @RobotKeyword("Double clicks whatever is under the mouse pointer. \n\n"
             + "``buttons`` is a list of mouse buttons to click. See `5. Used ENUMs` for different mouse buttons available. ")
-    @ArgumentNames({ "*buttons" })
+    @ArgumentNames({"*buttons"})
     public FxRobotInterface doubleClickOnMouseButton(String... buttons) {
         try {
             RobotLog.info("Double clicking mouse buttons \"" + Arrays.toString(buttons) + "\"");
@@ -143,7 +143,7 @@ public class ClickRobot extends TestFxAdapter {
     @RobotKeyword("Moves mouse directly to the given coordinates and clicks the primary mouse button\n\n"
             + "``x`` and ``y`` defines the coordinates as integer values. \n\n"
             + "Optional argument ``motion`` defines how mouse pointer is moved to target. Defaults to _DIRECT_.")
-    @ArgumentNames({ "x", "y", "motion=DIRECT" })
+    @ArgumentNames({"x", "y", "motion=DIRECT"})
     public FxRobotInterface clickOnCoordinates(int x, int y, String motion) {
         try {
             RobotLog.info("Clicking on coordinates x=\"" + x + "\"" + ", y=\"" + y + "\"" + " and motion=\"" + motion + "\"");
@@ -160,7 +160,7 @@ public class ClickRobot extends TestFxAdapter {
     @RobotKeyword("Moves mouse directly to the given coordinates and double clicks the primary mouse button\n\n"
             + "``x`` and ``y`` defines the coordinates as integer values. \n\n"
             + "Optional argument ``motion`` defines how mouse pointer is moved to target. Defaults to _DIRECT_.")
-    @ArgumentNames({ "x", "y", "motion=DIRECT" })
+    @ArgumentNames({"x", "y", "motion=DIRECT"})
     public FxRobotInterface doubleClickOnCoordinates(int x, int y, String motion) {
         try {
             checkObjectInsideActiveWindow(x, y);
@@ -177,7 +177,7 @@ public class ClickRobot extends TestFxAdapter {
     @RobotKeyword("Moves mouse directly to the given coordinates and right clicks the primary mouse button\n\n"
             + "``x`` and ``y`` defines the coordinates as integer values. \n\n"
             + "Optional argument ``motion`` defines how mouse pointer is moved to target. Defaults to _DIRECT_.")
-    @ArgumentNames({ "x", "y", "motion=DIRECT" })
+    @ArgumentNames({"x", "y", "motion=DIRECT"})
     public FxRobotInterface rightClickOnCoordinates(int x, int y, String motion) {
         try {
             checkObjectInsideActiveWindow(x, y);

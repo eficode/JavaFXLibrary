@@ -32,8 +32,8 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
@@ -110,8 +110,8 @@ public class Session {
         try {
             FxToolkit.hideStage();
             FxToolkit.cleanupStages();
-            sessionRobot.release(new KeyCode[] {});
-            sessionRobot.release(new MouseButton[] {});
+            sessionRobot.release(new KeyCode[]{});
+            sessionRobot.release(new MouseButton[]{});
             FxToolkit.cleanupApplication(sessionApplication);
         } catch (Exception e) {
             throw new JavaFXLibraryNonFatalException("Problem shutting down the application: " + e.getMessage(), e);
@@ -142,26 +142,26 @@ public class Session {
             ObservableList<Window> windows;
             // getWindows method is added in Java 9
             windows = (ObservableList<Window>) Window.class.getMethod("getWindows")
-                                                           .invoke(null);
+                    .invoke(null);
             return windows.stream()
-                          .filter(Stage.class::isInstance)
-                          .map(Stage.class::cast)
-                          .filter(Stage::isShowing)
-                          .findFirst();
+                    .filter(Stage.class::isInstance)
+                    .map(Stage.class::cast)
+                    .filter(Stage::isShowing)
+                    .findFirst();
         } catch (InvocationTargetException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException e) {
             // java 8 implementation
             try {
                 Iterator<Window> it = (Iterator<Window>) Window.class.getMethod("impl_getWindows")
-                                                                     .invoke(null);
+                        .invoke(null);
                 List<Window> windows = new ArrayList<>();
                 while (it.hasNext()) {
                     windows.add(it.next());
                 }
                 return windows.stream()
-                              .filter(Stage.class::isInstance)
-                              .map(Stage.class::cast)
-                              .filter(Stage::isShowing)
-                              .findFirst();
+                        .filter(Stage.class::isInstance)
+                        .map(Stage.class::cast)
+                        .filter(Stage::isShowing)
+                        .findFirst();
             } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                     | SecurityException ex) {
                 e.printStackTrace();

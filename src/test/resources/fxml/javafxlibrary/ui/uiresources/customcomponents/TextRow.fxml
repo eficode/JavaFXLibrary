@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Text?>
 <!--
   ~ Copyright 2017-2018   Eficode Oy
   ~ Copyright 2018-       Robot Framework Foundation
@@ -21,21 +16,25 @@
   ~ limitations under the License.
   -->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Text?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
     <HBox spacing="50">
         <StackPane>
             <Rectangle fx:id="rectangle" width="215" height="215"/>
             <Pane>
-                <Line startX="1.0" startY="1.0" endX="95.0" endY="95.0" />
-                <Line startX="120.0" startY="120.0" endX="215.0" endY="215.0" />
-                <Line startX="215.0" startY="1.0" endX="120.0" endY="95.0" />
-                <Line startX="95.0" startY="120.0" endX="1.0" endY="215.0" />
+                <Line startX="1.0" startY="1.0" endX="95.0" endY="95.0"/>
+                <Line startX="120.0" startY="120.0" endX="215.0" endY="215.0"/>
+                <Line startX="215.0" startY="1.0" endX="120.0" endY="95.0"/>
+                <Line startX="95.0" startY="120.0" endX="1.0" endY="215.0"/>
             </Pane>
-            <Text text="NO IMAGE AVAILABLE" />
+            <Text text="NO IMAGE AVAILABLE"/>
         </StackPane>
         <VBox>
             <Label fx:id="headingLabel" text="Heading"/>
-            <Label fx:id="contentLabel" styleClass="textRow" text="Text content" />
+            <Label fx:id="contentLabel" styleClass="textRow" text="Text content"/>
         </VBox>
     </HBox>
 </fx:root>

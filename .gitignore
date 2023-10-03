@@ -6,6 +6,7 @@ JavaFXLib-*.png
 .idea
 *.iml
 report-images
+*.DS_Store
 
 # temporary pom file by shade plugin
 dependency-reduced-pom.xml

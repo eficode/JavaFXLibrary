@@ -17,4 +17,4 @@
 
 package javafxlibrary.utils.finder;
 
-public enum FindPrefix { ID, CSS, CLASS, TEXT, XPATH, PSEUDO }
+public enum FindPrefix {ID, CSS, CLASS, TEXT, XPATH, PSEUDO}

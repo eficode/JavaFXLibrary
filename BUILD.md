@@ -25,6 +25,7 @@ JavaFXLibrary uses Apache Maven as a build tool.
 * update library version to x.x.x in pom.xml
 * run tests ``mvn clean verify``
 * copy target/robotframework/libdoc/javafxlibrary.html under docs directory (check that README.md links to correct file)
+* update links in README.md to point correct version in maven central
 * ``git commit -m "version to x.x.x" pom.xml docs/javafxlibrary.html``
 * create tag ``git tag -a x.x.x``
 * push ``git push origin master`` and ``git push origin x.x.x``

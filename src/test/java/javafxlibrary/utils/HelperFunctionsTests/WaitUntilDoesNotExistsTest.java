@@ -2,22 +2,21 @@ package javafxlibrary.utils.HelperFunctionsTests;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafxlibrary.TestFxAdapterTest;
+import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryTimeoutException;
 import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.finder.Finder;
 import mockit.*;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import testutils.DelayedObject;
 import testutils.DelayedObjectRemoval;
 
-public class WaitUntilDoesNotExistsTest extends TestFxAdapterTest {
+public class WaitUntilDoesNotExistsTest extends ApplicationTest {
 
-    @Mocked private Finder finder;
+    @Mocked
+    private Finder finder;
     private Button button;
 
     @Rule
@@ -38,7 +37,8 @@ public class WaitUntilDoesNotExistsTest extends TestFxAdapterTest {
     public void waitUntilDoesNotExists_DoesNotExist() {
         new Expectations() {
             {
-                finder.find(".button"); result = null;
+                finder.find(".button");
+                result = null;
             }
         };
 
@@ -70,7 +70,8 @@ public class WaitUntilDoesNotExistsTest extends TestFxAdapterTest {
 
         new Expectations() {
             {
-                finder.find(".button"); result = button;
+                finder.find(".button");
+                result = button;
             }
         };
 

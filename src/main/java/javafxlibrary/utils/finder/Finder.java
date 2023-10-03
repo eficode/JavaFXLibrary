@@ -25,7 +25,10 @@ import javafxlibrary.utils.TestFxAdapter;
 import org.testfx.api.FxRobotInterface;
 import org.testfx.service.query.EmptyNodeQueryException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Finder {
 
@@ -144,7 +147,7 @@ public class Finder {
         RobotLog.debug("Executing find all with root: " + root + " and query: " + query.getQuery());
         try {
             FindOperation findOperation = new FindOperation(root, query, true);
-            return new LinkedHashSet<>((Set<Node>)findOperation.executeLookup());
+            return new LinkedHashSet<>((Set<Node>) findOperation.executeLookup());
         } catch (EmptyNodeQueryException e) {
             return Collections.emptySet();
         }
