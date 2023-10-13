@@ -25,6 +25,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.44</jmockit.version>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.release>11</maven.compiler.release>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -161,6 +164,16 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>jdk-8</id>
+            <properties>
+                <maven.compiler.target>8</maven.compiler.target>
+                <maven.compiler.source>8</maven.compiler.source>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-jdk8-${project.version}</finalName>
+            </build>
+        </profile>
     </profiles>
 
     <distributionManagement>
@@ -171,6 +184,7 @@
     </distributionManagement>
 
     <build>
+        <finalName>${project.artifactId}-jdk11-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -210,6 +224,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
