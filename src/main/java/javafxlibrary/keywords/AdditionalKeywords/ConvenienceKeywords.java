@@ -481,16 +481,12 @@ public class ConvenienceKeywords extends TestFxAdapter {
             RobotLog.info("Getting table \"" + locator + "\" cells from column \"" + column + "\".");
             TableView table = (TableView) objectToNode(locator);
 
-            Optional<VirtualFlow> vf = table.getChildrenUnmodifiable().stream().filter(node -> node instanceof VirtualFlow).map(VirtualFlow.class::cast).findFirst();
+            VirtualFlow<?> vf = (VirtualFlow<?>) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1);
 
-            vf.ifPresentOrElse(virtualFlow -> {
-                for (int i = virtualFlow.getFirstVisibleCell().getIndex(); i < virtualFlow.getLastVisibleCell().getIndex() + 1; i++) {
-                    RobotLog.info("Index number: " + i);
-                    columnCells.add(mapObject(virtualFlow.getCell(i).getChildrenUnmodifiable().get(column)));
-                }
-            }, () -> {
-                throw new JavaFXLibraryNonFatalException("Could not find VirtualFlow from Tableview!");
-            });
+            for (int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
+                RobotLog.info("Index number: " + i);
+                columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
+            }
             
             return mapObjects(columnCells);
         } catch (ClassCastException cce) {
