@@ -4,7 +4,7 @@
 
 JavaFXLibrary works with both Jython (local and remote use) and Python (remote only) versions of Robot Framework. This means JavaFXLibrary can be used with Jython incompatible test libraries too by importing it as a remote library.
 
-JavaFXLibrary is tested to work with Java 8 and Robot Framework 3.2.1 or later.
+JavaFXLibrary is tested to work with Java (8 and 11) and Robot Framework 3.2.1 or later.
 
 ## Keyword documentation
 See keyword [documentation](https://repo1.maven.org/maven2/org/robotframework/javafxlibrary/0.7.1/javafxlibrary-0.7.1.html).

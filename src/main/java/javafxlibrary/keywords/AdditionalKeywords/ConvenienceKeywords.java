@@ -17,8 +17,8 @@
 
 package javafxlibrary.keywords.AdditionalKeywords;
 
-import com.sun.javafx.scene.control.skin.TableViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.control.skin.TableViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.BoundingBox;
@@ -279,7 +279,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     @RobotKeyword("Returns image name and path of the node. \n\n"
             + "``locator`` is either a _query_ or _Object_ for a node whose getHeight method will be called, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
-            + "Returns full image path by subsequently calling impl_getUrl -method. \n\n"
+            + "Returns full image path by subsequently calling getUrl -method. \n\n"
             + "Note, impl_getUrl -method is deprecated! Support for this method will be removed from Java in the future.")
     @ArgumentNames({"node"})
     public String getNodeImageUrl(Object locator) {
@@ -294,8 +294,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
                     try {
                         Object result = m.invoke(node, (Object) null);
                         Image image = (Image) result;
-                        RobotLog.trace("Calling deprecated method impl_getUrl() for image: \"" + image + "\"");
-                        return image.impl_getUrl();
+                        return image.getUrl();
                     } catch (Exception e) {
                         throw new JavaFXLibraryNonFatalException("Problem calling method: .getImage(): " + e.getMessage(), e);
                     }
@@ -477,15 +476,18 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public List<Object> getTableColumnCells(Object locator, int column) {
         checkObjectArgumentNotNull(locator);
         try {
+            List<Object> columnCells = new ArrayList<>();
+
             RobotLog.info("Getting table \"" + locator + "\" cells from column \"" + column + "\".");
             TableView table = (TableView) objectToNode(locator);
-            List<Object> columnCells = new ArrayList<>();
+
             VirtualFlow<?> vf = (VirtualFlow<?>) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1);
 
             for (int i = vf.getFirstVisibleCell().getIndex(); i < vf.getLastVisibleCell().getIndex() + 1; i++) {
                 RobotLog.info("Index number: " + i);
                 columnCells.add(mapObject(vf.getCell(i).getChildrenUnmodifiable().get(column)));
             }
+            
             return mapObjects(columnCells);
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");

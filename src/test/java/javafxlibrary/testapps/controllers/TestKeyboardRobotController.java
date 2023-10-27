@@ -17,7 +17,7 @@
 
 package javafxlibrary.testapps.controllers;
 
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
+import javafx.scene.control.skin.TextAreaSkin;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -52,15 +52,9 @@ public class TestKeyboardRobotController implements Initializable {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.TAB)) {
-                    if (event.isShiftDown()) {
-                        textArea.setText(textArea.getText() + "    ");
-                        textArea.positionCaret(textArea.getText().length());
-                        event.consume();
-                    } else {
-                        TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
-                        skin.getBehavior().traverseNext();
-                        event.consume();
-                    }
+                    textArea.setText(textArea.getText() + "    ");
+                    textArea.positionCaret(textArea.getText().length());
+                    event.consume();
                 }
             }
         });
