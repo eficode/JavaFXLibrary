@@ -13,7 +13,6 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.testfx.service.query.BoundsQuery;
 
 import java.util.ArrayList;
@@ -27,9 +26,6 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
 
     @Mocked
     Stage stage;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -74,9 +70,10 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
         String target = "Can't click Button at [505.0, 505.0]: out of window bounds. To enable clicking outside " +
                 "of visible window bounds use keyword SET SAFE CLICKING | OFF";
 
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage(target);
-        HelperFunctions.checkClickTarget(button);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.checkClickTarget(button);
+        });
+        Assert.assertEquals(target, exception.getMessage());
     }
 
     @Test
@@ -96,16 +93,18 @@ public class CheckClickTargetTest extends TestFxAdapterTest {
     @Test
     public void checkClickTarget_Disabled() {
         button.setDisable(true);
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become enabled within given timeout of 0 seconds.");
-        HelperFunctions.checkClickTarget(button);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.checkClickTarget(button);
+        });
+        Assert.assertEquals("Given target \"" + button + "\" did not become enabled within given timeout of 0 seconds.", exception.getMessage());
     }
 
     @Test
     public void checkClickTarget_NotVisible() {
         button.setVisible(false);
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 0 seconds.");
-        HelperFunctions.checkClickTarget(button);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.checkClickTarget(button);
+        });
+        Assert.assertEquals("Given target \"" + button + "\" did not become visible within given timeout of 0 seconds.", exception.getMessage());
     }
 }

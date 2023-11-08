@@ -5,16 +5,12 @@ import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.Assert;
 
 public class WaitForProgressBarToFinishTest extends ApplicationTest {
 
     private ProgressBar progressBar;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -38,9 +34,10 @@ public class WaitForProgressBarToFinishTest extends ApplicationTest {
     @Test
     public void waitForProgressBarToFinish_IsNotFinished() {
         progressBar.setProgress(0);
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Given ProgressBar did not complete in 1 seconds!");
-        HelperFunctions.waitForProgressBarToFinish(progressBar, 1);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.waitForProgressBarToFinish(progressBar, 1);
+        });
+        Assert.assertEquals("Given ProgressBar did not complete in 1 seconds!", exception.getMessage());
     }
 
     private Thread finishAfterTimeout() {

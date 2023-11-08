@@ -4,17 +4,12 @@ import javafx.geometry.VerticalDirection;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static testutils.TestFunctions.useMac;
 import static testutils.TestFunctions.useWindows;
 
 public class GetVerticalDirectionTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getVerticalDirection_WindowsAndLinux() {
@@ -32,8 +27,9 @@ public class GetVerticalDirectionTest {
 
     @Test
     public void getVerticalDirection_InvalidValue() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Direction: \"FORWARD\" is not a valid direction. Accepted values are: [UP, DOWN]");
-        HelperFunctions.getVerticalDirection("FORWARD");
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.getVerticalDirection("FORWARD");
+        });
+        Assert.assertEquals("Direction: \"FORWARD\" is not a valid direction. Accepted values are: [UP, DOWN]", exception.getMessage());
     }
 }

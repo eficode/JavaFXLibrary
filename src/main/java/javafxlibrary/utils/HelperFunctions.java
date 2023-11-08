@@ -275,7 +275,8 @@ public class HelperFunctions {
         throw new JavaFXLibraryNonFatalException("Object was null, unable to map object!");
     }
 
-    public static List<Object> mapObjects(Iterable objects) {
+
+    public static List<Object> mapObjects(Iterable<?> objects) {
         List<Object> keys = new ArrayList<>();
 
         for (Object o : objects)
@@ -291,7 +292,7 @@ public class HelperFunctions {
         RobotLog.info("Calling method \"" + method + "\" of object \"" + o + "\" with arguments \""
                 + Arrays.toString(arguments) + "\"");
 
-        Class[] argumentTypes = new Class[arguments.length];
+        Class<?>[] argumentTypes = new Class[arguments.length];
 
         for (int i = 0; i < arguments.length; i++)
             argumentTypes[i] = arguments[i].getClass();
@@ -696,15 +697,6 @@ public class HelperFunctions {
             throw new JavaFXLibraryNonFatalException("unsupported parameter type: " + object.getClass().getName());
     }
 
-    private static String remainingQueries(String query) {
-        String[] queries = query.split(" ", 2);
-        String currentQuery = queries[0];
-        if (currentQuery.equals(query))
-            return null;
-        else
-            return queries[1];
-    }
-
     public static Node getHoveredNode() {
         return getHoveredNode(robot.listTargetWindows().get(0).getScene().getRoot());
     }
@@ -727,7 +719,7 @@ public class HelperFunctions {
         return root;
     }
 
-    public static Object getFieldsValue(Object o, Class c, String fieldName) {
+    public static Object getFieldsValue(Object o, Class<?> c, String fieldName) {
 
         try {
             Field[] fields = c.getDeclaredFields();
@@ -749,7 +741,7 @@ public class HelperFunctions {
         throw new JavaFXLibraryNonFatalException("Couldn't get value of field");
     }
 
-    public static void printFields(Object o, Class c) {
+    public static void printFields(Object o, Class<?> c) {
 
         try {
             Field[] fields = c.getDeclaredFields();
@@ -843,7 +835,7 @@ public class HelperFunctions {
         throw new JavaFXLibraryNonFatalException("Unable to get selected Tab!");
     }
 
-    public static String getTableColumnName(TableView table, int index) {
+    public static String getTableColumnName(TableView<?> table, int index) {
 
         for (Node node : robot.from(table).lookup(".column-header-background .table-column").nth(index).lookup(".label").queryAll()) {
             if (node instanceof Labeled) {
@@ -856,17 +848,19 @@ public class HelperFunctions {
         return "";
     }
 
-    public static Node getTableRowCell(TableView table, int row, int cell) {
+    public static Node getTableRowCell(TableView<?> table, int row, int cell) {
         return robot.from(table).lookup(".table-row-cell").nth(row).lookup(".table-cell").nth(cell).query();
     }
 
-    public static Class getMainClassFromJarFile(String appName) {
+    public static Class<?> getMainClassFromJarFile(String appName) {
         try {
             JarFile jarFile = new JarFile(appName);
             String mainClassName = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
             Enumeration<JarEntry> e = jarFile.entries();
             URL[] urls = {new URL("jar:file:" + appName + "!/")};
             URLClassLoader cl = URLClassLoader.newInstance(urls);
+
+            jarFile.close();
 
             while (e.hasMoreElements()) {
                 JarEntry je = e.nextElement();
@@ -893,7 +887,7 @@ public class HelperFunctions {
         }
     }
 
-    public static Application createWrapperApplication(Class c, String... appArgs) {
+    public static Application createWrapperApplication(Class<?> c, String... appArgs) {
 
         try {
             Method main = c.getMethod("main", String[].class);
@@ -912,7 +906,7 @@ public class HelperFunctions {
         }
     }
 
-    public static Application createThreadedWrapperApplication(Class c, String... appArgs) {
+    public static Application createThreadedWrapperApplication(Class<?> c, String... appArgs) {
         try {
             Method main = c.getMethod("main", String[].class);
             return new Application() {
@@ -945,6 +939,7 @@ public class HelperFunctions {
         return object;
     }
 
+    @SuppressWarnings("unchecked")
     public static Object[] useMappedObjects(Object[] arr) {
         Object[] replaced = new Object[arr.length];
 
@@ -967,6 +962,7 @@ public class HelperFunctions {
         return replaced;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Object> useMappedObjects(List<Object> list) {
         List<Object> replaced = new ArrayList<>(list);
 
@@ -988,8 +984,9 @@ public class HelperFunctions {
         return replaced;
     }
 
+    @SuppressWarnings("unchecked") 
     public static Map<String, Object> useMappedObjects(Map<String, Object> map) {
-        Map<String, Object> replaced = new HashMap();
+        Map<String, Object> replaced = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
             Object o = entry.getValue();

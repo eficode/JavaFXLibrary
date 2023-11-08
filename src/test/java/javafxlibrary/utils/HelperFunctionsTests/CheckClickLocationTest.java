@@ -10,15 +10,13 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.testfx.service.query.BoundsQuery;
+import org.junit.Assert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.endsWith;
 
 @Ignore("Fails when run with Maven")
 public class CheckClickLocationTest extends TestFxAdapterTest {
@@ -29,9 +27,6 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
 
     @Mocked
     Stage stage;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -65,7 +60,7 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
     public void checkClickLocation_IsWithinVisibleWindow() {
         setBoundsQueryExpectations(30, 30);
         HelperFunctions.checkObjectInsideActiveWindow(30, 30);
-        Assert.assertThat(outContent.toString(), endsWith("*TRACE* Target location checks out OK, it is within active window\n"));
+        Assert.assertEquals("*TRACE* Target location checks out OK, it is within active window\n", outContent.toString().substring(outContent.toString().length() - 56));
     }
 
     @Test
@@ -74,9 +69,11 @@ public class CheckClickLocationTest extends TestFxAdapterTest {
         String target = "Can't click Point2D at [30.0, 800.0]: out of window bounds. To enable clicking outside " +
                 "of visible window bounds use keyword `Set Safe Clicking` with argument `off`";
 
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage(target);
-        HelperFunctions.checkObjectInsideActiveWindow(30, 800);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.checkObjectInsideActiveWindow(30, 800);
+        });
+
+        Assert.assertEquals(target, exception.getMessage());
     }
 
     private void setBoundsQueryExpectations(double minX, double minY) {

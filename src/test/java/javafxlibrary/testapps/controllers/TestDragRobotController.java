@@ -92,14 +92,14 @@ public class TestDragRobotController implements Initializable {
         //circle.setOnMouseDragReleased(event -> dragReleaseListener(event));
     }
 
-    private void dragReleaseListener(MouseEvent event) {
-        circle.setCenterX(event.getX());
-        circle.setCenterY(event.getY());
-        circle.setTranslateX(event.getX());
-        circle.setTranslateY(event.getY());
-        circleLabel.setText("X" + (int) circle.getCenterX() + " Y" + (int) circle.getCenterY());
-        circleScreenLocationLabel.setText("X" + (int) circle.getCenterX() + " Y" + (int) circle.getCenterY());
-    }
+    // private void dragReleaseListener(MouseEvent event) {
+    //     circle.setCenterX(event.getX());
+    //     circle.setCenterY(event.getY());
+    //     circle.setTranslateX(event.getX());
+    //     circle.setTranslateY(event.getY());
+    //     circleLabel.setText("X" + (int) circle.getCenterX() + " Y" + (int) circle.getCenterY());
+    //     circleScreenLocationLabel.setText("X" + (int) circle.getCenterX() + " Y" + (int) circle.getCenterY());
+    // }
 
     private void dragListener(MouseEvent event) {
         Circle secondCircle = (Circle) secondStage.getScene().lookup("#secondCircle");

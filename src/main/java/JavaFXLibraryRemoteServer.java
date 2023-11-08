@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -36,6 +35,5 @@ public class JavaFXLibraryRemoteServer extends RemoteServer {
         LogFactory.releaseAll();
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
                 "org.apache.commons.logging.impl.Log4JLogger");
-        Log log = LogFactory.getLog(RemoteServer.class);
     }
 }

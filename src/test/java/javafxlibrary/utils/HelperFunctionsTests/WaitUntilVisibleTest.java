@@ -8,14 +8,10 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 
 public class WaitUntilVisibleTest extends ApplicationTest {
 
     private Button button;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -48,9 +44,10 @@ public class WaitUntilVisibleTest extends ApplicationTest {
     @Test
     public void waitUntilVisible_IsNotVisible() {
         button.setVisible(false);
-        thrown.expect(JavaFXLibraryTimeoutException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become visible within given timeout of 1 SECONDS");
-        HelperFunctions.waitUntilVisible(".button", 1, "SECONDS");
+        JavaFXLibraryTimeoutException exception = Assert.assertThrows(JavaFXLibraryTimeoutException.class, () -> {
+            HelperFunctions.waitUntilVisible(".button", 1, "SECONDS");
+        });
+        Assert.assertEquals("Given target \"" + button + "\" did not become visible within given timeout of 1 SECONDS", exception.getMessage());
     }
 
     private Thread setVisibleAfterTimeout() {

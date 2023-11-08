@@ -8,14 +8,10 @@ import javafxlibrary.utils.HelperFunctions;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 
 public class WaitUntilEnabledTest extends ApplicationTest {
 
     private Button button;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -46,9 +42,10 @@ public class WaitUntilEnabledTest extends ApplicationTest {
     @Test
     public void waitUntilEnabled_IsNotEnabled() {
         button.setDisable(true);
-        thrown.expect(JavaFXLibraryTimeoutException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.");
-        HelperFunctions.waitUntilEnabled(".button", 1, "SECONDS");
+        JavaFXLibraryTimeoutException exception = Assert.assertThrows(JavaFXLibraryTimeoutException.class, () -> {
+            HelperFunctions.waitUntilEnabled(".button", 1, "SECONDS");
+        });
+        Assert.assertEquals("Given target \"" + button + "\" did not become enabled within given timeout of 1 seconds.", exception.getMessage());
     }
 
     private Thread enableButtonAfterTimeout() {

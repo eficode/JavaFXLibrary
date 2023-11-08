@@ -8,7 +8,6 @@ import javafxlibrary.utils.HelperFunctions;
 import javafxlibrary.utils.finder.Finder;
 import mockit.*;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import testutils.DelayedObject;
 
 public class WaitUntilExistsTest extends TestFxAdapterTest {
@@ -16,9 +15,6 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
     @Mocked
     private Finder finder;
     private Button button;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -51,7 +47,7 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
         new Expectations() {
             {
                 finder.find(".button");
-                result = new Delegate() {
+                result = new Delegate<Node>() {
                     public Node delegate() throws Exception {
                         return (Node) delayedObject.getValue();
                     }
@@ -73,8 +69,10 @@ public class WaitUntilExistsTest extends TestFxAdapterTest {
             }
         };
 
-        thrown.expect(JavaFXLibraryTimeoutException.class);
-        thrown.expectMessage("Given element \".button\" was not found within given timeout of 500 MILLISECONDS");
-        HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
+        JavaFXLibraryTimeoutException exception = Assert.assertThrows(JavaFXLibraryTimeoutException.class, () -> {
+            HelperFunctions.waitUntilExists(".button", 500, "MILLISECONDS");
+        });
+
+        Assert.assertEquals("Given element \".button\" was not found within given timeout of 500 MILLISECONDS", exception.getMessage());
     }
 }

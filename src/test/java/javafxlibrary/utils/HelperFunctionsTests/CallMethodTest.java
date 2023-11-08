@@ -6,9 +6,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.awt.*;
 
@@ -16,9 +14,6 @@ import static testutils.TestFunctions.setupStageInJavaFXThread;
 import static testutils.TestFunctions.waitForEventsInJavaFXThread;
 
 public class CallMethodTest extends ApplicationTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void callMethod_InSameThread_NoArgs_WithReturnValue() {
@@ -73,9 +68,12 @@ public class CallMethodTest extends ApplicationTest {
     @Test
     public void callMethod_InWrongThread() {
         Stage stage = setupStageInJavaFXThread();
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Couldn't execute Call Method: Not on FX application thread; currentThread = main");
-        HelperFunctions.callMethod(stage, "show", new Object[]{}, false);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.callMethod(stage, "show", new Object[]{}, false);
+        });
+        String expectedMessage = "Couldn't execute Call Method: Not on FX application thread; currentThread = main";
+        String actualMessage = exception.getMessage();
+        Assert.assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -83,10 +81,13 @@ public class CallMethodTest extends ApplicationTest {
         Point point = new Point(0, 0);
         Object[] arguments = {"20", "17"};
 
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]");
+        Exception exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.callMethod(point, "setLocation", arguments, false);
+        });
 
-        HelperFunctions.callMethod(point, "setLocation", arguments, false);
+        String expectedMessage = "class java.awt.Point has no method \"setLocation\" with arguments [class java.lang.String, class java.lang.String]";
+        String actualMessage = exception.getMessage();
+        Assert.assertTrue(actualMessage.contains(expectedMessage));
     }
 
     public class TestPoint extends Point {

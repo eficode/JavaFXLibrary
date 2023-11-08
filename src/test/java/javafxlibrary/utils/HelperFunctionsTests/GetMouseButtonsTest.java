@@ -7,14 +7,9 @@ import javafxlibrary.utils.HelperFunctions;
 import java.util.Arrays;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class GetMouseButtonsTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getMouseButtons_Middle() {
@@ -51,10 +46,10 @@ public class GetMouseButtonsTest {
 
     @Test
     public void getMouseButtons_InvalidValue() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        // thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: " + Arrays.asList(MouseButton.values()));
-        HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
+         JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.getMouseButtons(new String[]{"HUGE_RED_ONE"});
+        });
+        Assert.assertEquals("\"HUGE_RED_ONE\" is not a valid MouseButton. Accepted values are: " + Arrays.asList(MouseButton.values()), exception.getMessage());
     }
 
 }

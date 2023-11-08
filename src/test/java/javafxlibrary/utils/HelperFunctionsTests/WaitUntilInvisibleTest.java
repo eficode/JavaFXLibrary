@@ -9,16 +9,11 @@ import mockit.Mock;
 import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class WaitUntilInvisibleTest extends ApplicationTest {
 
     private Button button;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -52,9 +47,10 @@ public class WaitUntilInvisibleTest extends ApplicationTest {
     @Test
     public void waitUntilInvisible_IsVisible() {
         button.setVisible(true);
-        thrown.expect(JavaFXLibraryTimeoutException.class);
-        thrown.expectMessage("Given target \"" + button + "\" did not become invisible within given timeout of 1 SECONDS");
-        HelperFunctions.waitUntilNotVisible(".button", 1, "SECONDS");
+        JavaFXLibraryTimeoutException exception = Assert.assertThrows(JavaFXLibraryTimeoutException.class, () -> {
+            HelperFunctions.waitUntilNotVisible(".button", 1, "SECONDS");
+        });
+        Assert.assertEquals("Given target \"" + button + "\" did not become invisible within given timeout of 1 SECONDS", exception.getMessage());
     }
 
     private Thread setInvisibleAfterTimeout() {

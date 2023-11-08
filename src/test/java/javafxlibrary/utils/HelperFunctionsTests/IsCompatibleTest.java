@@ -13,8 +13,8 @@ public class IsCompatibleTest extends ApplicationTest {
     @Test
     public void isCompatible_TestAllValidTypes() {
         // Void cannot be instantiated
-        Object[] objects = new Object[]{new Integer("2"), new Double("2.00"), new Long("200"),
-                new Float("2.00"), new Character('b'), Boolean.TRUE, new Byte("10"), new Short("1"),
+        Object[] objects = new Object[]{Integer.valueOf("2"), Double.valueOf("2.00"), Long.valueOf("200"),
+                Float.valueOf("2.00"), Character.valueOf('b'), Boolean.TRUE, Byte.valueOf("10"), Short.valueOf("1"),
                 "String", new ArrayList<>()};
 
         for (Object o : objects) {

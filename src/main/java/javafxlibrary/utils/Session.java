@@ -46,11 +46,12 @@ public class Session {
     public String screenshotDirectory;
     public String screenshotDirectoryInLogs;
 
+    @SuppressWarnings("unchecked")
     public Session(String appName, String... appArgs) {
         try {
             // start the client
             this.primaryStage = FxToolkit.registerPrimaryStage();
-            this.sessionApplication = FxToolkit.setupApplication((Class) Class.forName(appName), appArgs);
+            this.sessionApplication = FxToolkit.setupApplication((Class<? extends Application>) Class.forName(appName), appArgs);
             this.sessionRobot = new FxRobot();
             this.applicationName = appName;
             this.screenshotDirectory = System.getProperty("user.dir") + "/report-images/";
@@ -136,6 +137,7 @@ public class Session {
     /**
      * When running JavaFXLibrary as java agent this method tries to find first showing stage.
      */
+    @SuppressWarnings("unchecked")
     private Optional<Stage> getExistingPrimaryStage() {
 
         try {

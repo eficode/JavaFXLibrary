@@ -4,14 +4,9 @@ import javafx.geometry.Pos;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class GetPositionTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getPosition_ValidArgument() {
@@ -21,8 +16,11 @@ public class GetPositionTest {
 
     @Test
     public void getPosition_InvalidArgument() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Position: \"NEXT_TO_THE_IMAGE\" is not a valid position. Accepted values are: [TOP_LEFT");
-        HelperFunctions.getPosition("NEXT_TO_THE_IMAGE");
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.getPosition("NEXT_TO_THE_IMAGE");
+        });
+        String expectedMessage = "Position: \"NEXT_TO_THE_IMAGE\" is not a valid position. Accepted values are: [TOP_LEFT";
+        String actualMessage = exception.getMessage();
+        Assert.assertTrue(actualMessage.contains(expectedMessage));
     }
 }

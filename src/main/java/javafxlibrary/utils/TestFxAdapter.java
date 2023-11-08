@@ -48,7 +48,7 @@ public class TestFxAdapter {
     protected static String logImages = "embedded";
 
     // internal book keeping for objects
-    public static HashMap objectMap = new HashMap();
+    public static HashMap<String, Object> objectMap = new HashMap<>();
 
     public void createNewSession(String appName, String... appArgs) {
         if (isAgent) {
@@ -60,8 +60,8 @@ public class TestFxAdapter {
              * class to load properly
              */
             if (appName.endsWith(".jar")) {
-                Class mainClass = getMainClassFromJarFile(appName);
-                activeSession = new Session(mainClass, appArgs);
+                Class<?> mainClass = getMainClassFromJarFile(appName);
+                activeSession = new Session(mainClass.getName(), appArgs);
             } else {
                 activeSession = new Session(appName, appArgs);
             }

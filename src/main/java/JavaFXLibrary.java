@@ -152,13 +152,14 @@ public class JavaFXLibrary extends AnnotationLibrary {
     @Autowired
     protected RunOnFailure runOnFailure;
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object runKeyword(String keywordName, List args, Map kwargs) {
         if (kwargs == null) {
-            kwargs = new HashMap();
+            kwargs = new HashMap<>();
         }
-        List finalArgs;
-        Map finalKwargs;
+        List<?> finalArgs;
+        Map<?,?> finalKwargs;
 
         // JavalibCore changes arguments of Call Method keywords to Strings after this check, so they need to handle their own objectMapping
         if (!(keywordName.equals("callObjectMethod") || keywordName.equals("callObjectMethodInFxApplicationThread"))) {

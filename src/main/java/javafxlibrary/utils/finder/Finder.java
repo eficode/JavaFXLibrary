@@ -143,6 +143,7 @@ public class Finder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Set<Node> executeFindAll(Parent root, Query query) {
         RobotLog.debug("Executing find all with root: " + root + " and query: " + query.getQuery());
         try {

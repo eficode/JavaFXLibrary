@@ -113,7 +113,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public String[] listNodeMethods(Node node) {
         try {
             RobotLog.info("Listing all available methods for node: \"" + node + "\"");
-            Class nodeClass = node.getClass();
+            Class<?> nodeClass = node.getClass();
             ArrayList<String> list = new ArrayList<>();
             System.out.println("*INFO*");
             while (nodeClass != null) {
@@ -137,7 +137,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         StringBuilder entry = new StringBuilder(m.getReturnType().getName() + " ");
         entry.append(m.getName());
         entry.append("(");
-        Class[] args = m.getParameterTypes();
+        Class<?>[] args = m.getParameterTypes();
         for (int i = 0; i < args.length; i++) {
             entry.append(args[i].getName());
             if (i != args.length - 1)
@@ -408,9 +408,10 @@ public class ConvenienceKeywords extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" cell value from row \"" + row + "\" and column \"" + column + "\".");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
             Object item = table.getItems().get(row);
-            TableColumn col = (TableColumn) table.getColumns().get(column);
+            TableColumn col = (TableColumn<?, ?>) table.getColumns().get(column);
+            @SuppressWarnings("unchecked")
             Object value = col.getCellObservableValue(item).getValue();
             return mapObject(value);
         } catch (ClassCastException cce) {
@@ -432,7 +433,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" cell from row \"" + row + "\" and column \"" + column + "\".");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
             return mapObject(getTableRowCell(table, row, column));
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
@@ -443,15 +444,16 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "``locator`` is either a _query_ or _Object:Node_ for identifying the TableView element, see "
             + "`3. Locating JavaFX Nodes`. \n\n"
             + "``column`` Integer value for the column")
+    @SuppressWarnings("unchecked")        
     @ArgumentNames({"table", "column"})
     public List<Object> getTableColumnValues(Object locator, int column) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" values from column \"" + column + "\".");
-            TableView table = (TableView) objectToNode(locator);
-            ObservableList items = table.getItems();
+            TableView<?> table = (TableView<?>) objectToNode(locator);
+            ObservableList<?> items = table.getItems();
             List<Object> values = new ArrayList<>();
-            TableColumn tableColumn = (TableColumn) table.getColumns().get(column);
+            TableColumn tableColumn = (TableColumn<?, ?>) table.getColumns().get(column);
             if (tableColumn.getText() != null)
                 RobotLog.info("Getting values from column " + tableColumn.getText());
             else
@@ -479,7 +481,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
             List<Object> columnCells = new ArrayList<>();
 
             RobotLog.info("Getting table \"" + locator + "\" cells from column \"" + column + "\".");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
 
             VirtualFlow<?> vf = (VirtualFlow<?>) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1);
 
@@ -502,16 +504,18 @@ public class ConvenienceKeywords extends TestFxAdapter {
             + "| ${row cells}= | Get Table Row Cells | id=table-id | ${2} | \n"
             + "| Dictionary Should Contain Key | ${row cells} | column name | \n"
             + "| ${cell text}= | Get Node Text | &{row cells}[column name] | # assuming that cell is a node that has a text value |\n")
+    @SuppressWarnings("unchecked")        
     @ArgumentNames({"table", "row"})
     public List<Object> getTableRowValues(Object locator, int rowNumber) {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" values from row \"" + rowNumber + "\".");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
             Object row = table.getItems().get(rowNumber);
             List<Object> values = new ArrayList<>();
             for (Object tableColumn : table.getColumns()) {
-                values.add(((TableColumn) tableColumn).getCellObservableValue(row).getValue());
+                TableColumn<Object, Object> column = (TableColumn<Object, Object>) tableColumn;
+                values.add(column.getCellObservableValue((Object) row).getValue());
             }
             return values;
         } catch (ClassCastException cce) {
@@ -532,7 +536,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" cells from row \"" + row + "\".");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
             Map<String, Object> cells = new HashMap<>();
             for (int i = 0; i < table.getColumns().size(); i++) {
                 cells.put(getTableColumnName(table, i), mapObject(getTableRowCell(table, row, i)));
@@ -551,7 +555,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting table \"" + locator + "\" column count.");
-            TableView table = (TableView) objectToNode(locator);
+            TableView<?> table = (TableView<?>) objectToNode(locator);
             return table.getColumns().size();
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Unable to handle argument as TableView!");
@@ -684,7 +688,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
         checkObjectArgumentNotNull(locator);
         try {
             RobotLog.info("Getting spinner value from locator \"" + locator + "\".");
-            Spinner spinner = (Spinner) objectToNode(locator);
+            Spinner<?> spinner = (Spinner<?>) objectToNode(locator);
             return spinner.getValueFactory().getValue();
         } catch (ClassCastException cce) {
             throw new JavaFXLibraryNonFatalException("Given locator could not be handled as Spinner!", cce);
@@ -864,7 +868,7 @@ public class ConvenienceKeywords extends TestFxAdapter {
     public void selectContextMenuItem(String item) {
         RobotLog.info("Selecting context menu item \"" + item + "\".");
         List<Window> windows = robot.listTargetWindows();
-        ListIterator li = windows.listIterator(windows.size());
+        ListIterator<?> li = windows.listIterator(windows.size());
         while (li.hasPrevious()) {
             Set<Node> nodes = robot.rootNode((Window) li.previous()).lookupAll(".menu-item");
             for (Node node : nodes) {

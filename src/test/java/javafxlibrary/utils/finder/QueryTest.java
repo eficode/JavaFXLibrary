@@ -2,14 +2,9 @@ package javafxlibrary.utils.finder;
 
 import javafxlibrary.exceptions.JavaFXLibraryQueryException;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class QueryTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void validQuery_withIndex() {
@@ -31,8 +26,9 @@ public class QueryTest {
 
     @Test
     public void invalidQueryIndex() {
-        thrown.expect(JavaFXLibraryQueryException.class);
-        thrown.expectMessage("Invalid query \"css=VBox[0]\": Minimum index value is 1!");
-        new Query("css=VBox[0]");
+        JavaFXLibraryQueryException exception = Assert.assertThrows(JavaFXLibraryQueryException.class, () -> {
+            new Query("css=VBox[0]");
+        });
+        Assert.assertEquals("Invalid query \"css=VBox[0]\": Minimum index value is 1!", exception.getMessage());
     }
 }

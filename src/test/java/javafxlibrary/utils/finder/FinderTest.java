@@ -12,7 +12,6 @@ import javafxlibrary.utils.TestFxAdapter;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.testfx.api.FxRobot;
 
 import java.util.ArrayList;
@@ -25,9 +24,6 @@ public class FinderTest extends TestFxAdapterTest {
     Stage stage;
     @Mocked
     VBox root;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {

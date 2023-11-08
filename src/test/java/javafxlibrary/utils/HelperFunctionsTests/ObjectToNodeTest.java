@@ -11,18 +11,13 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class ObjectToNodeTest extends ApplicationTest {
 
     @Mocked
     private Finder finder;
     Button button;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void objectToNode_StringQuery() {
@@ -54,15 +49,17 @@ public class ObjectToNodeTest extends ApplicationTest {
 
     @Test
     public void objectToNode_InvalidType() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("given target \"java.lang.Integer\" is not an instance of Node or a query string for node!");
-        HelperFunctions.objectToNode(new Integer("2009"));
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.objectToNode(Integer.valueOf("2009"));
+        });
+        Assert.assertEquals("given target \"java.lang.Integer\" is not an instance of Node or a query string for node!", exception.getMessage());
     }
 
     @Test
     public void objectToNode_NullObject() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("target object was empty (null)");
-        HelperFunctions.objectToNode(null);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.objectToNode(null);
+        });
+        Assert.assertEquals("target object was empty (null)", exception.getMessage());
     }
 }

@@ -28,7 +28,6 @@ import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
@@ -72,7 +71,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     @ArgumentNames({"appName", "*args"})
     public void launchSwingApplication(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
-        Class mainClass = getMainClass(appName);
+        Class<?> mainClass = getMainClass(appName);
         Application app = createWrapperApplication(mainClass, appArgs);
         createNewSession(app);
         waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
@@ -92,14 +91,14 @@ public class ApplicationLauncher extends TestFxAdapter {
     @ArgumentNames({"appName", "*args"})
     public void launchSwingApplicationInSeparateThread(String appName, String... appArgs) {
         RobotLog.info("Starting application:" + appName);
-        Class c = getMainClass(appName);
+        Class<?> c = getMainClass(appName);
         Application app = createThreadedWrapperApplication(c, appArgs);
         createNewSession(app);
         waitForEventsInFxApplicationThread(getLibraryKeywordTimeout());
         RobotLog.info("Application: " + appName + " started.");
     }
 
-    private Class getMainClass(String appName) {
+    private Class<?> getMainClass(String appName) {
         try {
             if (appName.endsWith(".jar")) {
                 return getMainClassFromJarFile(appName);
@@ -118,6 +117,8 @@ public class ApplicationLauncher extends TestFxAdapter {
         try {
             URL[] urls = new URL[]{new File(path).toURI().toURL()};
             URLClassLoader classLoader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+
+            classLoader.close();
 
         } catch (Exception e) {
             throw new JavaFXLibraryFatalException("Problem setting the classpath: " + path, e);
@@ -214,7 +215,7 @@ public class ApplicationLauncher extends TestFxAdapter {
     public void logSystemProperties() {
         try {
             Properties p = System.getProperties();
-            Enumeration keys = p.keys();
+            Enumeration<?> keys = p.keys();
             while (keys.hasMoreElements()) {
                 String key = (String) keys.nextElement();
                 String value = (String) p.get(key);

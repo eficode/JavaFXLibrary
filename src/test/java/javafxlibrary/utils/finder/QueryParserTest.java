@@ -1,14 +1,9 @@
 package javafxlibrary.utils.finder;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class QueryParserTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void startsWithPrefix_AcceptedValues() {
@@ -41,9 +36,10 @@ public class QueryParserTest {
 
     @Test
     public void getIndividualQueries_TextWithoutQuotes() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("\"text\" query prefix is missing quotation marks.");
-        String query = QueryParser.removePrefix("text=this is not allowed", FindPrefix.TEXT);
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            QueryParser.removePrefix("text=this is not allowed", FindPrefix.TEXT);
+        });
+        Assert.assertEquals("\"text\" query prefix is missing quotation marks.", exception.getMessage());
     }
 
     @Test
@@ -58,16 +54,18 @@ public class QueryParserTest {
 
     @Test
     public void getPrefix_NoEquals() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Query \"noEquals\" does not contain any supported prefix");
-        QueryParser.getPrefix("noEquals");
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            QueryParser.getPrefix("noEquals");
+        });
+        Assert.assertEquals("Query \"noEquals\" does not contain any supported prefix", exception.getMessage());
     }
 
     @Test
     public void getPrefix_InvalidValue() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Query \"notaprefix=someValue\" does not contain any supported prefix");
-        QueryParser.getPrefix("notaprefix=someValue");
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            QueryParser.getPrefix("notaprefix=someValue");
+        });
+        Assert.assertEquals("Query \"notaprefix=someValue\" does not contain any supported prefix", exception.getMessage());
     }
 
     @Test

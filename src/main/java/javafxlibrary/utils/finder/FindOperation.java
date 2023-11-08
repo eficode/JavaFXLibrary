@@ -52,6 +52,7 @@ public class FindOperation {
         if (!findAll && query.containsIndex()) {
             return executeOverriddenLookup();
         } else if (query.containsIndex()) {
+            @SuppressWarnings("unchecked")
             Set<Node> lookupResults = new LinkedHashSet<>((Set<Node>) executeLookup(query.getPrefix(), query.getQuery()));
             lookupResults.remove(root);
             Node nodeAtIndex = getLookupResultByIndex(lookupResults, query.getIndex());
@@ -66,6 +67,7 @@ public class FindOperation {
 
     protected Object executeOverriddenLookup() {
         this.findAll = true;
+        @SuppressWarnings("unchecked")
         Set<Node> result = new LinkedHashSet<>((Set<Node>) executeLookup(query.getPrefix(), query.getQuery()));
         result.remove(root);
         return getLookupResultByIndex(result, query.getIndex());

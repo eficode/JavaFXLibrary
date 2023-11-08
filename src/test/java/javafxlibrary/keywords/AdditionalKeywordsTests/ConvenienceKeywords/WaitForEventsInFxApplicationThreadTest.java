@@ -24,14 +24,9 @@ import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.keywords.AdditionalKeywords.ApplicationLauncher;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class WaitForEventsInFxApplicationThreadTest extends ApplicationTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private static ApplicationLauncher keywords;
 
@@ -50,11 +45,12 @@ public class WaitForEventsInFxApplicationThreadTest extends ApplicationTest {
 
     @Test
     public void waitForEventsInFxApplicationThread_TimeoutExceeded() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("Events did not finish within the given timeout of 1 seconds.");
         Button b = createDelayedButton(3000);
         Platform.runLater(() -> b.fire());
-        keywords.waitForEventsInFxApplicationThread(1);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            keywords.waitForEventsInFxApplicationThread(1);
+        });
+        Assert.assertEquals("Events did not finish within the given timeout of 1 seconds.", exception.getMessage());
     }
 
     private Button createDelayedButton(int timeout) {

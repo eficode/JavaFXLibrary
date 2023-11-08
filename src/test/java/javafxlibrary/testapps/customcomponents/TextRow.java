@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @DefaultProperty("children")
-public class TextRow extends VBox implements Runnable, Callable {
+public class TextRow extends VBox implements Runnable, Callable<Object> {
 
     @FXML
     Label headingLabel;

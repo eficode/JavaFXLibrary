@@ -16,16 +16,11 @@ import mockit.Injectable;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.testfx.service.query.PointQuery;
 import org.testfx.service.query.impl.BoundsPointQuery;
 
 public class ObjectToBoundsTest extends TestFxAdapterTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void objectToBounds_Window(@Injectable Window window) {
@@ -136,8 +131,9 @@ public class ObjectToBoundsTest extends TestFxAdapterTest {
 
     @Test
     public void objectToBounds_UnsupportedType() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("unsupported parameter type: java.lang.Integer");
-        HelperFunctions.objectToBounds(22);
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.objectToBounds(22);
+        });
+        Assert.assertEquals("unsupported parameter type: java.lang.Integer", exception.getMessage());
     }
 }

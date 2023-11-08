@@ -23,7 +23,7 @@ public class TestListener {
 
     public static final int ROBOT_LISTENER_API_VERSION = 2;
 
-    public void endSuite(String name, java.util.Map attributes) {
+    public void endSuite(String name, java.util.Map<String, Object> attributes) {
         objectMap.clear();
     }
 }

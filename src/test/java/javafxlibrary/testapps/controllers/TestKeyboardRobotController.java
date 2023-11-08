@@ -17,7 +17,6 @@
 
 package javafxlibrary.testapps.controllers;
 
-import javafx.scene.control.skin.TextAreaSkin;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

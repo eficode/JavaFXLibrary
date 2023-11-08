@@ -4,14 +4,9 @@ import javafx.scene.input.KeyCode;
 import javafxlibrary.exceptions.JavaFXLibraryNonFatalException;
 import javafxlibrary.utils.HelperFunctions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class GetKeyCodeTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void getKeyCode_ValidArgument() {
@@ -28,8 +23,11 @@ public class GetKeyCodeTest {
 
     @Test
     public void getKeyCode_InvalidArgument() {
-        thrown.expect(JavaFXLibraryNonFatalException.class);
-        thrown.expectMessage("\"SAUSAGE\" is not a valid Keycode. Accepted values are: [ENTER, BACK_SPACE, TAB");
-        HelperFunctions.getKeyCode(new String[]{"SAUSAGE"});
+        JavaFXLibraryNonFatalException exception = Assert.assertThrows(JavaFXLibraryNonFatalException.class, () -> {
+            HelperFunctions.getKeyCode(new String[]{"SAUSAGE"});
+        });
+        String expectedMessage = "\"SAUSAGE\" is not a valid Keycode. Accepted values are: [ENTER, BACK_SPACE, TAB";
+        String actualMessage = exception.getMessage();
+        Assert.assertTrue(actualMessage.contains(expectedMessage));
     }
 }
